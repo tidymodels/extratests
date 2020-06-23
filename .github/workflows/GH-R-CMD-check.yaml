@@ -1,4 +1,7 @@
-on: [push, pull_request]
+on:
+  schedule:
+    # runs tests every day at 1am
+    - cron:  '0 1 * * *'
 
 name: GH-R-CMD-check
 
