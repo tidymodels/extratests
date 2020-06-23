@@ -19,13 +19,11 @@ Suggests:
     spelling,
     testthat,
     ranger,
-    randomForest
+    randomForest,
+    C50,
+    earth
 Language: en-US
 Depends: 
     tidymodels,
     modeldata,
     parsnip
-Remotes:
-    tidymodels/dials#127,
-    tidymodels/tune#232
-    
