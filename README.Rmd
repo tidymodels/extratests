@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# extratests
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`extratests` is an internal package used for tests that
+
+* Depend on multiple tidymodels packages
+
+* Involve special/extra packages.  
+
+* Whose run-time is not practical for individual packages. 
+
+These tests are run on a cron job and are run for both CRAN versions and the current GitHub development versions. 
