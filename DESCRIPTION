@@ -19,7 +19,9 @@ Suggests:
     spelling,
     testthat,
     ranger,
-    randomForest
+    randomForest,
+    C50,
+    earth
 Language: en-US
 Depends: 
     tidymodels,
