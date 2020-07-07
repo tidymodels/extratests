@@ -63,11 +63,11 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_cran("sparklyr")
         shell: Rscript {0}
 
       - name: Install spark
         run: |
-          remotes::install_cran("sparklyr")
           sparklyr::spark_install()
         shell: Rscript {0}
 
