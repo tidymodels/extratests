@@ -1,7 +1,4 @@
-on:
-  schedule:
-    # runs tests every day at 1am
-    - cron:  '0 1 * * *'
+on: push
 
 name: GH-R-CMD-check
 
@@ -76,6 +73,10 @@ jobs:
           try(remotes::install_github("tidymodels/modeldata"), silent = TRUE)
         shell: Rscript {0}
 
+      - name: Install spark
+        run: |
+          sparklyr::spark_install()
+        shell: Rscript {0}
 
       - name: Session info
         run: |
