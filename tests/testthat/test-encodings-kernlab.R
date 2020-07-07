@@ -1,4 +1,4 @@
-context("randomForest encodings")
+context("kernlab encodings")
 
 library(tidymodels)
 data(scat, package = "modeldata")
@@ -7,9 +7,9 @@ scat <- na.omit(scat)
 ## -----------------------------------------------------------------------------
 
 parsnip_mod <-
-  rand_forest(mtry = 4, trees = 20) %>%
-  set_engine("randomForest", importance = TRUE) %>%
-  set_mode("classification")
+  svm_rbf() %>%
+  set_engine("kernlab") %>%
+  set_mode("regression")
 
 ## -----------------------------------------------------------------------------
 
@@ -18,10 +18,10 @@ test_that('parsnip models with formula interface', {
 
   parsnip_form_fit <-
     parsnip_mod %>%
-    fit(Species ~ ., data = scat)
+    fit(Species ~ Location + Age, data = scat)
 
-  parsnip_form_names <- rownames(parsnip_form_fit$fit$importance)
-  expect_true(sum(grepl("Location", parsnip_form_names)) == 1)
+  parsnip_form_names <- colnames(parsnip_form_fit$fit@xmatrix[[1]])
+  expect_true(sum(grepl("Location", parsnip_form_names)) == 3)
 })
 
 test_that('parsnip models with xy interface', {
@@ -29,10 +29,10 @@ test_that('parsnip models with xy interface', {
 
   parsnip_xy_fit <-
     parsnip_mod %>%
-    fit_xy(x = scat[, -1], y = scat$Species)
+    fit_xy(x = scat[, c("Location", "Age")], y = scat$Species)
 
-  parsnip_xy_names <- rownames(parsnip_xy_fit$fit$importance)
-  expect_true(sum(grepl("Location", parsnip_xy_names)) == 1)
+  parsnip_form_names <- colnames(parsnip_xy_fit$fit@xmatrix[[1]])
+  expect_true(sum(grepl("Location", parsnip_form_names)) == 3)
 
 })
 
@@ -44,7 +44,7 @@ test_that('workflows', {
   wflow <-
     workflow() %>%
     add_model(parsnip_mod) %>%
-    add_formula(Species ~ .)
+    add_formula(Species ~ Location + Age)
 
   parsnip_wflow_fit <-
     wflow %>%
@@ -53,11 +53,11 @@ test_that('workflows', {
   parsnip_wflow_names <-
     parsnip_wflow_fit %>%
     pull_workflow_fit() %>%
-    pluck("fit") %>%
-    pluck("importance") %>%
-    rownames()
+    pluck("fit")
 
-  expect_true(sum(grepl("Location", parsnip_wflow_names)) == 1)
+  parsnip_wflow_names <- parsnip_wflow_names@xmatrix[[1]] %>% colnames()
+
+  expect_true(sum(grepl("Location", parsnip_wflow_names)) == 3)
 
 })
 

@@ -21,7 +21,14 @@ Suggests:
     ranger,
     randomForest,
     C50,
-    earth
+    earth,
+    kernlab,
+    survival,
+    xgboost,
+    dplyr,
+    purrr,
+    tibble,
+    tidyr
 Language: en-US
 Depends: 
     tidymodels,

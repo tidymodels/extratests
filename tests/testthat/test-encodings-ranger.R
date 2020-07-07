@@ -57,7 +57,7 @@ test_that('workflows', {
     pluck("variable.importance") %>%
     names()
 
-  # expect_equal(sum(grepl("Location", parsnip_wflow_names)) == 1)
+  expect_true(sum(grepl("Location", parsnip_wflow_names)) == 1)
 
 })
 
