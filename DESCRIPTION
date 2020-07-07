@@ -28,7 +28,9 @@ Suggests:
     dplyr,
     purrr,
     tibble,
-    tidyr
+    tidyr,
+    glmnet,
+    sparklyr
 Language: en-US
 Depends: 
     tidymodels,
