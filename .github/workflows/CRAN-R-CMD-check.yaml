@@ -1,7 +1,4 @@
-on:
-  schedule:
-    # runs tests every day at 1am
-    - cron:  '0 1 * * *'
+on: push
 
 name: CRAN-R-CMD-check
 
