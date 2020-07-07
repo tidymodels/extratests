@@ -22,7 +22,8 @@ Suggests:
     randomForest,
     C50,
     earth,
-    sparklyr
+    sparklyr,
+    dplyr
 Language: en-US
 Depends: 
     tidymodels,
