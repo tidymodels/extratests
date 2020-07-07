@@ -21,7 +21,8 @@ Suggests:
     ranger,
     randomForest,
     C50,
-    earth
+    earth,
+    sparklyr
 Language: en-US
 Depends: 
     tidymodels,
