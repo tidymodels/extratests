@@ -29,6 +29,8 @@ spark_install_winutils <- function(version) {
 library(sparklyr)
 
 if (.Platform$OS.type == "windows") {
+  # Right now, this does not seem to be working on windows; working on fixing it.
+  # Leaving it as-is as a place to start.
   spark_install_winutils("2.4")
   sparklyr::spark_install(verbose = TRUE, version = "2.4", hadoop_version = "2.7")
 } else {
