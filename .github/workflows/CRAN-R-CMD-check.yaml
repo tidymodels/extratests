@@ -1,4 +1,10 @@
 on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   schedule:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
