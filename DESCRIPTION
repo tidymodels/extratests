@@ -24,7 +24,8 @@ Suggests:
     earth,
     sparklyr,
     dplyr,
-    glmnet
+    glmnet,
+    rstanarm
 Language: en-US
 Depends: 
     tidymodels,
