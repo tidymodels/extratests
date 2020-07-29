@@ -58,27 +58,27 @@ test_that("spark descriptor", {
 
   expect_equal(
     template2(6, 4, 150, NA, 1),
-    eval_descrs2(get_descr_form(compounds ~ ., data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(compounds ~ ., data = hpc_descr))
   )
   expect_equal(
     template2(3, 1, 150, NA, 1),
-    eval_descrs2(get_descr_form(compounds ~ class, data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(compounds ~ class, data = hpc_descr))
   )
   expect_equal(
     template2(1, 1, 150, NA, 0),
-    eval_descrs2(get_descr_form(compounds ~ input_fields, data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(compounds ~ input_fields, data = hpc_descr))
   )
   expect_equivalent(
     template2(4, 4, 150, class_tab2, 0),
-    eval_descrs2(get_descr_form(class ~ ., data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(class ~ ., data = hpc_descr))
   )
   expect_equal(
     template2(1, 1, 150, class_tab2, 0),
-    eval_descrs2(get_descr_form(class ~ input_fields, data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(class ~ input_fields, data = hpc_descr))
   )
   expect_equivalent(
     template2(7, 3, 24, rev(table(npk$K, dnn = NULL)), 3),
-    eval_descrs2(get_descr_form(K ~ ., data = npk_descr))
+    eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr))
   )
 
 })
