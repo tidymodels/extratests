@@ -12,7 +12,7 @@ parsnip_mod <-
 ## -----------------------------------------------------------------------------
 
 test_that('parsnip models with formula interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
+  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   parsnip_form_fit <-
     parsnip_mod %>%
@@ -25,7 +25,7 @@ test_that('parsnip models with formula interface', {
 })
 
 test_that('parsnip models with xy interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
+  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   expect_warning(
     expect_error(
@@ -46,7 +46,7 @@ test_that('parsnip models with xy interface', {
 ## -----------------------------------------------------------------------------
 
 test_that('workflows', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
+  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   wflow <-
     workflow() %>%
