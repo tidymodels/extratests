@@ -25,10 +25,13 @@ Suggests:
     sparklyr,
     dplyr,
     glmnet,
-    rstanarm
-Language: en-US
-Depends: 
-    tidymodels,
+    rstanarm,
     modeldata,
     parsnip,
-    purrr
+    purrr,
+    tidyr,
+    tibble,
+    rlang
+Language: en-US
+Depends: 
+    tidymodels

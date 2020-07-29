@@ -85,7 +85,8 @@ test_that('stan prediction', {
     control = quiet_ctrl
   )
 
-  expect_equal(uni_pred, predict(res_xy, hpc[1:5, num_pred])$.pred, tolerance = 0.001)
+  set.seed(383)
+  expect_equal(uni_pred, predict(res_xy, hpc[1:5, num_pred])$.pred, tolerance = 0.1)
 
   res_form <- fit(
     hpc_basic,
@@ -93,7 +94,7 @@ test_that('stan prediction', {
     data = hpc,
     control = quiet_ctrl
   )
-  expect_equal(inl_pred, predict(res_form, hpc[1:5, ])$.pred, tolerance = 0.001)
+  expect_equal(inl_pred, predict(res_form, hpc[1:5, ])$.pred, tolerance = 0.1)
 })
 
 
