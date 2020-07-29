@@ -21,9 +21,17 @@ Suggests:
     ranger,
     randomForest,
     C50,
-    earth
+    earth,
+    sparklyr,
+    dplyr,
+    glmnet,
+    rstanarm,
+    modeldata,
+    parsnip,
+    purrr,
+    tidyr,
+    tibble,
+    rlang
 Language: en-US
 Depends: 
-    tidymodels,
-    modeldata,
-    parsnip
+    tidymodels

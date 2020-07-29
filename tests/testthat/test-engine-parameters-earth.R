@@ -1,4 +1,4 @@
-context("engine-specific parameters with earth")
+context("engine-specific parameters - earth")
 
 library(tidymodels)
 

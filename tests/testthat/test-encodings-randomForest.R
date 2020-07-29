@@ -1,4 +1,4 @@
-context("randomForest encodings")
+context("encodings - randomForest")
 
 library(tidymodels)
 data(scat, package = "modeldata")
@@ -57,7 +57,7 @@ test_that('workflows', {
     pluck("importance") %>%
     rownames()
 
-  # expect_equal(sum(grepl("Location", parsnip_wflow_names)) == 1)
+  expect_true(sum(grepl("Location", parsnip_wflow_names)) == 1)
 
 })
 
