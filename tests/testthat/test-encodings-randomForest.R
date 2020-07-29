@@ -1,4 +1,4 @@
-context("randomForest encodings")
+context("encodings - randomForest")
 
 library(tidymodels)
 data(scat, package = "modeldata")

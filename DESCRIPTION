@@ -23,7 +23,8 @@ Suggests:
     C50,
     earth,
     sparklyr,
-    dplyr
+    dplyr,
+    glmnet
 Language: en-US
 Depends: 
     tidymodels,

@@ -1,4 +1,4 @@
-context("glmnet encodings")
+context("encodings - glmnet ")
 
 library(tidymodels)
 data(ames, package = "modeldata")
