@@ -28,4 +28,5 @@ Language: en-US
 Depends: 
     tidymodels,
     modeldata,
-    parsnip
+    parsnip,
+    purrr
