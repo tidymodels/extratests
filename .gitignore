@@ -2,3 +2,7 @@
 .DS_Store
 .Rproj.user
 .Rhistory
+tests/testthat/derby.log
+tests/testthat/logs/log4j.spark.log
+derby.log
+logs/log4j.spark.log
