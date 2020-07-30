@@ -28,7 +28,15 @@ spark_install_winutils <- function(version) {
 
 library(sparklyr)
 
-if (!isTRUE(sparklyr::spark_install_find()$installed)) {
+need_install <- try(sparklyr::spark_install_find(version = "2.4"), silent = TRUE)
+
+if(inherits(need_install, "try-error")) {
+  need_install <- TRUE
+} else {
+  need_install <- !isTRUE(need_install$installed)
+}
+
+if (need_install) {
   if (.Platform$OS.type == "windows") {
     # Right now, this does not seem to be working on windows; working on fixing it.
     # Leaving it as-is as a place to start.
