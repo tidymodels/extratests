@@ -43,6 +43,8 @@ sc <- try(sparklyr::spark_connect(master = "local"), silent = TRUE)
 
 if(inherits(sc, "try-error")) {
   print(sc)
+} else {
+  sparklyr::spark_disconnect_all()
 }
 
 ## -----------------------------------------------------------------------------

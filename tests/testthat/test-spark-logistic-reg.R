@@ -4,7 +4,7 @@ library(dplyr)
 
 # ------------------------------------------------------------------------------
 
-context("logistic regression execution with spark")
+context("engine - spark - logistic regression")
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)]
 
@@ -82,7 +82,7 @@ test_that('spark execution', {
     as.data.frame(spark_class_prob_classprob)
   )
 
-
+  spark_disconnect_all()
 })
 
 

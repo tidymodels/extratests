@@ -1,14 +1,10 @@
 library(testthat)
 library(parsnip)
 
-context("spark descriptors")
+context("engine - spark - data descriptors")
 
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)] %>% as.data.frame()
-
-# ------------------------------------------------------------------------------
-
-context("descriptor variables")
 
 # ------------------------------------------------------------------------------
 
@@ -80,5 +76,5 @@ test_that("spark descriptor", {
     template2(7, 3, 24, rev(table(npk$K, dnn = NULL)), 3),
     eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr))
   )
-
+  spark_disconnect_all()
 })

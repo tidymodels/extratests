@@ -7,7 +7,7 @@ library(modeldata)
 
 # ------------------------------------------------------------------------------
 
-context("engine - glmnet - logistic regressiont")
+context("engine - glmnet - logistic regression")
 
 # ------------------------------------------------------------------------------
 
