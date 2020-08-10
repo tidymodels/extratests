@@ -12,6 +12,8 @@ data_folds <- vfold_cv(two_class_dat, repeats = 3)
 
 test_that("tuning for mars() -- submodels *and* no submodels", {
 
+  skip_if(utils::packageVersion("tune") <= "0.1.1")
+
   expect_error(
     mars_spec <-
       mars(num_terms = tune(), prod_degree = tune(), prune_method = tune()) %>%
