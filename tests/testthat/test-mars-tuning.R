@@ -12,6 +12,8 @@ data_folds <- vfold_cv(two_class_dat, repeats = 3)
 
 test_that("tuning for mars() -- submodels *and* no submodels", {
 
+  skip_if(utils::packageVersion("tune") <= "0.1.1")
+
   expect_error(
     mars_spec <-
       mars(num_terms = tune(), prod_degree = tune(), prune_method = tune()) %>%
@@ -57,7 +59,8 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
       mars_wf,
       resample = data_folds,
       grid = params_grid,
-      metrics = metric_set(roc_auc)
+      metrics = metric_set(roc_auc),
+      control = control_grid(save_pred = TRUE)
     ),
     NA
   )
@@ -66,6 +69,9 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
   expect_equal(mars_metrics$.config, paste0("Model", 1:7))
   expect_equal(unique(mars_metrics$.metric), "roc_auc")
   expect_true(all(names(params_grid) %in% names(mars_metrics)))
+
+  expect_error(mars_preds <- collect_predictions(rs, summarize = TRUE), NA)
+  expect_equal(count(mars_preds, .row, .config)$n, rep(1L, 5537))
 
 })
 
