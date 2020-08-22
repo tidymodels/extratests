@@ -20,8 +20,8 @@ test_that('recipe tunable methods', {
 })
 
 test_that('recipe required_pkgs methods', {
-  skip_if(utils::packageVersion("tune") <= "tune_0.1.1.9000")
-  skip_if(utils::packageVersion("recipe") <= "0.1.13.9000")
+  skip_if(utils::packageVersion("tune") < "0.1.1.9000")
+  skip_if(utils::packageVersion("recipes") < "0.1.13.9000")
   pls_pkgs <- required_pkgs(test_recipe, FALSE)
 
   expect_equal(pls_pkgs, "mixOmics")
