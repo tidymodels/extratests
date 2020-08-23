@@ -4,6 +4,7 @@ context("parallel processing with psock clusters")
 
 library(testthat)
 library(discrim)
+library(themis)
 library(tidymodels)
 library(modeldata)
 library(doParallel)
@@ -16,8 +17,8 @@ discrim_mod <- discrim_linear() %>%
 set.seed(123)
 folds <- vfold_cv(two_class_dat)
 
-test_that('LDA parallel test', {
-  skip_if(utils::packageVersion("discrim") <= "0.1.0.9000")
+test_that('parsnip-adjacent parallel test', {
+  skip_if(utils::packageVersion("discrim") < "0.1.0.9000")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
@@ -27,6 +28,35 @@ test_that('LDA parallel test', {
     res <- fit_resamples(discrim_mod, Class ~ ., folds),
     regex = NA
   )
+  stopCluster(cl)
+
+  expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
+})
+
+# ------------------------------------------------------------------------------
+
+rec <-
+  recipe(Class ~ ., data = two_class_dat) %>%
+  step_smote(Class)
+
+discrim_wflow <-
+  workflow() %>%
+  add_model(discrim_mod) %>%
+  add_recipe(rec)
+
+test_that('recipe-adjacent parallel test', {
+  skip_if(utils::packageVersion("discrim") < "0.1.0.9000")
+  skip_if(utils::packageVersion("themis")  < "0.1.2.9000")
+
+  library(doParallel)
+  cl <- makePSOCKcluster(2)
+  registerDoParallel(cl)
+
+  expect_error(
+    res <- fit_resamples(discrim_wflow, folds),
+    regex = NA
+  )
+  stopCluster(cl)
 
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })
