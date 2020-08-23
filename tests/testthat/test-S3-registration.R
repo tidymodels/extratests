@@ -3,8 +3,7 @@ context("S3 registration")
 # ------------------------------------------------------------------------------
 
 library(testthat)
-library(tune)
-library(recipes)
+library(tidymodels)
 
 test_recipe <-
   recipe(mpg ~ ., data = mtcars) %>%
