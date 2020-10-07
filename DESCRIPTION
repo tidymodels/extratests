@@ -34,7 +34,8 @@ Suggests:
     rlang,
     discrim,
     parallel,
-    doParallel
+    doParallel,
+    poissonreg
 Language: en-US
 Depends: 
     tidymodels
