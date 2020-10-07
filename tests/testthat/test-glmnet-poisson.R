@@ -1,6 +1,8 @@
 
 context("engine - glmnet - Poisson regression")
 
+skip_if(utils::packageVersion("parsnip") < "0.1.3.9000")
+
 ## -----------------------------------------------------------------------------
 
 library(rlang)
