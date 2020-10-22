@@ -78,6 +78,11 @@ test_that('glmnet prediction, one lambda', {
   uni_pred <- unname(uni_pred)
 
   expect_equal(uni_pred, predict(xy_fit, lending_club[1:7, num_pred])$.pred_class)
+  expect_equal(
+    predict(xy_fit, lending_club[1:7, num_pred]),
+    predict(xy_fit, lending_club[1:7, sample(num_pred)])
+  )
+
 
   res_form <- fit(
     logistic_reg(penalty = 0.1) %>% set_engine("glmnet"),

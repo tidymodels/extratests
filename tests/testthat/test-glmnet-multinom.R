@@ -71,6 +71,10 @@ test_that('glmnet prediction, one lambda', {
   uni_pred <- unname(uni_pred)
 
   expect_equal(uni_pred, predict(xy_fit, hpc[rows, 1:4], type = "class")$.pred_class)
+  expect_equal(
+    predict(xy_fit, hpc[rows, 1:4], type = "class"),
+    predict(xy_fit, hpc[rows, c(3:1, 4)], type = "class")
+  )
 
   res_form <- fit(
     multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),

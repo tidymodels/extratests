@@ -86,6 +86,10 @@ test_that('glmnet prediction, single lambda', {
                 198.126819755653)
 
   expect_equal(uni_pred, predict(res_xy, hpc[1:5, num_pred])$.pred, tolerance = 0.0001)
+  expect_equal(
+    predict(res_xy, hpc[1:5, num_pred]),
+    predict(res_xy, hpc[1:5, sample(num_pred)])
+  )
 
   res_form <- fit(
     hpc_basic,
