@@ -31,6 +31,8 @@ zeroinfl_spec <- poisson_reg() %>% set_engine("zeroinfl")
 test_that('glmnet execution', {
   skip_on_cran()
   skip_if_not_installed("glmnet")
+  skip_if(utils::packageVersion("poissonreg") < "0.1.0")
+  skip_if(utils::packageVersion("parsnip") < "0.1.4")
 
   expect_error(
     res <- fit_xy(
@@ -42,7 +44,7 @@ test_that('glmnet execution', {
     regexp = NA
   )
 
-  expect_false(has_multi_predict(res))
+  expect_true(has_multi_predict(res))
 
   expect_error(
     fit(
@@ -53,15 +55,15 @@ test_that('glmnet execution', {
     )
   )
 
-  expect_warning(
+  expect_error(
     glmnet_xy_catch <- fit_xy(
       glmn_spec,
       x = senior_ind[, 1:3],
       y = factor(senior_ind$count),
       control = caught_ctrl
-    )
+    ),
+    "For a regression model, the outcome should be numeric."
   )
-  expect_true(inherits(glmnet_xy_catch$fit, "try-error"))
 
 })
 

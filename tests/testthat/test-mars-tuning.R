@@ -66,7 +66,7 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
   )
 
   expect_error(mars_metrics <- collect_metrics(rs), NA)
-  expect_equal(mars_metrics$.config, paste0("Model", 1:7))
+  expect_equal(mars_metrics$.config, paste0("Preprocessor1_Model", 1:7))
   expect_equal(unique(mars_metrics$.metric), "roc_auc")
   expect_true(all(names(params_grid) %in% names(mars_metrics)))
 
