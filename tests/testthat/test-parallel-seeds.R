@@ -27,9 +27,11 @@ test_that('parallel seeds', {
 
   set.seed(1)
   res_1 <- fit_resamples(rf_spec, Class ~ ., folds)
+  res_1
 
   set.seed(1)
   res_2 <- fit_resamples(rf_spec, Class ~ ., folds)
+  res_2
 
   expect_equal(
     collect_metrics(res_1),
