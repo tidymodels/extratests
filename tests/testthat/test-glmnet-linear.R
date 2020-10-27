@@ -57,13 +57,15 @@ test_that('glmnet execution', {
     )
   )
 
-  glmnet_xy_catch <- fit_xy(
-    hpc_basic,
-    x = hpc[, num_pred],
-    y = factor(hpc$input_fields),
-    control = caught_ctrl
+  expect_error(
+    fit_xy(
+      hpc_basic,
+      x = hpc[, num_pred],
+      y = factor(hpc$input_fields),
+      control = caught_ctrl
+    ),
+    "For a regression model"
   )
-  expect_true(inherits(glmnet_xy_catch$fit, "try-error"))
 
 })
 
