@@ -1,4 +1,5 @@
 library(testthat)
+library(extratests)
 library(tidymodels)
 library(modeldata)
 library(doParallel)
@@ -13,6 +14,7 @@ rf_spec <-
 
 set.seed(123)
 folds <- vfold_cv(two_class_dat)
+ctrl_extra <- control_resamples(pkgs = "extratests")
 
 test_that('parallel seeds', {
   skip_if(utils::packageVersion("tune") <= "0.1.1.9000")
@@ -22,13 +24,11 @@ test_that('parallel seeds', {
   registerDoParallel(cl)
 
   set.seed(1)
-  res_1 <- fit_resamples(rf_spec, Class ~ ., folds,
-                         control = control_resamples(pkgs = "extratests"))
+  res_1 <- fit_resamples(rf_spec, Class ~ ., folds, control = ctrl_extra)
   expect_equal(res_1$.notes[[1]]$.notes, character(0))
 
   set.seed(1)
-  res_2 <- fit_resamples(rf_spec, Class ~ ., folds,
-                         control = control_resamples(pkgs = "extratests"))
+  res_2 <- fit_resamples(rf_spec, Class ~ ., folds, control = ctrl_extra)
   expect_equal(res_2$.notes[[1]]$.notes, character(0))
 
   expect_equal(

@@ -1,3 +1,4 @@
+library(extratests)
 library(testthat)
 library(discrim)
 library(tidymodels)
@@ -11,6 +12,7 @@ discrim_mod <- discrim_linear() %>%
   set_engine("MASS")
 set.seed(123)
 folds <- vfold_cv(two_class_dat)
+ctrl_extra <- control_resamples(pkgs = "extratests")
 
 test_that('LDA parallel test', {
   skip_if(utils::packageVersion("discrim") <= "0.1.0.9000")
@@ -20,7 +22,7 @@ test_that('LDA parallel test', {
   registerDoParallel(cl)
 
   expect_error(
-    res <- fit_resamples(discrim_mod, Class ~ ., folds),
+    res <- fit_resamples(discrim_mod, Class ~ ., folds, control = ctrl_extra),
     regex = NA
   )
 
