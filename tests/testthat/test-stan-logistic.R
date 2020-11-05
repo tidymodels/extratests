@@ -191,11 +191,11 @@ test_that('stan intervals', {
   expect_equal(confidence_parsnip$.pred_upper_good, stan_upper,
                ignore_attr = TRUE, tolerance = 0.01)
   expect_equal(confidence_parsnip$.pred_lower_bad, 1 - stan_upper,
-               ignore_attr = TRUE, tolerance = 0.02)
+               ignore_attr = TRUE, tolerance = 0.03)
   expect_equal(confidence_parsnip$.pred_upper_bad, 1 - stan_lower,
-               ignore_attr = TRUE, tolerance = 0.02)
+               ignore_attr = TRUE, tolerance = 0.03)
   expect_equal(confidence_parsnip$.std_error, stan_std,
-               ignore_attr = TRUE, tolerance = 0.02)
+               ignore_attr = TRUE, tolerance = 0.03)
 
   stan_pred_lower <- c(`1` = 0, `2` = 0, `3` = 0, `4` = 0, `5` = 1)
   stan_pred_upper <- c(`1` = 1, `2` = 1, `3` = 1, `4` = 1, `5` = 1)
