@@ -2,10 +2,6 @@ library(testthat)
 
 # ------------------------------------------------------------------------------
 
-context("engine - earth with submodels *and* no submodels - tuning")
-
-# ------------------------------------------------------------------------------
-
 data(two_class_dat, package = "modeldata")
 set.seed(7898)
 data_folds <- vfold_cv(two_class_dat, repeats = 3)

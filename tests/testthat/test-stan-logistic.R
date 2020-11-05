@@ -4,8 +4,6 @@ library(rlang)
 library(tibble)
 library(modeldata)
 
-context("engine - stan - logistic regression")
-
 ## -----------------------------------------------------------------------------
 
 ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
@@ -104,20 +102,21 @@ test_that('stan_glm probability', {
 
   xy_pred <-
     tibble::tribble(
-    ~bad,             ~good,
-    0.0173511241321764, 0.982648875867824,
-    0.0550090130462705,  0.94499098695373,
-    0.0292445716644468, 0.970755428335553,
-    0.0516116810109397,  0.94838831898906,
-    0.0142530690940691, 0.985746930905931,
-    0.0184806465081366, 0.981519353491863,
-    0.0253642111906806, 0.974635788809319
-  )
+      ~bad,             ~good,
+      0.0173511241321764, 0.982648875867824,
+      0.0550090130462705,  0.94499098695373,
+      0.0292445716644468, 0.970755428335553,
+      0.0516116810109397,  0.94838831898906,
+      0.0142530690940691, 0.985746930905931,
+      0.0184806465081366, 0.981519353491863,
+      0.0253642111906806, 0.974635788809319
+    )
 
-  expect_equivalent(
+  expect_equal(
     xy_pred %>% as.data.frame(),
     parsnip:::predict_classprob.model_fit(xy_fit, lending_club[1:7, num_pred]) %>% as.data.frame(),
-    tolerance = 0.1
+    tolerance = 0.1,
+    ignore_attr = TRUE
   )
 
   res_form <- fit(
@@ -139,11 +138,12 @@ test_that('stan_glm probability', {
       0.013776487556396, 0.986223512443604,
       0.00359938202445076, 0.996400617975549
     )
-  expect_equivalent(
+  expect_equal(
     form_pred %>% as.data.frame(),
     parsnip:::predict_classprob.model_fit(res_form, lending_club[1:7, c("funded_amnt", "int_rate")]) %>%
       as.data.frame(),
-    tolerance = 0.1
+    tolerance = 0.1,
+    ignore_attr = TRUE
   )
 })
 
@@ -186,20 +186,25 @@ test_that('stan intervals', {
     c(`1` = 0.0181025303127182, `2` = 0.0388665155739319, `3` = 0.0205886091162274,
       `4` = 0.0181715224502082, `5` = 0.00405145389896896)
 
-  expect_equivalent(confidence_parsnip$.pred_lower_good, stan_lower, tolerance = 0.01)
-  expect_equivalent(confidence_parsnip$.pred_upper_good, stan_upper, tolerance = 0.01)
-  expect_equivalent(confidence_parsnip$.pred_lower_bad, 1 - stan_upper, tolerance = 0.01)
-  expect_equivalent(confidence_parsnip$.pred_upper_bad, 1 - stan_lower, tolerance = 0.01)
-  expect_equivalent(confidence_parsnip$.std_error, stan_std, tolerance = 0.001)
+  expect_equal(confidence_parsnip$.pred_lower_good, stan_lower,
+               ignore_attr = TRUE, tolerance = 0.01)
+  expect_equal(confidence_parsnip$.pred_upper_good, stan_upper,
+               ignore_attr = TRUE, tolerance = 0.01)
+  expect_equal(confidence_parsnip$.pred_lower_bad, 1 - stan_upper,
+               ignore_attr = TRUE, tolerance = 0.02)
+  expect_equal(confidence_parsnip$.pred_upper_bad, 1 - stan_lower,
+               ignore_attr = TRUE, tolerance = 0.02)
+  expect_equal(confidence_parsnip$.std_error, stan_std,
+               ignore_attr = TRUE, tolerance = 0.02)
 
   stan_pred_lower <- c(`1` = 0, `2` = 0, `3` = 0, `4` = 0, `5` = 1)
   stan_pred_upper <- c(`1` = 1, `2` = 1, `3` = 1, `4` = 1, `5` = 1)
   stan_pred_std  <-
     c(`1` = 0.211744742168102, `2` = 0.265130711714607, `3` = 0.209589904165081,
       `4` = 0.198389410902796, `5` = 0.0446989708829856)
-  expect_equivalent(prediction_parsnip$.pred_lower_good, stan_pred_lower)
-  expect_equivalent(prediction_parsnip$.pred_upper_good, stan_pred_upper)
-  expect_equivalent(prediction_parsnip$.std_error, stan_pred_std, tolerance = 0.1)
+  expect_equal(prediction_parsnip$.pred_lower_good, stan_pred_lower, ignore_attr = TRUE)
+  expect_equal(prediction_parsnip$.pred_upper_good, stan_pred_upper, ignore_attr = TRUE)
+  expect_equal(prediction_parsnip$.std_error, stan_pred_std, tolerance = 0.1, ignore_attr = TRUE)
 })
 
 

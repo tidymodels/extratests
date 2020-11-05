@@ -4,7 +4,6 @@ library(dplyr)
 
 # ------------------------------------------------------------------------------
 
-context("engine - spark - boosted tree")
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)]
 
@@ -169,9 +168,10 @@ test_that('spark execution', {
 
   expect_equal(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
 
-  expect_equivalent(
+  expect_equal(
     as.data.frame(spark_class_prob),
-    as.data.frame(spark_class_dup)
+    as.data.frame(spark_class_dup),
+    ignore_attr = TRUE
   )
   expect_equal(
     as.data.frame(spark_class_prob_classprob),

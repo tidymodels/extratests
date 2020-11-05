@@ -1,5 +1,3 @@
-context("encodings - ranger")
-
 library(tidymodels)
 data(scat, package = "modeldata")
 scat <- na.omit(scat)

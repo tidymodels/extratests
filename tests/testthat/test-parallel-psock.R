@@ -1,7 +1,3 @@
-context("parallel processing with psock clusters")
-
-# ------------------------------------------------------------------------------
-
 library(testthat)
 library(discrim)
 library(tidymodels)
@@ -28,5 +24,6 @@ test_that('LDA parallel test', {
     regex = NA
   )
 
+  expect_equal(res$.notes[[1]]$.notes, character(0))
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })

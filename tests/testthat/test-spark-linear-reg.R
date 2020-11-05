@@ -4,7 +4,6 @@ library(dplyr)
 
 # ------------------------------------------------------------------------------
 
-context("engine - spark - linear regression")
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)]
 

@@ -1,7 +1,3 @@
-context("S3 registration")
-
-# ------------------------------------------------------------------------------
-
 library(testthat)
 library(tidymodels)
 

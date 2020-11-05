@@ -1,7 +1,3 @@
-context("consistent parallel seeds")
-
-# ------------------------------------------------------------------------------
-
 library(testthat)
 library(tidymodels)
 library(modeldata)

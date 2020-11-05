@@ -1,6 +1,4 @@
 
-context("engine - stan - Poisson regression")
-
 skip_if(utils::packageVersion("parsnip") < "0.1.3.9000")
 
 ## -----------------------------------------------------------------------------
@@ -128,15 +126,23 @@ test_that('stan intervals', {
   pi_lower <- c(483, 676, 244, 340, 71)
   pi_upper <- c(595, 808, 320, 433, 112)
 
-  expect_equivalent(confidence_parsnip$.pred_lower, ci_lower, tolerance = 1e-2)
-  expect_equivalent(confidence_parsnip$.pred_upper, ci_upper, tolerance = 1e-2)
+  expect_equal(confidence_parsnip$.pred_lower,
+               ci_lower,
+               tolerance = 1e-2,
+               ignore_attr = TRUE)
+  expect_equal(confidence_parsnip$.pred_upper,
+               ci_upper,
+               tolerance = 1e-2,
+               ignore_attr = TRUE)
 
-  expect_equivalent(prediction_parsnip$.pred_lower,
-                    pi_lower,
-                    tolerance = 1e-2)
-  expect_equivalent(prediction_parsnip$.pred_upper,
-                    pi_upper,
-                    tolerance = 1e-2)
+  expect_equal(prediction_parsnip$.pred_lower,
+               pi_lower,
+               tolerance = 1e-2,
+               ignore_attr = TRUE)
+  expect_equal(prediction_parsnip$.pred_upper,
+               pi_upper,
+               tolerance = 1e-2,
+               ignore_attr = TRUE)
 })
 
 
