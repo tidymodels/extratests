@@ -22,11 +22,13 @@ test_that('parallel seeds', {
   registerDoParallel(cl)
 
   set.seed(1)
-  res_1 <- fit_resamples(rf_spec, Class ~ ., folds)
+  res_1 <- fit_resamples(rf_spec, Class ~ ., folds,
+                         control = control_resamples(pkgs = "extratests"))
   expect_equal(res_1$.notes[[1]]$.notes, character(0))
 
   set.seed(1)
-  res_2 <- fit_resamples(rf_spec, Class ~ ., folds)
+  res_2 <- fit_resamples(rf_spec, Class ~ ., folds,
+                         control = control_resamples(pkgs = "extratests"))
   expect_equal(res_2$.notes[[1]]$.notes, character(0))
 
   expect_equal(
