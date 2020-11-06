@@ -20,6 +20,7 @@ test_that('LDA parallel test', {
   library(doParallel)
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
+  parallel::clusterEvalQ(cl, library(extratests))
 
   expect_error(
     res <- fit_resamples(discrim_mod, Class ~ ., folds, control = ctrl_extra),
