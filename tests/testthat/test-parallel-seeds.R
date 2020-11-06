@@ -26,6 +26,7 @@ test_that('parallel seeds', {
   library(doParallel)
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
+  parallel::clusterEvalQ(cl, library(extratests))
 
   set.seed(1)
   res_1 <- fit_resamples(wf, folds)
