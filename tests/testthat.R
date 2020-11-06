@@ -43,7 +43,7 @@ if (need_install) {
     spark_install_winutils("2.4")
     sparklyr::spark_install(verbose = TRUE, version = "2.4", hadoop_version = "2.7")
   } else {
-    sparklyr::spark_install(verbose = TRUE, version = "2.4")
+    sparklyr::spark_install(verbose = TRUE)
   }
 }
 
