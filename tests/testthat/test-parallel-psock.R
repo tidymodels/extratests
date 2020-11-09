@@ -1,7 +1,4 @@
-context("parallel processing with psock clusters")
-
-# ------------------------------------------------------------------------------
-
+library(extratests)
 library(testthat)
 library(discrim)
 library(themis)
@@ -17,8 +14,10 @@ discrim_mod <- discrim_linear() %>%
 set.seed(123)
 folds <- vfold_cv(two_class_dat)
 
-test_that('parsnip-adjacent parallel test', {
-  skip_if(utils::packageVersion("discrim") < "0.1.0.9000")
+
+test_that('LDA parallel test', {
+  skip_if(utils::packageVersion("discrim") <= "0.1.0.9000")
+  skip_on_os("windows")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
@@ -47,6 +46,7 @@ discrim_wflow <-
 test_that('recipe-adjacent parallel test', {
   skip_if(utils::packageVersion("discrim") < "0.1.0.9000")
   skip_if(utils::packageVersion("themis")  < "0.1.2.9000")
+  skip_on_os("windows")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
@@ -58,5 +58,6 @@ test_that('recipe-adjacent parallel test', {
   )
   stopCluster(cl)
 
+  expect_equal(res$.notes[[1]]$.notes, character(0))
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })

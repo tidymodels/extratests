@@ -3,8 +3,6 @@ library(parsnip)
 library(rlang)
 library(modeldata)
 
-context("engine - stan - linear regression")
-
 ## -----------------------------------------------------------------------------
 
 ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
@@ -134,15 +132,17 @@ test_that('stan intervals', {
   pi_upper <- c(8345.56815544477, 7954.98392035813, 7890.10036321417, 7970.64062851536,
                 8247.10241974192)
 
-  expect_equivalent(confidence_parsnip$.pred_lower, ci_lower, tolerance = 1e-2)
-  expect_equivalent(confidence_parsnip$.pred_upper, ci_upper, tolerance = 1e-2)
+  expect_equal(confidence_parsnip$.pred_lower, ci_lower, ignore_attr = TRUE, tolerance = 1e-2)
+  expect_equal(confidence_parsnip$.pred_upper, ci_upper, ignore_attr = TRUE, tolerance = 1e-2)
 
-  expect_equivalent(prediction_parsnip$.pred_lower,
-                    pi_lower,
-                    tolerance = 1e-2)
-  expect_equivalent(prediction_parsnip$.pred_upper,
-                    pi_upper,
-                    tolerance = 1e-2)
+  expect_equal(prediction_parsnip$.pred_lower,
+               pi_lower,
+               ignore_attr = TRUE,
+               tolerance = 1e-2)
+  expect_equal(prediction_parsnip$.pred_upper,
+               pi_upper,
+               ignore_attr = TRUE,
+               tolerance = 1e-2)
 })
 
 

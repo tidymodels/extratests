@@ -6,10 +6,6 @@ library(dplyr)
 
 # ------------------------------------------------------------------------------
 
-context("engine - glmnet - multinom regression")
-
-# ------------------------------------------------------------------------------
-
 ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
 caught_ctrl   <- control_parsnip(verbosity = 1, catch = TRUE)
 quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
@@ -177,6 +173,6 @@ test_that("class predictions are factors with all levels", {
   nd <- hpc[hpc$class == "VF", ]
   yhat <- predict(basic, new_data = nd, penalty = .1)
   yhat_multi <- multi_predict(basic, new_data =  nd, penalty = .1)$.pred
-  expect_is(yhat_multi[[1]]$.pred_class, "factor")
+  expect_s3_class(yhat_multi[[1]]$.pred_class, "factor")
   expect_equal(levels(yhat_multi[[1]]$.pred_class), levels(hpc$class))
 })

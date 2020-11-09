@@ -7,10 +7,6 @@ library(modeldata)
 
 # ------------------------------------------------------------------------------
 
-context("engine - glmnet - logistic regression")
-
-# ------------------------------------------------------------------------------
-
 ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
 caught_ctrl   <- control_parsnip(verbosity = 1, catch = TRUE)
 quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
@@ -274,7 +270,7 @@ test_that('glmnet probabilities, one lambda', {
     )
 
   one_row <- predict(res_form, lending_club[1, c("funded_amnt", "int_rate")], type = "prob")
-  expect_equivalent(form_pred[1,], one_row)
+  expect_equal(form_pred[1,], one_row, ignore_attr = TRUE)
 
 })
 
