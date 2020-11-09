@@ -35,8 +35,9 @@ Suggests:
     tibble,
     rlang,
     discrim,
-    parallel,
+    themis,
     doParallel,
+    parallel,
     poissonreg,
     mixOmics
 Language: en-US
