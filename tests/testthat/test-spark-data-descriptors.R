@@ -1,8 +1,6 @@
 library(testthat)
 library(parsnip)
 
-context("engine - spark - data descriptors")
-
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)] %>% as.data.frame()
 
@@ -36,6 +34,7 @@ class_tab <- table(hpc$class, dnn = NULL)
 test_that("spark descriptor", {
 
   skip_if_not_installed("sparklyr")
+  skip_on_os("linux")
 
   library(sparklyr)
   library(dplyr)
@@ -64,17 +63,19 @@ test_that("spark descriptor", {
     template2(1, 1, 150, NA, 0),
     eval_descrs2(parsnip:::get_descr_form(compounds ~ input_fields, data = hpc_descr))
   )
-  expect_equivalent(
+  expect_equal(
     template2(4, 4, 150, class_tab2, 0),
-    eval_descrs2(parsnip:::get_descr_form(class ~ ., data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(class ~ ., data = hpc_descr)),
+    ignore_attr = TRUE
   )
   expect_equal(
     template2(1, 1, 150, class_tab2, 0),
     eval_descrs2(parsnip:::get_descr_form(class ~ input_fields, data = hpc_descr))
   )
-  expect_equivalent(
+  expect_equal(
     template2(7, 3, 24, rev(table(npk$K, dnn = NULL)), 3),
-    eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr))
+    eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr)),
+    ignore_attr = TRUE
   )
   spark_disconnect_all()
 })

@@ -4,7 +4,6 @@ library(dplyr)
 
 # ------------------------------------------------------------------------------
 
-context("engine - spark - multinomial regression")
 source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)]
 
@@ -69,9 +68,10 @@ test_that('spark execution', {
     c("pred_VF", "pred_F", "pred_L", "pred_M")
   )
 
-  expect_equivalent(
+  expect_equal(
     as.data.frame(spark_class_prob),
-    as.data.frame(spark_class_prob_classprob)
+    as.data.frame(spark_class_prob_classprob),
+    ignore_attr = TRUE
   )
 
   spark_disconnect_all()

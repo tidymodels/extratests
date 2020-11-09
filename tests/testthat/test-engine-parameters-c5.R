@@ -1,5 +1,3 @@
-context("engine-specific parameters - C50")
-
 library(tidymodels)
 data(two_class_dat, package = "modeldata")
 

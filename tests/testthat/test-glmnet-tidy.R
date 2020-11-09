@@ -1,6 +1,3 @@
-context("engine - glmnet - tidy method")
-
-## -----------------------------------------------------------------------------
 
 test_that('linear regression', {
   skip_if_not_installed("glmnet")

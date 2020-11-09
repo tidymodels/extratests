@@ -1,5 +1,3 @@
-context("engine-specific parameters - earth")
-
 library(tidymodels)
 
 mars_mod <-

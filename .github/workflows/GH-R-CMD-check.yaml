@@ -89,6 +89,9 @@ jobs:
           try(remotes::install_github("tidymodels/rsample"), silent = TRUE)
           try(remotes::install_github("tidymodels/yardstick"), silent = TRUE)
           try(remotes::install_github("tidymodels/modeldata"), silent = TRUE)
+          try(remotes::install_github("tidymodels/poissonreg"), silent = TRUE)
+          try(remotes::install_github("tidymodels/discrim"), silent = TRUE)
+          try(remotes::install_github("tidymodels/plsmod"), silent = TRUE)
         shell: Rscript {0}
 
       - name: Session info
