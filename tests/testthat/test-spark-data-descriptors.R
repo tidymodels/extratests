@@ -34,7 +34,6 @@ class_tab <- table(hpc$class, dnn = NULL)
 test_that("spark descriptor", {
 
   skip_if_not_installed("sparklyr")
-  skip_on_os("linux")
 
   library(sparklyr)
   library(dplyr)
