@@ -1,4 +1,3 @@
-library(extratests)
 library(testthat)
 library(discrim)
 library(themis)
@@ -17,7 +16,6 @@ folds <- vfold_cv(two_class_dat)
 
 test_that('LDA parallel test', {
   skip_if(utils::packageVersion("discrim") <= "0.1.0.9000")
-  skip_on_os("windows")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
