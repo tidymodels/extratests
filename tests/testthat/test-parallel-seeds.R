@@ -1,5 +1,4 @@
 library(testthat)
-library(extratests)
 library(tidymodels)
 library(modeldata)
 library(doParallel)
@@ -17,7 +16,6 @@ folds <- vfold_cv(two_class_dat)
 
 test_that('parallel seeds', {
   skip_if(utils::packageVersion("tune") <= "0.1.1.9000")
-  skip_on_os("windows")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
