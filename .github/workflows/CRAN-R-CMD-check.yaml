@@ -21,8 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-16.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-16.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", spark: false}
+          - {os: ubuntu-16.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", spark: true}
+          - {os: windows-latest, r: 'release', spark: false}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -40,6 +41,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@master
 
       - uses: actions/setup-java@v1
+        if: matrix.config.spark
         with:
           java-version: '8' # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
@@ -75,6 +77,12 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
+      - name: Install Spark
+        if: matrix.config.spark
+        run: |
+          sparklyr::spark_install(verbose = TRUE)
         shell: Rscript {0}
 
       - name: Session info
