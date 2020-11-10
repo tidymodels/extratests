@@ -16,6 +16,7 @@ folds <- vfold_cv(two_class_dat)
 
 test_that('LDA parallel test', {
   skip_if(utils::packageVersion("discrim") <= "0.1.0.9000")
+  skip_if(utils::packageVersion("tune") <= "0.1.1.9000")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
@@ -44,6 +45,7 @@ discrim_wflow <-
 test_that('recipe-adjacent parallel test', {
   skip_if(utils::packageVersion("discrim") < "0.1.0.9000")
   skip_if(utils::packageVersion("themis")  < "0.1.2.9000")
+  skip_if(utils::packageVersion("tune") <= "0.1.1.9000")
 
   library(doParallel)
   cl <- makePSOCKcluster(2)
