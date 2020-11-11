@@ -9,6 +9,8 @@
 installs](https://github.com/tidymodels/extratests/workflows/CRAN-R-CMD-check/badge.svg)](https://github.com/tidymodels/extratests/actions)
 [![R build status - GH
 installs](https://github.com/tidymodels/extratests/workflows/GH-R-CMD-check/badge.svg)](https://github.com/tidymodels/extratests/actions)
+[![R build status -
+Spark](https://github.com/tidymodels/extratests/workflows/spark-R-CMD-check/badge.svg)](https://github.com/tidymodels/extratests/actions)
 <!-- badges: end -->
 
 `extratests` is an internal package used for tests that

@@ -1,3 +1,6 @@
+## Skip entire file is Spark is not installed
+skip_if(spark_not_installed())
+
 library(testthat)
 library(parsnip)
 
