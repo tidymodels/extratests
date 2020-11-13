@@ -36,6 +36,7 @@ Suggests:
     rlang,
     discrim,
     themis,
+    hardhat,
     doParallel,
     parallel,
     poissonreg,
