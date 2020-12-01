@@ -69,6 +69,7 @@ test_that('glmnet prediction, single lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+  skip_if(utils::packageVersion("parsnip") <= "0.1.5")
 
   res_xy <- fit_xy(
     hpc_basic,
@@ -84,6 +85,7 @@ test_that('glmnet prediction, single lambda', {
                 198.126819755653)
 
   expect_equal(uni_pred, predict(res_xy, hpc[1:5, num_pred])$.pred, tolerance = 0.0001)
+  expect_equal(uni_pred[3], predict(res_xy, hpc[3, num_pred])$.pred, tolerance = 0.0001)
   expect_equal(
     predict(res_xy, hpc[1:5, num_pred]),
     predict(res_xy, hpc[1:5, sample(num_pred)])

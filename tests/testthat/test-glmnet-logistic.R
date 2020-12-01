@@ -57,6 +57,7 @@ test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+  skip_if(utils::packageVersion("parsnip") <= "0.1.5")
 
   xy_fit <- fit_xy(
     logistic_reg(penalty = 0.1) %>% set_engine("glmnet"),
@@ -74,6 +75,7 @@ test_that('glmnet prediction, one lambda', {
   uni_pred <- unname(uni_pred)
 
   expect_equal(uni_pred, predict(xy_fit, lending_club[1:7, num_pred])$.pred_class)
+  expect_equal(uni_pred[2], predict(xy_fit, lending_club[2, num_pred])$.pred_class)
   expect_equal(
     predict(xy_fit, lending_club[1:7, num_pred]),
     predict(xy_fit, lending_club[1:7, sample(num_pred)])

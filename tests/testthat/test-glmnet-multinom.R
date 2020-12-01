@@ -51,6 +51,7 @@ test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+  skip_if(utils::packageVersion("parsnip") <= "0.1.5")
 
   xy_fit <- fit_xy(
     multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
@@ -67,6 +68,7 @@ test_that('glmnet prediction, one lambda', {
   uni_pred <- unname(uni_pred)
 
   expect_equal(uni_pred, predict(xy_fit, hpc[rows, 1:4], type = "class")$.pred_class)
+  expect_error(predict(xy_fit, hpc[3, 1:4], type = "class")$.pred_class, NA)
   expect_equal(
     predict(xy_fit, hpc[rows, 1:4], type = "class"),
     predict(xy_fit, hpc[rows, c(3:1, 4)], type = "class")
