@@ -4,7 +4,6 @@ skip_if(spark_not_installed())
 library(testthat)
 library(parsnip)
 
-source(test_path("parsnip-helper-objects.R"))
 hpc <- hpc_data[1:150, c(2:5, 8)] %>% as.data.frame()
 
 # ------------------------------------------------------------------------------
