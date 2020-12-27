@@ -65,7 +65,7 @@ jobs:
 
       - name: Install Spark
         run: |
-          sparklyr::spark_install(verbose = TRUE)
+          try(sparklyr::spark_install(verbose = TRUE), silent = TRUE)
         shell: Rscript {0}
 
       - name: Session info
