@@ -15,6 +15,8 @@ rec_3 <- recipe(mpg ~ ., mtcars)
 
 test_that('recipe parameters', {
 
+  skip_if(utils::packageVersion("recipes") < "0.1.15.9000")
+
   # un-randomify the id names
   rec_1_id <- rec_1
   rec_1_id$steps[[1]]$id <- "center_1"
@@ -24,10 +26,11 @@ test_that('recipe parameters', {
   rec_res_1 <- varying_args(rec_1_id)
 
   exp_1 <- tibble(
-    name = c("na_rm", "neighbors", "options", "num_comp", "threshold", "options"),
-    varying = c(FALSE, TRUE, FALSE, TRUE, FALSE, FALSE),
-    id = c("center_1", rep("knnimpute_1", 2), rep("pca_1", 3)),
-    type = rep("step", 6)
+    name = c("na_rm", "neighbors", "options", "num_comp",
+             "threshold", "options", "keep_original_cols"),
+    varying = c(FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE),
+    id = c("center_1", rep("knnimpute_1", 2), rep("pca_1", 4)),
+    type = rep("step", 7)
   )
 
   expect_equal(rec_res_1, exp_1)
