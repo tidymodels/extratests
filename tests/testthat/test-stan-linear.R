@@ -102,7 +102,7 @@ test_that('stan intervals', {
 
   res_xy <- fit_xy(
     linear_reg() %>%
-      set_engine("stan", seed = 1333, chains = 10, iter = 1000),
+      set_engine("stan", seed = 1333, chains = 10, iter = 5000),
     x = hpc[, num_pred],
     y = hpc$input_fields,
     control = quiet_ctrl
@@ -122,15 +122,22 @@ test_that('stan intervals', {
             type = "pred_int",
             level = 0.93)
 
+  test <-
+    rstanarm::posterior_epred(res_xy$fit, hpc[1:5,]) %>%
+    apply(2, quantile, prob = (1 - .93)/2) %>%
+    unname()
+
   ci_lower <- c(1577.25718753727, 1382.58210286254, 1399.96490471468, 1381.56774986889,
                 1383.25519963864)
   ci_upper <- c(1809.28331613624, 1609.11912475981, 1646.44852457781, 1608.3327281785,
                 1609.4796390366)
 
-  pi_lower <- c(-4960.33135373564, -5123.82860109357, -5063.60881734505, -5341.21637448872,
-                -5184.63627366821)
-  pi_upper <- c(8345.56815544477, 7954.98392035813, 7890.10036321417, 7970.64062851536,
-                8247.10241974192)
+  pi_lower <- rstanarm::posterior_predict(res_xy$fit, hpc[1:5,], seed = 1198) %>%
+    apply(2, quantile, prob = 0.035) %>%
+    unname()
+  pi_upper <- rstanarm::posterior_predict(res_xy$fit, hpc[1:5,], seed = 1198) %>%
+    apply(2, quantile, prob = 0.965) %>%
+    unname()
 
   expect_equal(confidence_parsnip$.pred_lower, ci_lower, ignore_attr = TRUE, tolerance = 1e-2)
   expect_equal(confidence_parsnip$.pred_upper, ci_upper, ignore_attr = TRUE, tolerance = 1e-2)
@@ -138,11 +145,11 @@ test_that('stan intervals', {
   expect_equal(prediction_parsnip$.pred_lower,
                pi_lower,
                ignore_attr = TRUE,
-               tolerance = 1e-2)
+               tolerance = .1)
   expect_equal(prediction_parsnip$.pred_upper,
                pi_upper,
                ignore_attr = TRUE,
-               tolerance = 1e-2)
+               tolerance = .1)
 })
 
 
