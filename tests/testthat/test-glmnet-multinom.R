@@ -12,7 +12,7 @@ quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
 
 run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 
-data("hpc_data")
+data("hpc_data", package = "modeldata")
 hpc <- hpc_data[, c(2:5, 8)]
 rows <- c(1, 51, 101)
 
