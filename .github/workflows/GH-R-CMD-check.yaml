@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-16.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - {os: ubuntu-16.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: windows-latest, r: 'release'}
 
     env:
@@ -33,60 +33,55 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-r@v1
+        id: install-r
         with:
           r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
 
-      - uses: r-lib/actions/setup-pandoc@master
+      - uses: r-lib/actions/setup-pandoc@v1
 
-      - name: Query dependencies
+      - name: Install pak and query dependencies
         run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+          saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
         shell: Rscript {0}
 
       - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
+          restore-keys: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-        run: |
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "16.04"), sep = "\n")')
+        run: Rscript -e 'pak::local_system_requirements(execute = TRUE)'
 
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
+          pak::local_install_dev_deps(upgrade = TRUE)
+          pak::pkg_install("remotes")
+          pak::pkg_install("rcmdcheck")
         shell: Rscript {0}
 
       - name: Install devel versions
         run: |
-          try(remotes::install_github("tidymodels/tidymodels"), silent = TRUE)
-          try(remotes::install_github("tidymodels/workflows"), silent = TRUE)
-          try(remotes::install_github("tidymodels/hardhat"), silent = TRUE)
-          try(remotes::install_github("tidymodels/parsnip"), silent = TRUE)
-          try(remotes::install_github("tidymodels/dials"), silent = TRUE)
-          try(remotes::install_github("tidymodels/recipes"), silent = TRUE)
-          try(remotes::install_github("tidymodels/tune"), silent = TRUE)
-          try(remotes::install_github("tidymodels/rsample"), silent = TRUE)
-          try(remotes::install_github("tidymodels/yardstick"), silent = TRUE)
-          try(remotes::install_github("tidymodels/modeldata"), silent = TRUE)
-          try(remotes::install_github("tidymodels/themis"), silent = TRUE)
-          try(remotes::install_github("tidymodels/poissonreg"), silent = TRUE)
-          try(remotes::install_github("tidymodels/discrim"), silent = TRUE)
-          try(remotes::install_github("tidymodels/plsmod"), silent = TRUE)
+          try(pak::pkg_install("tidymodels/tidymodels"))
+          try(pak::pkg_install("tidymodels/workflows"))
+          try(pak::pkg_install("tidymodels/hardhat"))
+          try(pak::pkg_install("tidymodels/parsnip"))
+          try(pak::pkg_install("tidymodels/dials"))
+          try(pak::pkg_install("tidymodels/recipes"))
+          try(pak::pkg_install("tidymodels/tune"))
+          try(pak::pkg_install("tidymodels/rsample"))
+          try(pak::pkg_install("tidymodels/yardstick"))
+          try(pak::pkg_install("tidymodels/modeldata"))
+          try(pak::pkg_install("tidymodels/themis"))
+          try(pak::pkg_install("tidymodels/poissonreg"))
+          try(pak::pkg_install("tidymodels/discrim"))
+          try(pak::pkg_install("tidymodels/plsmod"))
         shell: Rscript {0}
 
       - name: Session info
