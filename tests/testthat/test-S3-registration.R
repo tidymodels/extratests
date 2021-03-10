@@ -41,7 +41,8 @@ test_that('workflows required_pkgs methods', {
   skip_if(utils::packageVersion("recipes") < "0.1.13.9000")
 
   rec_pkgs <- required_pkgs(test_rec_wflow, FALSE)
-  expect_equal(rec_pkgs, c("glmnet", "mixOmics"))
+  expect_true("glmnet" %in% rec_pkgs)
+  expect_true("mixOmics" %in% rec_pkgs)
 
   form_pkgs <- required_pkgs(test_form_wflow, FALSE)
   expect_equal(form_pkgs, "glmnet")
