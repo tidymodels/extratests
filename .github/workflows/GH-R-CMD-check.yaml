@@ -82,6 +82,9 @@ jobs:
           try(pak::pkg_install("tidymodels/poissonreg"))
           try(pak::pkg_install("tidymodels/discrim"))
           try(pak::pkg_install("tidymodels/plsmod"))
+          try(pak::pkg_install("tidymodels/stacks"))
+          try(pak::pkg_install("tidymodels/workflowsets"))
+          try(pak::pkg_install("tidymodels/finetune"))
         shell: Rscript {0}
 
       - name: Session info
