@@ -40,7 +40,10 @@ Suggests:
     doParallel,
     parallel,
     poissonreg,
-    mixOmics
+    mixOmics,
+    finetune,
+    klaR,
+    stacks
 Language: en-US
 Depends: 
     tidymodels
