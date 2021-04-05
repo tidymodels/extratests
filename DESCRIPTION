@@ -40,7 +40,9 @@ Suggests:
     doParallel,
     parallel,
     poissonreg,
-    mixOmics
+    mixOmics,
+    dimRed,
+    NMF
 Language: en-US
 Depends: 
     tidymodels
