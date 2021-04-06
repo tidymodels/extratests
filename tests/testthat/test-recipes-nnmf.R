@@ -26,8 +26,8 @@ test_that('Correct values', {
       ),
       .Dim = c(4L, 2L),
       .Dimnames = list(
-        c("Sepal.Length",
-          "Sepal.Width", "Petal.Length", "Petal.Width"),
+        c("Sepal.Length", "Sepal.Width",
+          "Petal.Length", "Petal.Width"),
         c("NNMF1", "NNMF2")
       )
     )
@@ -150,7 +150,7 @@ test_that('tidy method', {
     tidy(rec, 1),
     tibble::tribble(
       ~terms, ~value, ~component,    ~id,
-      "disp",     NA_real_,          2, "test",
+      "disp",   NA_real_,          2, "test",
       "wt",     NA_real_,          2, "test"
     )
   )

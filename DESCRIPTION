@@ -41,7 +41,8 @@ Suggests:
     parallel,
     poissonreg,
     mixOmics,
-    dimRed
+    dimRed,
+    NMF
 Language: en-US
 Depends: 
     tidymodels
