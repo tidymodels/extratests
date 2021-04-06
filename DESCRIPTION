@@ -14,7 +14,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.1.9001
 Config/testthat/edition: 3
 biocViews:
 Suggests: 
@@ -41,8 +41,7 @@ Suggests:
     parallel,
     poissonreg,
     mixOmics,
-    dimRed,
-    NMF
+    dimRed
 Language: en-US
 Depends: 
     tidymodels
