@@ -33,6 +33,7 @@ Suggests:
     purrr,
     tidyr,
     tibble,
+    recipes,
     rlang,
     discrim,
     themis,
