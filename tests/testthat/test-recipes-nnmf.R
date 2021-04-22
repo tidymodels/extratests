@@ -100,8 +100,6 @@ test_that('tunable', {
 
 test_that('keep_original_cols works', {
 
-  skip_if(utils::packageVersion("recipes") < "0.1.15.9000")
-
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf(all_predictors(), seed = 2432, num_run = 3, keep_original_cols = TRUE)
 
@@ -117,8 +115,6 @@ test_that('keep_original_cols works', {
 })
 
 test_that('can prep recipes with no keep_original_cols', {
-
-  skip_if(utils::packageVersion("recipes") < "0.1.15.9000")
 
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf(all_predictors(), seed = 2432, num_run = 3)
