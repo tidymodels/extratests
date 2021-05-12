@@ -25,7 +25,7 @@ test_that('glmnet execution', {
 
   expect_error(
     res <- fit_xy(
-      multinom_reg() %>% set_engine("glmnet"),
+      multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
       control = ctrl,
       x = hpc[, 1:4],
       y = hpc$class
@@ -38,7 +38,7 @@ test_that('glmnet execution', {
 
   expect_error(
     glmnet_xy_catch <- fit_xy(
-      multinom_reg() %>% set_engine("glmnet"),
+      multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
       x = hpc[, 2:5],
       y = hpc$compounds,
       control = caught_ctrl
@@ -104,14 +104,14 @@ test_that('glmnet probabilities, mulitiple lambda', {
   lams <- c(0.01, 0.1)
 
   xy_fit <- fit_xy(
-    multinom_reg(penalty = lams) %>% set_engine("glmnet"),
+    multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
     control = ctrl,
     x = hpc[, 1:4],
     y = hpc$class
   )
 
-  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "class"))
-  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "prob"))
+  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "class"), NA)
+  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "prob"), NA)
 
   mult_pred <-
     predict(xy_fit$fit,
@@ -175,7 +175,7 @@ test_that("class predictions are factors with all levels", {
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
 
-  basic <- multinom_reg() %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc)
+  basic <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc)
   nd <- hpc[hpc$class == "VF", ]
   yhat <- predict(basic, new_data = nd, penalty = .1)
   yhat_multi <- multi_predict(basic, new_data =  nd, penalty = .1)$.pred
