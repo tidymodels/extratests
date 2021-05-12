@@ -112,7 +112,7 @@ test_that('glmnet prediction, multiple lambda', {
 
   lams <- c(.01, 0.1)
 
-  hpc_mult <- linear_reg(penalty = lams, mixture = .3) %>%
+  hpc_mult <- linear_reg(penalty = 0.1, mixture = .3) %>%
     set_engine("glmnet")
 
   res_xy <- fit_xy(
@@ -150,7 +150,7 @@ test_that('glmnet prediction, multiple lambda', {
 
   expect_equal(
     as.data.frame(mult_pred),
-    multi_predict(res_xy, new_data = hpc[1:5, num_pred], lambda = lams) %>%
+    multi_predict(res_xy, new_data = hpc[1:5, num_pred], penalty = lams) %>%
       unnest(cols = c(.pred)) %>%
       as.data.frame(),
     tolerance = 0.0001
@@ -195,59 +195,11 @@ test_that('glmnet prediction, multiple lambda', {
 
   expect_equal(
     as.data.frame(form_pred),
-    multi_predict(res_form, new_data = hpc[1:5, ], lambda = lams) %>%
+    multi_predict(res_form, new_data = hpc[1:5, ], penalty = lams) %>%
       unnest(cols = c(.pred)) %>%
       as.data.frame(),
     tolerance = 0.0001
   )
-})
-
-test_that('glmnet prediction, all lambda', {
-
-  skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
-
-  hpc_all <- linear_reg(mixture = .3) %>%
-    set_engine("glmnet", nlambda = 7)
-
-  res_xy <- fit_xy(
-    hpc_all,
-    control = ctrl,
-    x = hpc[, num_pred],
-    y = hpc$input_fields
-  )
-
-  all_pred <- predict(res_xy$fit, newx = as.matrix(hpc[1:5, num_pred]))
-  all_pred <- stack(as.data.frame(all_pred))
-  all_pred$penalty <- rep(res_xy$fit$lambda, each = 5)
-  all_pred$rows <- rep(1:5, length(res_xy$fit$lambda))
-  all_pred <- all_pred[order(all_pred$rows, all_pred$penalty), ]
-  all_pred <- all_pred[, c("penalty", "values")]
-  names(all_pred) <- c("penalty", ".pred")
-  all_pred <- tibble::as_tibble(all_pred)
-
-  expect_equal(all_pred, multi_predict(res_xy, new_data = hpc[1:5,num_pred ]) %>% unnest(cols = c(.pred)))
-
-  res_form <- fit(
-    hpc_all,
-    input_fields ~ log(compounds) + class,
-    data = hpc,
-    control = ctrl
-  )
-
-  form_mat <- model.matrix(input_fields ~ log(compounds) + class, data = hpc)
-  form_mat <- form_mat[1:5, -1]
-
-  form_pred <- predict(res_form$fit, newx = form_mat)
-  form_pred <- stack(as.data.frame(form_pred))
-  form_pred$penalty <- rep(res_form$fit$lambda, each = 5)
-  form_pred$rows <- rep(1:5, length(res_form$fit$lambda))
-  form_pred <- form_pred[order(form_pred$rows, form_pred$penalty), ]
-  form_pred <- form_pred[, c("penalty", "values")]
-  names(form_pred) <- c("penalty", ".pred")
-  form_pred <- tibble::as_tibble(form_pred)
-
-  expect_equal(form_pred, multi_predict(res_form, hpc[1:5, c("compounds", "class")]) %>% unnest(cols = c(.pred)))
 })
 
 
@@ -257,7 +209,7 @@ test_that('submodel prediction', {
   skip_if(run_glmnet)
 
   reg_fit <-
-    linear_reg() %>%
+    linear_reg(penalty = 0.1) %>%
     set_engine("glmnet") %>%
     fit(mpg ~ ., data = mtcars[-(1:4), ])
 
@@ -273,20 +225,20 @@ test_that('submodel prediction', {
   )
 
   reg_fit <-
-    linear_reg() %>%
+    linear_reg(penalty = 0.01) %>%
     set_engine("glmnet") %>%
     fit(mpg ~ ., data = mtcars[-(1:4), ])
 
 
   pred_glmn_all <-
-    predict(reg_fit$fit, as.matrix(mtcars[1:2, -1])) %>%
+    predict(reg_fit$fit, as.matrix(mtcars[1:2, -1]), penalty = reg_fit$fit$lambda) %>%
     as.data.frame() %>%
     stack() %>%
     dplyr::arrange(ind)
 
 
   mp_res_all <-
-    multi_predict(reg_fit, new_data = mtcars[1:2, -1]) %>%
+    multi_predict(reg_fit, new_data = mtcars[1:2, -1], penalty = reg_fit$fit$lambda) %>%
     tidyr::unnest(cols = c(.pred))
 
   expect_equal(sort(mp_res_all$.pred), sort(pred_glmn_all$values))
@@ -300,7 +252,7 @@ test_that('error traps', {
   skip_if(run_glmnet)
 
   expect_error(
-    linear_reg() %>%
+    linear_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
       predict(mtcars[-(1:4), ], penalty = 0:1)
