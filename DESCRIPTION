@@ -44,7 +44,8 @@ Suggests:
     mixOmics,
     dimRed,
     NMF,
-    spatialsample
+    spatialsample,
+    stacks
 Language: en-US
 Depends: 
     tidymodels
