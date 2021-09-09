@@ -11,41 +11,45 @@ Authors@R:
              role = "cph"))
 Description: A place for units tests that depend on multiple packages.
 License: MIT + file LICENSE
+Depends: 
+    tidymodels
+Suggests: 
+    C50,
+    dimRed,
+    discrim,
+    doParallel,
+    dplyr,
+    earth,
+    glmnet,
+    hardhat,
+    mixOmics,
+    modeldata,
+    NMF,
+    parallel,
+    parsnip,
+    poissonreg,
+    purrr,
+    randomForest,
+    ranger,
+    recipes,
+    rlang,
+    rsample,
+    rstanarm,
+    sparklyr,
+    spatialsample,
+    spelling,
+    stacks,
+    testthat,
+    themis,
+    tibble,
+    tidyr,
+    tune,
+    workflows,
+    yardstick
+biocViews:
+Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1.9001
-Config/testthat/edition: 3
-biocViews:
-Suggests: 
-    spelling,
-    testthat,
-    ranger,
-    randomForest,
-    C50,
-    earth,
-    sparklyr,
-    dplyr,
-    glmnet,
-    rstanarm,
-    modeldata,
-    parsnip,
-    purrr,
-    tidyr,
-    tibble,
-    recipes,
-    rlang,
-    discrim,
-    themis,
-    hardhat,
-    doParallel,
-    parallel,
-    poissonreg,
-    mixOmics,
-    dimRed,
-    NMF,
-    spatialsample,
-    stacks
-Language: en-US
-Depends: 
-    tidymodels
