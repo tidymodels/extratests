@@ -68,7 +68,7 @@ test_that('workflows', {
 
   parsnip_wflow_names <-
     parsnip_wflow_fit %>%
-    pull_workflow_fit() %>%
+    extract_fit_parsnip() %>%
     tidy() %>%
     pull(term)
 
