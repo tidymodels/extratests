@@ -23,9 +23,6 @@ grid <-
 ## -----------------------------------------------------------------------------
 
 test_that('single tree grid search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   expect_error(
     tree_tuned <-
       tree_mod %>%
@@ -37,9 +34,6 @@ test_that('single tree grid search', {
 
 
 test_that('single tree Bayesian search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   set.seed(2893)
   expect_error(
     tree_search <-
@@ -53,9 +47,6 @@ test_that('single tree Bayesian search', {
 ## -----------------------------------------------------------------------------
 
 test_that('boosted tree grid search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   expect_error(
     boost_tuned <-
       boost_mod %>%
@@ -66,9 +57,6 @@ test_that('boosted tree grid search', {
 })
 
 test_that('boosted tree Bayesian search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   set.seed(2893)
   expect_error(
     boost_search <-

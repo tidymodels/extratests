@@ -10,8 +10,6 @@ parsnip_mod <-
 ## -----------------------------------------------------------------------------
 
 test_that('parsnip models with formula interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
-
   parsnip_form_fit <-
     parsnip_mod %>%
     fit(Sale_Price ~ Year_Built + Alley, data = ames)
@@ -29,8 +27,6 @@ test_that('parsnip models with formula interface', {
 })
 
 test_that('parsnip models with xy interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
-
   expect_warning(
     expect_error(
       parsnip_mod %>%
@@ -55,8 +51,6 @@ test_that('parsnip models with xy interface', {
 ## -----------------------------------------------------------------------------
 
 test_that('workflows', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
-
   wflow <-
     workflow() %>%
     add_model(parsnip_mod) %>%
@@ -68,7 +62,7 @@ test_that('workflows', {
 
   parsnip_wflow_names <-
     parsnip_wflow_fit %>%
-    pull_workflow_fit() %>%
+    extract_fit_parsnip() %>%
     tidy() %>%
     pull(term)
 

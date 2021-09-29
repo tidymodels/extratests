@@ -14,9 +14,6 @@ rs <- bootstraps(mtcars, times = 5)
 ## -----------------------------------------------------------------------------
 
 test_that('grid search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   set.seed(2893)
   expect_error(
     rf_tune <-
@@ -31,9 +28,6 @@ test_that('grid search', {
 ## -----------------------------------------------------------------------------
 
 test_that('Bayes search', {
-  skip_if(utils::packageVersion("dials") <= "0.0.7")
-  skip_if(utils::packageVersion("tune")  <= "0.1.0")
-
   set.seed(2893)
   expect_error(
     rf_search <-

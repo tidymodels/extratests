@@ -70,6 +70,8 @@ test_that('Correct values', {
 
 test_that('No NNF', {
 
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9000")
+
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf(all_predictors(), seed = 2432, num_comp = 0) %>%
     prep()
@@ -78,7 +80,7 @@ test_that('No NNF', {
     names(juice(rec)),
     names(iris)
   )
-  expect_true(inherits(rec$steps[[1]]$res, "list"))
+  expect_equal(rec$steps[[1]]$res, NULL)
   expect_output(print(rec),
                 regexp = "factorization was not done")
   expect_true(all(is.na(tidy(rec, 1)$value)))

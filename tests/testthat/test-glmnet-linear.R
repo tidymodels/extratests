@@ -69,7 +69,6 @@ test_that('glmnet prediction, single lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
-  skip_if(utils::packageVersion("parsnip") <= "0.1.5")
 
   res_xy <- fit_xy(
     hpc_basic,
