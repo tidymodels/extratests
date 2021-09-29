@@ -3,19 +3,17 @@ library(tidymodels)
 
 rec_1 <- recipe(mpg ~ ., mtcars) %>%
   step_center(all_predictors()) %>%
-  step_knnimpute(all_predictors(), neighbors = varying()) %>%
+  step_impute_knn(all_predictors(), neighbors = varying()) %>%
   step_pca(all_predictors(), num_comp = varying())
 
 rec_2 <- recipe(mpg ~ ., mtcars) %>%
   step_center(all_predictors()) %>%
-  step_knnimpute(all_predictors()) %>%
+  step_impute_knn(all_predictors()) %>%
   step_pca(all_predictors())
 
 rec_3 <- recipe(mpg ~ ., mtcars)
 
 test_that('recipe parameters', {
-
-  skip_if(utils::packageVersion("recipes") < "0.1.15.9000")
 
   # un-randomify the id names
   rec_1_id <- rec_1
