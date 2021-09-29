@@ -1,7 +1,6 @@
 
 test_that('linear regression', {
   skip_if_not_installed("glmnet")
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   ps_mod <-
     linear_reg(penalty = .1) %>%
@@ -17,7 +16,6 @@ test_that('linear regression', {
 
 test_that('logistic regression', {
   skip_if_not_installed("glmnet")
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   data(two_class_dat, package = "modeldata")
 
@@ -35,7 +33,6 @@ test_that('logistic regression', {
 
 test_that('multinomial regression', {
   skip_if_not_installed("glmnet")
-  skip_if(utils::packageVersion("parsnip") <= "0.1.2")
 
   data(penguins, package = "modeldata")
 

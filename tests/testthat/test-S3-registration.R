@@ -28,8 +28,6 @@ test_that('recipe tunable methods', {
 })
 
 test_that('recipe required_pkgs methods', {
-  skip_if(utils::packageVersion("tune") < "0.1.1.9000")
-  skip_if(utils::packageVersion("recipes") < "0.1.13.9000")
   pls_pkgs <- required_pkgs(test_recipe, FALSE)
 
   expect_equal(pls_pkgs, "mixOmics")
@@ -37,9 +35,6 @@ test_that('recipe required_pkgs methods', {
 
 
 test_that('workflows required_pkgs methods', {
-  skip_if(utils::packageVersion("tune") < "0.1.1.9000")
-  skip_if(utils::packageVersion("recipes") < "0.1.13.9000")
-
   rec_pkgs <- required_pkgs(test_rec_wflow, FALSE)
   expect_true("glmnet" %in% rec_pkgs)
   expect_true("mixOmics" %in% rec_pkgs)

@@ -15,8 +15,6 @@ set.seed(123)
 folds <- vfold_cv(two_class_dat)
 
 test_that('parallel seeds', {
-  skip_if(utils::packageVersion("tune") <= "0.1.1.9000")
-
   library(doParallel)
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)

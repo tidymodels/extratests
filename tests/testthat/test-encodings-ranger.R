@@ -12,8 +12,6 @@ parsnip_mod <-
 ## -----------------------------------------------------------------------------
 
 test_that('parsnip models with formula interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
-
   parsnip_form_fit <-
     parsnip_mod %>%
     fit(Species ~ ., data = scat)
@@ -28,8 +26,6 @@ test_that('parsnip models with formula interface', {
 })
 
 test_that('parsnip models with xy interface', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
-
   parsnip_xy_fit <-
     parsnip_mod %>%
     fit_xy(x = scat[, -1], y = scat$Species)
@@ -46,8 +42,6 @@ test_that('parsnip models with xy interface', {
 ## -----------------------------------------------------------------------------
 
 test_that('workflows', {
-  skip_if(utils::packageVersion("parsnip") <= "0.1.1")
-
   wflow <-
     workflow() %>%
     add_model(parsnip_mod) %>%

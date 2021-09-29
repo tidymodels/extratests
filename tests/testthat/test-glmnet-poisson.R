@@ -1,6 +1,4 @@
 
-skip_if(utils::packageVersion("parsnip") < "0.1.3.9000")
-
 ## -----------------------------------------------------------------------------
 
 library(rlang)
@@ -29,8 +27,6 @@ zeroinfl_spec <- poisson_reg() %>% set_engine("zeroinfl")
 test_that('glmnet execution', {
   skip_on_cran()
   skip_if_not_installed("glmnet")
-  skip_if(utils::packageVersion("poissonreg") < "0.1.0")
-  skip_if(utils::packageVersion("parsnip") < "0.1.4")
 
   expect_error(
     res <- fit_xy(

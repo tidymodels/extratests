@@ -57,7 +57,6 @@ test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
-  skip_if(utils::packageVersion("parsnip") <= "0.1.5")
 
   xy_fit <- fit_xy(
     logistic_reg(penalty = 0.1) %>% set_engine("glmnet"),
