@@ -50,6 +50,5 @@ test_that('recipe-adjacent parallel test', {
   )
   stopCluster(cl)
 
-  expect_equal(res$.notes[[1]]$.notes, character(0))
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })
