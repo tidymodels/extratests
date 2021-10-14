@@ -24,6 +24,7 @@ test_that('LDA parallel test', {
     regex = NA
   )
   stopCluster(cl)
+  registerDoSEQ() # stopCluster() does not reset the number of workers
 
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })
@@ -40,7 +41,6 @@ discrim_wflow <-
   add_recipe(rec)
 
 test_that('recipe-adjacent parallel test', {
-  library(doParallel)
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
 
@@ -49,6 +49,7 @@ test_that('recipe-adjacent parallel test', {
     regex = NA
   )
   stopCluster(cl)
+  registerDoSEQ()
 
   expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
 })

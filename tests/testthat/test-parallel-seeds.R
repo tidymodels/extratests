@@ -15,7 +15,6 @@ set.seed(123)
 folds <- vfold_cv(two_class_dat)
 
 test_that('parallel seeds', {
-  library(doParallel)
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
 
@@ -28,6 +27,7 @@ test_that('parallel seeds', {
   expect_equal(nrow(res_2$.notes[[1]]), 0)
 
   stopCluster(cl)
+  registerDoSEQ() # stopCluster() does not reset the number of workers
 
   expect_equal(
     collect_metrics(res_1),
