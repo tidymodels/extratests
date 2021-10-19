@@ -21,6 +21,7 @@ Suggests:
     doParallel,
     dplyr,
     earth,
+    fastICA,
     glmnet,
     hardhat,
     mixOmics,

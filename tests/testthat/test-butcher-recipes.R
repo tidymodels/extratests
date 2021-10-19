@@ -17,3 +17,11 @@ test_that("recipe + step_nnmf + axe_env() works", {
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
+
+
+test_that("recipe + step_ica + axe_env() works", {
+  rec <- recipe(Species ~ ., data = iris) %>%
+    step_ica(Petal.Width, Sepal.Width, num_comp = 2)
+  x <- axe_env(rec)
+  terms_empty_env(x, 1)
+})
