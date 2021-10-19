@@ -14,12 +14,14 @@ License: MIT + file LICENSE
 Depends: 
     tidymodels
 Suggests: 
+    butcher,
     C50,
     dimRed,
     discrim,
     doParallel,
     dplyr,
     earth,
+    fastICA,
     glmnet,
     hardhat,
     mixOmics,
@@ -46,7 +48,7 @@ Suggests:
     tune,
     workflows,
     yardstick
-biocViews:
+biocViews:  mixOmics
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
