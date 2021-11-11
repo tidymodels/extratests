@@ -58,6 +58,10 @@ jobs:
         if: runner.os == 'Linux'
         run: Rscript -e 'pak::local_system_requirements(execute = TRUE)'
 
+      - name: Install NLOpt
+        run: |
+          pak::pkg_system_requirements("nloptr")
+        shell: Rscript {0}
 
       - name: Install dependencies
         run: |
