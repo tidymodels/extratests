@@ -27,6 +27,7 @@ test_that('parsnip models with formula interface', {
 })
 
 test_that('parsnip models with xy interface', {
+  skip_if(packageVersion("parsnip") < "0.1.7.9001")
   expect_warning(
     expect_error(
       parsnip_mod %>%
