@@ -10,10 +10,10 @@ on:
   pull_request:
     branches: [main, master]
 
-name: GH-R-CMD-check
+name: GH-R-CMD-check-test
 
 jobs:
-  GH-R-CMD-check:
+  GH-R-CMD-check-test:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
