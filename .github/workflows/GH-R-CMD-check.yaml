@@ -47,6 +47,11 @@ jobs:
           saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
         shell: Rscript {0}
 
+      - name: install nlopt
+        run: |
+          pacman -S mingw-w64-{i686,x86_64}-nlopt
+        shell: Rscript {0}
+
       - name: Cache R packages
         uses: actions/cache@v2
         with:
