@@ -49,7 +49,7 @@ jobs:
 
       - name: install nlopt on Windows
         if: runner.os == 'windows'
-        run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-nlopt
+        run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: Cache R packages
