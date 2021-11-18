@@ -6,9 +6,14 @@
 # usethis::use_github_action("check-standard") will install it.
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
   pull_request:
-    branches: [main, master]
+    branches:
+      - main
+  schedule:
+    # runs tests every day at 1am EST
+    - cron:  '0 5 * * *'
 
 name: GH-R-CMD-check-test
 
@@ -53,7 +58,7 @@ jobs:
           saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
         shell: Rscript {0}
 
-      - name: install nlopt on Windows
+      - name: install nlopt, glpk, and libxml2 on Windows
         if: runner.os == 'windows'
         run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
