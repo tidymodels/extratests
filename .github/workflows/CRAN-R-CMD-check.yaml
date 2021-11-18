@@ -1,3 +1,9 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/master/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# NOTE: This workflow is overkill for most R packages and
+# check-standard.yaml is likely a better choice.
+# usethis::use_github_action("check-standard") will install it.
 on:
   push:
     branches:
@@ -9,10 +15,10 @@ on:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
 
-name: CRAN-R-CMD-check
+name: CRAN-R-CMD-check-test
 
 jobs:
-  CRAN-R-CMD-check:
+  CRAN-R-CMD-check-test:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -21,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-18.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
+          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
           - {os: windows-latest, r: 'release'}
 
     env:
@@ -29,17 +35,22 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_COMPILE_AND_INSTALL_PACKAGES: 'always'
+      R_KEEP_PKG_SOURCE: yes
 
     steps:
       - uses: actions/checkout@v2
 
+      - uses: r-lib/actions/setup-pandoc@v1
+
       - uses: r-lib/actions/setup-r@v1
-        id: install-r
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
 
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: r-lib/actions/setup-r-dependencies@v1
+        with:
+          extra-packages: rcmdcheck
 
       - name: Install pak and query dependencies
         run: |
@@ -47,29 +58,10 @@ jobs:
           saveRDS(pak::pkg_deps_tree("local::.", dependencies = TRUE), ".github/r-depends.rds")
         shell: Rscript {0}
 
-      - name: install nlopt
-        run: |
-          pacman -S mingw-w64-{i686,x86_64}-nlopt
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-cran-1-${{ hashFiles('.github/r-depends.rds') }}
-          restore-keys: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-cran-1-
-
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: Rscript -e 'pak::local_system_requirements(execute = TRUE)'
-
-      - name: Install dependencies
-        run: |
-          pak::local_install_dev_deps(upgrade = TRUE)
-          pak::pkg_install("remotes")
-          pak::pkg_install("rcmdcheck")
-        shell: Rscript {0}
+      - name: install nlopt, glpk, and libxml2 on Windows
+        if: runner.os == 'windows'
+        run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
+        shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: Session info
         run: |
@@ -78,13 +70,7 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-        run: |
-          pak::local_install()
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
+      - uses: r-lib/actions/check-r-package@v1
 
       - name: Show testthat output
         if: always()
@@ -107,4 +93,3 @@ jobs:
           channel_id: G01LVEJHSN6
           status: FAILED
           color: danger
-
