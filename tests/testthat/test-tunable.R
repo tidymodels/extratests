@@ -75,15 +75,13 @@ test_that('model with main and engine parameters', {
   expect_true(sum(purrr::map_lgl(c5_info$call_info, is.null)) == 1)
 })
 
-
 test_that('bad model inputs', {
   lm_model <- linear_reg() %>% set_engine("lm")
 
   bad_class <- lm_model
   class(bad_class) <- c("potato", "model_spec")
-  expect_error(
-    tunable(bad_class),
-    "model database doesn't know about the arguments for model"
+  expect_snapshot(
+   (expect_error(tunable(bad_class)))
   )
 })
 
@@ -153,4 +151,3 @@ test_that("workflow with tunable recipe and model", {
     c(rep("model_spec", 9), rep("recipe", 4))
   )
 })
-
