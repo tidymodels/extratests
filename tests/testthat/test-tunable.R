@@ -87,6 +87,17 @@ test_that('bad model inputs', {
   )
 })
 
+test_that("workflow with no tunable parameters", {
+  rm_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
+    step_rm(date, ends_with("away"))
+  lm_model <- linear_reg() %>% set_engine("lm")
+  wf_untunable <- workflow(rm_rec, lm_model)
+
+  wf_info <- tunable(wf_untunable)
+  check_tunable_tibble(wf_info)
+  expect_equal(nrow(wf_info), 0)
+})
+
 test_that("workflow with tunable recipe", {
   spline_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
     step_date(date) %>%
