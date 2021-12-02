@@ -4,6 +4,7 @@ library(butcher)
 # Data sets used for testing
 data(biomass)
 biomass_tr <- biomass[biomass$dataset == "Training",]
+biomass_te <- biomass[biomass$dataset == "Testing",]
 
 terms_empty_env <- function(axed, step_number) {
   expect_identical(attr(axed$steps[[step_number]]$terms[[1]], ".Environment"),
@@ -13,9 +14,18 @@ terms_empty_env <- function(axed, step_number) {
 test_that("recipe + step_nnmf + axe_env() works", {
   skip_if_not_installed("NMF")
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
-    step_nnmf(all_predictors(), num_comp = 2, seed = 473, num_run = 2)
+    step_nnmf(all_numeric_predictors(), num_comp = 2, seed = 473, num_run = 2)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
+})
+
+test_that("recipe + step_nnmf + bake() works", {
+  skip_if_not_installed("NMF")
+  rec <- recipe(HHV ~ ., data = biomass_tr) %>%
+    step_nnmf(all_numeric_predictors(), num_comp = 2, seed = 473, num_run = 2) %>%
+    prep()
+  x <- butcher(rec)
+  expect_equal(bake(rec, biomass_te), bake(x, biomass_te))
 })
 
 
@@ -24,4 +34,12 @@ test_that("recipe + step_ica + axe_env() works", {
     step_ica(Petal.Width, Sepal.Width, num_comp = 2)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
+})
+
+test_that("recipe + step_ica + bake() works", {
+  rec <- recipe(Species ~ ., data = iris) %>%
+    step_ica(Petal.Width, Sepal.Width, num_comp = 2) %>%
+    prep()
+  x <- butcher(rec)
+  expect_equal(bake(rec, iris), bake(x, iris))
 })
