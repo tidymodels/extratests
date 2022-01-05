@@ -46,7 +46,7 @@ jobs:
         if: runner.os == 'windows'
         run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
-        
+
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
@@ -66,11 +66,11 @@ jobs:
       - name: Install devel versions
         run: |
           try(pak::pkg_install("tidymodels/tidymodels"))
-          try(pak::pkg_install("tidymodels/workflows"))
+          try(pak::pkg_install("tidymodels/workflows@extract-parameters"))
           try(pak::pkg_install("tidymodels/hardhat"))
-          try(pak::pkg_install("tidymodels/parsnip"))
-          try(pak::pkg_install("tidymodels/dials"))
-          try(pak::pkg_install("tidymodels/recipes"))
+          try(pak::pkg_install("tidymodels/parsnip@extract-parameters"))
+          try(pak::pkg_install("tidymodels/dials@extract-parameter"))
+          try(pak::pkg_install("tidymodels/recipes@extract-parameters"))
           try(pak::pkg_install("tidymodels/tune"))
           try(pak::pkg_install("tidymodels/rsample"))
           try(pak::pkg_install("tidymodels/yardstick"))
