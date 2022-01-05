@@ -46,7 +46,11 @@ Suggests:
     workflows,
     yardstick
 Remotes:
-    mixOmicsTeam/mixOmics
+    mixOmicsTeam/mixOmics,
+    tidymodels/dials@extract-parameter,
+    tidymodels/recipes@extract-parameters,
+    tidymodels/parsnip@extract-parameters,
+    tidymodels/workflows@extract-parameters
 biocViews: mixOmics
 Config/testthat/edition: 3
 Encoding: UTF-8
