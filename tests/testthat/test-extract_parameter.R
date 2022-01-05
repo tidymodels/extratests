@@ -57,7 +57,7 @@ test_that('recipe with tunable parameters', {
 
 
 test_that('model with no parameters', {
-  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004")
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9005")
 
   lm_model <- linear_reg() %>% set_engine("lm")
 
@@ -67,7 +67,7 @@ test_that('model with no parameters', {
 })
 
 test_that('model with main and engine parameters', {
-  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004")
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9005")
 
   bst_model <-
     boost_tree(mode = "classification", trees = tune("funky name \n")) %>%
@@ -120,7 +120,7 @@ test_that("workflow with tunable recipe", {
 })
 
 test_that("workflow with tunable model", {
-  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004" ||
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9005" ||
             utils::packageVersion("workflows") < "0.2.4.9002")
 
   rm_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
@@ -142,7 +142,7 @@ test_that("workflow with tunable model", {
 
 test_that("workflow with tunable recipe and model", {
   skip_if(utils::packageVersion("recipes") < "0.1.17.9001" ||
-            utils::packageVersion("parsnip") < "0.1.7.9004" ||
+            utils::packageVersion("parsnip") < "0.1.7.9005" ||
             utils::packageVersion("workflows") < "0.2.4.9002")
 
   spline_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
