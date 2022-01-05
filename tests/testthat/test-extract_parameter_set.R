@@ -2,6 +2,8 @@ library(tidymodels)
 data("Chicago", package = "modeldata")
 
 test_that('recipe with no steps', {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+
   bare_rec <- recipe(ridership ~ ., data = head(Chicago))
 
   bare_info <- extract_parameter_set_dials(bare_rec)
@@ -10,6 +12,8 @@ test_that('recipe with no steps', {
 })
 
 test_that('recipe with no tunable parameters', {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+
   rm_rec <-
     recipe(ridership ~ ., data = head(Chicago)) %>%
     step_rm(date, ends_with("away"))
@@ -20,6 +24,8 @@ test_that('recipe with no tunable parameters', {
 })
 
 test_that('recipe with tunable parameters', {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+
   spline_rec <-
     recipe(ridership ~ ., data = head(Chicago)) %>%
     step_date(date) %>%
@@ -53,6 +59,8 @@ test_that('recipe with tunable parameters', {
 
 
 test_that('model with no parameters', {
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004")
+
   lm_model <- linear_reg() %>% set_engine("lm")
 
   lm_info <- extract_parameter_set_dials(lm_model)
@@ -61,6 +69,8 @@ test_that('model with no parameters', {
 })
 
 test_that('model with main and engine parameters', {
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004")
+
   bst_model <-
     boost_tree(mode = "classification", trees = tune("funky name \n")) %>%
     set_engine("C5.0", rules = tune(), noGlobalPruning = TRUE)
@@ -82,6 +92,9 @@ test_that('model with main and engine parameters', {
 
 
 test_that("workflow with tunable recipe", {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001" ||
+            utils::packageVersion("workflows") < "0.2.4.9002")
+
   spline_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
     step_date(date) %>%
     step_holiday(date) %>%
@@ -101,6 +114,9 @@ test_that("workflow with tunable recipe", {
 })
 
 test_that("workflow with tunable model", {
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9004" ||
+            utils::packageVersion("workflows") < "0.2.4.9002")
+
   rm_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
     step_rm(date, ends_with("away"))
   bst_model <-
@@ -115,6 +131,10 @@ test_that("workflow with tunable model", {
 })
 
 test_that("workflow with tunable recipe and model", {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001" ||
+            utils::packageVersion("parsnip") < "0.1.7.9004" ||
+            utils::packageVersion("workflows") < "0.2.4.9002")
+
   spline_rec <- recipe(ridership ~ ., data = head(Chicago)) %>%
     step_date(date) %>%
     step_holiday(date) %>%
