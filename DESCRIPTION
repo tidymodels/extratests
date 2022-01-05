@@ -10,6 +10,8 @@ Description: A place for units tests that depend on multiple packages.
 License: MIT + file LICENSE
 Depends: 
     tidymodels
+Imports:
+    dials (>= 0.0.10.9001)
 Suggests: 
     butcher,
     C50,
@@ -25,12 +27,12 @@ Suggests:
     modeldata,
     NMF,
     parallel,
-    parsnip,
+    parsnip (>= 0.1.7.9004),
     poissonreg,
     purrr,
     randomForest,
     ranger,
-    recipes,
+    recipes (>= 0.1.17.9001),
     rlang,
     rsample,
     rstanarm,
@@ -43,7 +45,7 @@ Suggests:
     tibble,
     tidyr,
     tune,
-    workflows,
+    workflows (>= 0.2.4.9002),
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
