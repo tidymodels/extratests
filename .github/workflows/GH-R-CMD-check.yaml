@@ -46,7 +46,7 @@ jobs:
         if: runner.os == 'windows'
         run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
-        
+
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
@@ -109,6 +109,6 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
-          channel_id: G01LVEJHSN6
+          channel_id: C02PQLWUZPU
           status: FAILED
           color: danger
