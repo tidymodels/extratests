@@ -29,6 +29,7 @@ Suggests:
     poissonreg,
     purrr,
     randomForest,
+    RcppML,
     ranger,
     recipes,
     rlang,
