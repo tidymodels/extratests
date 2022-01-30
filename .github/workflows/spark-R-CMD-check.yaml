@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
-          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-18.04,   r: 'release', http-user-agent: 'release'}
+
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
