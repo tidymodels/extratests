@@ -52,6 +52,13 @@ test_that('glmnet execution', {
       control = ctrl
     )
   )
+})
+
+test_that('glmnet outcome errors', {
+
+  skip_if_not_installed("glmnet")
+  skip_if(run_glmnet)
+  skip_if(utils::packageVersion("parsnip") < "0.1.7.9003")
 
   expect_error(
     fit_xy(
@@ -62,6 +69,19 @@ test_that('glmnet execution', {
     ),
     "For a regression model"
   )
+
+  hpc$class <- as.character(hpc$class)
+
+  expect_error(
+    fit(
+      hpc_basic,
+      class ~ compounds + iterations,
+      data = hpc,
+      control = ctrl
+    ),
+    "For a regression model"
+  )
+
 
 })
 
