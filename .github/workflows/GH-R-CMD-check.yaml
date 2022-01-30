@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-18.04,   r: 'release', http-user-agent: 'release'}
           - {os: windows-latest, r: 'release'}
 
     env:
@@ -46,7 +46,7 @@ jobs:
         if: runner.os == 'windows'
         run: pacman -Sy --noconfirm mingw-w64-{i686,x86_64}-{nlopt,glpk,libxml2}
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
-        
+
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
