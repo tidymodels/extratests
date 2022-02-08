@@ -8,32 +8,13 @@ test_that('Correct values', {
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf_sparse(all_predictors(), seed = 2432)
 
-  # dat <- Matrix::Matrix(t(as.matrix(iris[, -5])), sparse = TRUE)
-  # res <- RcppML::nmf(
-  #   A = dat, k = 2, L1 = c(0.001, 0.001), verbose = FALSE,
-  #   seed = 2432, nonneg = TRUE
-  # )
-  # dput(res$w)
-  # dput(as.matrix(iris[1:10, -5]) %*% res$w)
-
-  exp_w <-
-    structure(c(
-      0.503640687085334, 0.341172873400033, 0.136435348037937,
-      0.0187510914766956, 0.270387203970495, 0, 0.518315790606461,
-      0.211297005423044
-    ), .Dim = c(4L, 2L))
-  exp_pred <-
-    structure(c(
-      3.95743226658377, 3.68611769246669, 3.63998059492583,
-      3.58278630848488, 3.94118548521524, 4.2896744447761, 3.67336974484877,
-      3.88659444533903, 3.40018006158402, 3.73200340546282, 2.14687624818318,
-      2.09279880738908, 1.98688978753433, 2.06351422525858, 2.11983752778613,
-      2.42574654764087, 2.03281234674023, 2.17166910684677, 1.95760520540383,
-      2.12350068590742
-    ), .Dim = c(10L, 2L), .Dimnames = list(c(
-      "1",
-      "2", "3", "4", "5", "6", "7", "8", "9", "10"
-    ), NULL))
+  dat <- Matrix::Matrix(t(as.matrix(iris[, -5])), sparse = TRUE)
+  res <- RcppML::nmf(
+    A = dat, k = 2, L1 = c(0.001, 0.001), verbose = FALSE,
+    seed = 2432, nonneg = TRUE
+  )
+  exp_w <- res$w
+  exp_pred <- as.matrix(iris[1:10, -5]) %*% res$w
 
   expect_output(print(rec))
   expect_output(rec <- prep(rec, training = iris, verbose = TRUE))
