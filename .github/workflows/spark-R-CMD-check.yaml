@@ -15,10 +15,10 @@ on:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
 
-name: spark-R-CMD-check-test
+name: spark-R-CMD-check
 
 jobs:
-  spark-R-CMD-check-test:
+  spark-R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
