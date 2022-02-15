@@ -15,7 +15,7 @@ on:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
 
-name: GH-R-CMD-check-tes
+name: GH-R-CMD-check
 
 jobs:
   GH-R-CMD-check:
