@@ -4,7 +4,6 @@ library(tibble)
 
 # ------------------------------------------------------------------------------
 
-context("random forest execution with randomForest")
 source(test_path("helper-objects.R"))
 
 # ------------------------------------------------------------------------------
@@ -121,7 +120,7 @@ test_that('randomForest classification probabilities', {
   expect_equal(xy_pred, predict(xy_fit, new_data = lending_club[1:6, num_pred], type = "prob"))
 
   one_row <- predict(xy_fit, new_data = lending_club[1, num_pred], type = "prob")
-  expect_equivalent(xy_pred[1,], one_row)
+  expect_equal(xy_pred[1,], one_row)
 
   form_fit <- fit(
     lc_basic,
@@ -228,20 +227,18 @@ test_that('argument checks for data dimensions', {
     set_engine("randomForest") %>%
     set_mode("regression")
 
-  expect_warning(
+  expect_snapshot(
     f_fit  <- spec %>% fit(body_mass_g ~ ., data = penguins),
-    "(1000 samples)|(1000 columns)"
   )
 
-  expect_warning(
+  expect_snapshot(
     xy_fit <- spec %>% fit_xy(x = penguins[, -6], y = penguins$body_mass_g),
-    "(1000 samples)|(1000 columns)"
   )
 
   expect_equal(f_fit$fit$mtry, 6)
-  expect_equal(f_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)))
+  expect_equal(f_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
   expect_equal(xy_fit$fit$mtry, 6)
-  expect_equal(xy_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)))
+  expect_equal(xy_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
 
 })
 
