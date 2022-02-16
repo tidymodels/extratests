@@ -13,7 +13,6 @@ Depends:
 Suggests: 
     butcher,
     C50,
-    dimRed,
     discrim,
     doParallel,
     dplyr,
@@ -24,7 +23,6 @@ Suggests:
     Matrix,
     mixOmics,
     modeldata,
-    NMF,
     parallel,
     parsnip,
     pillar (>= 1.6.5.9001),
