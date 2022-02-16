@@ -1,5 +1,6 @@
 library(recipes)
 library(butcher)
+library(Matrix) # Waiting for fix in RcppML
 
 # Data sets used for testing
 data(biomass)
@@ -11,18 +12,18 @@ terms_empty_env <- function(axed, step_number) {
                    rlang::base_env())
 }
 
-test_that("recipe + step_nnmf + axe_env() works", {
-  skip_if_not_installed("NMF")
+test_that("recipe + step_nnmf_sparse + axe_env() works", {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
-    step_nnmf(all_numeric_predictors(), num_comp = 2, seed = 473, num_run = 2)
+    step_nnmf_sparse(all_numeric_predictors(), num_comp = 2, seed = 473)
   x <- axe_env(rec)
   terms_empty_env(x, 1)
 })
 
-test_that("recipe + step_nnmf + bake() works", {
-  skip_if_not_installed("NMF")
+test_that("recipe + step_nnmf_sparse + bake() works", {
+  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
-    step_nnmf(all_numeric_predictors(), num_comp = 2, seed = 473, num_run = 2) %>%
+    step_nnmf_sparse(all_numeric_predictors(), num_comp = 2, seed = 473) %>%
     prep()
   x <- butcher(rec)
   expect_equal(bake(rec, biomass_te), bake(x, biomass_te))
