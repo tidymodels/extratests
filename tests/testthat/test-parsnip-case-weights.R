@@ -73,6 +73,31 @@ test_that('bag_mars - earth case weights', {
 # ------------------------------------------------------------------------------
 # boosted trees
 
+test_that('boost_tree - xgboost case weights', {
+  dat <- make_two_class_wts()
+
+  expect_error({
+    sink(file = tempfile())
+    set.seed(1)
+    wt_fit <-
+      boost_tree() %>%
+      set_mode("classification") %>%
+      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    sink()
+  },
+  regexp = NA)
+
+  sink(file = tempfile())
+  set.seed(1)
+  unwt_fit <-
+    boost_tree() %>%
+    set_mode("classification") %>%
+    fit(Class ~ ., data = two_class_dat)
+  sink()
+
+  expect_snapshot(print(wt_fit$fit$call))
+  expect_unequal(unwt_fit$fit$evaluation_log, wt_fit$fit$evaluation_log)
+})
 
 # ------------------------------------------------------------------------------
 # C5_rules
@@ -104,6 +129,7 @@ test_that('decision_tree - rpart case weights', {
   expect_snapshot(print(wt_fit$fit$call))
   expect_unequal(unwt_fit$fit$variable.importance, wt_fit$fit$variable.importance)
 })
+
 
 # ------------------------------------------------------------------------------
 # discrim_flexible
