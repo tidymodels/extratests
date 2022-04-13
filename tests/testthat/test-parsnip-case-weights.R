@@ -279,6 +279,8 @@ test_that('discrim_flexible - earth case weights', {
 # discrim_linear
 
 test_that('LDA - sda case weights', {
+  dat <- make_two_class_wts()
+
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
