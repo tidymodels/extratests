@@ -276,6 +276,30 @@ test_that('discrim_flexible - earth case weights', {
 })
 
 # ------------------------------------------------------------------------------
+# discrim_linear
+
+test_that('LDA - sda case weights', {
+  data("two_class_dat", package = "modeldata")
+  wts <- order(-two_class_dat$B)
+  wts <- importance_weights(wts)
+
+  expect_error({
+    wt_fit <-
+      discrim_linear(penalty = 0.0001) %>%
+      set_engine("mda") %>%
+      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+  },
+  regexp = NA)
+
+  unwt_fit <-
+    discrim_linear(penalty = 0.0001) %>%
+    set_engine("mda") %>%
+    fit(Class ~ ., data = two_class_dat)
+
+
+})
+
+# ------------------------------------------------------------------------------
 # linear_reg
 
 test_that('linear_reg - lm case weights', {
