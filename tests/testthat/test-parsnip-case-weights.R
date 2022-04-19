@@ -252,6 +252,28 @@ test_that('decision_tree - C50 case weights', {
 })
 
 
+test_that('decision_tree - ctree censored case weights', {
+  dat <- make_cens_wts()
+
+  expect_error({
+    wt_fit <-
+      decision_tree() %>%
+      set_engine("partykit") %>%
+      set_mode("censored regression") %>%
+      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
+  },
+  regexp = NA)
+
+  unwt_fit <-
+    decision_tree() %>%
+    set_engine("partykit") %>%
+    set_mode("censored regression") %>%
+    fit(Surv(time, event) ~ ., data = dat$full)
+
+  expect_snapshot(print(wt_fit$fit$call))
+  #TODO # expect_unequal(unwt_fit$fit$variable.importance, wt_fit$fit$variable.importance)
+})
+
 # ------------------------------------------------------------------------------
 # discrim_flexible
 
@@ -550,22 +572,11 @@ test_that('mars - earth case weights', {
 test_that('mlp - nnet case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    set.seed(1)
-    wt_fit <-
+  expect_snapshot_error(
       mlp() %>%
       set_mode("classification") %>%
       fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  set.seed(1)
-  sub_fit <-
-    mlp() %>%
-    set_mode("classification") %>%
-    fit(Class ~ ., data = dat$subset)
-
-  expect_equal(coef(wt_fit$fit), coef(sub_fit$fit))
+  )
 })
 
 
@@ -589,27 +600,6 @@ test_that('multinom_reg - glmnet case weights', {
     fit(island ~ ., data = dat$subset)
 
   expect_equal(sub_fit$fit$beta, wt_fit$fit$beta)
-})
-
-
-test_that('multinom_reg - nnet case weights', {
-  skip("fails - variable lengths differ (found for '(weights)')")
-  dat <- make_penguin_wts()
-
-  expect_error({
-    set.seed(1)
-    wt_fit <-
-      multinom_reg() %>%
-      fit(island ~ ., data = penguins, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  set.seed(1)
-  sub_fit <-
-    multinom_reg() %>%
-    fit(island ~ ., data = dat$subset)
-
-  expect_equal(coef(wt_fit$fit), coef(sub_fit$fit))
 })
 
 
@@ -796,6 +786,29 @@ test_that('rand_forest - ranger case weights', {
 
   expect_unequal(unwt_fit$fit$predictions, wt_fit$fit$predictions)
   expect_snapshot(print(wt_fit$fit$call))
+})
+
+
+test_that('rand_forest - ctree censored case weights', {
+  dat <- make_cens_wts()
+
+  expect_error({
+    wt_fit <-
+      rand_forest(mtry = 2) %>%
+      set_engine("partykit") %>%
+      set_mode("censored regression") %>%
+      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
+  },
+  regexp = NA)
+
+  unwt_fit <-
+    rand_forest(mtry = 2) %>%
+    set_engine("partykit") %>%
+    set_mode("censored regression") %>%
+    fit(Surv(time, event) ~ ., data = dat$full)
+
+  expect_snapshot(print(wt_fit$fit$call))
+  #TODO # expect_unequal(unwt_fit$fit$variable.importance, wt_fit$fit$variable.importance)
 })
 
 # ------------------------------------------------------------------------------
