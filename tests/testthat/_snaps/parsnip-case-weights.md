@@ -5,6 +5,16 @@
     Output
       NULL
 
+# boost_tree - xgboost case weights
+
+    Code
+      print(wt_fit$fit$call)
+    Output
+      xgboost::xgb.train(params = list(eta = 0.3, max_depth = 6, gamma = 0, 
+          colsample_bytree = 1, colsample_bynode = 1, min_child_weight = 1, 
+          subsample = 1, objective = "binary:logistic"), data = x$data, 
+          nrounds = 15, watchlist = x$watchlist, verbose = 0, nthread = 1)
+
 # decision_tree - rpart case weights
 
     Code
@@ -66,6 +76,10 @@
     Output
       earth(formula = Class ~ ., data = data, weights = weights, keepxy = TRUE, 
           glm = ~list(family = stats::binomial))
+
+# mlp - nnet case weights
+
+    Case weights are not enabled by the underlying model implementation.
 
 # poisson_reg - stan_glmer case weights
 
