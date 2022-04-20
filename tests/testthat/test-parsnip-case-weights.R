@@ -34,8 +34,6 @@ expect_unequal <-
 # bagged trees
 
 test_that('bag_tree - rpart case weights', {
-  skip("until I fix the warnings")
-
   dat <- make_two_class_wts()
 
   expect_error({
