@@ -1,3 +1,18 @@
+skip_if_not_installed("parsnip", "0.2.1.9001")
+skip_if_not_installed("hardhat", "0.2.0.9000")
+skip_if_not_installed("yardstick", "0.0.9.9000")
+skip_if_not_installed("workflows", "0.2.6.9001")
+skip_if_not_installed("recipes", "0.2.0.9001")
+skip_if_not_installed("discrim", "0.2.0.9000")
+skip_if_not_installed("multilevelmod", "0.1.0.9000")
+skip_if_not_installed("poissonreg", "0.2.0.9000")
+skip_if_not_installed("rules", "0.2.0.9000")
+skip_if_not_installed("baguette", "0.2.0.9000")
+skip_if_not_installed("censored", "0.0.0.9000")
+skip_if_not_installed("poissonreg", "0.2.0.9000")
+skip_if_not_installed("poissonreg", "0.2.0.9000")
+
+
 library(parsnip)
 library(censored)
 library(baguette)
@@ -44,6 +59,7 @@ test_that('bag_tree - rpart case weights', {
 })
 
 test_that('bag_tree - C50 case weights', {
+
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
@@ -228,7 +244,7 @@ test_that('decision_tree - rpart case weights', {
 
 
 test_that('decision_tree - C50 case weights', {
-
+  skip("Case weights are not enabled by the underlying model implementation")
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
@@ -254,6 +270,7 @@ test_that('decision_tree - C50 case weights', {
 
 
 test_that('decision_tree - ctree censored case weights', {
+  skip("Case weights are not enabled by the underlying model implementation")
   dat <- make_cens_wts()
 
   expect_error({
@@ -929,6 +946,7 @@ test_that('rand_forest - ranger case weights', {
 
 
 test_that('rand_forest - ctree censored case weights', {
+  skip("Case weights are not enabled by the underlying model implementation")
   dat <- make_cens_wts()
 
   expect_error({
