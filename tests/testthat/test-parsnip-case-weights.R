@@ -10,7 +10,6 @@ skip_if_not_installed("rules", "0.2.0.9000")
 skip_if_not_installed("baguette", "0.2.0.9000")
 skip_if_not_installed("censored", "0.0.0.9000")
 skip_if_not_installed("poissonreg", "0.2.0.9000")
-skip_if_not_installed("poissonreg", "0.2.0.9000")
 
 
 library(parsnip)
@@ -88,7 +87,6 @@ test_that('bag_tree - C50 case weights', {
 # bagged mars
 
 test_that('bag_mars - earth case weights', {
-  skip("this takes forever")
   dat <- make_ames_wts()
 
   expect_error({
@@ -242,7 +240,7 @@ test_that('decision_tree - rpart case weights', {
 
 
 test_that('decision_tree - C50 case weights', {
-  skip("Case weights are not enabled by the underlying model implementation")
+
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
