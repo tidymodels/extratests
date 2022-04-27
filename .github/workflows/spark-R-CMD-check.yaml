@@ -53,15 +53,9 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Remove PPA problematic for XML
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-add-repository -y -r ppa:ondrej/php || true
-          sudo apt-get update
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, XML
           needs: check
 
       - name: Install Spark
