@@ -47,7 +47,7 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-       - name: Remove PPA problematic for XML
+      - name: Remove PPA problematic for XML
         if: runner.os == 'Linux'
         run: |
           sudo apt-add-repository -y -r ppa:ondrej/php || true
