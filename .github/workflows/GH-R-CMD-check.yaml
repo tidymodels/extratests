@@ -57,7 +57,6 @@ jobs:
           try(pak::pkg_install("tidymodels/tidymodels"))
           try(pak::pkg_install("tidymodels/workflows"))
           try(pak::pkg_install("tidymodels/hardhat"))
-          try(pak::pkg_install("tidymodels/parsnip@feature/case-weights"))
           try(pak::pkg_install("tidymodels/dials"))
           try(pak::pkg_install("tidymodels/recipes@case-weights"))
           try(pak::pkg_install("tidymodels/tune"))
@@ -69,6 +68,7 @@ jobs:
           try(pak::pkg_install("tidymodels/discrim"))
           try(pak::pkg_install("tidymodels/plsmod"))
           try(pak::pkg_install("tidymodels/spatialsample"))
+          try(pak::pkg_install("tidymodels/parsnip@feature/case-weights"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
