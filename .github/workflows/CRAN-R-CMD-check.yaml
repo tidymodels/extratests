@@ -47,6 +47,11 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Update to get updated PPA
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
