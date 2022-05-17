@@ -15,7 +15,7 @@ library(dplyr)
 
 test_that("stacks can accommodate outcome levels that are not valid colnames", {
   # skip on pre-0.2.2
-  skip_if(utils::packageVersion("stacks") < "0.2.2.9001")
+  skip_if(utils::packageVersion("stacks") < "0.2.3.9001")
 
   data("penguins")
 
