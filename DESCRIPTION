@@ -47,6 +47,7 @@ Suggests:
     tidyr,
     tune,
     workflows,
+    XML (>= 3.99-0.9),
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
