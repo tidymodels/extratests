@@ -47,9 +47,14 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Update to get updated PPA
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::XML
+          extra-packages: any::rcmdcheck
           needs: check
 
       - name: Install devel versions
@@ -60,6 +65,7 @@ jobs:
           try(pak::pkg_install("tidymodels/dials"))
           try(pak::pkg_install("tidymodels/recipes@case-weights"))
           try(pak::pkg_install("tidymodels/tune"))
+          try(pak::pkg_install("tidymodels/stacks"))
           try(pak::pkg_install("tidymodels/rsample"))
           try(pak::pkg_install("tidymodels/yardstick"))
           try(pak::pkg_install("tidymodels/modeldata"))
