@@ -63,7 +63,7 @@ jobs:
           try(pak::pkg_install("tidymodels/workflows"))
           try(pak::pkg_install("tidymodels/hardhat"))
           try(pak::pkg_install("tidymodels/dials"))
-          try(pak::pkg_install("tidymodels/recipes@case-weights"))
+          try(pak::pkg_install("tidymodels/recipes"))
           try(pak::pkg_install("tidymodels/tune"))
           try(pak::pkg_install("tidymodels/stacks"))
           try(pak::pkg_install("tidymodels/rsample"))
