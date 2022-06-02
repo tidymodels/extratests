@@ -236,9 +236,9 @@ test_that('argument checks for data dimensions', {
   )
 
   expect_equal(f_fit$fit$mtry, 6)
-  expect_equal(f_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
+  expect_equal(f_fit$fit$call$nodesize, rlang::expr(min_rows(1000, x)), ignore_attr = TRUE)
   expect_equal(xy_fit$fit$mtry, 6)
-  expect_equal(xy_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
+  expect_equal(xy_fit$fit$call$nodesize, rlang::expr(min_rows(1000, x)), ignore_attr = TRUE)
 
 })
 
