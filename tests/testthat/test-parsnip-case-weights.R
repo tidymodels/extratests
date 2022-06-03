@@ -50,7 +50,7 @@ test_that('bag_tree - rpart case weights', {
     bag_tree() %>%
     set_engine("rpart") %>%
     set_mode("classification") %>%
-    fit(Class ~ ., data = dat$subset)
+    fit(Class ~ ., data = two_class_dat)
 
   expect_unequal(unwt_fit$fit$imp, wt_fit$fit$imp)
 })
