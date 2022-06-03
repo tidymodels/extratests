@@ -72,7 +72,7 @@ make_mtcars_wts <- function() {
 
 
 make_cens_wts <- function() {
-  data(time_to_million, package = "censored")
+  data(time_to_million, package = "censored", envir = rlang::current_env())
 
   set.seed(1)
   time_to_million <- time_to_million[1:100, c("time", "event", "released_theaters", "rated")]
