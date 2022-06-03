@@ -18,7 +18,7 @@ on:
 name: case-weights-R-CMD-check
 
 jobs:
-  case-weights-R-CMD-check:
+  GH-R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
