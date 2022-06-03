@@ -394,7 +394,8 @@ test_that('LDA - sda case weights', {
     set_engine("mda") %>%
     fit(Class ~ ., data = two_class_dat)
 
-
+  expect_snapshot(wt_fit$fit$call)
+  expect_unequal(unwt_fit$fit$fit, wt_fit$fit$fit)
 })
 
 # ------------------------------------------------------------------------------
