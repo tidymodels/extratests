@@ -280,7 +280,7 @@ test_that('decision_tree - rpart case weights', {
 })
 
 test_that('decision_tree - rpart censored case weights', {
-  skip("pec package (wrapping rpart) doesn't handle weights")
+  skip("only dev version of pec package (wrapping rpart) handles weights")
   # see https://github.com/tagteam/pec/issues/3
   dat <- make_cens_wts()
 
@@ -293,13 +293,10 @@ test_that('decision_tree - rpart censored case weights', {
   },
   regexp = NA)
 
-  unwt_fit <-
-    decision_tree() %>%
-    set_engine("rpart") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
-
-  #expect_unequal(unwt_fit$fit$fitted, wt_fit$fit$fitted)
+  terms_data_classes <- attr(wt_fit$fit$rpart$terms, "dataClasses")
+  expect_true(
+  "(weights)" %in% names(terms_data_classes)
+  )
 })
 
 test_that('decision_tree - C50 case weights', {
