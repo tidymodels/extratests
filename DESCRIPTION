@@ -11,7 +11,9 @@ License: MIT + file LICENSE
 Depends: 
     tidymodels
 Suggests: 
+    baguette,
     butcher,
+    censored,
     C50,
     dials,
     dimRed,
