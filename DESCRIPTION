@@ -32,6 +32,7 @@ Suggests:
     parsnip,
     pillar (>= 1.6.5.9001),
     poissonreg,
+    pscl,
     purrr,
     randomForest,
     ranger,
