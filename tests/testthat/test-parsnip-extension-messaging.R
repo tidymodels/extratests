@@ -1,4 +1,4 @@
-test_that('message informatively with unknown implementation (tidymodels/parsnip#793)', {
+test_that('messaging with unknown implementation (bag tree, tidymodels/parsnip#793)', {
   skip_if(utils::packageVersion("parsnip") < "1.0.2")
 
   library(parsnip)
@@ -64,5 +64,68 @@ test_that('message informatively with unknown implementation (tidymodels/parsnip
   expect_snapshot(
     bag_tree() %>%
       set_engine("C5.0")
+  )
+})
+
+test_that('messaging with unknown implementation (decision tree, tidymodels/parsnip#793)', {
+  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+
+  library(parsnip)
+
+  # one possible extension --------------------------------------------------
+  # known engine, mode
+  expect_snapshot(
+    decision_tree()
+  )
+
+  # known, uniquely identifying mode
+  expect_snapshot(
+    decision_tree() %>%
+      set_mode("censored regression")
+  )
+
+  # known engine, two possible extensions
+  expect_snapshot(
+    decision_tree() %>%
+      set_engine("partykit")
+  )
+
+  # known engine, one possible extension
+  expect_snapshot(
+    decision_tree() %>%
+      set_engine("partykit") %>%
+      set_mode("regression")
+  )
+
+  # inter-extension interactions --------------------------------------------
+  library(censored)
+
+  # do not message -- well-specified spec
+  expect_snapshot(
+    decision_tree() %>%
+      set_mode("censored regression") %>%
+      set_engine("rpart")
+  )
+
+  # do not message - this could still possibly be a well-specified spec
+  expect_snapshot(
+    decision_tree() %>%
+      set_engine("partykit")
+  )
+
+  # message, now that additional mode means this is in bonsai
+  expect_snapshot(
+    decision_tree() %>%
+      set_mode("regression") %>%
+      set_engine("partykit")
+  )
+
+  # do not message now that bonsai is loaded
+  library(bonsai)
+
+  expect_snapshot(
+    decision_tree() %>%
+      set_mode("regression") %>%
+      set_engine("partykit")
   )
 })

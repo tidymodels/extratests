@@ -12,6 +12,7 @@ Depends:
     tidymodels
 Suggests: 
     baguette,
+    bonsai,
     butcher,
     censored,
     C50,
