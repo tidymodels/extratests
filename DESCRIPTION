@@ -23,6 +23,7 @@ Suggests:
     dplyr,
     earth,
     fastICA,
+    flexsurv,
     glmnet,
     hardhat,
     Matrix,
