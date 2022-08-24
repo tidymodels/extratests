@@ -1,5 +1,10 @@
 # Helpers used for parsnip case weight tests
 
+expect_unequal <-
+  function(object, expected, ...,
+           tolerance = if (edition_get() >= 3) testthat_tolerance()) {
+    expect_true(!compare(object, expected, tolerance = tolerance, ...)$equal)
+  }
 
 make_two_class_wts <- function(x) {
   data(two_class_dat, package = "modeldata", envir = rlang::current_env())
@@ -58,7 +63,6 @@ make_biochem_wts <- function() {
   list(wts = wts, subset = bioChemists_subset, full = bioChemists)
 }
 
-
 make_mtcars_wts <- function() {
 
   set.seed(1)
@@ -69,7 +73,6 @@ make_mtcars_wts <- function() {
 
   list(wts = wts, subset = mtcars_subset)
 }
-
 
 make_cens_wts <- function() {
   data(time_to_million, package = "censored", envir = rlang::current_env())
@@ -83,5 +86,3 @@ make_cens_wts <- function() {
 
   list(wts = wts, subset = cens_subset, full = time_to_million)
 }
-
-

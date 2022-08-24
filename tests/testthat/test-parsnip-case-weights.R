@@ -21,16 +21,8 @@ library(multilevelmod)
 library(discrim)
 library(sparklyr)
 
-# ------------------------------------------------------------------------------
 
-expect_unequal <-
-  function(object, expected, ...,
-           tolerance = if (edition_get() >= 3) testthat_tolerance()) {
-    expect_true(!compare(object, expected, tolerance = tolerance, ...)$equal)
-  }
-
-# ------------------------------------------------------------------------------
-# bagged trees
+# bagged trees ------------------------------------------------------------
 
 test_that('bag_tree - rpart case weights', {
   dat <- make_two_class_wts()
@@ -108,8 +100,7 @@ test_that('bag_tree - C50 case weights', {
 })
 
 
-# ------------------------------------------------------------------------------
-# bagged mars
+# bagged mars -------------------------------------------------------------
 
 test_that('bag_mars - earth case weights', {
   dat <- make_ames_wts()
@@ -135,8 +126,7 @@ test_that('bag_mars - earth case weights', {
 })
 
 
-# ------------------------------------------------------------------------------
-# boosted trees
+# boosted trees -----------------------------------------------------------
 
 test_that('boost_tree - xgboost case weights', {
   dat <- make_two_class_wts()
@@ -206,9 +196,8 @@ test_that("boost_tree - mboost censored case weights", {
   expect_equal(wt_fit$fit$`(weights)`, as.vector(dat$wts))
 })
 
-# ------------------------------------------------------------------------------
-# C5_rules
 
+# C5_rules ----------------------------------------------------------------
 
 test_that('C5_rules - C50 case weights', {
 
@@ -236,8 +225,8 @@ test_that('C5_rules - C50 case weights', {
 
 })
 
-# ------------------------------------------------------------------------------
-# cubist_rules
+
+# cubist_rules ------------------------------------------------------------
 
 test_that('cubist case weights', {
   dat <- make_ames_wts()
@@ -256,8 +245,8 @@ test_that('cubist case weights', {
   expect_true(wt_fit$fit$caseWeights)
 })
 
-# ------------------------------------------------------------------------------
-# decision_tree
+
+# decision_tree -----------------------------------------------------------
 
 test_that('decision_tree - rpart case weights', {
   dat <- make_two_class_wts()
@@ -344,8 +333,8 @@ test_that('decision_tree - partykit censored case weights', {
   expect_true(wt_fit$fit$info$control$caseweights)
 })
 
-# ------------------------------------------------------------------------------
-# discrim_flexible
+
+# discrim_flexible --------------------------------------------------------
 
 test_that('discrim_flexible - earth case weights', {
   dat <- make_two_class_wts()
@@ -367,8 +356,8 @@ test_that('discrim_flexible - earth case weights', {
   expect_unequal(unwt_fit$fit$fit$coefficients, wt_fit$fit$fit$coefficients)
 })
 
-# ------------------------------------------------------------------------------
-# discrim_linear
+
+# discrim_linear ----------------------------------------------------------
 
 test_that('LDA - sda case weights', {
   dat <- make_two_class_wts()
@@ -394,8 +383,8 @@ test_that('LDA - sda case weights', {
   expect_unequal(unwt_fit$fit$fit, wt_fit$fit$fit)
 })
 
-# ------------------------------------------------------------------------------
-# linear_reg
+
+# linear_reg --------------------------------------------------------------
 
 test_that('linear_reg - lm case weights', {
   dat <- make_mtcars_wts()
@@ -432,7 +421,6 @@ test_that('linear_reg - glm case weights', {
 
   expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 })
-
 
 test_that('linear_reg - glmnet case weights', {
   dat <- make_ames_wts()
@@ -476,7 +464,6 @@ test_that('linear_reg - stan_glmer case weights', {
   expect_snapshot(print(wt_fit$fit$call))
 })
 
-
 test_that('linear_reg - lme4::lmer case weights', {
   dat <- make_msa_wts()
 
@@ -498,7 +485,6 @@ test_that('linear_reg - lme4::lmer case weights', {
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit@call))
 })
-
 
 test_that('linear_reg - spark case weights', {
   skip_if_not_installed("sparklyr")
@@ -546,8 +532,7 @@ test_that('linear_reg - spark case weights', {
 })
 
 
-# ------------------------------------------------------------------------------
-# logistic_reg
+# logistic_reg ------------------------------------------------------------
 
 test_that('logistic_reg - glm case weights', {
   dat <- make_two_class_wts()
@@ -604,7 +589,6 @@ test_that('logistic_reg - stan case weights', {
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit$call))
 })
-
 
 test_that('logistic_reg - stan_glmer case weights', {
   data("two_class_dat", package = "modeldata")
@@ -705,9 +689,8 @@ test_that('logistic_reg - spark case weights', {
   spark_disconnect_all()
 })
 
-# ------------------------------------------------------------------------------
-# mars
 
+# mars --------------------------------------------------------------------
 
 test_that('mars - earth case weights', {
   dat <- make_two_class_wts()
@@ -730,8 +713,8 @@ test_that('mars - earth case weights', {
 
 })
 
-# ------------------------------------------------------------------------------
-# mlp
+
+# mlp ---------------------------------------------------------------------
 
 test_that('mlp - nnet case weights', {
   dat <- make_two_class_wts()
@@ -744,8 +727,7 @@ test_that('mlp - nnet case weights', {
 })
 
 
-# ------------------------------------------------------------------------------
-# multinom_reg
+# multinom_reg ------------------------------------------------------------
 
 test_that('multinom_reg - glmnet case weights', {
   dat <- make_penguin_wts()
@@ -765,7 +747,6 @@ test_that('multinom_reg - glmnet case weights', {
 
   expect_equal(sub_fit$fit$beta, wt_fit$fit$beta)
 })
-
 
 test_that('multinom_reg - spark case weights', {
   skip_if_not_installed("sparklyr")
@@ -812,8 +793,8 @@ test_that('multinom_reg - spark case weights', {
   spark_disconnect_all()
 })
 
-# ------------------------------------------------------------------------------
-# poisson_reg
+
+# poisson_reg -------------------------------------------------------------
 
 test_that('poisson_reg - glm case weights', {
   dat <- make_biochem_wts()
@@ -968,8 +949,8 @@ test_that('poisson_reg - lme4::glmer case weights', {
   expect_snapshot(print(wt_fit$fit@call))
 })
 
-# ------------------------------------------------------------------------------
-# proportional_hazards
+
+# proportional_hazards ----------------------------------------------------
 
 test_that('proportional_hazards - survival censored case weights', {
   # survival engine can only take weights > 0
@@ -1015,8 +996,7 @@ test_that('proportional_hazards - glmnet censored case weights', {
 })
 
 
-# ------------------------------------------------------------------------------
-# rand_forest
+# rand_forest -------------------------------------------------------------
 
 test_that('rand_forest - ranger case weights', {
   dat <- make_two_class_wts()
@@ -1062,8 +1042,8 @@ test_that('rand_forest - partykit censored case weights', {
   expect_unequal(unwt_fit$fit$fitted, wt_fit$fit$fitted)
 })
 
-# ------------------------------------------------------------------------------
-# survival_reg
+
+# survival_reg ------------------------------------------------------------
 
 test_that('survival_reg - survival censored case weights', {
   # survival engine can only take weights > 0
