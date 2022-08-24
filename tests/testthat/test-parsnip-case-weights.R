@@ -324,7 +324,6 @@ test_that('decision_tree - C50 case weights', {
   expect_unequal(unwt_fit$fit$tree, wt_fit$fit$tree)
 })
 
-
 test_that('decision_tree - partykit censored case weights', {
   data(time_to_million, package = "censored", envir = rlang::current_env())
 
@@ -822,7 +821,7 @@ test_that('poisson_reg - glm case weights', {
   expect_error({
     wt_fit <-
       poisson_reg() %>%
-      fit(art ~ ., data = bioChemists, case_weights = dat$wts)
+      fit(art ~ ., data = dat$full, case_weights = dat$wts)
   },
   regexp = NA)
 
@@ -834,7 +833,7 @@ test_that('poisson_reg - glm case weights', {
 })
 
 test_that('poisson_reg - stan_glmer case weights', {
-  data(bioChemists, package = "pscl")
+  data(bioChemists, package = "pscl", envir = rlang::current_env())
 
   set.seed(1)
   wts <- runif(nrow(bioChemists))
@@ -868,7 +867,7 @@ test_that('poisson_reg - hurdle case weights', {
     wt_fit <-
       poisson_reg() %>%
       set_engine("hurdle") %>%
-      fit(art ~ ., data = bioChemists, case_weights = dat$wts)
+      fit(art ~ ., data = dat$full, case_weights = dat$wts)
   },
   regexp = NA)
 
@@ -887,7 +886,7 @@ test_that('poisson_reg - zeroinfl case weights', {
     wt_fit <-
       poisson_reg() %>%
       set_engine("zeroinfl") %>%
-      fit(art ~ ., data = bioChemists, case_weights = dat$wts)
+      fit(art ~ ., data = dat$full, case_weights = dat$wts)
   },
   regexp = NA)
 
@@ -899,7 +898,6 @@ test_that('poisson_reg - zeroinfl case weights', {
   expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
-
 test_that('poisson_reg - glmnet case weights', {
   dat <- make_biochem_wts()
 
@@ -907,19 +905,18 @@ test_that('poisson_reg - glmnet case weights', {
     wt_fit <-
       poisson_reg(penalty = 0.001) %>%
       set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-      fit(art ~ ., data = bioChemists, case_weights = dat$wts)
+      fit(art ~ ., data = dat$full, case_weights = dat$wts)
   },
   regexp = NA)
 
   unwt_fit <-
     poisson_reg(penalty = 0.001) %>%
     set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-    fit(art ~ ., data = bioChemists)
+    fit(art ~ ., data = dat$full)
 
   expect_unequal(unwt_fit$fit$beta, wt_fit$fit$beta)
   expect_snapshot(print(wt_fit$fit$call))
 })
-
 
 test_that('poisson_reg - stan case weights', {
   dat <- make_biochem_wts()
@@ -928,22 +925,21 @@ test_that('poisson_reg - stan case weights', {
     wt_fit <-
       poisson_reg() %>%
       set_engine("stan", seed = 1, refresh = 0) %>%
-      fit(art ~ ., data = bioChemists, case_weights = dat$wts)
+      fit(art ~ ., data = dat$full, case_weights = dat$wts)
   },
   regexp = NA)
 
   unwt_fit <-
     poisson_reg() %>%
     set_engine("stan", seed = 1, refresh = 0) %>%
-    fit(art ~ ., data = bioChemists)
+    fit(art ~ ., data = dat$full)
 
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit$call))
 })
 
-
 test_that('poisson_reg - lme4::glmer case weights', {
-  data(bioChemists, package = "pscl")
+  data(bioChemists, package = "pscl", envir = rlang::current_env())
 
   set.seed(1)
   wts <- runif(nrow(bioChemists))
@@ -1043,7 +1039,6 @@ test_that('rand_forest - ranger case weights', {
   expect_unequal(unwt_fit$fit$predictions, wt_fit$fit$predictions)
   expect_snapshot(print(wt_fit$fit$call))
 })
-
 
 test_that('rand_forest - partykit censored case weights', {
   dat <- make_cens_wts()

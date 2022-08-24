@@ -2,7 +2,7 @@
 
 
 make_two_class_wts <- function(x) {
-  data(two_class_dat, package = "modeldata")
+  data(two_class_dat, package = "modeldata", envir = rlang::current_env())
   set.seed(1)
   wts <- runif(nrow(two_class_dat))
   wts <- ifelse(wts < 1/5, 0, 1)
@@ -12,7 +12,7 @@ make_two_class_wts <- function(x) {
 }
 
 make_ames_wts <- function(x) {
-  data("ames", package = "modeldata")
+  data("ames", package = "modeldata", envir = rlang::current_env())
   ames$Sale_Price <- log10(ames$Sale_Price)
   ames <- dplyr::select(ames, Sale_Price, Longitude, Latitude, Neighborhood)
 
@@ -25,7 +25,7 @@ make_ames_wts <- function(x) {
 }
 
 make_msa_wts <- function(x) {
-  data("msa_data", package = "multilevelmod")
+  data("msa_data", package = "multilevelmod", envir = rlang::current_env())
   set.seed(1)
   wts <- runif(nrow(msa_data))
   wts <- ifelse(wts < 1/5, 0, 1)
@@ -35,7 +35,7 @@ make_msa_wts <- function(x) {
 }
 
 make_penguin_wts <- function() {
-  data("penguins", package = "modeldata")
+  data("penguins", package = "modeldata", envir = rlang::current_env())
   penguins <- penguins[complete.cases(penguins),]
 
   set.seed(1)
@@ -47,7 +47,7 @@ make_penguin_wts <- function() {
 }
 
 make_biochem_wts <- function() {
-  data(bioChemists, package = "pscl")
+  data(bioChemists, package = "pscl", envir = rlang::current_env())
 
   set.seed(1)
   wts <- runif(nrow(bioChemists))
@@ -55,7 +55,7 @@ make_biochem_wts <- function() {
   bioChemists_subset <- bioChemists[wts != 0, ]
   wts <- importance_weights(wts)
 
-  list(wts = wts, subset = bioChemists_subset)
+  list(wts = wts, subset = bioChemists_subset, full = bioChemists)
 }
 
 
