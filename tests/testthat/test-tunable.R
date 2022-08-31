@@ -81,7 +81,7 @@ test_that('bad model inputs', {
   bad_class <- lm_model
   class(bad_class) <- c("potato", "model_spec")
   expect_snapshot(
-   (expect_error(tunable(bad_class)))
+    (expect_error(tunable(bad_class)))
   )
 })
 
@@ -151,3 +151,109 @@ test_that("workflow with tunable recipe and model", {
     c(rep("model_spec", 9), rep("recipe", 4))
   )
 })
+
+# ------------------------------------------------------------------------------
+# test specific values
+
+
+test_that('test tunable parameter values', {
+  # depends on whether tune >= 0.1.6.9001 is installed
+  skip_if(inherits(try(tunable(), silent = TRUE), "try-error"))
+
+  print_parameters <- function(x) {
+    params <- tunable(x)
+    info <- params$call_info
+    names(info) <- params$names
+    print(info)
+    invisible(NULL)
+  }
+
+  expect_snapshot(
+    boost_tree(trees = tune(), min_n = tune(), sample_size = tune()) %>%
+      set_engine('C5.0') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    rules::C5_rules(trees = tune(), min_n = tune()) %>%
+      set_engine('C5.0') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    decision_tree(min_n = tune()) %>%
+      set_engine('C5.0') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    logistic_reg(penalty = tune()) %>%
+      set_engine('brulee') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    mars(prod_degree = tune()) %>%
+      set_engine('earth') %>%
+      set_mode('classification') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    multinom_reg(penalty = tune()) %>%
+      set_engine('brulee') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    rand_forest(mtry = tune(), min_n = tune()) %>%
+      set_engine('randomForest') %>%
+      set_mode('classification') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    rand_forest(mtry = tune(), min_n = tune()) %>%
+      set_engine('ranger') %>%
+      set_mode('classification') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    linear_reg(penalty = tune()) %>%
+      set_engine('brulee') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    boost_tree(
+      tree_depth = tune(),
+      trees = tune(),
+      learn_rate = tune(),
+      min_n = tune(),
+      loss_reduction = tune(),
+      sample_size = tune(),
+      stop_iter = tune()
+    ) %>%
+      set_engine('xgboost') %>%
+      set_mode('classification') %>%
+      print_parameters()
+  )
+
+  expect_snapshot(
+    mlp(
+      hidden_units = tune(),
+      penalty = tune(),
+      dropout = tune(),
+      epochs = tune(),
+      activation = tune()
+    ) %>%
+      set_engine('brulee') %>%
+      set_mode('classification') %>%
+      print_parameters()
+  )
+
+})
+
+
+
