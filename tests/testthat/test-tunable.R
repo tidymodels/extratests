@@ -81,7 +81,7 @@ test_that('bad model inputs', {
   bad_class <- lm_model
   class(bad_class) <- c("potato", "model_spec")
   expect_snapshot(
-   (expect_error(tunable(bad_class)))
+    (expect_error(tunable(bad_class)))
   )
 })
 
