@@ -236,3 +236,69 @@
       Computational engine: partykit 
       
 
+# missing implementation checks prompt conservatively with old objects (bag_tree)
+
+    Code
+      bt
+    Output
+      Bagged Decision Tree Model Specification (regression)
+      
+      Main Arguments:
+        cost_complexity = 0
+        min_n = 2
+      
+      Computational engine: rpart 
+      
+
+---
+
+    Code
+      bt
+    Output
+      Bagged Decision Tree Model Specification (regression)
+      
+      Main Arguments:
+        cost_complexity = 0
+        min_n = 2
+      
+      Computational engine: rpart 
+      
+
+# missing implementation checks prompt conservatively with old objects (decision_tree)
+
+    Code
+      dt
+    Output
+      Decision Tree Model Specification (unknown)
+      
+      Computational engine: rpart 
+      
+
+---
+
+    Code
+      dt_censored
+    Output
+      Decision Tree Model Specification (censored regression)
+      
+      Computational engine: rpart 
+      
+
+---
+
+    Code
+      dt_censored
+    Output
+      Decision Tree Model Specification (censored regression)
+      
+      Computational engine: rpart 
+      
+
+# missing implementation checks prompt conservatively with external objects (arima_boost)
+
+    Code
+      ab
+    Output
+      Time Series Model w/ XGBoost Error Specification (regression)
+      
+
