@@ -211,7 +211,7 @@ test_that('C5_rules - C50 case weights', {
 
   expect_error({
     wt_fit <-
-      C5_rules(trees = 5)%>%
+      C5_rules(trees = 5) %>%
       set_engine("C5.0") %>%
       set_mode("classification") %>%
       fit(Class ~ ., data = two_class_dat, case_weights = wts)
