@@ -28,6 +28,7 @@ Suggests:
     Matrix,
     mixOmics,
     modeldata,
+    modeltime,
     parallel,
     parsnip,
     pillar (>= 1.6.5.9001),
