@@ -1,9 +1,9 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip", "0.2.1.9001")
-skip_if_not_installed("hardhat", "0.2.0.9000")
-skip_if_not_installed("yardstick", "0.0.9.9000")
-skip_if_not_installed("workflows", "0.2.6.9001")
-skip_if_not_installed("recipes", "0.2.0.9001")
+skip_if_not_installed("parsnip",   "1.0.1")
+skip_if_not_installed("hardhat",   "1.2.0")
+skip_if_not_installed("yardstick", "1.0.0")
+skip_if_not_installed("workflows", "1.0.0")
+skip_if_not_installed("recipes",   "1.0.0")
 
 # load all extension packages to register the engines
 library(parsnip)
@@ -19,7 +19,7 @@ library(sparklyr)
 # bagged trees ------------------------------------------------------------
 
 test_that('bag_tree - rpart case weights', {
-  skip_if_not_installed("baguette", "0.2.0.9000")
+  skip_if_not_installed("baguette", "1.0.0")
 
   dat <- make_two_class_wts()
 
@@ -44,7 +44,7 @@ test_that('bag_tree - rpart case weights', {
 })
 
 test_that('bag_tree - rpart censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   dat <- make_cens_wts()
 
@@ -71,7 +71,7 @@ test_that('bag_tree - rpart censored case weights', {
 })
 
 test_that('bag_tree - C50 case weights', {
-  skip_if_not_installed("baguette", "0.2.0.9000")
+  skip_if_not_installed("baguette", "1.0.0")
 
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
@@ -102,7 +102,7 @@ test_that('bag_tree - C50 case weights', {
 # bagged mars -------------------------------------------------------------
 
 test_that('bag_mars - earth case weights', {
-  skip_if_not_installed("baguette", "0.2.0.9000")
+  skip_if_not_installed("baguette", "1.0.0")
 
   dat <- make_ames_wts()
 
@@ -182,7 +182,7 @@ test_that('boost_tree - C50 case weights', {
 })
 
 test_that("boost_tree - mboost censored case weights", {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   dat <- make_cens_wts()
 
@@ -203,7 +203,7 @@ test_that("boost_tree - mboost censored case weights", {
 # C5_rules ----------------------------------------------------------------
 
 test_that('C5_rules - C50 case weights', {
-  skip_if_not_installed("rules", "0.2.0.9000")
+  skip_if_not_installed("rules", "1.0.0")
 
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
@@ -233,7 +233,7 @@ test_that('C5_rules - C50 case weights', {
 # cubist_rules ------------------------------------------------------------
 
 test_that('cubist case weights', {
-  skip_if_not_installed("rules", "0.2.0.9000")
+  skip_if_not_installed("rules", "1.0.0")
 
   dat <- make_ames_wts()
 
@@ -276,7 +276,7 @@ test_that('decision_tree - rpart case weights', {
 
 test_that('decision_tree - rpart censored case weights', {
   skip("only dev version of pec package (wrapping rpart) handles weights")
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   # see https://github.com/tagteam/pec/issues/3
   dat <- make_cens_wts()
@@ -322,7 +322,7 @@ test_that('decision_tree - C50 case weights', {
 })
 
 test_that('decision_tree - partykit censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   data(time_to_million, package = "censored", envir = rlang::current_env())
 
@@ -347,7 +347,7 @@ test_that('decision_tree - partykit censored case weights', {
 # discrim_flexible --------------------------------------------------------
 
 test_that('discrim_flexible - earth case weights', {
-  skip_if_not_installed("discrim", "0.2.0.9000")
+  skip_if_not_installed("discrim", "1.0.0")
 
   dat <- make_two_class_wts()
 
@@ -372,7 +372,7 @@ test_that('discrim_flexible - earth case weights', {
 # discrim_linear ----------------------------------------------------------
 
 test_that('LDA - sda case weights', {
-  skip_if_not_installed("discrim", "0.2.0.9000")
+  skip_if_not_installed("discrim", "1.0.0")
 
   dat <- make_two_class_wts()
 
@@ -456,7 +456,7 @@ test_that('linear_reg - glmnet case weights', {
 })
 
 test_that('linear_reg - stan_glmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   dat <- make_msa_wts()
 
@@ -480,7 +480,7 @@ test_that('linear_reg - stan_glmer case weights', {
 })
 
 test_that('linear_reg - lme4::lmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   dat <- make_msa_wts()
 
@@ -608,7 +608,7 @@ test_that('logistic_reg - stan case weights', {
 })
 
 test_that('logistic_reg - stan_glmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   data("two_class_dat", package = "modeldata")
 
@@ -637,7 +637,7 @@ test_that('logistic_reg - stan_glmer case weights', {
 })
 
 test_that('logistic_reg - lme4::glmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   data("two_class_dat", package = "modeldata")
 
@@ -818,7 +818,7 @@ test_that('multinom_reg - spark case weights', {
 # poisson_reg -------------------------------------------------------------
 
 test_that('poisson_reg - glm case weights', {
-  skip_if_not_installed("poissonreg", "0.2.0.9000")
+  skip_if_not_installed("poissonreg", "1.0.1")
 
   dat <- make_biochem_wts()
 
@@ -837,7 +837,7 @@ test_that('poisson_reg - glm case weights', {
 })
 
 test_that('poisson_reg - stan_glmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
 
@@ -867,7 +867,7 @@ test_that('poisson_reg - stan_glmer case weights', {
 })
 
 test_that('poisson_reg - hurdle case weights', {
-  skip_if_not_installed("poissonreg", "0.2.0.9000")
+  skip_if_not_installed("poissonreg", "1.0.1")
 
   dat <- make_biochem_wts()
 
@@ -888,7 +888,7 @@ test_that('poisson_reg - hurdle case weights', {
 })
 
 test_that('poisson_reg - zeroinfl case weights', {
-  skip_if_not_installed("poissonreg", "0.2.0.9000")
+  skip_if_not_installed("poissonreg", "1.0.1")
 
   dat <- make_biochem_wts()
 
@@ -909,7 +909,7 @@ test_that('poisson_reg - zeroinfl case weights', {
 })
 
 test_that('poisson_reg - glmnet case weights', {
-  skip_if_not_installed("poissonreg", "0.2.0.9000")
+  skip_if_not_installed("poissonreg", "1.0.1")
 
   dat <- make_biochem_wts()
 
@@ -931,7 +931,7 @@ test_that('poisson_reg - glmnet case weights', {
 })
 
 test_that('poisson_reg - stan case weights', {
-  skip_if_not_installed("poissonreg", "0.2.0.9000")
+  skip_if_not_installed("poissonreg", "1.0.1")
 
   dat <- make_biochem_wts()
 
@@ -953,7 +953,7 @@ test_that('poisson_reg - stan case weights', {
 })
 
 test_that('poisson_reg - lme4::glmer case weights', {
-  skip_if_not_installed("multilevelmod", "0.1.0.9000")
+  skip_if_not_installed("multilevelmod", "1.0.0")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
 
@@ -988,7 +988,7 @@ test_that('poisson_reg - lme4::glmer case weights', {
 # proportional_hazards ----------------------------------------------------
 
 test_that('proportional_hazards - survival censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   # survival engine can only take weights > 0
   data(time_to_million, package = "censored", envir = rlang::current_env())
@@ -1011,7 +1011,7 @@ test_that('proportional_hazards - survival censored case weights', {
 })
 
 test_that('proportional_hazards - glmnet censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   dat <- make_cens_wts()
 
@@ -1060,7 +1060,7 @@ test_that('rand_forest - ranger case weights', {
 })
 
 test_that('rand_forest - partykit censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   dat <- make_cens_wts()
 
@@ -1087,7 +1087,7 @@ test_that('rand_forest - partykit censored case weights', {
 # survival_reg ------------------------------------------------------------
 
 test_that('survival_reg - survival censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   # survival engine can only take weights > 0
   data(time_to_million, package = "censored", envir = rlang::current_env())
@@ -1110,7 +1110,7 @@ test_that('survival_reg - survival censored case weights', {
 })
 
 test_that('survival_reg - flexsurv censored case weights', {
-  skip_if_not_installed("censored", "0.0.0.9000")
+  skip_if_not_installed("censored", "0.1.0")
 
   # flexsurv engine can only take weights > 0
   data(time_to_million, package = "censored", envir = rlang::current_env())
