@@ -11,8 +11,11 @@ License: MIT + file LICENSE
 Depends: 
     tidymodels
 Suggests: 
+    baguette,
     butcher,
     C50,
+    censored,
+    coin,
     dials,
     dimRed,
     discrim,
@@ -20,15 +23,20 @@ Suggests:
     dplyr,
     earth,
     fastICA,
+    flexsurv,
     glmnet,
     hardhat,
     Matrix,
+    mda,
     mixOmics,
     modeldata,
+    multilevelmod,
     parallel,
     parsnip,
+    pec,
     pillar (>= 1.6.5.9001),
     poissonreg,
+    pscl,
     purrr,
     randomForest,
     ranger,
@@ -48,6 +56,7 @@ Suggests:
     tidyr,
     tune,
     workflows,
+    xgboost,
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
