@@ -20,12 +20,13 @@ test_that('tune recipe and model, which has_unknowns', {
 
   set.seed(4400)
   wflow <- workflow() %>% add_recipe(rec_tune_1) %>% add_model(rf_mod)
-  pset <- dials::parameters(wflow) %>% update(num_comp = num_comp(c(3, 5)),
-                                              mtry = mtry(c(1, 3)))
+  pset <- extract_parameter_set_dials(wflow) %>%
+    update(num_comp = num_comp(c(3, 5)),
+           mtry = mtry(c(1, 3)))
   expect_true(
     any(
       vapply(
-        dials::parameters(wflow)$object,
+        extract_parameter_set_dials(wflow)$object,
         dials::has_unknowns,
         FUN.VALUE = TRUE
       )
