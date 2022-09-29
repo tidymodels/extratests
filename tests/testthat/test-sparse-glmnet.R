@@ -79,11 +79,11 @@ test_that('matrix composition works', {
     processed <- mold(rec, mlc_churn, blueprint = matrix_bp),
     NA
   )
-  expect_type(processed$predictors, "double")
+  expect_type(processed$predictors, "integer")
   expect_equal(dim(processed$predictors), c(5000, 3))
 
   forged <- forge(mlc_churn, blueprint = processed$blueprint)$predictors
-  expect_type(forged, "double")
+  expect_type(forged, "integer")
   expect_equal(dim(forged), c(5000, 3))
 
 
@@ -94,7 +94,7 @@ test_that('matrix composition works', {
       .fit_pre(data = mlc_churn),
     NA
   )
-  expect_type(wf_pre$pre$mold$predictors, "double")
+  expect_type(wf_pre$pre$mold$predictors, "integer")
   expect_equal(dim(wf_pre$pre$mold$predictors), c(5000, 3))
 
 
