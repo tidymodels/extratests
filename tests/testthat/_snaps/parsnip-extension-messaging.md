@@ -43,7 +43,7 @@
       i The parsnip extension packages censored and baguette implement support for this specification.
       i Please install (if needed) and load to continue.
     Output
-      Bagged Decision Tree Model Specification (unknown)
+      Bagged Decision Tree Model Specification (unknown mode)
       
       Main Arguments:
         cost_complexity = 0
@@ -61,7 +61,7 @@
       i The parsnip extension packages censored and baguette implement support for this specification.
       i Please install (if needed) and load to continue.
     Output
-      Bagged Decision Tree Model Specification (unknown)
+      Bagged Decision Tree Model Specification (unknown mode)
       
       Main Arguments:
         cost_complexity = 0
@@ -89,7 +89,7 @@
     Code
       bag_tree() %>% set_engine("rpart")
     Output
-      Bagged Decision Tree Model Specification (unknown)
+      Bagged Decision Tree Model Specification (unknown mode)
       
       Main Arguments:
         cost_complexity = 0
@@ -139,7 +139,7 @@
     Code
       bag_tree() %>% set_engine("C5.0")
     Output
-      Bagged Decision Tree Model Specification (unknown)
+      Bagged Decision Tree Model Specification (unknown mode)
       
       Main Arguments:
         cost_complexity = 0
@@ -153,7 +153,7 @@
     Code
       decision_tree()
     Output
-      Decision Tree Model Specification (unknown)
+      Decision Tree Model Specification (unknown mode)
       
       Computational engine: rpart 
       
@@ -173,7 +173,7 @@
     Code
       decision_tree() %>% set_engine("partykit")
     Output
-      Decision Tree Model Specification (unknown)
+      Decision Tree Model Specification (unknown mode)
       
       Computational engine: partykit 
       
@@ -207,7 +207,7 @@
     Code
       decision_tree() %>% set_engine("partykit")
     Output
-      Decision Tree Model Specification (unknown)
+      Decision Tree Model Specification (unknown mode)
       
       Computational engine: partykit 
       
@@ -269,7 +269,7 @@
     Code
       dt
     Output
-      Decision Tree Model Specification (unknown)
+      Decision Tree Model Specification (unknown mode)
       
       Computational engine: rpart 
       
