@@ -77,6 +77,8 @@ wf_set <-
 
 # tests ------------------------------------------------------------------
 test_that("stacking with grid search works", {
+  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+
   wf_set_grid <-
     workflow_map(
       wf_set %>% option_add(control = control_stack_grid()),
@@ -118,6 +120,8 @@ test_that("stacking with grid search works", {
 })
 
 test_that("stacking with Bayesian tuning works", {
+  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+
   wf_set_bayes <-
     workflow_map(
       wf_set %>% option_add(control = control_stack_bayes()),
@@ -159,6 +163,8 @@ test_that("stacking with Bayesian tuning works", {
 })
 
 test_that("stacking with finetune works (anova)", {
+  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+
   wf_set_anova <-
     workflow_map(
       wf_set  %>% option_add(control = control_race(save_pred = TRUE, save_workflow = TRUE)),
@@ -219,6 +225,8 @@ test_that("stacking with finetune works (anova)", {
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
+  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+
   wf_set_sim_anneal <-
     workflow_map(
       wf_set  %>% option_add(control = control_sim_anneal(save_pred = TRUE, save_workflow = TRUE)),
@@ -269,6 +277,8 @@ test_that("stacking with finetune works (sim_anneal)", {
 
 
 test_that("stacking with finetune works (win_loss)", {
+  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+
   wf_set_win_loss <-
     workflow_map(
       wf_set  %>% option_add(control = control_race(save_pred = TRUE, save_workflow = TRUE)),
