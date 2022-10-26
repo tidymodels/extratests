@@ -1030,8 +1030,8 @@ test_that('proportional_hazards - glmnet censored case weights', {
     set_mode("censored regression") %>%
     fit(Surv(time, event) ~ ., data = dat$full)
 
-  expect_snapshot(wt_fit$fit$call)
-  expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
+  expect_snapshot(wt_fit$fit$fit$call)
+  expect_unequal(coef(unwt_fit$fit$fit), coef(wt_fit$fit$fit))
 })
 
 
