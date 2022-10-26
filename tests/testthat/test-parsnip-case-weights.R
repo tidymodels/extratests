@@ -1011,7 +1011,7 @@ test_that('proportional_hazards - survival censored case weights', {
 })
 
 test_that('proportional_hazards - glmnet censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
+  skip_if_not_installed("censored", "0.1.1.9001")
 
   dat <- make_cens_wts()
 
