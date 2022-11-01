@@ -12,6 +12,7 @@ Depends:
     tidymodels
 Suggests: 
     baguette,
+    bonsai,
     butcher,
     C50,
     censored,
@@ -30,6 +31,7 @@ Suggests:
     mda,
     mixOmics,
     modeldata,
+    modeltime,
     multilevelmod,
     parallel,
     parsnip,
@@ -68,3 +70,4 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1.9001
+Config/testthat/start-first: parsnip-extension-messaging
