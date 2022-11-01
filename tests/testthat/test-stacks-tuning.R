@@ -174,6 +174,10 @@ test_that("stacking with finetune works (anova)", {
       metrics = metric
     )
 
+  wf_set_anova <- wf_set_anova[
+    purrr::map(wf_set_anova$result, inherits, "tune_results") %>% unlist(),
+  ]
+
   data_st_anova <-
     stacks() %>%
     add_candidates(wf_set_anova)
@@ -236,10 +240,12 @@ test_that("stacking with finetune works (sim_anneal)", {
       metrics = metric
     )
 
+  wf_set_sim_anneal <- wf_set_sim_anneal[
+    purrr::map(wf_set_sim_anneal$result, inherits, "tune_results") %>% unlist(),
+  ]
+
   wf_set_preds <-
-    wf_set_sim_anneal[
-      purrr::map(wf_set_sim_anneal$result, inherits, "tune_results") %>% unlist(),
-    ] %>%
+    wf_set_sim_anneal %>%
     collect_metrics(summarize = FALSE) %>%
     group_by(wflow_id, .config) %>%
     count()
@@ -287,6 +293,10 @@ test_that("stacking with finetune works (win_loss)", {
       resamples = folds,
       metrics = metric
     )
+
+  wf_set_win_loss <- wf_set_win_loss[
+    purrr::map(wf_set_win_loss$result, inherits, "tune_results") %>% unlist(),
+  ]
 
   data_st_win_loss <-
     stacks() %>%
