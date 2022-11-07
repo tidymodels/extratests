@@ -58,7 +58,7 @@ spec_svm <-
   set_mode("regression")
 
 spec_nn <-
-  mlp(hidden_units = tune(), penalty = tune(), epochs = tune()) %>%
+  mlp(penalty = tune()) %>%
   set_engine("nnet") %>%
   set_mode("regression")
 
@@ -295,19 +295,18 @@ test_that("stacking with finetune works (win_loss)", {
       metrics = metric
     )
 
+  warning(paste0(c("Candidates are fitted: ", purrr::map_lgl(wf_set_win_loss$result, inherits, "tune_results"))))
+
   data_st_win_loss <-
     stacks() %>%
     add_candidates(wf_set_win_loss)
 
   expect_true(inherits(data_st_win_loss, "tbl_df"))
 
-  warning(paste0(c("Data stack column names", colnames(data_st_win_loss)), sep = ", "))
-  warning(paste0(c("Data stack column map", purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))), sep = ", "))
-
-  warning(paste0("All data stack names in map: ", all(
+  expect_true(all(
     colnames(data_st_win_loss)[2:length(data_st_win_loss)] %in%
     purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
-  )))
+  ))
 
   model_st_win_loss <-
     data_st_win_loss %>%
