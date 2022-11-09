@@ -295,18 +295,6 @@ test_that("stacking with finetune works (win_loss)", {
       metrics = metric
     )
 
-  warning(paste0("Class of workflow_set: ", class(wf_set_win_loss)[[1]]))
-
-  for (i in seq_along(wf_set_win_loss$result)) {
-    warning(paste0("workflow ID:", wf_set_win_loss$wflow_id[i]))
-    warning(paste0(class(wf_set_win_loss$result[[i]]), collapse = ", "))
-    if (inherits(wf_set_win_loss$result[[i]], "try-error")) {
-      warning(conditionMessage(attr(wf_set_win_loss$result[[i]], "condition")))
-    }
-  }
-
-  warning(paste0(c("Candidates are fitted: ", purrr::map_lgl(wf_set_win_loss$result, inherits, "tune_results"))))
-
   data_st_win_loss <-
     stacks() %>%
     add_candidates(wf_set_win_loss)
