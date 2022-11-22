@@ -13,6 +13,7 @@ Depends:
 Suggests: 
     baguette,
     bonsai,
+    BradleyTerry2,
     butcher,
     C50,
     censored,
@@ -24,6 +25,7 @@ Suggests:
     dplyr,
     earth,
     fastICA,
+    finetune,
     flexsurv,
     glmnet,
     hardhat,
@@ -58,6 +60,7 @@ Suggests:
     tidyr,
     tune,
     workflows,
+    workflowsets,
     xgboost,
     yardstick
 Remotes:
