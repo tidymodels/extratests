@@ -3,10 +3,8 @@ library(testthat)
 # ------------------------------------------------------------------------------
 
 library(spatialsample)
-data(ames, package = "modeldata")
-ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
 set.seed(7898)
-folds <- spatial_clustering_cv(ames, coords = c("Latitude", "Longitude"), v = 5)
+folds <- spatial_clustering_cv(boston_canopy, v = 5)
 
 tree_spec <-
   decision_tree(
@@ -22,7 +20,7 @@ test_that("can tune with spatialsample object", {
   expect_error(
     rs <- workflow() %>%
       add_model(tree_spec) %>%
-      add_formula(Sale_Price ~ Year_Built + Gr_Liv_Area +  Bldg_Type) %>%
+      add_formula(mean_heat_index ~ change_canopy_percentage + canopy_percentage_2019 + land_area) %>%
       tune_grid(resamples = folds, grid = 5, metrics = metric_set(rmse)),
     NA
   )
@@ -34,7 +32,6 @@ test_that("can tune with spatialsample object", {
 })
 
 test_that("can tune with sf-based spatialsample object", {
-  skip_if(utils::packageVersion("spatialsample") < "0.1.0.9000")
 
   set.seed(7898)
   block <- spatial_block_cv(boston_canopy, v = 20, radius = 1, buffer = 1)
@@ -42,7 +39,7 @@ test_that("can tune with sf-based spatialsample object", {
   expect_error(
     rs <- workflow() %>%
       add_model(tree_spec) %>%
-      add_formula(mean_heat_index ~ change_canopy_percentage + canopy_percentage_2019 +  land_area) %>%
+      add_formula(mean_heat_index ~ change_canopy_percentage + canopy_percentage_2019 + land_area) %>%
       tune_grid(resamples = block, grid = 5, metrics = metric_set(rmse)),
     NA
   )
