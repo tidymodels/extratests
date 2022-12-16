@@ -32,6 +32,7 @@ Suggests:
     Matrix,
     mda,
     mixOmics,
+    mockery,
     modeldata,
     modeltime,
     multilevelmod,
