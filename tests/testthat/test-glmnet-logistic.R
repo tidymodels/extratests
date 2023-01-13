@@ -1,34 +1,18 @@
 library(testthat)
 library(parsnip)
-library(rlang)
-library(tibble)
-library(tidyr)
-library(modeldata)
 
-# ------------------------------------------------------------------------------
-
-ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
-caught_ctrl   <- control_parsnip(verbosity = 1, catch = TRUE)
-quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
-
-run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
-
-## -----------------------------------------------------------------------------
-
-data(lending_club)
-data(wa_churn)
-lending_club <- head(lending_club, 200)
-lc_form <- as.formula(Class ~ log(funded_amnt) + int_rate)
-num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
-lc_bad_form <- as.formula(funded_amnt ~ term)
-lc_basic <- logistic_reg(penalty = 0.1) %>% set_engine("glmnet")
-
-# ------------------------------------------------------------------------------
+R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+skip_if(R_version_too_small_for_glmnet)
 
 test_that('glmnet execution', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(lending_club, package = "modeldata", envir = rlang::current_env())
+  lending_club <- head(lending_club, 200)
+  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
+  lc_basic <- logistic_reg(penalty = 0.1) %>% set_engine("glmnet")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   expect_error(
     res <- fit_xy(
@@ -56,7 +40,11 @@ test_that('glmnet execution', {
 test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(lending_club, package = "modeldata", envir = rlang::current_env())
+  lending_club <- head(lending_club, 200)
+  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   xy_fit <- fit_xy(
     logistic_reg(penalty = 0.1) %>% set_engine("glmnet"),
@@ -106,11 +94,14 @@ test_that('glmnet prediction, one lambda', {
 
 })
 
-
 test_that('glmnet prediction, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(lending_club, package = "modeldata", envir = rlang::current_env())
+  lending_club <- head(lending_club, 200)
+  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   lams <- c(0.01, 0.1)
 
@@ -143,11 +134,14 @@ test_that('glmnet prediction, mulitiple lambda', {
 
 })
 
-
 test_that('glmnet probabilities, one lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(lending_club, package = "modeldata", envir = rlang::current_env())
+  lending_club <- head(lending_club, 200)
+  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   xy_fit <- fit_xy(
     logistic_reg(penalty = 0.1)  %>% set_engine("glmnet"),
@@ -196,7 +190,11 @@ test_that('glmnet probabilities, one lambda', {
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(lending_club, package = "modeldata", envir = rlang::current_env())
+  lending_club <- head(lending_club, 200)
+  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   lams <- c(0.01, 0.1)
 
@@ -261,11 +259,11 @@ test_that('glmnet probabilities, mulitiple lambda', {
 
 })
 
-
 test_that('submodel prediction', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
+
+  data(wa_churn, package = "modeldata", envir = rlang::current_env())
 
   vars <- c("female", "tenure", "total_charges", "phone_service", "monthly_charges")
   class_fit <-
