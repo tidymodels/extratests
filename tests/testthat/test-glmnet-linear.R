@@ -1,11 +1,11 @@
 library(testthat)
 library(parsnip)
 
-run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+skip_if(R_version_too_small_for_glmnet)
 
 test_that('glmnet execution', {
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
@@ -41,7 +41,6 @@ test_that('glmnet execution', {
 
 test_that('glmnet outcome errors', {
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
   skip_if(utils::packageVersion("parsnip") < "0.1.7.9003")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
@@ -78,7 +77,6 @@ test_that('glmnet outcome errors', {
 test_that('glmnet prediction, single lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
@@ -125,7 +123,6 @@ test_that('glmnet prediction, single lambda', {
 test_that('glmnet prediction, multiple lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   lams <- c(.01, 0.1)
 
@@ -228,7 +225,6 @@ test_that('glmnet prediction, multiple lambda', {
 test_that('submodel prediction', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   reg_fit <-
     linear_reg(penalty = 0.1) %>%
@@ -271,7 +267,6 @@ test_that('submodel prediction', {
 test_that('error traps', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   expect_error(
     linear_reg(penalty = 0.01) %>%

@@ -1,12 +1,12 @@
 library(testthat)
 library(parsnip)
 
-run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+skip_if(R_version_too_small_for_glmnet)
 
 test_that('glmnet execution', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(lending_club, package = "modeldata", envir = rlang::current_env())
   lending_club <- head(lending_club, 200)
@@ -40,7 +40,6 @@ test_that('glmnet execution', {
 test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(lending_club, package = "modeldata", envir = rlang::current_env())
   lending_club <- head(lending_club, 200)
@@ -98,7 +97,6 @@ test_that('glmnet prediction, one lambda', {
 test_that('glmnet prediction, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(lending_club, package = "modeldata", envir = rlang::current_env())
   lending_club <- head(lending_club, 200)
@@ -139,7 +137,6 @@ test_that('glmnet prediction, mulitiple lambda', {
 test_that('glmnet probabilities, one lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(lending_club, package = "modeldata", envir = rlang::current_env())
   lending_club <- head(lending_club, 200)
@@ -193,7 +190,6 @@ test_that('glmnet probabilities, one lambda', {
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(lending_club, package = "modeldata", envir = rlang::current_env())
   lending_club <- head(lending_club, 200)
@@ -266,7 +262,6 @@ test_that('glmnet probabilities, mulitiple lambda', {
 test_that('submodel prediction', {
 
   skip_if_not_installed("glmnet")
-  skip_if(run_glmnet)
 
   data(wa_churn, package = "modeldata", envir = rlang::current_env())
 
