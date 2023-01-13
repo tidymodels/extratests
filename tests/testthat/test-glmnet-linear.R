@@ -1,35 +1,19 @@
 library(testthat)
 library(parsnip)
-library(rlang)
-library(tidyr)
-library(modeldata)
-
-# ------------------------------------------------------------------------------
-
-ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
-caught_ctrl   <- control_parsnip(verbosity = 1, catch = TRUE)
-quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
 
 run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 
-## -----------------------------------------------------------------------------
-
-data("hpc_data")
-
-hpc <- hpc_data[1:150, c(2:5, 8)]
-num_pred <- c("compounds", "iterations", "num_pending")
-hpc_bad_form <- as.formula(class ~ term)
-hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
-  set_engine("glmnet", nlambda = 15)
-no_lambda <- linear_reg(mixture = .3) %>%
-  set_engine("glmnet")
-
-# ------------------------------------------------------------------------------
-
 test_that('glmnet execution', {
-
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
+    set_engine("glmnet", nlambda = 15)
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
+  num_pred <- c("compounds", "iterations", "num_pending")
 
   expect_error(
     res <- fit_xy(
@@ -44,6 +28,7 @@ test_that('glmnet execution', {
   expect_true(has_multi_predict(res))
   expect_equal(multi_predict_args(res), "penalty")
 
+  hpc_bad_form <- as.formula(class ~ term)
   expect_error(
     fit(
       hpc_basic,
@@ -55,10 +40,17 @@ test_that('glmnet execution', {
 })
 
 test_that('glmnet outcome errors', {
-
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
   skip_if(utils::packageVersion("parsnip") < "0.1.7.9003")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
+    set_engine("glmnet", nlambda = 15)
+  caught_ctrl <- control_parsnip(verbosity = 1, catch = TRUE)
+  num_pred <- c("compounds", "iterations", "num_pending")
 
   expect_error(
     fit_xy(
@@ -81,14 +73,20 @@ test_that('glmnet outcome errors', {
     ),
     "For a regression model"
   )
-
-
 })
 
 test_that('glmnet prediction, single lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
+    set_engine("glmnet", nlambda = 15)
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
+  num_pred <- c("compounds", "iterations", "num_pending")
 
   res_xy <- fit_xy(
     hpc_basic,
@@ -131,8 +129,13 @@ test_that('glmnet prediction, multiple lambda', {
 
   lams <- c(.01, 0.1)
 
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
   hpc_mult <- linear_reg(penalty = 0.1, mixture = .3) %>%
     set_engine("glmnet")
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
+  num_pred <- c("compounds", "iterations", "num_pending")
 
   res_xy <- fit_xy(
     hpc_mult,

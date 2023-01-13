@@ -1,27 +1,17 @@
 library(testthat)
 library(parsnip)
-library(rlang)
-library(tibble)
-library(dplyr)
-
-# ------------------------------------------------------------------------------
-
-ctrl          <- control_parsnip(verbosity = 1, catch = FALSE)
-caught_ctrl   <- control_parsnip(verbosity = 1, catch = TRUE)
-quiet_ctrl    <- control_parsnip(verbosity = 0, catch = TRUE)
 
 run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
-
-data("hpc_data", package = "modeldata")
-hpc <- hpc_data[, c(2:5, 8)]
-rows <- c(1, 51, 101)
-
-# ------------------------------------------------------------------------------
 
 test_that('glmnet execution', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[, c(2:5, 8)]
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
+  caught_ctrl <- control_parsnip(verbosity = 1, catch = TRUE)
 
   expect_error(
     res <- fit_xy(
@@ -51,6 +41,11 @@ test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[, c(2:5, 8)]
+  rows <- c(1, 51, 101)
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   xy_fit <- fit_xy(
     multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
@@ -94,11 +89,15 @@ test_that('glmnet prediction, one lambda', {
 
 })
 
-
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[, c(2:5, 8)]
+  rows <- c(1, 51, 101)
+  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   lams <- c(0.01, 0.1)
 
@@ -173,6 +172,9 @@ test_that('glmnet probabilities, mulitiple lambda', {
 test_that("class predictions are factors with all levels", {
   skip_if_not_installed("glmnet")
   skip_if(run_glmnet)
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[, c(2:5, 8)]
 
   basic <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc)
   nd <- hpc[hpc$class == "VF", ]
