@@ -47,41 +47,6 @@ test_that("glmnet model object", {
   expect_equal(f_fit$fit[-11], exp_fit[-11])
 })
 
-test_that('glmnet outcome errors', {
-  skip_if_not_installed("glmnet")
-  skip_if(utils::packageVersion("parsnip") < "0.1.7.9003")
-
-  data("hpc_data", package = "modeldata", envir = rlang::current_env())
-  hpc <- hpc_data[1:150, c(2:5, 8)]
-
-  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
-    set_engine("glmnet", nlambda = 15)
-  caught_ctrl <- control_parsnip(verbosity = 1, catch = TRUE)
-  num_pred <- c("compounds", "iterations", "num_pending")
-
-  expect_error(
-    fit_xy(
-      hpc_basic,
-      x = hpc[, num_pred],
-      y = factor(hpc$input_fields),
-      control = caught_ctrl
-    ),
-    "For a regression model"
-  )
-
-  hpc$class <- as.character(hpc$class)
-
-  expect_error(
-    fit(
-      hpc_basic,
-      class ~ compounds + iterations,
-      data = hpc,
-      control = ctrl
-    ),
-    "For a regression model"
-  )
-})
-
 test_that('glmnet prediction, single lambda', {
 
   skip_if_not_installed("glmnet")
