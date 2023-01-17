@@ -4,7 +4,7 @@ library(parsnip)
 R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 skip_if(R_version_too_small_for_glmnet)
 
-test_that('glmnet execution', {
+test_that('glmnet execution error', {
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
@@ -12,29 +12,15 @@ test_that('glmnet execution', {
 
   hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
     set_engine("glmnet", nlambda = 15)
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
-  num_pred <- c("compounds", "iterations", "num_pending")
 
-  expect_error(
-    res <- fit_xy(
-      hpc_basic,
-      control = ctrl,
-      x = hpc[, num_pred],
-      y = hpc$input_fields
-    ),
-    regexp = NA
-  )
-
-  expect_true(has_multi_predict(res))
-  expect_equal(multi_predict_args(res), "penalty")
-
-  hpc_bad_form <- as.formula(class ~ term)
+  # this error/test is not glmnet-specific,
+  # the error comes from `parsnip::.convert_form_to_xy_fit()`
+  hpc_bad_form <- as.formula(class ~ nonexistent_variable)
   expect_error(
     fit(
       hpc_basic,
       hpc_bad_form,
-      data = hpc,
-      control = ctrl
+      data = hpc
     )
   )
 })
