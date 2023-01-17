@@ -238,21 +238,17 @@ test_that('submodel prediction', {
 
 
 test_that('error traps', {
-
   skip_if_not_installed("glmnet")
 
-  expect_error(
+  expect_snapshot(error = TRUE, {
     linear_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
       predict(mtcars[-(1:4), ], penalty = 0:1)
-  )
-  expect_error(
+  })
+  expect_snapshot(error = TRUE, {
     linear_reg() %>%
       set_engine("glmnet") %>%
-      fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
-      predict(mtcars[-(1:4), ])
-  )
-
+      fit(mpg ~ ., data = mtcars[-(1:4), ])
+  })
 })
-
