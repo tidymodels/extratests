@@ -25,6 +25,28 @@ test_that('glmnet execution error', {
   )
 })
 
+test_that("glmnet model object", {
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+  hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
+  hpc_y <- hpc$input_fields
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
+                            alpha = 0.3, nlambda = 15)
+
+  lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15)
+  expect_no_error(
+    f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
+  )
+  expect_no_error(
+    xy_fit <- fit_xy(lm_spec, x = hpc_x, y = hpc_y)
+  )
+
+  expect_equal(f_fit$fit, xy_fit$fit)
+  # removing call element
+  expect_equal(f_fit$fit[-11], exp_fit[-11])
+})
+
 test_that('glmnet outcome errors', {
   skip_if_not_installed("glmnet")
   skip_if(utils::packageVersion("parsnip") < "0.1.7.9003")
