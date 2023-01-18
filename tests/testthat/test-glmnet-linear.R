@@ -143,6 +143,60 @@ test_that("formula interface can deal with missing values", {
   expect_true(is.na(f_pred$.pred[1]))
 })
 
+test_that("glmnet multi_predict(): type numeric", {
+  skip_if_not_installed("glmnet")
+
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+  hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
+  hpc_y <- hpc$input_fields
+
+  penalty_values <- c(0.01, 0.1)
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian", alpha = 0.3)
+  exp_pred <- predict(exp_fit, hpc_x, s = penalty_values)
+
+  lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>% set_engine("glmnet")
+  f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
+  xy_fit <- fit_xy(lm_spec, x = hpc_x, y = hpc_y)
+
+  expect_true(has_multi_predict(xy_fit))
+  expect_equal(multi_predict_args(xy_fit), "penalty")
+
+  f_pred <- multi_predict(f_fit, hpc, penalty = penalty_values)
+  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values)
+  expect_equal(f_pred, xy_pred)
+
+  f_pred_001 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.01) %>%
+    dplyr::pull(.pred)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.1) %>%
+    dplyr::pull(.pred)
+  expect_equal(f_pred_001, unname(exp_pred[,1]))
+  expect_equal(f_pred_01, unname(exp_pred[,2]))
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(hpc))
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(dim(.x) == c(2, 2))))
+  )
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred"))))
+  )
+
+  # single prediction
+  f_pred_1 <- multi_predict(f_fit, hpc[1, ], penalty = penalty_values)
+  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE], penalty = penalty_values)
+  expect_equal(f_pred_1, xy_pred_1)
+  expect_equal(nrow(f_pred_1), 1)
+  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
 
 test_that('error traps', {
   skip_if_not_installed("glmnet")
