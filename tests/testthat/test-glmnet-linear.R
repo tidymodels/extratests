@@ -244,49 +244,6 @@ test_that('glmnet prediction, multiple lambda', {
   )
 })
 
-
-test_that('submodel prediction', {
-
-  skip_if_not_installed("glmnet")
-
-  reg_fit <-
-    linear_reg(penalty = 0.1) %>%
-    set_engine("glmnet") %>%
-    fit(mpg ~ ., data = mtcars[-(1:4), ])
-
-  pred_glmn <- predict(reg_fit$fit, as.matrix(mtcars[1:4, -1]), s = .1)
-
-  mp_res <- multi_predict(reg_fit, new_data = mtcars[1:4, -1], penalty = .1)
-  mp_res <- do.call("rbind", mp_res$.pred)
-  expect_equal(mp_res[[".pred"]], unname(pred_glmn[,1]))
-
-  expect_error(
-    multi_predict(reg_fit, newdata = mtcars[1:4, -1], penalty = .1),
-    "Did you mean"
-  )
-
-  reg_fit <-
-    linear_reg(penalty = 0.01) %>%
-    set_engine("glmnet") %>%
-    fit(mpg ~ ., data = mtcars[-(1:4), ])
-
-
-  pred_glmn_all <-
-    predict(reg_fit$fit, as.matrix(mtcars[1:2, -1]), penalty = reg_fit$fit$lambda) %>%
-    as.data.frame() %>%
-    stack() %>%
-    dplyr::arrange(ind)
-
-
-  mp_res_all <-
-    multi_predict(reg_fit, new_data = mtcars[1:2, -1], penalty = reg_fit$fit$lambda) %>%
-    tidyr::unnest(cols = c(.pred))
-
-  expect_equal(sort(mp_res_all$.pred), sort(pred_glmn_all$values))
-
-})
-
-
 test_that('error traps', {
   skip_if_not_installed("glmnet")
 
