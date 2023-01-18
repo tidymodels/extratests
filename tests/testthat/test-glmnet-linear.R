@@ -47,6 +47,39 @@ test_that("glmnet model object", {
   expect_equal(f_fit$fit[-11], exp_fit[-11])
 })
 
+test_that("glmnet prediction: type numeric", {
+  skip_if_not_installed("glmnet")
+
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+  hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
+  hpc_y <- hpc$input_fields
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
+                            alpha = 0.3, nlambda = 15)
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
+
+  lm_spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15)
+  f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
+  xy_fit <- fit_xy(lm_spec, x = hpc_x, y = hpc_y)
+
+  f_pred <- predict(f_fit, hpc)
+  xy_pred <- predict(xy_fit, hpc_x)
+  expect_equal(f_pred, xy_pred)
+  expect_equal(f_pred$.pred, as.vector(exp_pred))
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(hpc))
+
+  # single prediction
+  f_pred_1 <- predict(f_fit, hpc[1, ])
+  expect_equal(nrow(f_pred_1), 1)
+  xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE])
+  expect_equal(nrow(xy_pred_1), 1)
+})
+
 test_that('glmnet prediction: column order of `new_data` irrelevant', {
 
   skip_if_not_installed("glmnet")
