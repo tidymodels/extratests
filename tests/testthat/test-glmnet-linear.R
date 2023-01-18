@@ -10,7 +10,7 @@ test_that('glmnet execution error', {
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
 
-  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
+  hpc_basic <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
 
   # this error/test is not glmnet-specific,
@@ -26,6 +26,8 @@ test_that('glmnet execution error', {
 })
 
 test_that("glmnet model object", {
+  skip_if_not_installed("glmnet")
+
   hpc <- hpc_data[1:150, c(2:5, 8)]
   hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
   hpc_y <- hpc$input_fields
@@ -33,7 +35,7 @@ test_that("glmnet model object", {
   exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
                             alpha = 0.3, nlambda = 15)
 
-  lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>%
+  lm_spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
   expect_no_error(
     f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
@@ -81,7 +83,6 @@ test_that("glmnet prediction: type numeric", {
 })
 
 test_that('glmnet prediction: column order of `new_data` irrelevant', {
-
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
@@ -133,7 +134,6 @@ test_that("formula interface can deal with missing values", {
   hpc <- hpc_data[1:150, c(2:5, 8)]
 
   hpc$compounds[1] <- NA
-  hpc_x[1,1] <- NA
 
   lm_spec <- linear_reg(penalty = 0.123) %>% set_engine("glmnet")
   f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
