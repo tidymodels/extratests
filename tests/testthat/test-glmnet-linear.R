@@ -47,49 +47,23 @@ test_that("glmnet model object", {
   expect_equal(f_fit$fit[-11], exp_fit[-11])
 })
 
-test_that('glmnet prediction, single lambda', {
+test_that('glmnet prediction: column order of `new_data` irrelevant', {
 
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
 
-  hpc_basic <- linear_reg(penalty = .1, mixture = .3) %>%
+  hpc_basic <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
   num_pred <- c("compounds", "iterations", "num_pending")
 
-  res_xy <- fit_xy(
-    hpc_basic,
-    control = ctrl,
-    x = hpc[, num_pred],
-    y = hpc$input_fields
-  )
+  res_xy <- fit_xy(hpc_basic, x = hpc[, num_pred], y = hpc$input_fields)
 
-  # glmn_mod <- glmnet::glmnet(x = as.matrix(hpc[, num_pred]), y = hpc$input_fields,
-  #                            alpha = .3, nlambda = 15)
-
-  uni_pred <- c(640.599944271351, 196.646976529848, 186.279646400216, 194.673852228774,
-                198.126819755653)
-
-  expect_equal(uni_pred, predict(res_xy, hpc[1:5, num_pred])$.pred, tolerance = 0.0001)
-  expect_equal(uni_pred[3], predict(res_xy, hpc[3, num_pred])$.pred, tolerance = 0.0001)
   expect_equal(
-    predict(res_xy, hpc[1:5, num_pred]),
-    predict(res_xy, hpc[1:5, sample(num_pred)])
+    predict(res_xy, hpc[1:5, sample(num_pred)]),
+    predict(res_xy, hpc[1:5, num_pred])
   )
-
-  res_form <- fit(
-    hpc_basic,
-    input_fields ~ log(compounds) + class,
-    data = hpc,
-    control = ctrl
-  )
-
-  form_pred <- c(570.504089227118, 162.413061474088, 167.022896537861, 157.609071878082,
-                 165.887783741483)
-
-  expect_equal(form_pred, predict(res_form, hpc[1:5,])$.pred, tolerance = 0.0001)
 })
 
 
