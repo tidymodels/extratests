@@ -4,37 +4,31 @@ library(parsnip)
 R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 skip_if(R_version_too_small_for_glmnet)
 
-test_that('glmnet execution', {
-
+test_that("glmnet execution and model object", {
   skip_if_not_installed("glmnet")
 
-  data(lending_club, package = "modeldata", envir = rlang::current_env())
-  lending_club <- head(lending_club, 200)
-  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
-  lc_basic <- logistic_reg(penalty = 0.1) %>% set_engine("glmnet")
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
+  lending_club <- lending_club[1:200, ]
+  lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term,
+                                 data = lending_club)[, -1]
+  lending_club_y <- lending_club$Class
 
+  exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y,
+                            family = "binomial")
+
+  lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
   expect_error(
-    res <- fit_xy(
-      lc_basic,
-      control = ctrl,
-      x = lending_club[, num_pred],
-      y = lending_club$Class
-    ),
-    regexp = NA
+    f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+                 data = lending_club),
+    NA
+  )
+  expect_error(
+    xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y),
+    NA
   )
 
-  expect_true(has_multi_predict(res))
-  expect_equal(multi_predict_args(res), "penalty")
-
-  expect_error(
-    glmnet_xy_catch <- fit_xy(
-      lc_basic,
-      x = lending_club[, num_pred],
-      y = lending_club$total_bal_il,
-      control = caught_ctrl
-    )
-  )
+  expect_equal(f_fit$fit, xy_fit$fit)
+  # removing call element
+  expect_equal(f_fit$fit[-12], exp_fit[-12])
 })
 
 test_that('glmnet prediction, one lambda', {
