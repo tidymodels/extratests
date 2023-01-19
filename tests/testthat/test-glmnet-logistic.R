@@ -127,59 +127,6 @@ test_that('glmnet prediction, mulitiple lambda', {
 
 })
 
-test_that('glmnet probabilities, one lambda', {
-
-  skip_if_not_installed("glmnet")
-
-  data(lending_club, package = "modeldata", envir = rlang::current_env())
-  lending_club <- head(lending_club, 200)
-  num_pred <- c("funded_amnt", "annual_inc", "num_il_tl")
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
-
-  xy_fit <- fit_xy(
-    logistic_reg(penalty = 0.1)  %>% set_engine("glmnet"),
-    control = ctrl,
-    x = lending_club[, num_pred],
-    y = lending_club$Class
-  )
-
-  uni_pred <-
-    predict(xy_fit$fit,
-            newx = as.matrix(lending_club[1:7, num_pred]),
-            s = 0.1, type = "response")[,1]
-  uni_pred <- tibble(.pred_bad = 1 - uni_pred, .pred_good = uni_pred)
-
-  expect_equal(
-    uni_pred,
-    predict(xy_fit, lending_club[1:7, num_pred], type = "prob")
-  )
-
-  res_form <- fit(
-    logistic_reg(penalty = 0.1)  %>% set_engine("glmnet"),
-    Class ~ log(funded_amnt) + int_rate,
-    data = lending_club,
-    control = ctrl
-  )
-
-  form_mat <- model.matrix(Class ~ log(funded_amnt) + int_rate, data = lending_club)
-  form_mat <- form_mat[1:7, -1]
-
-  form_pred <-
-    unname(predict(res_form$fit,
-                   newx = form_mat,
-                   s = 0.1, type = "response")[, 1])
-  form_pred <- tibble(.pred_bad = 1 - form_pred, .pred_good = form_pred)
-
-  expect_equal(
-    form_pred,
-    predict(res_form, lending_club[1:7, c("funded_amnt", "int_rate")], type = "prob")
-  )
-
-  one_row <- predict(res_form, lending_club[1, c("funded_amnt", "int_rate")], type = "prob")
-  expect_equal(form_pred[1,], one_row, ignore_attr = TRUE)
-
-})
-
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
