@@ -31,55 +31,24 @@ test_that("glmnet execution and model object", {
   expect_equal(f_fit$fit[-14], exp_fit[-14])
 })
 
-test_that('glmnet prediction, one lambda', {
+test_that("glmnet prediction: column order of `new_data` irrelevant", {
 
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[, c(2:5, 8)]
   rows <- c(1, 51, 101)
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
 
   xy_fit <- fit_xy(
     multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
-    control = ctrl,
     x = hpc[, 1:4],
     y = hpc$class
   )
 
-  uni_pred <-
-    predict(xy_fit$fit,
-            newx = as.matrix(hpc[rows, 1:4]),
-            s = xy_fit$spec$args$penalty, type = "class")
-  uni_pred <- factor(uni_pred[,1], levels = levels(hpc$class))
-  uni_pred <- unname(uni_pred)
-
-  expect_equal(uni_pred, predict(xy_fit, hpc[rows, 1:4], type = "class")$.pred_class)
-  expect_error(predict(xy_fit, hpc[3, 1:4], type = "class")$.pred_class, NA)
   expect_equal(
-    predict(xy_fit, hpc[rows, 1:4], type = "class"),
-    predict(xy_fit, hpc[rows, c(3:1, 4)], type = "class")
+    predict(xy_fit, hpc[rows, c(3:1, 4)], type = "class"),
+    predict(xy_fit, hpc[rows, 1:4], type = "class")
   )
-
-  res_form <- fit(
-    multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
-    class ~ log(compounds) + input_fields,
-    data = hpc,
-    control = ctrl
-  )
-
-  form_mat <- model.matrix(class ~ log(compounds) + input_fields, data = hpc)
-  form_mat <- form_mat[rows, -1]
-
-  form_pred <-
-    predict(res_form$fit,
-            newx = form_mat,
-            s = res_form$spec$args$penalty,
-            type = "class")
-  form_pred <- factor(form_pred[,1], levels = levels(hpc$class))
-  expect_equal(form_pred, parsnip:::predict_class.model_fit(res_form, hpc[rows, c("compounds", "input_fields")]))
-  expect_equal(form_pred, predict(res_form, hpc[rows, c("compounds", "input_fields")], type = "class")$.pred_class)
-
 })
 
 test_that("glmnet prediction: type class", {
