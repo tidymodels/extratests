@@ -122,6 +122,33 @@ test_that("glmnet prediction: type prob", {
   expect_equal(nrow(xy_pred_1), 1)
 })
 
+test_that("glmnet prediction: type raw", {
+  skip_if_not_installed("glmnet")
+
+  lending_club <- lending_club[1:200, ]
+  lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
+  lending_club_y <- lending_club$Class
+
+  exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y, family = "binomial")
+  exp_pred <- predict(exp_fit, lending_club_x)
+
+  lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
+  f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+               data = lending_club)
+  xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
+
+  f_pred <- predict(f_fit, lending_club, type = "raw")
+  xy_pred <- predict(xy_fit, lending_club_x, type = "raw")
+  expect_equal(f_pred, xy_pred)
+  expect_equal(f_pred, exp_pred)
+
+  # single prediction
+  f_pred_1 <- predict(f_fit, lending_club[1, ], type = "raw")
+  expect_equal(nrow(f_pred_1), 1)
+  xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE], type = "raw")
+  expect_equal(nrow(xy_pred_1), 1)
+})
+
 test_that('glmnet prediction, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
