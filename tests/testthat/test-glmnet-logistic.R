@@ -149,6 +149,22 @@ test_that("glmnet prediction: type raw", {
   expect_equal(nrow(xy_pred_1), 1)
 })
 
+test_that("formula interface can deal missing values", {
+  skip_if_not_installed("glmnet")
+
+  lending_club <- lending_club[1:200, ]
+  lending_club$funded_amnt[1] <- NA
+
+  lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
+  f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+               data = lending_club)
+
+  f_pred <- predict(f_fit, lending_club)
+  expect_equal(nrow(f_pred), nrow(lending_club))
+  # no expectation for the first value to be NA because glmnet itself
+  # returns a non-NA value
+})
+
 test_that('glmnet prediction, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
