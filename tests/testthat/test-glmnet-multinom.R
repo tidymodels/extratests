@@ -82,6 +82,108 @@ test_that('glmnet prediction, one lambda', {
 
 })
 
+test_that("glmnet prediction: type class", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.1, type = "class")
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+  xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
+
+  f_pred <- predict(f_fit, hpc_data, type = "class")
+  xy_pred <- predict(xy_fit, hpc_x, type = "class")
+  expect_equal(f_pred, xy_pred)
+  expect_equal(
+    f_pred$.pred_class %>% as.character(),
+    exp_pred %>% as.vector()
+  )
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred_class")
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+
+  # single prediction
+  f_pred_1 <- predict(f_fit, hpc_data[1, ])
+  expect_equal(nrow(f_pred_1), 1)
+  xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE])
+  expect_equal(nrow(xy_pred_1), 1)
+})
+
+test_that("glmnet prediction: type prob", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.1, type = "response")
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+  xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
+
+  f_pred <- predict(f_fit, hpc_data, type = "prob")
+  xy_pred <- predict(xy_fit, hpc_x, type = "prob")
+  expect_equal(f_pred, xy_pred)
+  expect_equal(
+    as.matrix(f_pred) %>% unname(),
+    exp_pred[, , 1] %>% unname()
+  )
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), c(".pred_VF", ".pred_F", ".pred_M", ".pred_L"))
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+
+  # single prediction
+  f_pred_1 <- predict(f_fit, hpc_data[1, ], type = "prob")
+  expect_equal(nrow(f_pred_1), 1)
+  xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE], type = "prob")
+  expect_equal(nrow(xy_pred_1), 1)
+})
+
+test_that("glmnet prediction: type raw", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+  xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
+
+  f_pred <- predict(f_fit, hpc_data, type = "raw")
+  xy_pred <- predict(xy_fit, hpc_x, type = "raw")
+  expect_equal(f_pred, xy_pred)
+
+  # single prediction
+  f_pred_1 <- predict(f_fit, hpc_data[1, ], type = "raw")
+  expect_equal(nrow(f_pred_1), 1)
+  xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE], type = "raw")
+  expect_equal(nrow(xy_pred_1), 1)
+})
+
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
