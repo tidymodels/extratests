@@ -153,6 +153,24 @@ test_that("glmnet prediction: type raw", {
   expect_equal(nrow(xy_pred_1), 1)
 })
 
+test_that("formula interface can deal with missing values", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc_data$compounds[1] <- NA
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ log(compounds) + input_fields, data = hpc_data)
+
+  f_pred <- predict(f_fit, hpc_data, type = "class")
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_true(is.na(f_pred$.pred_class[1]))
+
+  f_pred <- predict(f_fit, hpc_data, type = "prob")
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_true(all(is.na(f_pred[1,])))
+})
+
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
