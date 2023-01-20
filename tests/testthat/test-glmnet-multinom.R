@@ -4,39 +4,6 @@ library(parsnip)
 R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 skip_if(R_version_too_small_for_glmnet)
 
-test_that('glmnet execution', {
-
-  skip_if_not_installed("glmnet")
-
-  data("hpc_data", package = "modeldata", envir = rlang::current_env())
-  hpc <- hpc_data[, c(2:5, 8)]
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
-  caught_ctrl <- control_parsnip(verbosity = 1, catch = TRUE)
-
-  expect_error(
-    res <- fit_xy(
-      multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
-      control = ctrl,
-      x = hpc[, 1:4],
-      y = hpc$class
-    ),
-    regexp = NA
-  )
-
-  expect_true(has_multi_predict(res))
-  expect_equal(multi_predict_args(res), "penalty")
-
-  expect_error(
-    glmnet_xy_catch <- fit_xy(
-      multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
-      x = hpc[, 2:5],
-      y = hpc$compounds,
-      control = caught_ctrl
-    )
-  )
-
-})
-
 test_that("glmnet execution and model object", {
   skip_if_not_installed("glmnet")
 
