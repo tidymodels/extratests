@@ -277,7 +277,7 @@ test_that('glmnet probabilities, mulitiple lambda', {
 
 })
 
-test_that('submodel prediction', {
+test_that('multi_predict() with default or single penalty value', {
 
   skip_if_not_installed("glmnet")
 
@@ -289,16 +289,8 @@ test_that('submodel prediction', {
     set_engine("glmnet") %>%
     fit(churn ~ ., data = wa_churn[-(1:4), c("churn", vars)])
 
-  pred_glmn <- predict(class_fit$fit, as.matrix(wa_churn[1:4, vars]), s = .1, type = "response")
-
-  mp_res <- multi_predict(class_fit, new_data = wa_churn[1:4, vars], penalty = .1, type = "prob")
-  mp_res <- do.call("rbind", mp_res$.pred)
-  expect_equal(mp_res[[".pred_No"]], unname(pred_glmn[,1]))
-
-  expect_error(
-    multi_predict(class_fit, newdata = wa_churn[1:4, vars], penalty = .1, type = "prob"),
-    "Did you mean"
-  )
+  pred_glmn <- predict(class_fit$fit, as.matrix(wa_churn[1:4, vars]), s = .1,
+                       type = "response")
 
   # Can predict using default penalty. See #108
   expect_error(
@@ -306,4 +298,13 @@ test_that('submodel prediction', {
     NA
   )
 
+  # Can deal with single penalty value
+  mp_res <- multi_predict(class_fit, new_data = wa_churn[1:4, vars],
+                          penalty = 0.1, type = "prob")
+  mp_res <- do.call("rbind", mp_res$.pred)
+  expect_equal(mp_res[[".pred_No"]], unname(pred_glmn[,1]))
+
+  expect_snapshot(error = TRUE, {
+    multi_predict(class_fit, newdata = wa_churn[1:4, vars], type = "prob")
+  })
 })
