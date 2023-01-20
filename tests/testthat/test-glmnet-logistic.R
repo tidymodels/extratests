@@ -277,6 +277,118 @@ test_that('glmnet probabilities, mulitiple lambda', {
 
 })
 
+test_that("glmnet multi_predict(): type class", {
+  skip_if_not_installed("glmnet")
+
+  lending_club <- lending_club[1:200, ]
+  lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
+  lending_club_y <- lending_club$Class
+
+  penalty_values <- c(0.01, 0.1)
+
+  exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y,
+                            family = "binomial")
+  exp_pred <- predict(exp_fit, lending_club_x, s = penalty_values, type = "class")
+
+  lr_spec <- logistic_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+               data = lending_club)
+  xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
+
+  expect_true(has_multi_predict(xy_fit))
+  expect_equal(multi_predict_args(xy_fit), "penalty")
+
+  f_pred <- multi_predict(f_fit, lending_club, penalty = penalty_values, type = "class")
+  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "class") # FIXME make this work with just hpc instead of hpc_x?
+  expect_equal(f_pred, xy_pred)
+
+  f_pred_001 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.01) %>%
+    dplyr::pull(.pred_class)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.1) %>%
+    dplyr::pull(.pred_class)
+  expect_equal(as.character(f_pred_001), unname(exp_pred[,1]))
+  expect_equal(as.character(f_pred_01), unname(exp_pred[,2]))
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(dim(.x) == c(2, 2))))
+  )
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred_class"))))
+  )
+
+  # single prediction
+  f_pred_1 <- multi_predict(f_fit, lending_club[1, ], penalty = c(0.123, 0.5), type = "class")
+  xy_pred_1 <- multi_predict(xy_fit, lending_club_x[1, , drop = FALSE], penalty = c(0.123, 0.5), type = "class")
+  expect_equal(f_pred_1, xy_pred_1)
+  expect_equal(nrow(f_pred_1), 1)
+  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
+test_that("glmnet multi_predict(): type prob", {
+  skip_if_not_installed("glmnet")
+
+  lending_club <- lending_club[1:200, ]
+  lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
+  lending_club_y <- lending_club$Class
+
+  penalty_values <- c(0.01, 0.1)
+
+  exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y, family = "binomial")
+  exp_pred <- predict(exp_fit, lending_club_x, s = penalty_values, type = "response")
+
+  lr_spec <- logistic_reg(penalty = 0.01) %>% set_engine("glmnet")
+  f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+               data = lending_club)
+  xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
+
+  f_pred <- multi_predict(f_fit, lending_club, penalty = penalty_values, type = "prob")
+  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "prob") # FIXME make this work with just hpc instead of hpc_x?
+  expect_equal(f_pred, xy_pred)
+
+  f_pred_001 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.01) %>%
+    dplyr::pull(.pred_good)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.1) %>%
+    dplyr::pull(.pred_good)
+  expect_equal(f_pred_001, unname(exp_pred[,1]))
+  expect_equal(f_pred_01, unname(exp_pred[,2]))
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(dim(.x) == c(2, 3))))
+  )
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred_bad", ".pred_good"))))
+  )
+
+  # single prediction
+  f_pred_1 <- multi_predict(f_fit, lending_club[1, ], penalty = penalty_values,
+                            type = "prob")
+  xy_pred_1 <- multi_predict(xy_fit, lending_club_x[1, , drop = FALSE],
+                             penalty = penalty_values, type = "prob")
+  expect_equal(f_pred_1, xy_pred_1)
+  expect_equal(nrow(f_pred_1), 1)
+  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
 test_that('multi_predict() with default or single penalty value', {
 
   skip_if_not_installed("glmnet")
