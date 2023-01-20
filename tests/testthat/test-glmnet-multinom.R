@@ -37,6 +37,33 @@ test_that('glmnet execution', {
 
 })
 
+test_that("glmnet execution and model object", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  expect_error(
+    f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+                 data = hpc_data),
+    NA
+  )
+  expect_error(
+    xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y),
+    NA
+  )
+
+  expect_equal(f_fit$fit, xy_fit$fit)
+  # removing call element
+  expect_equal(f_fit$fit[-14], exp_fit[-14])
+})
+
 test_that('glmnet prediction, one lambda', {
 
   skip_if_not_installed("glmnet")
