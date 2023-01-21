@@ -52,6 +52,7 @@ test_that("glmnet prediction: type numeric", {
   expect_equal(nrow(f_pred), nrow(seniors))
 
   # single prediction
+  skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
   f_pred_1 <- predict(f_fit, seniors[1, ])
   expect_equal(nrow(f_pred_1), 1)
   xy_pred_1 <- predict(xy_fit, seniors_x[1, , drop = FALSE])
