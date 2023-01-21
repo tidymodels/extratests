@@ -121,15 +121,14 @@ test_that("formula interface can deal with missing values", {
 })
 
 test_that('error traps', {
-  skip_on_cran()
   skip_if_not_installed("glmnet")
 
-  expect_error(
-    poisson_reg() %>%
+  expect_snapshot(error = TRUE, {
+    poisson_reg(penalty = 0.1) %>%
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
       predict(mtcars[-(1:4), ], penalty = 0:1)
-  )
+  })
   expect_error(
     poisson_reg() %>%
       set_engine("glmnet") %>%
