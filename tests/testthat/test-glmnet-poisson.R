@@ -44,6 +44,31 @@ test_that('glmnet execution', {
 
 })
 
+test_that("glmnet model object", {
+  skip_if_not_installed("glmnet")
+
+  data(seniors, package = "poissonreg", envir = rlang::current_env())
+  seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
+  seniors_y <- seniors$count
+
+  exp_fit <- glmnet::glmnet(x = seniors_x, y = seniors_y, family = "poisson",
+                            alpha = 0.3, nlambda = 15)
+
+  spec <- poisson_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15)
+
+  expect_no_error({
+    f_fit <- fit(spec, count ~ ., data = seniors)
+  })
+  expect_no_error({
+    xy_fit <- fit_xy(spec, x = seniors_x, y = seniors_y)
+  })
+
+  expect_equal(f_fit$fit, xy_fit$fit)
+  # removing call element
+  expect_equal(f_fit$fit[-11], exp_fit[-11])
+})
+
 test_that('glmnet prediction, single lambda', {
   skip_on_cran()
   skip_if_not_installed("glmnet")
