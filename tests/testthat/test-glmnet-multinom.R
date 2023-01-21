@@ -171,6 +171,133 @@ test_that("formula interface can deal with missing values", {
   expect_true(all(is.na(f_pred[1,])))
 })
 
+test_that("glmnet multi_predict(): type class", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  penalty_values <- c(0.01, 0.1)
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+  exp_pred <- predict(exp_fit, hpc_x, s = penalty_values, type = "class")
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+  xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
+
+  expect_true(has_multi_predict(xy_fit))
+  expect_equal(multi_predict_args(xy_fit), "penalty")
+
+  f_pred <- multi_predict(f_fit, hpc_data, penalty = penalty_values,
+                          type = "class")
+  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values,
+                           type = "class")
+  expect_equal(f_pred, xy_pred)
+
+  f_pred_001 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.01) %>%
+    dplyr::pull(.pred_class)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.1) %>%
+    dplyr::pull(.pred_class)
+  expect_equal(as.character(f_pred_001), unname(exp_pred[,1]))
+  expect_equal(as.character(f_pred_01), unname(exp_pred[,2]))
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(dim(.x) == c(2, 2))))
+  )
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(names(.x) == c(".pred_class", "penalty"))))
+  )
+
+  # single prediction
+  f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
+                            type = "class")
+  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE],
+                             penalty = penalty_values, type = "class")
+  expect_equal(f_pred_1, xy_pred_1)
+  expect_equal(nrow(f_pred_1), 1)
+  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
+test_that("glmnet multi_predict(): type prob", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
+                        data = hpc_data)[, -1]
+  hpc_y <- hpc_data$class
+
+  penalty_values <- c(0.01, 0.1)
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
+  exp_pred <- predict(exp_fit, hpc_x, s = penalty_values, type = "response")
+
+  mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+  xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
+
+  f_pred <- multi_predict(f_fit, hpc_data, penalty = penalty_values,
+                          type = "prob")
+  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values,
+                           type = "prob")
+  expect_equal(f_pred, xy_pred)
+
+  f_pred_001 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.01) %>%
+    dplyr::select(-penalty)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::filter(penalty == 0.1) %>%
+    dplyr::select(-penalty)
+  expect_equal(
+    as.matrix(f_pred_001) %>% unname(),
+    exp_pred[, , 1] %>% unname()
+  )
+  expect_equal(
+    as.matrix(f_pred_01) %>% unname(),
+    exp_pred[, , 2] %>% unname()
+  )
+
+  # check format
+  expect_s3_class(f_pred, "tbl_df")
+  expect_equal(names(f_pred), ".pred")
+  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(dim(.x) == c(2, 5))))
+  )
+  expect_true(
+    all(purrr::map_lgl(f_pred$.pred,
+                       ~ all(names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))))
+  )
+
+  # single prediction
+  f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
+                            type = "prob")
+  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE],
+                             penalty = penalty_values, type = "prob")
+  expect_equal(f_pred_1, xy_pred_1)
+  expect_equal(nrow(f_pred_1), 1)
+  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
 test_that('glmnet probabilities, mulitiple lambda', {
 
   skip_if_not_installed("glmnet")
