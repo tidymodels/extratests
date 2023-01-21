@@ -298,82 +298,42 @@ test_that("glmnet multi_predict(): type prob", {
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
 })
 
-test_that('glmnet probabilities, mulitiple lambda', {
+test_that("multi_predict() with default or single penalty value", {
 
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[, c(2:5, 8)]
   rows <- c(1, 51, 101)
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
-
-  lams <- c(0.01, 0.1)
 
   xy_fit <- fit_xy(
     multinom_reg(penalty = 0.1) %>% set_engine("glmnet"),
-    control = ctrl,
     x = hpc[, 1:4],
     y = hpc$class
   )
 
-  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "class"), NA)
-  expect_error(predict(xy_fit, hpc[rows, 1:4], type = "prob"), NA)
-
-  mult_pred <-
-    predict(xy_fit$fit,
-            newx = as.matrix(hpc[rows, 1:4]),
-            s = lams, type = "response")
-  mult_pred <- apply(mult_pred, 3, as_tibble)
-  mult_pred <- dplyr:::bind_rows(mult_pred)
-  mult_probs <- mult_pred
-  names(mult_pred) <- paste0(".pred_", names(mult_pred))
-  mult_pred$penalty <- rep(lams, each = 3)
-  mult_pred$row <- rep(1:3, 2)
-  mult_pred <- mult_pred[order(mult_pred$row, mult_pred$penalty),]
-  mult_pred <- split(mult_pred[, -5], mult_pred$row)
-  names(mult_pred) <- NULL
-  mult_pred <- tibble(.pred = mult_pred)
-
-  multi_pred_res <- multi_predict(xy_fit, hpc[rows, 1:4], penalty = lams, type = "prob")
-
-  for (i in seq_along(multi_pred_res$.pred)) {
-    expect_equal(
-      mult_pred      %>% dplyr::slice(i) %>% pull(.pred) %>% purrr::pluck(1) %>% dplyr::select(starts_with(".pred")),
-      multi_pred_res %>% dplyr::slice(i) %>% pull(.pred) %>% purrr::pluck(1) %>% dplyr::select(starts_with(".pred"))
-    )
-  }
-
-  mult_class <- factor(names(mult_probs)[apply(mult_probs, 1, which.max)],
-                       levels = xy_fit$lvl)
-  mult_class <- tibble(
-    .pred_class = mult_class,
-    penalty = rep(lams, each = 3),
-    row = rep(1:3, 2)
-  )
-  mult_class <- mult_class[order(mult_class$row, mult_class$penalty),]
-  mult_class <- split(mult_class[, -3], mult_class$row)
-  names(mult_class) <- NULL
-  mult_class <- tibble(.pred = mult_class)
-
-  mult_class_res <- multi_predict(xy_fit, hpc[rows, 1:4], penalty = lams)
-
-  for (i in seq_along(mult_class_res$.pred)) {
-    expect_equal(
-      mult_class     %>% dplyr::slice(i) %>% pull(.pred) %>% purrr::pluck(1) %>% dplyr::select(starts_with(".pred")),
-      mult_class_res %>% dplyr::slice(i) %>% pull(.pred) %>% purrr::pluck(1) %>% dplyr::select(starts_with(".pred"))
-    )
-  }
-
+  # Can deal with single penalty value
   expect_error(
-    multi_predict(xy_fit, newdata = hpc[rows, 1:4], penalty = lams),
-    "Did you mean"
+    multi_predict(xy_fit, new_data = hpc[rows, 1:4], penalty = 0.1, type = "class"),
+    NA
   )
-
-  # Can predict probs with default penalty. See #108
+  expect_error(
+    multi_predict(xy_fit, new_data = hpc[rows, 1:4], penalty = 0.1, type = "prob"),
+    NA
+  )
+  # Can predict with default penalty. See #108
+  expect_error(
+    multi_predict(xy_fit, new_data = hpc[rows, 1:4], type = "class"),
+    NA
+  )
   expect_error(
     multi_predict(xy_fit, new_data = hpc[rows, 1:4], type = "prob"),
     NA
   )
+
+  expect_snapshot(error = TRUE, {
+    multi_predict(xy_fit, newdata = hpc[rows, 1:4], penalty = c(0.1, 0.5))
+  })
 
 })
 
