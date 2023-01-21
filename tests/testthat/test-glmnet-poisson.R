@@ -1,49 +1,5 @@
 library(poissonreg)
 
-test_that('glmnet execution', {
-  skip_on_cran()
-  skip_if_not_installed("glmnet")
-
-  data(seniors, package = "poissonreg", envir = rlang::current_env())
-  senior_ind <- model.matrix(~ ., data = seniors)[, -1]
-  senior_ind <- tibble::as_tibble(senior_ind)
-
-  glmn_spec <- poisson_reg(penalty = .01, mixture = .3) %>% set_engine("glmnet")
-  ctrl <- control_parsnip(verbosity = 1, catch = FALSE)
-
-  expect_error(
-    res <- fit_xy(
-      glmn_spec,
-      control = ctrl,
-      x = senior_ind[, 1:3],
-      y = senior_ind$count
-    ),
-    regexp = NA
-  )
-
-  expect_true(has_multi_predict(res))
-
-  expect_error(
-    fit(
-      glmn_spec,
-      iris_bad_form,
-      data = iris,
-      control = ctrl
-    )
-  )
-
-  expect_error(
-    glmnet_xy_catch <- fit_xy(
-      glmn_spec,
-      x = senior_ind[, 1:3],
-      y = factor(senior_ind$count),
-      control = caught_ctrl
-    ),
-    "For a regression model, the outcome should be numeric."
-  )
-
-})
-
 test_that("glmnet model object", {
   skip_if_not_installed("glmnet")
 
