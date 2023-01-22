@@ -98,6 +98,7 @@ test_that("glmnet prediction: type raw", {
   expect_equal(f_pred, exp_pred)
 
   # single prediction
+  skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
   f_pred_1 <- predict(f_fit, seniors[1, ], type = "raw")
   expect_equal(nrow(f_pred_1), 1)
   xy_pred_1 <- predict(xy_fit, seniors_x[1, , drop = FALSE], type = "raw")
