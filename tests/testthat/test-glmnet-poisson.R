@@ -130,10 +130,10 @@ test_that('error traps', {
       fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
       predict(mtcars[-(1:4), ], penalty = 0:1)
   })
-  expect_error(
+  skip_if_not_installed("parsnip", minimum_version = "1.0.3.9000")
+  expect_snapshot(error = TRUE, {
     poisson_reg() %>%
       set_engine("glmnet") %>%
-      fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
-      predict(mtcars[-(1:4), ])
-  )
+      fit(mpg ~ ., data = mtcars[-(1:4), ])
+  })
 })
