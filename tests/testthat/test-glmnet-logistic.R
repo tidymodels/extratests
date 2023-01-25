@@ -134,7 +134,7 @@ test_that("glmnet prediction: type raw", {
   lending_club_y <- lending_club$Class
 
   exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y, family = "binomial")
-  exp_pred <- predict(exp_fit, lending_club_x)
+  exp_pred <- predict(exp_fit, lending_club_x, s = 0.123)
 
   lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
   f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
@@ -144,7 +144,14 @@ test_that("glmnet prediction: type raw", {
   f_pred <- predict(f_fit, lending_club, type = "raw")
   xy_pred <- predict(xy_fit, lending_club_x, type = "raw")
   expect_equal(f_pred, xy_pred)
-  expect_equal(f_pred, exp_pred)
+  parsnip_version_without_bug_fix <-
+    utils::packageVersion("parsnip") < "1.0.3.9001"
+  if (parsnip_version_without_bug_fix) {
+    exp_pred <- predict(exp_fit, lending_club_x)
+    expect_equal(f_pred, exp_pred)
+  } else {
+    expect_equal(f_pred, exp_pred)
+  }
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "raw")
