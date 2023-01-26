@@ -148,7 +148,7 @@ test_that("glmnet prediction: type raw", {
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9001"
   if (parsnip_version_without_bug_fix) {
-    exp_pred <- predict(exp_fit, lending_club_x)
+    exp_pred <- predict(exp_fit, hpc_x)
     expect_equal(f_pred, exp_pred)
   } else {
     expect_equal(f_pred, exp_pred)
