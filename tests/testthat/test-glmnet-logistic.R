@@ -149,7 +149,7 @@ test_that("glmnet prediction: type raw", {
   expect_equal(nrow(xy_pred_1), 1)
 })
 
-test_that("formula interface can deal missing values", {
+test_that("formula interface can deal with missing values", {
   skip_if_not_installed("glmnet")
 
   lending_club <- lending_club[1:200, ]
@@ -306,5 +306,56 @@ test_that('multi_predict() with default or single penalty value', {
 
   expect_snapshot(error = TRUE, {
     multi_predict(class_fit, newdata = wa_churn[1:4, vars], type = "prob")
+  })
+})
+
+test_that("class predictions are factors with all levels", {
+  skip_if_not_installed("glmnet")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+  lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term,
+                                 data = lending_club)[, -1]
+  lending_club_y <- lending_club$Class
+
+  exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y,
+                            family = "binomial")
+  exp_pred <- predict(exp_fit, lending_club_x, s = 0.123, type = "class")
+
+  lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
+  f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
+               data = lending_club)
+  xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
+
+  f_pred <- predict(f_fit, lending_club, type = "class")
+  xy_pred <- predict(xy_fit, lending_club_x, type = "class")
+  expect_equal(f_pred, xy_pred)
+  expect_s3_class(f_pred$.pred_class, "factor")
+  expect_equal(levels(f_pred$.pred_class), levels(lending_club$Class))
+
+  f_pred <- multi_predict(f_fit, lending_club, type = "class")
+  xy_pred <- multi_predict(xy_fit, lending_club_x, type = "class")
+  expect_equal(f_pred, xy_pred)
+  expect_s3_class(f_pred$.pred[[1]]$.pred_class, "factor")
+  expect_equal(levels(f_pred$.pred[[1]]$.pred_class), levels(lending_club$Class))
+})
+
+test_that('error traps', {
+  skip_if_not_installed("glmnet")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+
+  expect_snapshot(error = TRUE, {
+    logistic_reg(penalty = 0.01) %>%
+      set_engine("glmnet") %>%
+      fit(Class ~ log(funded_amnt) + int_rate + term,
+          data = lending_club) %>%
+      predict(lending_club, penalty = 0:1)
+  })
+  expect_snapshot(error = TRUE, {
+    logistic_reg() %>%
+      set_engine("glmnet") %>%
+      fit(Class ~ log(funded_amnt) + int_rate + term,
+          data = lending_club)
   })
 })

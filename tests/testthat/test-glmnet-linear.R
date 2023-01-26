@@ -198,6 +198,48 @@ test_that("glmnet multi_predict(): type numeric", {
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
 })
 
+test_that('multi_predict() with default or single penalty value', {
+  skip_if_not_installed("glmnet")
+
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+  hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
+  hpc_y <- hpc$input_fields
+
+  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian", alpha = 0.3)
+
+  lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>% set_engine("glmnet")
+  f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
+  xy_fit <- fit_xy(lm_spec, x = hpc_x, y = hpc_y)
+
+  # Can deal with single penalty value
+  expect_no_error(
+    f_pred <- multi_predict(f_fit, new_data = hpc, penalty = 0.1),
+  )
+  expect_no_error(
+    xy_pred <- multi_predict(xy_fit, new_data = hpc_x, penalty = 0.1),
+  )
+  expect_equal(f_pred, xy_pred)
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
+  f_pred_01 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::pull(.pred)
+  expect_equal(f_pred_01, unname(exp_pred[,1]))
+
+  # Can predict using default penalty. See #108
+  expect_no_error(
+    f_pred <- multi_predict(f_fit, new_data = hpc),
+  )
+  expect_no_error(
+    xy_pred <- multi_predict(xy_fit, new_data = hpc_x),
+  )
+  expect_equal(f_pred, xy_pred)
+  exp_pred <- predict(exp_fit, hpc_x, s = 0.123)
+  f_pred_0123 <- f_pred %>%
+    tidyr::unnest(cols = .pred) %>%
+    dplyr::pull(.pred)
+  expect_equal(f_pred_0123, unname(exp_pred[,1]))
+})
+
 test_that('error traps', {
   skip_if_not_installed("glmnet")
 

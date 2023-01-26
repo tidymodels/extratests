@@ -350,3 +350,21 @@ test_that("class predictions are factors with all levels", {
   expect_s3_class(yhat_multi[[1]]$.pred_class, "factor")
   expect_equal(levels(yhat_multi[[1]]$.pred_class), levels(hpc$class))
 })
+
+test_that('error traps', {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  expect_snapshot(error = TRUE, {
+    multinom_reg(penalty = 0.01) %>%
+      set_engine("glmnet") %>%
+      fit(class ~ ., data = hpc_data) %>%
+      predict(hpc_data, penalty = 0:1)
+  })
+  expect_snapshot(error = TRUE, {
+    multinom_reg() %>%
+      set_engine("glmnet") %>%
+      fit(class ~ ., data = hpc_data)
+  })
+})
