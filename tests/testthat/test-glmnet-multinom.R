@@ -226,10 +226,19 @@ test_that("glmnet multi_predict(): type class", {
     all(purrr::map_lgl(f_pred$.pred,
                        ~ all(dim(.x) == c(2, 2))))
   )
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(names(.x) == c(".pred_class", "penalty"))))
-  )
+  parsnip_version_without_bug_fix <-
+    utils::packageVersion("parsnip") < "1.0.3.9002"
+  if (parsnip_version_without_bug_fix) {
+    expect_true(
+      all(purrr::map_lgl(f_pred$.pred,
+                         ~ all(names(.x) == c(".pred_class", "penalty"))))
+    )
+  } else {
+    expect_true(
+      all(purrr::map_lgl(f_pred$.pred,
+                         ~ all(names(.x) == c("penalty", ".pred_class"))))
+    )
+  }
 
   # single prediction
   f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
@@ -291,10 +300,19 @@ test_that("glmnet multi_predict(): type prob", {
     all(purrr::map_lgl(f_pred$.pred,
                        ~ all(dim(.x) == c(2, 5))))
   )
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))))
-  )
+  parsnip_version_without_bug_fix <-
+    utils::packageVersion("parsnip") < "1.0.3.9002"
+  if (parsnip_version_without_bug_fix) {
+    expect_true(
+      all(purrr::map_lgl(f_pred$.pred,
+                         ~ all(names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))))
+    )
+  } else {
+    expect_true(
+      all(purrr::map_lgl(f_pred$.pred,
+                         ~ all(names(.x) == c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L"))))
+    )
+  }
 
   # single prediction
   f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
