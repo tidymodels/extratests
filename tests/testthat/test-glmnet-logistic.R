@@ -7,6 +7,7 @@ skip_if(R_version_too_small_for_glmnet)
 test_that("glmnet execution and model object", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term,
                                  data = lending_club)[, -1]
@@ -34,6 +35,7 @@ test_that("glmnet execution and model object", {
 test_that("glmnet prediction: type class", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term,
                                  data = lending_club)[, -1]
@@ -90,6 +92,7 @@ test_that("glmnet prediction: column order of `new_data` irrelevant", {
 test_that("glmnet prediction: type prob", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
   lending_club_y <- lending_club$Class
@@ -125,12 +128,13 @@ test_that("glmnet prediction: type prob", {
 test_that("glmnet prediction: type raw", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
   lending_club_y <- lending_club$Class
 
   exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y, family = "binomial")
-  exp_pred <- predict(exp_fit, lending_club_x)
+  exp_pred <- predict(exp_fit, lending_club_x, s = 0.123)
 
   lr_spec <- logistic_reg(penalty = 0.123) %>% set_engine("glmnet")
   f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
@@ -140,7 +144,14 @@ test_that("glmnet prediction: type raw", {
   f_pred <- predict(f_fit, lending_club, type = "raw")
   xy_pred <- predict(xy_fit, lending_club_x, type = "raw")
   expect_equal(f_pred, xy_pred)
-  expect_equal(f_pred, exp_pred)
+  parsnip_version_without_bug_fix <-
+    utils::packageVersion("parsnip") < "1.0.3.9001"
+  if (parsnip_version_without_bug_fix) {
+    exp_pred <- predict(exp_fit, lending_club_x)
+    expect_equal(f_pred, exp_pred)
+  } else {
+    expect_equal(f_pred, exp_pred)
+  }
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "raw")
@@ -152,6 +163,7 @@ test_that("glmnet prediction: type raw", {
 test_that("formula interface can deal missing values", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club$funded_amnt[1] <- NA
 
@@ -168,6 +180,7 @@ test_that("formula interface can deal missing values", {
 test_that("glmnet multi_predict(): type class", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
   lending_club_y <- lending_club$Class
@@ -225,6 +238,7 @@ test_that("glmnet multi_predict(): type class", {
 test_that("glmnet multi_predict(): type prob", {
   skip_if_not_installed("glmnet")
 
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
   lending_club_x <- model.matrix(~ log(funded_amnt) + int_rate + term, data = lending_club)[, -1]
   lending_club_y <- lending_club$Class
@@ -234,7 +248,7 @@ test_that("glmnet multi_predict(): type prob", {
   exp_fit <- glmnet::glmnet(x = lending_club_x, y = lending_club_y, family = "binomial")
   exp_pred <- predict(exp_fit, lending_club_x, s = penalty_values, type = "response")
 
-  lr_spec <- logistic_reg(penalty = 0.01) %>% set_engine("glmnet")
+  lr_spec <- logistic_reg(penalty = 0.1) %>% set_engine("glmnet")
   f_fit <- fit(lr_spec, Class ~ log(funded_amnt) + int_rate + term,
                data = lending_club)
   xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)

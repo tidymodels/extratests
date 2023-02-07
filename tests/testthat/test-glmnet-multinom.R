@@ -145,6 +145,14 @@ test_that("glmnet prediction: type raw", {
   f_pred <- predict(f_fit, hpc_data, type = "raw")
   xy_pred <- predict(xy_fit, hpc_x, type = "raw")
   expect_equal(f_pred, xy_pred)
+  parsnip_version_without_bug_fix <-
+    utils::packageVersion("parsnip") < "1.0.3.9001"
+  if (parsnip_version_without_bug_fix) {
+    exp_pred <- predict(exp_fit, hpc_x)
+    expect_equal(f_pred, exp_pred)
+  } else {
+    expect_equal(f_pred, exp_pred)
+  }
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc_data[1, ], type = "raw")
