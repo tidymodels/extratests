@@ -3,7 +3,7 @@ test_that("reverse Kaplan-Meier curves", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("survival")
   skip_if_not_installed("censored")
-  skip_if(utils::packageVersion("parsnip") < "1.0.3.9001")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.3.9001")
 
   library(survival)
   library(censored)
@@ -16,9 +16,10 @@ test_that("reverse Kaplan-Meier curves", {
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   expect_true(any(names(mod_fit) == "censor_probs"))
-  expect_true(
-    inherits(mod_fit$censor_probs,
-             c("censoring_model_reverse_km", "censoring_model")))
+  expect_s3_class(
+    mod_fit$censor_probs,
+    c("censoring_model_reverse_km", "censoring_model")
+  )
   expect_equal(
     names(mod_fit$censor_probs),
     c("formula", "fit", "label", "required_pkgs")
