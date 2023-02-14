@@ -1,5 +1,6 @@
 test_that("reverse Kaplan-Meier curves", {
   skip_if(utils::packageVersion("parsnip") < "1.0.3.9003")
+  # tests for tidymodels/parnsip#855
 
   library(dplyr)
   library(parsnip)
