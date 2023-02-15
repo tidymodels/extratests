@@ -16,8 +16,8 @@ test_that('Correct values', {
   exp_w <- res$w
   exp_pred <- as.matrix(iris[1:10, -5]) %*% res$w
 
-  expect_output(print(rec))
-  expect_output(rec <- prep(rec, training = iris, verbose = TRUE))
+  expect_snapshot(print(rec))
+  expect_snapshot(rec <- prep(rec, training = iris, verbose = TRUE))
 
   rec_res <- juice(rec, all_predictors(), composition = "matrix")[1:10,]
 
@@ -38,8 +38,7 @@ test_that('No NNF', {
     names(iris)
   )
   expect_equal(rec$steps[[1]]$res$w, NULL)
-  expect_output(print(rec),
-                regexp = "No non-negative matrix factorization")
+  expect_snapshot(print(rec))
   expect_true(all(is.na(tidy(rec, 1)$value)))
 })
 
