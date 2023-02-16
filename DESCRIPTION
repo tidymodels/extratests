@@ -29,6 +29,7 @@ Suggests:
     flexsurv,
     glmnet,
     hardhat,
+    lubridate,
     Matrix,
     mda,
     mixOmics,
