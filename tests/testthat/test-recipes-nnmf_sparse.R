@@ -40,7 +40,7 @@ test_that('No NNF', {
     names(iris)
   )
   expect_equal(rec$steps[[1]]$res$w, NULL)
-  expect_snapshot(print(rec))
+  expect_snapshot(print(rec), variant = recipes_version())
   expect_true(all(is.na(tidy(rec, 1)$value)))
 })
 
