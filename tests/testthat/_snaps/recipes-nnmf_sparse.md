@@ -2,17 +2,18 @@
 
     Code
       print(rec)
-    Message <cliMessage>
+    Output
+      Recipe
       
-      -- Recipe ----------------------------------------------------------------------
+      Inputs:
       
-      -- Inputs 
-      Number of variables by role
-      outcome:   1
-      predictor: 4
+            role #variables
+         outcome          1
+       predictor          4
       
-      -- Operations 
-      * Non-negative matrix factorization for: all_predictors()
+      Operations:
+      
+      Non-negative matrix factorization for all_predictors()
 
 ---
 
@@ -27,19 +28,18 @@
 
     Code
       print(rec)
-    Message <cliMessage>
+    Output
+      Recipe
       
-      -- Recipe ----------------------------------------------------------------------
+      Inputs:
       
-      -- Inputs 
-      Number of variables by role
-      outcome:   1
-      predictor: 4
+            role #variables
+         outcome          1
+       predictor          4
       
-      -- Training information 
-      Training data contained 150 data points and no incomplete rows.
+      Training data contained 150 data points and no missing data.
       
-      -- Operations 
-      * No non-negative matrix factorization was extracted from: Sepal.Length,
-        Sepal.Width, Petal.Length, Petal.Width | Trained
+      Operations:
+      
+      No non-negative matrix factorization was extracted from Sepal.Length, Sepal.Width, Petal.Length, Petal.W... [trained]
 
