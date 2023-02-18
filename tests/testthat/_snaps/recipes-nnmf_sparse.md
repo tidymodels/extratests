@@ -1,23 +1,6 @@
 # Correct values
 
     Code
-      print(rec)
-    Output
-      Recipe
-      
-      Inputs:
-      
-            role #variables
-         outcome          1
-       predictor          4
-      
-      Operations:
-      
-      Non-negative matrix factorization for all_predictors()
-
----
-
-    Code
       rec <- prep(rec, training = iris, verbose = TRUE)
     Output
       oper 1 step nnmf sparse [training] 
@@ -28,18 +11,19 @@
 
     Code
       print(rec)
-    Output
-      Recipe
+    Message <cliMessage>
       
-      Inputs:
+      -- Recipe ----------------------------------------------------------------------
       
-            role #variables
-         outcome          1
-       predictor          4
+      -- Inputs 
+      Number of variables by role
+      outcome:   1
+      predictor: 4
       
-      Training data contained 150 data points and no missing data.
+      -- Training information 
+      Training data contained 150 data points and no incomplete rows.
       
-      Operations:
-      
-      No non-negative matrix factorization was extracted from Sepal.Length, Sepal.Width, Petal.Length, Petal.W... [trained]
+      -- Operations 
+      * No non-negative matrix factorization was extracted from: Sepal.Length,
+        Sepal.Width, Petal.Length, Petal.Width | Trained
 
