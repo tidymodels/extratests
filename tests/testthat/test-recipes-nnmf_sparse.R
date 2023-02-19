@@ -2,6 +2,8 @@ library(testthat)
 library(recipes)
 library(Matrix) # Waiting for fix in RcppML
 
+recipes_version <- function() paste0("recipes", packageVersion("recipes"))
+
 test_that('Correct values', {
   skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
 
@@ -16,7 +18,7 @@ test_that('Correct values', {
   exp_w <- res$w
   exp_pred <- as.matrix(iris[1:10, -5]) %*% res$w
 
-  expect_snapshot(print(rec))
+  expect_snapshot(print(rec), variant = recipes_version())
   expect_snapshot(rec <- prep(rec, training = iris, verbose = TRUE))
 
   rec_res <- juice(rec, all_predictors(), composition = "matrix")[1:10,]
@@ -38,7 +40,7 @@ test_that('No NNF', {
     names(iris)
   )
   expect_equal(rec$steps[[1]]$res$w, NULL)
-  expect_snapshot(print(rec))
+  expect_snapshot(print(rec), variant = recipes_version())
   expect_true(all(is.na(tidy(rec, 1)$value)))
 })
 
