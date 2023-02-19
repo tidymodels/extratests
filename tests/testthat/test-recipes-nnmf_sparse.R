@@ -2,7 +2,7 @@ library(testthat)
 library(recipes)
 library(Matrix) # Waiting for fix in RcppML
 
-recipes_version <- function() paste0("recipes:", packageVersion("recipes"))
+recipes_version <- function() paste0("recipes", packageVersion("recipes"))
 
 test_that('Correct values', {
   skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
