@@ -66,7 +66,7 @@ jobs:
           try(pak::pkg_install("tidymodels/hardhat"))
           try(pak::pkg_install("tidymodels/modeldata"))
           try(pak::pkg_install("tidymodels/multilevelmod"))
-          try(pak::pkg_install("tidymodels/parsnip"))
+          try(pak::pkg_install("tidymodels/parsnip#890"))
           try(pak::pkg_install("tidymodels/plsmod"))
           try(pak::pkg_install("tidymodels/poissonreg"))
           try(pak::pkg_install("tidymodels/recipes"))

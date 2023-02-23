@@ -255,3 +255,64 @@ test_that('error traps', {
       fit(mpg ~ ., data = mtcars[-(1:4), ])
   })
 })
+
+test_that("base-R families: type numeric", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  # quasi() as an example for a base-R family
+  spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15, family = stats::quasi())
+  f_fit <- fit(spec, input_fields ~ log(compounds) + class, data = hpc)
+
+  expect_true(has_multi_predict(f_fit))
+  expect_equal(multi_predict_args(f_fit), "penalty")
+
+  pred <- predict(f_fit, hpc[1:5,], type = "numeric")
+  pred_005 <- predict(f_fit, hpc[1:5,], type = "numeric", penalty = 0.05)
+  mpred <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
+  mpred_005 <- multi_predict(f_fit, hpc[1:5,], type = "numeric", penalty = 0.05)
+
+  expect_identical(names(pred), ".pred")
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred"))))
+  )
+  expect_identical(
+    pred$.pred,
+    mpred %>% tidyr::unnest(cols = .pred) %>% pull(.pred)
+  )
+  expect_identical(
+    pred_005$.pred,
+    mpred_005 %>% tidyr::unnest(cols = .pred) %>% pull(.pred)
+  )
+
+  mpred <- multi_predict(f_fit, hpc[1:5,], type = "numeric", penalty = c(0.05, 0.1))
+
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(dim(.x) == c(2, 2))))
+  )
+})
+
+test_that("base-R families: type NULL", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  # quasi() as an example for a base-R family
+  spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15, family = stats::quasi())
+  f_fit <- fit(spec, input_fields ~ log(compounds) + class, data = hpc)
+
+  pred <- predict(f_fit, hpc[1:5,])
+  pred_numeric <- predict(f_fit, hpc[1:5,], type = "numeric")
+  expect_identical(pred, pred_numeric)
+
+  mpred <- multi_predict(f_fit, hpc[1:5,])
+  mpred_numeric <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
+  expect_identical(mpred, mpred_numeric)
+})
