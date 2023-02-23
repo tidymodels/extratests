@@ -376,6 +376,7 @@ test_that('error traps', {
 
 test_that("base-R families: type class", {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9000")
 
   data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
@@ -419,6 +420,7 @@ test_that("base-R families: type class", {
 
 test_that("base-R families: type prob", {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9000")
 
   data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
@@ -462,6 +464,7 @@ test_that("base-R families: type prob", {
 
 test_that("base-R families: type NULL", {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9000")
 
   data("lending_club", package = "modeldata", envir = rlang::current_env())
   lending_club <- lending_club[1:200, ]
