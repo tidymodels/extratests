@@ -55,6 +55,7 @@ Suggests:
     spatialsample,
     spelling,
     stacks,
+    survival,
     testthat,
     themis,
     tibble,
