@@ -927,6 +927,7 @@ test_that('poisson_reg - glmnet case weights', {
     fit(art ~ ., data = dat$full)
 
   expect_unequal(unwt_fit$fit$beta, wt_fit$fit$beta)
+  skip_if_not_installed("parsnip", "1.0.4.9000")
   expect_snapshot(print(wt_fit$fit$call))
 })
 
