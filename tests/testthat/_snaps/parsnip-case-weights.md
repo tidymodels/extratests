@@ -104,7 +104,7 @@
       print(wt_fit$fit$call)
     Output
       glmnet::glmnet(x = maybe_matrix(x), y = y, family = "poisson", 
-          weights = weights, path_values = ~10^(-4:-1))
+          weights = weights, lambda = ~10^(-4:-1))
 
 # poisson_reg - stan case weights
 
