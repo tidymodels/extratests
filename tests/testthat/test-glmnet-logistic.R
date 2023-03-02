@@ -200,7 +200,7 @@ test_that("glmnet multi_predict(): type class", {
   expect_equal(multi_predict_args(xy_fit), "penalty")
 
   f_pred <- multi_predict(f_fit, lending_club, penalty = penalty_values, type = "class")
-  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "class") # FIXME make this work with just hpc instead of hpc_x?
+  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "class")
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -254,7 +254,7 @@ test_that("glmnet multi_predict(): type prob", {
   xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
 
   f_pred <- multi_predict(f_fit, lending_club, penalty = penalty_values, type = "prob")
-  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "prob") # FIXME make this work with just hpc instead of hpc_x?
+  xy_pred <- multi_predict(xy_fit, lending_club_x, penalty = penalty_values, type = "prob")
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -289,6 +289,25 @@ test_that("glmnet multi_predict(): type prob", {
   expect_equal(f_pred_1, xy_pred_1)
   expect_equal(nrow(f_pred_1), 1)
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
+test_that("glmnet multi_predict(): type NULL", {
+  skip_if_not_installed("glmnet")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+
+  spec <- logistic_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15)
+  f_fit <- fit(spec, Class ~ log(funded_amnt) + int_rate + term, data = lending_club)
+
+  pred <- predict(f_fit, lending_club[1:5,])
+  pred_class <- predict(f_fit, lending_club[1:5,], type = "class")
+  expect_identical(pred, pred_class)
+
+  mpred <- multi_predict(f_fit, lending_club[1:5,])
+  mpred_class <- multi_predict(f_fit, lending_club[1:5,], type = "class")
+  expect_identical(mpred, mpred_class)
 })
 
 test_that('multi_predict() with default or single penalty value', {
@@ -371,6 +390,14 @@ test_that('error traps', {
       set_engine("glmnet") %>%
       fit(Class ~ log(funded_amnt) + int_rate + term,
           data = lending_club)
+  })
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
+  expect_snapshot(error = TRUE, {
+    logistic_reg(penalty = 0.01) %>%
+      set_engine("glmnet") %>%
+      fit(Class ~ log(funded_amnt) + int_rate + term,
+          data = lending_club) %>%
+      multi_predict(lending_club, type = "time")
   })
 })
 

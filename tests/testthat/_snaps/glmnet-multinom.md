@@ -23,3 +23,11 @@
       * To try multiple values for total regularization, use the tune package.
       * To predict multiple penalties, use `multi_predict()`
 
+---
+
+    Code
+      multinom_reg(penalty = 0.01) %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc_data) %>%
+        multi_predict(hpc_data, type = "numeric")
+    Error <rlang_error>
+      For numeric predictions, the object should be a regression model.
+
