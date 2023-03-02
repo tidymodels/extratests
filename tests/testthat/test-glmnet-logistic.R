@@ -373,3 +373,112 @@ test_that('error traps', {
           data = lending_club)
   })
 })
+
+test_that("base-R families: type class", {
+  skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+
+  # quasibinomial() as an example for a base-R family
+  spec <- logistic_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15, family = stats::quasibinomial())
+  f_fit <- fit(spec, Class ~ log(funded_amnt) + int_rate + term, data = lending_club)
+
+  expect_true(has_multi_predict(f_fit))
+  expect_equal(multi_predict_args(f_fit), "penalty")
+
+  pred <- predict(f_fit, lending_club[1:5,], type = "class")
+  pred_005 <- predict(f_fit, lending_club[1:5,], type = "class", penalty = 0.05)
+  mpred <- multi_predict(f_fit, lending_club[1:5,], type = "class")
+  mpred_005 <- multi_predict(f_fit, lending_club[1:5,], type = "class",
+                             penalty = 0.05)
+
+  expect_identical(names(pred), ".pred_class")
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred_class"))))
+  )
+  expect_identical(
+    pred$.pred_class,
+    mpred %>% tidyr::unnest(cols = .pred) %>% pull(.pred_class)
+  )
+  expect_identical(
+    pred_005$.pred_class,
+    mpred_005 %>% tidyr::unnest(cols = .pred) %>% pull(.pred_class)
+  )
+
+  mpred <- multi_predict(f_fit, lending_club[1:5,], type = "class",
+                         penalty = c(0.05, 0.1))
+
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(dim(.x) == c(2, 2))))
+  )
+})
+
+test_that("base-R families: type prob", {
+  skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+
+  # quasibinomial() as an example for a base-R family
+  spec <- logistic_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15, family = stats::quasibinomial())
+  f_fit <- fit(spec, Class ~ log(funded_amnt) + int_rate + term, data = lending_club)
+
+  expect_true(has_multi_predict(f_fit))
+  expect_equal(multi_predict_args(f_fit), "penalty")
+
+  pred <- predict(f_fit, lending_club[1:5,], type = "prob")
+  pred_005 <- predict(f_fit, lending_club[1:5,], type = "prob", penalty = 0.05)
+  mpred <- multi_predict(f_fit, lending_club[1:5,], type = "prob")
+  mpred_005 <- multi_predict(f_fit, lending_club[1:5,], type = "prob",
+                             penalty = 0.05)
+
+  expect_identical(names(pred), c(".pred_bad", ".pred_good"))
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(names(.x) == c("penalty", ".pred_bad", ".pred_good"))))
+  )
+  expect_identical(
+    pred$.pred_bad,
+    mpred %>% tidyr::unnest(cols = .pred) %>% pull(.pred_bad)
+  )
+  expect_identical(
+    pred_005$.pred_bad,
+    mpred_005 %>% tidyr::unnest(cols = .pred) %>% pull(.pred_bad)
+  )
+
+  mpred <- multi_predict(f_fit, lending_club[1:5,], type = "prob",
+                         penalty = c(0.05, 0.1))
+
+  expect_true(
+    all(purrr::map_lgl(mpred$.pred,
+                       ~ all(dim(.x) == c(2, 3))))
+  )
+})
+
+test_that("base-R families: type NULL", {
+  skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+
+  # quasibinomial() as an example for a base-R family
+  spec <- logistic_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15, family = stats::quasibinomial())
+  f_fit <- fit(spec, Class ~ log(funded_amnt) + int_rate + term, data = lending_club)
+
+  pred <- predict(f_fit, lending_club[1:5,])
+  pred_class <- predict(f_fit, lending_club[1:5,], type = "class")
+  expect_identical(pred, pred_class)
+
+  mpred <- multi_predict(f_fit, lending_club[1:5,])
+  mpred_class <- multi_predict(f_fit, lending_club[1:5,], type = "class")
+  expect_identical(mpred, mpred_class)
+})
