@@ -258,7 +258,7 @@ test_that('error traps', {
 
 test_that("base-R families: type numeric", {
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9000")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
@@ -300,7 +300,7 @@ test_that("base-R families: type numeric", {
 
 test_that("base-R families: type NULL", {
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9000")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[1:150, c(2:5, 8)]
