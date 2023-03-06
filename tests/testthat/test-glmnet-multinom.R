@@ -411,12 +411,11 @@ test_that('error traps', {
       set_engine("glmnet") %>%
       fit(class ~ ., data = hpc_data)
   })
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9004")
   expect_snapshot(error = TRUE, {
     multinom_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
       fit(class ~ ., data = hpc_data) %>%
       multi_predict(hpc_data, type = "numeric")
   })
-
 })
