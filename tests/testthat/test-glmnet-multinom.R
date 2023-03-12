@@ -357,6 +357,8 @@ test_that("multi_predict() with default or single penalty value", {
     NA
   )
 
+  skip_if(packageVersion("parsnip") < "1.0.4.9002")
+
   expect_snapshot(error = TRUE, {
     multi_predict(xy_fit, newdata = hpc[rows, 1:4], penalty = c(0.1, 0.5))
   })

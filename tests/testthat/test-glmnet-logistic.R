@@ -318,6 +318,8 @@ test_that('multi_predict() with default or single penalty value', {
   mp_res <- do.call("rbind", mp_res$.pred)
   expect_equal(mp_res[[".pred_No"]], unname(pred_glmn[,1]))
 
+  skip_if(packageVersion("parsnip") < "1.0.4.9002")
+
   expect_snapshot(error = TRUE, {
     multi_predict(class_fit, newdata = wa_churn[1:4, vars], type = "prob")
   })
