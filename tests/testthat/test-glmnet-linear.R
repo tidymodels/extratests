@@ -277,7 +277,7 @@ test_that('error traps', {
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ])
   })
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9004")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
   expect_snapshot(error = TRUE, {
     linear_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
