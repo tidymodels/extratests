@@ -1,6 +1,6 @@
 
-test_that('calcuate evaluation time', {
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+test_that('calculate weight time', {
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
 
   library(survival)
 
@@ -41,7 +41,7 @@ test_that('calcuate evaluation time', {
 })
 
 test_that('compute Graf weights', {
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
 
   library(parsnip)
   library(survival)
@@ -76,13 +76,13 @@ test_that('compute Graf weights', {
   wflow_wts_05 <- .censoring_weights_graf(wflow_fit, df, 5)
   wflow_wts_11 <- .censoring_weights_graf(wflow_fit, df, 11)
 
-  expect_equal(1 / cens_prob_00, wts_00$.weight_cens)
-  expect_equal(1 / cens_prob_05, wts_05$.weight_cens)
-  expect_equal(1 / cens_prob_11, wts_11$.weight_cens)
+  expect_equal(wts_00$.weight_cens, 1 / cens_prob_00)
+  expect_equal(wts_05$.weight_cens, 1 / cens_prob_05)
+  expect_equal(wts_11$.weight_cens, 1 / cens_prob_11)
 
-  expect_equal(1 / cens_prob_00, wflow_wts_00$.weight_cens)
-  expect_equal(1 / cens_prob_05, wflow_wts_05$.weight_cens)
-  expect_equal(1 / cens_prob_11, wflow_wts_11$.weight_cens)
+  expect_equal(wflow_wts_00$.weight_cens, 1 / cens_prob_00)
+  expect_equal(wflow_wts_05$.weight_cens, 1 / cens_prob_05)
+  expect_equal(wflow_wts_11$.weight_cens, 1 / cens_prob_11)
 
   expect_true(inherits(wts_00, "data.frame"))
   expect_equal(names(wts_00), c(".row", "eval_time", ".prob_cens", ".weight_cens"))
