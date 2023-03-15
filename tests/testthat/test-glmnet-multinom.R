@@ -324,6 +324,24 @@ test_that("glmnet multi_predict(): type prob", {
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
 })
 
+test_that("glmnet multi_predict(): type NULL", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
+  f_fit <- fit(spec, class ~ protocol + log(compounds) + input_fields,
+               data = hpc_data)
+
+  pred <- predict(f_fit, hpc_data[1:5,])
+  pred_class <- predict(f_fit, hpc_data[1:5,], type = "class")
+  expect_identical(pred, pred_class)
+
+  mpred <- multi_predict(f_fit, hpc_data[1:5,])
+  mpred_class <- multi_predict(f_fit, hpc_data[1:5,], type = "class")
+  expect_identical(mpred, mpred_class)
+})
+
 test_that("multi_predict() with default or single penalty value", {
 
   skip_if_not_installed("glmnet")
@@ -394,5 +412,12 @@ test_that('error traps', {
     multinom_reg() %>%
       set_engine("glmnet") %>%
       fit(class ~ ., data = hpc_data)
+  })
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
+  expect_snapshot(error = TRUE, {
+    multinom_reg(penalty = 0.01) %>%
+      set_engine("glmnet") %>%
+      fit(class ~ ., data = hpc_data) %>%
+      multi_predict(hpc_data, type = "numeric")
   })
 })

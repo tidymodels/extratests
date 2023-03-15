@@ -162,8 +162,9 @@ test_that("glmnet multi_predict(): type numeric", {
   expect_true(has_multi_predict(xy_fit))
   expect_equal(multi_predict_args(xy_fit), "penalty")
 
-  f_pred <- multi_predict(f_fit, hpc, penalty = penalty_values)
-  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values)
+  f_pred <- multi_predict(f_fit, hpc, type = "numeric", penalty = penalty_values)
+  xy_pred <- multi_predict(xy_fit, hpc_x, type = "numeric",
+                           penalty = penalty_values)
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -191,11 +192,33 @@ test_that("glmnet multi_predict(): type numeric", {
   )
 
   # single prediction
-  f_pred_1 <- multi_predict(f_fit, hpc[1, ], penalty = penalty_values)
-  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE], penalty = penalty_values)
+  f_pred_1 <- multi_predict(f_fit, hpc[1, ], type = "numeric",
+                            penalty = penalty_values)
+  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE], type = "numeric",
+                             penalty = penalty_values)
   expect_equal(f_pred_1, xy_pred_1)
   expect_equal(nrow(f_pred_1), 1)
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+})
+
+test_that("glmnet multi_predict(): type NULL", {
+  skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9002")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+  hpc <- hpc_data[1:150, c(2:5, 8)]
+
+  spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
+    set_engine("glmnet", nlambda = 15)
+  f_fit <- fit(spec, input_fields ~ log(compounds) + class, data = hpc)
+
+  pred <- predict(f_fit, hpc[1:5,])
+  pred_numeric <- predict(f_fit, hpc[1:5,], type = "numeric")
+  expect_identical(pred, pred_numeric)
+
+  mpred <- multi_predict(f_fit, hpc[1:5,])
+  mpred_numeric <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
+  expect_identical(mpred, mpred_numeric)
 })
 
 test_that('multi_predict() with default or single penalty value', {
@@ -253,6 +276,13 @@ test_that('error traps', {
     linear_reg() %>%
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ])
+  })
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
+  expect_snapshot(error = TRUE, {
+    linear_reg(penalty = 0.01) %>%
+      set_engine("glmnet") %>%
+      fit(mpg ~ ., data = mtcars) %>%
+      multi_predict(mtcars, type = "class")
   })
 })
 

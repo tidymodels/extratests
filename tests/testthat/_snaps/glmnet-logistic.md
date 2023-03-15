@@ -25,3 +25,12 @@
       * To try multiple values for total regularization, use the tune package.
       * To predict multiple penalties, use `multi_predict()`
 
+---
+
+    Code
+      logistic_reg(penalty = 0.01) %>% set_engine("glmnet") %>% fit(Class ~ log(
+        funded_amnt) + int_rate + term, data = lending_club) %>% multi_predict(
+        lending_club, type = "time")
+    Error <rlang_error>
+      For event time predictions, the object should be a censored regression.
+

@@ -16,3 +16,11 @@
       * To try multiple values for total regularization, use the tune package.
       * To predict multiple penalties, use `multi_predict()`
 
+---
+
+    Code
+      linear_reg(penalty = 0.01) %>% set_engine("glmnet") %>% fit(mpg ~ ., data = mtcars) %>%
+        multi_predict(mtcars, type = "class")
+    Error <rlang_error>
+      For class predictions, the object should be a classification model.
+
