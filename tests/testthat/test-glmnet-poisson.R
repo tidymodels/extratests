@@ -137,3 +137,40 @@ test_that('error traps', {
       fit(mpg ~ ., data = mtcars[-(1:4), ])
   })
 })
+
+test_that("data descriptors and quosures work", {
+  skip_if_not_installed("glmnet")
+
+  data(seniors, package = "poissonreg", envir = rlang::current_env())
+
+  my_penalty <- 1
+  my_mixture <- 0.3
+  my_penalties <- c(0.05, 1)
+
+  # use data descriptor .cols()
+  # formula has 3 predictor columns, thus penalty is 1
+  f_fit <- linear_reg(penalty = .cols() - 2, mixture = my_mixture) %>%
+    set_engine("glmnet", nlambda = 15) %>%
+    fit(count ~ ., data = seniors)
+
+  expect_identical(
+    predict(f_fit, seniors[1:3,]),
+    predict(f_fit, seniors[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    predict(f_fit, seniors[1:3,], penalty = my_penalty),
+    predict(f_fit, seniors[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    multi_predict(f_fit, seniors[1:3, ], penalty = my_penalties) %>%
+      tidyr::unnest(cols = .pred) %>%
+      dplyr::arrange(penalty) %>%
+      dplyr::pull(.pred),
+    c(
+      predict(f_fit, seniors[1:3,], penalty = 0.05) %>% pull(.pred),
+      predict(f_fit, seniors[1:3,], penalty = 1) %>% pull(.pred)
+    )
+  )
+})

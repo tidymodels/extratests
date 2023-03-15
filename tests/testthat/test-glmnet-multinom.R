@@ -421,3 +421,40 @@ test_that('error traps', {
       multi_predict(hpc_data, type = "numeric")
   })
 })
+
+test_that("data descriptors and quosures work", {
+  skip_if_not_installed("glmnet")
+
+  data("hpc_data", package = "modeldata", envir = rlang::current_env())
+
+  my_penalty <- 1
+  my_mixture <- 0.3
+  my_penalties <- c(0.05, 1)
+
+  # use data descriptor .cols()
+  # formula has 3 predictor columns, thus penalty is 1
+  f_fit <- multinom_reg(penalty = .cols() - 2, mixture = my_mixture) %>%
+    set_engine("glmnet", nlambda = 15) %>%
+    fit(class ~ protocol + log(compounds) + input_fields, data = hpc_data)
+
+  expect_identical(
+    predict(f_fit, hpc_data[1:3,]),
+    predict(f_fit, hpc_data[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    predict(f_fit, hpc_data[1:3,], penalty = my_penalty),
+    predict(f_fit, hpc_data[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    multi_predict(f_fit, hpc_data[1:3, ], penalty = my_penalties) %>%
+      tidyr::unnest(cols = .pred) %>%
+      dplyr::arrange(penalty) %>%
+      dplyr::pull(.pred_class),
+    c(
+      predict(f_fit, hpc_data[1:3,], penalty = 0.05) %>% pull(.pred_class),
+      predict(f_fit, hpc_data[1:3,], penalty = 1) %>% pull(.pred_class)
+    )
+  )
+})

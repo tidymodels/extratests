@@ -348,3 +348,38 @@ test_that("base-R families: type NULL", {
   mpred_numeric <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
   expect_identical(mpred, mpred_numeric)
 })
+
+test_that("data descriptors and quosures work", {
+  skip_if_not_installed("glmnet")
+
+  my_penalty <- 1
+  my_mixture <- 0.3
+  my_penalties <- c(0.05, 1)
+
+  # use data descriptor .cols()
+  # mtcars has 11 columns so 10 predictor columns, thus penalty is 1
+  f_fit <- linear_reg(penalty = .cols() - 9, mixture = my_mixture) %>%
+    set_engine("glmnet", nlambda = 15) %>%
+    fit(mpg ~ ., data = mtcars)
+
+  expect_identical(
+    predict(f_fit, mtcars[1:3,]),
+    predict(f_fit, mtcars[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    predict(f_fit, mtcars[1:3,], penalty = my_penalty),
+    predict(f_fit, mtcars[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    multi_predict(f_fit, mtcars[1:3, ], penalty = my_penalties) %>%
+      tidyr::unnest(cols = .pred) %>%
+      dplyr::arrange(penalty) %>%
+      dplyr::pull(.pred),
+    c(
+      predict(f_fit, mtcars[1:3,], penalty = 0.05) %>% pull(.pred),
+      predict(f_fit, mtcars[1:3,], penalty = 1) %>% pull(.pred)
+    )
+  )
+})
