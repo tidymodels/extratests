@@ -1058,17 +1058,7 @@ test_that('rand_forest - ranger case weights', {
 
   expect_unequal(unwt_fit$fit$predictions, wt_fit$fit$predictions)
 
-  # Note: around 2023-02-10 this stared failing with devel versions. We can't
-  # reproduce locally and suspect that it will resolve.
-  # The call object output is being replaced with the internals of eval_tidy:
-  # `.External2(ffi_eval_tidy, expr, data, env)`
-  library(lubridate)
-  if (now() > ymd("2023-02-16") + days(30)) {
-    rlang::abort("reinstate deferred unit test for printing ranger call")
-    # expect_snapshot(print(wt_fit$fit$call))
-  }
-
-
+  expect_snapshot(print(wt_fit$fit$call))
 })
 
 test_that('rand_forest - partykit censored case weights', {
