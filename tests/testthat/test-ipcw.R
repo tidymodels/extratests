@@ -92,3 +92,48 @@ test_that('compute Graf weights', {
 
 })
 
+test_that("error messages in context of .censoring_weights_graf()", {
+  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9006")
+  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
+
+  lung2 <- lung %>%
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
+  expect_snapshot(error = TRUE, .censoring_weights_graf("nothing useful"))
+
+  expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
+
+  # trigger `.check_censor_model()`
+  wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
+  expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, lung2)) # FIXME
+
+  # trigger `.find_surv_col()`
+  cox_model <- proportional_hazards() %>% fit(surv ~ ., data = lung2)
+  expect_snapshot(error = TRUE, .censoring_weights_graf(cox_model, lung))
+
+  # trigger `.check_censored_right()`
+  expect_snapshot(error = TRUE, {
+    lung_left <- lung[1,, drop = FALSE]
+    lung_left$surv <- Surv(10, 0, type = "left")
+    .censoring_weights_graf(cox_model, lung_left)
+  })
+
+  # trigger `.check_pred_col()`
+  expect_snapshot(error = TRUE, .censoring_weights_graf(cox_model, lung2))
+
+  # trigger warning directly in `.censoring_weights_graf()`
+  preds <- predict(
+    cox_model,
+    new_data = lung2[1:3, ],
+    type = "survival",
+    eval_time = c(100, 200)
+  )
+  preds$surv <- lung2$surv[1:3]
+  expect_snapshot({
+    .censoring_weights_graf(
+      cox_model,
+      preds,
+      cens_predictors = "shouldn't be using this anyway!"
+    )
+  })
+})
