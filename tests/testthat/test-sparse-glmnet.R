@@ -26,12 +26,9 @@ matrix_bp <- default_recipe_blueprint(composition = "matrix")
 ## -----------------------------------------------------------------------------
 
 test_that('sparse composition errors', {
-
-  expect_error(
-    mold(rec, mlc_churn, blueprint = sparse_bp),
-    "are not numeric"
-  )
-
+  expect_snapshot(error = TRUE, {
+    mold(rec, mlc_churn, blueprint = sparse_bp)
+  })
 })
 
 test_that('sparse composition works', {
