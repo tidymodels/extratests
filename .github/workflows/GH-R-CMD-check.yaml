@@ -58,6 +58,7 @@ jobs:
       - name: Install devel versions
         run: |
           try(pak::pkg_install("tidymodels/baguette"))
+          try(pak::pkg_install("tidymodels/bonsai"))
           try(pak::pkg_install("tidymodels/censored"))
           try(pak::pkg_install("tidymodels/dials"))
           try(pak::pkg_install("tidymodels/discrim"))
@@ -77,7 +78,6 @@ jobs:
           try(pak::pkg_install("tidymodels/tune"))
           try(pak::pkg_install("tidymodels/workflows"))
           try(pak::pkg_install("tidymodels/yardstick"))
-          try(pak::pkg_install("tidymodels/bonsai"))
           try(pak::pkg_install("business-science/modeltime"))
         shell: Rscript {0}
 
