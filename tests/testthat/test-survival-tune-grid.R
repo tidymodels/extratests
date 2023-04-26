@@ -35,9 +35,6 @@ test_that('grid tuning survival models ', {
   grid <- tibble(tree_depth = c(1, 2, 10))
 
   gctrl <- control_grid(save_pred = TRUE)
-  bctrl <- control_bayes(save_pred = TRUE)
-  sctrl <- control_sim_anneal(save_pred = TRUE)
-  rctrl <- control_race(save_pred = TRUE)
 
   # ------------------------------------------------------------------------------
   # Mixtures of static, dynamic, and integrated metrics
