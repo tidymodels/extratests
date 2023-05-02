@@ -73,7 +73,7 @@ test_that('sim annealing tuning survival models ', {
   expect_true(is.list(sa_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
     names(sa_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     sa_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -196,7 +196,7 @@ test_that('sim annealing tuning survival models ', {
   expect_true(is.list(sa_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
     names(sa_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     sa_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -254,7 +254,7 @@ test_that('sim annealing tuning survival models ', {
   expect_true(is.list(sa_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
     names(sa_dynamic_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     sa_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
