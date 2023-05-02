@@ -4,7 +4,6 @@ test_that("reverse Kaplan-Meier curves", {
   skip_if_not_installed("censored")
   skip_if_not_installed("parsnip", minimum_version = "1.0.3.9003")
 
-  library(survival)
   library(censored)
   library(prodlim)
 
