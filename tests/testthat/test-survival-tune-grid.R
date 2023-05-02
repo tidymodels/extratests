@@ -59,7 +59,7 @@ test_that('grid tuning survival models ', {
   expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
     names(grid_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     grid_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -142,7 +142,7 @@ test_that('grid tuning survival models ', {
   expect_true(is.list(grid_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
     names(grid_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     grid_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -179,7 +179,7 @@ test_that('grid tuning survival models ', {
   expect_true(is.list(grid_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
     names(grid_dynamic_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     grid_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,

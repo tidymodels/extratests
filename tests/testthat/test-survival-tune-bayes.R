@@ -73,7 +73,7 @@ test_that('Bayesian tuning survival models ', {
   expect_true(is.list(bayes_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
     names(bayes_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     bayes_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -196,7 +196,7 @@ test_that('Bayesian tuning survival models ', {
   expect_true(is.list(bayes_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
     names(bayes_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     bayes_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -254,7 +254,7 @@ test_that('Bayesian tuning survival models ', {
   expect_true(is.list(bayes_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
     names(bayes_dynamic_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored", ".weight_censored")
+    c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
     bayes_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
