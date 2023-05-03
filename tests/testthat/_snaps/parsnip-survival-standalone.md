@@ -1,8 +1,8 @@
-# survival helpers
+# .is_surv()
 
     The object does not have class `Surv`.
 
----
+# .check_cens_type()
 
     Code
       parsnip:::.check_cens_type(left_c, fail = TRUE)
