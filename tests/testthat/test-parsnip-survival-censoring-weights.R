@@ -1,5 +1,3 @@
-skip_if_not_installed("parsnip", minimum_version = "1.0.4.9006")
-
 test_that('calculate weight time', {
   skip_if_not_installed("survival")
 

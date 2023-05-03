@@ -1,4 +1,3 @@
-skip_if_not_installed("parsnip", minimum_version = "1.0.4.9001")
 skip_if_not_installed("survival")
 
 test_that(".is_surv()", {
