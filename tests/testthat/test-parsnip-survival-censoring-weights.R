@@ -36,8 +36,6 @@ test_that('calculate weight time', {
 })
 
 test_that('compute Graf weights', {
-  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
-
   library(tidymodels)
   library(censored)
 
@@ -86,8 +84,6 @@ test_that('compute Graf weights', {
 })
 
 test_that("error messages in context of .censoring_weights_graf()", {
-  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
-
   lung2 <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
