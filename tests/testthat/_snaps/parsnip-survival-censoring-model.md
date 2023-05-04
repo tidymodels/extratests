@@ -1,7 +1,7 @@
-# reverse Kaplan-Meier curves
+# print reverse Kaplan-Meier curves
 
     Code
-      print(mod_fit$censor_probs)
+      mod_fit$censor_probs
     Output
       $formula
       Surv(time, status) ~ age + sex
@@ -38,7 +38,7 @@
       attr(,"class")
       [1] "censoring_model_reverse_km" "censoring_model"           
 
----
+# Handle unknown or missing censoring model
 
     no applicable method for 'predict' applied to an object of class "censoring_model"
 

@@ -1,14 +1,9 @@
+skip_if_not_installed("censored")
+skip_if_not_installed("prodlim")
 
-test_that("reverse Kaplan-Meier curves", {
-  skip_if_not_installed("prodlim")
-  skip_if_not_installed("censored")
-  skip_if_not_installed("parsnip", minimum_version = "1.0.3.9003")
+library(censored)
 
-  library(censored)
-  library(prodlim)
-
-  # ----------------------------------------------------------------------------
-
+test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   lung <- lung[complete.cases(lung), ]
 
   mod_fit <-
@@ -20,9 +15,6 @@ test_that("reverse Kaplan-Meier curves", {
 
   psnip_df <- as_tibble(mod_fit$censor_probs$fit[1:6])
 
-  alt_obj <- mod_fit$censor_probs
-  class(alt_obj) <- "censoring_model"
-
   prdlim <-
     prodlim::prodlim(
       Surv(time, status) ~ 1,
@@ -32,9 +24,6 @@ test_that("reverse Kaplan-Meier curves", {
     )
   prdlim_df <- as_tibble(prdlim[1:6])
 
-  # ----------------------------------------------------------------------------
-
-  expect_snapshot( print(mod_fit$censor_probs) )
   expect_true(any(names(mod_fit) == "censor_probs"))
   expect_true(
     inherits(mod_fit$censor_probs,
@@ -61,9 +50,25 @@ test_that("reverse Kaplan-Meier curves", {
     prdlim_df,
     psnip_df
   )
+})
 
-  # ----------------------------------------------------------------------------
-  # prediction
+test_that("print reverse Kaplan-Meier curves", {
+  lung <- lung[complete.cases(lung), ]
+  mod_fit <-
+    survival_reg() %>%
+    fit(Surv(time, status) ~ age + sex, data = lung)
+  # For testing purposes
+  attr(mod_fit$censor_probs$formula, ".Environment") <- rlang::base_env()
+
+  expect_snapshot(mod_fit$censor_probs)
+})
+
+test_that("predict with reverse Kaplan-Meier curves", {
+  lung <- lung[complete.cases(lung), ]
+
+  mod_fit <-
+    survival_reg() %>%
+    fit(Surv(time, status) ~ age + sex, data = lung)
 
   pred_times <- (7:10) * 100
   parsnip_df_pred <- predict(mod_fit$censor_probs, time = pred_times)
@@ -95,14 +100,22 @@ test_that("reverse Kaplan-Meier curves", {
     which(is.na(miss_pred)),
     1
   )
-  # ----------------------------------------------------------------------------
-  #
+})
+
+test_that("Handle unknown or missing censoring model", {
+  lung <- lung[complete.cases(lung), ]
+
+  mod_fit <-
+    survival_reg() %>%
+    fit(Surv(time, status) ~ age + sex, data = lung)
+
+  alt_obj <- mod_fit$censor_probs
+  class(alt_obj) <- "censoring_model"
 
   expect_snapshot_error( predict(alt_obj, time = test_times) )
+
   expect_equal(
     parsnip:::reverse_km(linear_reg(), NULL),
     list()
   )
-
 })
-

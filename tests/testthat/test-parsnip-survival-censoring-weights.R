@@ -1,15 +1,10 @@
-
 test_that('calculate weight time', {
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9006")
-  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
-
-  library(tidymodels)
-  library(censored)
+  skip_if_not_installed("survival")
 
   times <- 1:10
   cens <- rep(0:1, times = 5)
 
-  surv_obj <- Surv(times, cens)
+  surv_obj <- survival::Surv(times, cens)
   n <- length(surv_obj)
 
   eval_0 <- parsnip:::graf_weight_time_vec(surv_obj, eval_time = rep(0, n))
@@ -38,13 +33,9 @@ test_that('calculate weight time', {
     eval_11[!na_11],
     seq(2, 10, by = 2)
   )
-
 })
 
 test_that('compute Graf weights', {
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9006")
-  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
-
   library(tidymodels)
   library(censored)
 
@@ -93,9 +84,6 @@ test_that('compute Graf weights', {
 })
 
 test_that("error messages in context of .censoring_weights_graf()", {
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9006")
-  skip_if_not_installed("censored", minimum_version = "0.1.1.9002")
-
   lung2 <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
