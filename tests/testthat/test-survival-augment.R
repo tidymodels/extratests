@@ -32,7 +32,7 @@ test_that('augmenting survival models ', {
   })
 
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(sim_tr), nrow(sr_aug))
+  expect_equal(nrow(sr_aug), nrow(sim_tr))
   expect_equal(names(sr_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
   expect_true(is.list(sr_aug$.pred))
   expect_equal(
@@ -49,7 +49,7 @@ test_that('augmenting survival models ', {
     fit(event_time ~ ., data = sim_tr)
 
   glmn_aug <- augment(glmn_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(sim_tr), nrow(glmn_aug))
+  expect_equal(nrow(glmn_aug), nrow(sim_tr))
   expect_equal(names(glmn_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
   expect_true(is.list(glmn_aug$.pred))
   expect_equal(
