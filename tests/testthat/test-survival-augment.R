@@ -27,7 +27,9 @@ test_that('augmenting survival models ', {
     survival_reg() %>%
     fit(event_time ~ ., data = sim_tr)
 
-  expect_snapshot_error(augment(sr_fit, new_data = sim_tr))
+  expect_snapshot(error = TRUE, {
+    augment(sr_fit, new_data = sim_tr)
+  })
 
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
   expect_equal(nrow(sim_tr), nrow(sr_aug))
