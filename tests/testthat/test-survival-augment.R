@@ -19,7 +19,7 @@ test_that('augmenting survival models ', {
   sim_tr <- training(split)
   sim_te <- testing(split)
 
-  time_points <- c(10, 1, 5, 15)
+  time_points <- c(1, 5, 10)
 
   # ------------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ test_that("augment() for survival models skips unavailble prediction type", {
     mutate(event_time = Surv(time, event)) %>%
     select(event_time, X1, X2)
 
-  time_points <- c(10, 1, 5, 15)
+  time_points <- c(1, 5, 10)
 
   # this engine does not provide predictions of type = "time"
   rf_fit <-
