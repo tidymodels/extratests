@@ -10,17 +10,6 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
-  psnip_df <- as_tibble(mod_fit$censor_probs$fit[1:6])
-
-  prdlim <-
-    prodlim::prodlim(
-      Surv(time, status) ~ 1,
-      data = lung,
-      reverse = TRUE,
-      type = "surv"
-    )
-  prdlim_df <- as_tibble(prdlim[1:6])
-
   expect_true(any(names(mod_fit) == "censor_probs"))
   expect_true(
     inherits(mod_fit$censor_probs,
@@ -43,6 +32,18 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
 
   expect_equal(mod_fit$censor_probs$label, "reverse_km")
   expect_equal(mod_fit$censor_probs$required_pkgs, "prodlim")
+
+
+  psnip_df <- as_tibble(mod_fit$censor_probs$fit[1:6])
+
+  prdlim <- prodlim::prodlim(
+    Surv(time, status) ~ 1,
+    data = lung,
+    reverse = TRUE,
+    type = "surv"
+  )
+  prdlim_df <- as_tibble(prdlim[1:6])
+
   expect_equal(
     prdlim_df,
     psnip_df
