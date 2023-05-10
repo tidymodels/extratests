@@ -6,19 +6,20 @@ library(censored)
 test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   lung <- lung[complete.cases(lung), ]
 
-  mod_fit <-
-    survival_reg() %>%
+  mod_fit <- survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   expect_true(any(names(mod_fit) == "censor_probs"))
-  expect_true(
-    inherits(mod_fit$censor_probs,
-             c("censoring_model_reverse_km", "censoring_model")))
-  expect_equal(
-    names(mod_fit$censor_probs),
+
+  expect_s3_class(
+    mod_fit$censor_probs,
+    c("censoring_model_reverse_km", "censoring_model")
+  )
+  expect_named(
+    mod_fit$censor_probs,
     c("formula", "fit", "label", "required_pkgs")
   )
-  expect_true(inherits(mod_fit$censor_probs$fit, "prodlim"))
+  expect_s3_class(mod_fit$censor_probs$fit, "prodlim")
   expect_equal(
     mod_fit$censor_probs$formula,
     Surv(time, status) ~ age + sex,
@@ -29,7 +30,6 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
     Surv(time, status) ~ 1,
     ignore_formula_env = TRUE
   )
-
   expect_equal(mod_fit$censor_probs$label, "reverse_km")
   expect_equal(mod_fit$censor_probs$required_pkgs, "prodlim")
 
