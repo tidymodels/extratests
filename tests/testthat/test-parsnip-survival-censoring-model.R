@@ -34,19 +34,18 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   expect_equal(mod_fit$censor_probs$required_pkgs, "prodlim")
 
 
-  psnip_df <- as_tibble(mod_fit$censor_probs$fit[1:6])
-
-  prdlim <- prodlim::prodlim(
+  rev_km_fit <- as_tibble(mod_fit$censor_probs$fit[1:6])
+  exp_rev_km_fit <- prodlim::prodlim(
     Surv(time, status) ~ 1,
     data = lung,
     reverse = TRUE,
     type = "surv"
   )
-  prdlim_df <- as_tibble(prdlim[1:6])
+  exp_rev_km_fit <- as_tibble(exp_rev_km_fit[1:6])
 
   expect_equal(
-    prdlim_df,
-    psnip_df
+    exp_rev_km_fit,
+    rev_km_fit
   )
 })
 
