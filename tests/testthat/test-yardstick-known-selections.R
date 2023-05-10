@@ -29,6 +29,10 @@ test_that("known selections are cleared after tune runs", {
 })
 
 test_that("known selections are stored", {
+  # only run interactively--see
+  # https://github.com/tidymodels/tune/blob/2a6332c35e32b4416ce868815884d8b26c3ff772/R/logging.R#L102-L108
+  skip_if(tune:::is_testing())
+
   extract_known_selections <- function(x) {
     rlang::ns_env("tune")$tune_env$known_selections
   }
