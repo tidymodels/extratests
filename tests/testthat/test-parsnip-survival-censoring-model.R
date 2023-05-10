@@ -10,9 +10,6 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
-  # For testing purposes
-  attr(mod_fit$censor_probs$formula, ".Environment") <- rlang::base_env()
-
   psnip_df <- as_tibble(mod_fit$censor_probs$fit[1:6])
 
   prdlim <-
