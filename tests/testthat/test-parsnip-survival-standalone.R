@@ -7,7 +7,7 @@ test_that(".is_surv()", {
 
   expect_true(parsnip:::.is_surv(right_c))
   expect_false(parsnip:::.is_surv(1, fail = FALSE))
-  expect_snapshot_error(parsnip:::.is_surv(1))
+  expect_snapshot(error = TRUE, parsnip:::.is_surv(1))
 })
 
 test_that(".check_cens_type()", {
@@ -15,14 +15,12 @@ test_that(".check_cens_type()", {
   events <- c(1, 0, 1, 0, 1)
   left_c <- survival::Surv(times, events, type = "left")
 
-  expect_snapshot(
-    error = TRUE,
-    parsnip:::.check_cens_type(left_c, fail = TRUE)
-  )
-  expect_snapshot(
-    error = TRUE,
+  expect_snapshot(error = TRUE, {
+    parsnip:::.check_cens_type(left_c, type = "right", fail = TRUE)
+  })
+  expect_snapshot(error = TRUE, {
     parsnip:::.check_cens_type(left_c, type = c("right", "interval"), fail = TRUE)
-  )
+  })
 })
 
 test_that(".is_censored_right()", {
