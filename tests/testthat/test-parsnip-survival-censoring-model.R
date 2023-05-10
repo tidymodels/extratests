@@ -33,7 +33,6 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   expect_equal(mod_fit$censor_probs$label, "reverse_km")
   expect_equal(mod_fit$censor_probs$required_pkgs, "prodlim")
 
-
   rev_km_fit <- as_tibble(mod_fit$censor_probs$fit[1:6])
   exp_rev_km_fit <- prodlim::prodlim(
     Surv(time, status) ~ 1,
@@ -42,11 +41,7 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
     type = "surv"
   )
   exp_rev_km_fit <- as_tibble(exp_rev_km_fit[1:6])
-
-  expect_equal(
-    exp_rev_km_fit,
-    rev_km_fit
-  )
+  expect_equal(rev_km_fit, exp_rev_km_fit)
 })
 
 test_that("print reverse Kaplan-Meier curves", {
