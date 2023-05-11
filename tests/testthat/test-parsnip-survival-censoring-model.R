@@ -79,18 +79,19 @@ test_that("predict with reverse Kaplan-Meier curves", {
   expect_equal(which(is.na(pred_miss)), 1)
 })
 
-test_that("Handle unknown or missing censoring model", {
+test_that("Handle unknown censoring model", {
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   alt_obj <- mod_fit$censor_probs
   class(alt_obj) <- "censoring_model"
+  expect_snapshot(error = TRUE, predict(alt_obj, time = 100))
+})
 
-  expect_snapshot_error( predict(alt_obj, time = test_times) )
-
+test_that("`reverse_km()` returns NULL for unrelated modes", {
   expect_equal(
-    parsnip:::reverse_km(linear_reg(), NULL),
+    parsnip:::reverse_km(linear_reg(), eval_env = NULL),
     list()
   )
 })

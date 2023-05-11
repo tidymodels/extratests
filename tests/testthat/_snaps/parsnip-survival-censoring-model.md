@@ -38,7 +38,10 @@
       attr(,"class")
       [1] "censoring_model_reverse_km" "censoring_model"           
 
-# Handle unknown or missing censoring model
+# Handle unknown censoring model
 
-    no applicable method for 'predict' applied to an object of class "censoring_model"
+    Code
+      predict(alt_obj, time = 100)
+    Error <simpleError>
+      no applicable method for 'predict' applied to an object of class "censoring_model"
 
