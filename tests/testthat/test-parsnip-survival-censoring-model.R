@@ -4,8 +4,6 @@ skip_if_not_installed("prodlim")
 library(censored)
 
 test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
-  lung <- lung[complete.cases(lung), ]
-
   mod_fit <- survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
@@ -45,7 +43,6 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
 })
 
 test_that("print reverse Kaplan-Meier curves", {
-  lung <- lung[complete.cases(lung), ]
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
@@ -56,8 +53,6 @@ test_that("print reverse Kaplan-Meier curves", {
 })
 
 test_that("predict with reverse Kaplan-Meier curves", {
-  lung <- lung[complete.cases(lung), ]
-
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
@@ -95,8 +90,6 @@ test_that("predict with reverse Kaplan-Meier curves", {
 })
 
 test_that("Handle unknown or missing censoring model", {
-  lung <- lung[complete.cases(lung), ]
-
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
