@@ -22,12 +22,12 @@
       
       Right-censored response of a survival model
       
-      No.Observations: 167 
+      No.Observations: 228 
       
       Pattern:
                       Freq
-       event          120 
-       right.censored 47  
+       event          165 
+       right.censored 63  
       
       $label
       [1] "reverse_km"
@@ -38,7 +38,10 @@
       attr(,"class")
       [1] "censoring_model_reverse_km" "censoring_model"           
 
-# Handle unknown or missing censoring model
+# Handle unknown censoring model
 
-    no applicable method for 'predict' applied to an object of class "censoring_model"
+    Code
+      predict(alt_obj, time = 100)
+    Error <simpleError>
+      no applicable method for 'predict' applied to an object of class "censoring_model"
 
