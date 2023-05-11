@@ -70,7 +70,14 @@ test_that("predict with reverse Kaplan-Meier curves", {
                       as_vector = TRUE)
   expect_type(pred_vec, "double")
   expect_equal(pred_vec, exp_pred)
+})
 
+test_that("predict can handle NA times", {
+  mod_fit <-
+    survival_reg() %>%
+    fit(Surv(time, status) ~ age + sex, data = lung)
+
+  pred_times <- (7:10) * 100
   pred_miss <- predict(mod_fit$censor_probs,
                        time = c(NA_real_, pred_times),
                        as_vector = TRUE)
