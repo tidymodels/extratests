@@ -43,11 +43,10 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
 })
 
 test_that("print reverse Kaplan-Meier curves", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9002")
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
-  # For testing purposes
-  attr(mod_fit$censor_probs$formula, ".Environment") <- rlang::base_env()
 
   expect_snapshot(mod_fit$censor_probs)
 })
@@ -101,6 +100,7 @@ test_that("predict() avoids zero probabilities", {
 })
 
 test_that("Handle unknown censoring model", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9002")
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
