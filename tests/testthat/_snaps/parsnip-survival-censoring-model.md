@@ -22,12 +22,12 @@
       
       Right-censored response of a survival model
       
-      No.Observations: 167 
+      No.Observations: 228 
       
       Pattern:
                       Freq
-       event          120 
-       right.censored 47  
+       event          165 
+       right.censored 63  
       
       $label
       [1] "reverse_km"
