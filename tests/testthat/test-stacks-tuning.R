@@ -230,7 +230,7 @@ test_that("stacking with finetune works (anova)", {
 
 test_that("stacking with finetune works (sim_anneal)", {
   skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
-  skip_if(utils::packageVersion("finetune") < "1.0.1.9001")
+  skip_if(utils::packageVersion("finetune") < "1.1.0.9001")
 
   wf_set_sim_anneal <-
     workflow_map(
