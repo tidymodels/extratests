@@ -58,35 +58,25 @@ test_that("predict with reverse Kaplan-Meier curves", {
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   pred_times <- (7:10) * 100
-  parsnip_df_pred <- predict(mod_fit$censor_probs, time = pred_times)
-  parsnip_vec_pred <-
-    predict(mod_fit$censor_probs, time = pred_times, as_vector = TRUE)
-  pl_pred <-
-    predict(mod_fit$censor_probs$fit, times = pred_times, type = "surv")
+  exp_pred <- predict(mod_fit$censor_probs$fit, times = pred_times, type = "surv")
+  pred_df <- predict(mod_fit$censor_probs, time = pred_times)
 
-  expect_true(inherits(parsnip_df_pred, "tbl_df"))
-  expect_equal(names(parsnip_df_pred), ".prob_censored")
-  expect_equal(nrow(parsnip_df_pred), length(pred_times))
-  expect_equal(parsnip_df_pred[[1]], pl_pred)
-  expect_equal(parsnip_vec_pred, pl_pred)
-  expect_true(inherits(parsnip_vec_pred, "numeric"))
+  expect_s3_class(pred_df, "tbl_df")
+  expect_named(pred_df, ".prob_censored")
+  expect_equal(nrow(pred_df), length(pred_times))
+  expect_equal(pred_df[[1]], exp_pred)
 
-  miss_pred <-
-    predict(mod_fit$censor_probs,
-            time = c(NA_real_, pred_times),
-            as_vector = TRUE)
-  expect_equal(
-    length(miss_pred),
-    length(pred_times) + 1
-  )
-  expect_equal(
-    sum(is.na(miss_pred)),
-    1L
-  )
-  expect_equal(
-    which(is.na(miss_pred)),
-    1
-  )
+  pred_vec <- predict(mod_fit$censor_probs, time = pred_times,
+                      as_vector = TRUE)
+  expect_type(pred_vec, "double")
+  expect_equal(pred_vec, exp_pred)
+
+  pred_miss <- predict(mod_fit$censor_probs,
+                       time = c(NA_real_, pred_times),
+                       as_vector = TRUE)
+  expect_equal(length(pred_miss), length(pred_times) + 1)
+  expect_equal(sum(is.na(pred_miss)), 1L)
+  expect_equal(which(is.na(pred_miss)), 1)
 })
 
 test_that("Handle unknown or missing censoring model", {
