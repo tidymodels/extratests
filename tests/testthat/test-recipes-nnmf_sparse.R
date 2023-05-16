@@ -110,8 +110,8 @@ test_that('tidy method', {
     tidy(rec, 1),
     tibble::tribble(
       ~terms, ~value, ~component,    ~id,
-      "disp",   NA_real_,          2, "test",
-      "wt",     NA_real_,          2, "test"
+      "disp",   NA_real_,          NA_character_, "test",
+      "wt",     NA_real_,          NA_character_, "test"
     )
   )
 
