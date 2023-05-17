@@ -35,6 +35,128 @@ test_that('calculate weight time', {
   )
 })
 
+test_that("graf_weight_time_vec() calculates weight time", {
+  skip_if_not_installed("survival")
+
+  eval_time_10 <- 10
+
+  # Graf et al (1999) Category 1
+  event_before_or_at_eval_time <- survival::Surv(
+    time = c(eval_time_10 - 1, eval_time_10),
+    event = c(1, 1)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(event_before_or_at_eval_time, eval_time = eval_time_10) %>%
+      unname(),
+    c(eval_time_10 - 1, eval_time_10)
+  )
+
+  # Graf et al (1999) Category 2
+  observed_time_gt_eval_time <- survival::Surv(
+    time = c(eval_time_10 + 1, eval_time_10 + 1),
+    event = c(1, 0)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(observed_time_gt_eval_time, eval_time = eval_time_10),
+    rep(eval_time_10, 2)
+  )
+
+  # Graf et al (1999) Category 3
+  censoring_before_or_at_eval_time <- survival::Surv(
+    time = c(eval_time_10 - 1, eval_time_10),
+    event = c(0, 0)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(censoring_before_or_at_eval_time, eval_time = eval_time_10) %>%
+      unname(),
+    c(NA, NA)
+  )
+})
+
+test_that("graf_weight_time_vec() guards against information leakage via `eps`", {
+  skip_if_not_installed("survival")
+
+  eval_time_10 <- 10
+
+  # Graf et al (1999) Category 1
+  time_before_or_at_eval_time <- c(eval_time_10 - 1, eval_time_10)
+  event_before_or_at_eval_time <- survival::Surv(
+    time = time_before_or_at_eval_time,
+    event = c(1, 1)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(
+      event_before_or_at_eval_time,
+      eval_time = eval_time_10,
+      eps = 2
+    ) %>%
+      unname(),
+    time_before_or_at_eval_time - 2
+  )
+
+  # Graf et al (1999) Category 2
+  observed_time_gt_eval_time <- survival::Surv(
+    time = c(eval_time_10 + 1, eval_time_10 + 1),
+    event = c(1, 0)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(
+      observed_time_gt_eval_time,
+      eval_time = eval_time_10,
+      eps = 2
+    ),
+    rep(eval_time_10, 2) - 2
+  )
+
+  # Graf et al (1999) Category 3
+  # weight time is NA, thus no modification
+})
+
+test_that("graf_weight_time_vec() does not return negative weight times", {
+  skip_if_not_installed("survival")
+
+  # Graf et al (1999) Category 1
+  # unmodified weight time is event_time < eps
+  event_time_lt_eps <- survival::Surv(time = c(-1, 0), event = c(1, 1))
+  expect_equal(
+    parsnip:::graf_weight_time_vec(event_time_lt_eps, eval_time = 10) %>%
+      unname(),
+    c(0, 0)
+  )
+
+  # Graf et al (1999) Category 2
+  # unmodified weight time is eval_time < eps
+  eval_time_lt_eps <- c(-1, 0)
+  observed_time_gt_eval_time <- survival::Surv(time = c(1, 1), event = c(1, 0))
+  expect_equal(
+    parsnip:::graf_weight_time_vec(observed_time_gt_eval_time, eval_time = eval_time_lt_eps),
+    c(0, 0)
+  )
+
+  # Graf et al (1999) Category 3
+  # weight time is NA, thus no check here
+})
+
+test_that("graf_weight_time_vec() handles eval_time of NULL", {
+  skip_if_not_installed("survival")
+
+  surv_obj <- survival::Surv(time = c(10, 12), event = c(0, 1))
+  expect_equal(
+    parsnip:::graf_weight_time_vec(surv_obj, eval_time = NULL),
+    logical(0)
+  )
+})
+
+test_that("graf_weight_time_vec() handles eval_time of NA", {
+  skip_if_not_installed("survival")
+
+  surv_obj <- survival::Surv(time = c(10, 12), event = c(0, 1))
+  expect_equal(
+    parsnip:::graf_weight_time_vec(surv_obj, eval_time = NA),
+    c(NA, NA)
+  )
+})
+
 test_that('compute Graf weights', {
   library(tidymodels)
   library(censored)
