@@ -97,7 +97,7 @@ test_that('can prep recipes with no keep_original_cols', {
 })
 
 test_that('tidy method', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if(utils::packageVersion("recipes") < "1.0.6.9000")
 
   set.seed(1)
   rec <- recipe(~ ., data = mtcars) %>%
@@ -110,8 +110,8 @@ test_that('tidy method', {
     tidy(rec, 1),
     tibble::tribble(
       ~terms, ~value, ~component,    ~id,
-      "disp",   NA_real_,          2, "test",
-      "wt",     NA_real_,          2, "test"
+      "disp",   NA_real_,          NA_character_, "test",
+      "wt",     NA_real_,          NA_character_, "test"
     )
   )
 
