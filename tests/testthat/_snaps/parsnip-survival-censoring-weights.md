@@ -15,13 +15,6 @@
 ---
 
     Code
-      .censoring_weights_graf(wrong_model, lung2)
-    Error <rlang_error>
-      The input should have a list column called `.pred`.
-
----
-
-    Code
       .censoring_weights_graf(cox_model, lung)
     Error <rlang_error>
       There should be a single column of class `Surv`
@@ -55,4 +48,11 @@
       1 <tibble [2 x 5]>   306 
       2 <tibble [2 x 5]>   455 
       3 <tibble [2 x 5]>  1010+
+
+# error for .censoring_weights_graf() from .check_censor_model()
+
+    Code
+      .censoring_weights_graf(wrong_model, mtcars)
+    Error <rlang_error>
+      The model needs to be for mode 'censored regression', not for mode 'regression'.
 
