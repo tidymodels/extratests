@@ -1,13 +1,21 @@
-library(testthat)
-library(tidymodels)
-library(prodlim)
-library(censored)
-library(yardstick)
-library(finetune)
 
 # ------------------------------------------------------------------------------
 
 test_that('grid tuning survival models ', {
+  skip_if_not_installed("survival")
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+  skip_if_not_installed("cesnored", minimum_version = "0.2.0.9000")
+  skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
+
+  library(testthat)
+  library(tidymodels)
+  library(prodlim)
+  library(censored)
+  library(yardstick)
+  library(finetune)
+
 
   set.seed(1)
   sim_dat <- SimSurv(500) %>%
