@@ -8,6 +8,7 @@ library(finetune)
 # ------------------------------------------------------------------------------
 
 test_that('race tuning survival models ', {
+  skip_if_not_installed("coin") # required for partykit engine
 
   set.seed(1)
   sim_dat <- SimSurv(500) %>%

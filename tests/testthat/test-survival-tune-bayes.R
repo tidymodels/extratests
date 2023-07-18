@@ -6,6 +6,7 @@ test_that('Bayesian tuning survival models ', {
   skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
   skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
   skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
+  skip_if_not_installed("coin") # required for partykit engine
 
   library(testthat)
   library(tidymodels)
