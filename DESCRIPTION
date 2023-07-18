@@ -63,6 +63,7 @@ Suggests:
     tibble,
     tidyr,
     tune,
+    withr,
     workflows,
     workflowsets,
     xgboost,
