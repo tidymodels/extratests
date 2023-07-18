@@ -111,31 +111,3 @@ test_that(".extract_surv_status() does not transform status for interval censori
     events_interval_12
   )
 })
-
-test_that(".time_as_binary_event() converts survival data to a factor", {
-  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
-  times <- 1:10
-  events <- rep(0:1, times = 5)
-  surv_obj <- survival::Surv(times, events)
-
-  lvls <- c("event", "non-event")
-  to_factor <- function(x) factor(x, levels = lvls)
-
-  obs_time_1.5 <- .time_as_binary_event(surv_obj, 1.5)
-  exp_time_1.5 <- to_factor(c(NA, rep("non-event", 9)))
-  expect_equal(obs_time_1.5, exp_time_1.5)
-
-  obs_time_5.5 <- .time_as_binary_event(surv_obj, 5.5)
-  exp_time_5.5 <- to_factor(c(rep(c(NA, "event"), 2), NA, rep("non-event", 5)))
-  expect_equal(obs_time_5.5, exp_time_5.5)
-
-  obs_time_11 <- .time_as_binary_event(surv_obj, 11)
-  exp_time_11 <- to_factor(rep(c(NA, "event"), 5))
-  expect_equal(obs_time_11, exp_time_11)
-
-  expect_snapshot(error = TRUE, .time_as_binary_event(surv_obj, 11:12))
-  expect_snapshot(error = TRUE, .time_as_binary_event(surv_obj, Inf))
-  expect_snapshot(error = TRUE, .time_as_binary_event(surv_obj, NA))
-  expect_snapshot(error = TRUE, .time_as_binary_event(surv_obj, -1))
-  expect_snapshot(error = TRUE, .time_as_binary_event(surv_obj, "potato"))
-})
