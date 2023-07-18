@@ -11,6 +11,7 @@ License: MIT + file LICENSE
 Depends: 
     tidymodels
 Suggests: 
+    aorsf,
     baguette,
     bonsai,
     BradleyTerry2,
