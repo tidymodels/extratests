@@ -62,6 +62,7 @@ test_that('augmenting survival models ', {
 test_that("augment() for survival models skips unavailble prediction type", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9001")
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("aorsf")
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
