@@ -1,4 +1,8 @@
-# Bayesian tuning survival models 
+# Bayesian tuning survival models with dynamic metric
+
+    No evaluation time was set; a value of 5 was used.
+
+# Bayesian tuning survival models with mixture of metric types
 
     No evaluation time was set; a value of 5 was used.
 
@@ -41,8 +45,4 @@
       3          6 brier_surv~ standard           NA 0.125    10 0.00897 Iter2       2
       4          2 brier_surv~ standard           NA 0.137    10 0.00884 Prepro~     0
       5          1 brier_surv~ standard           NA 0.143    10 0.00865 Prepro~     0
-
----
-
-    No evaluation time was set; a value of 5 was used.
 
