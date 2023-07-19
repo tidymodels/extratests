@@ -119,11 +119,9 @@ test_that('grid tuning survival models ', {
     c(".pred_time", ".row", "tree_depth", "event_time", ".config")
   )
 
-  expect_snapshot_warning(
-    expect_snapshot_plot(
-      "static-metric-grid-search",
-      print(autoplot(grid_static_res))
-    )
+  expect_snapshot_plot(
+    "static-metric-grid-search",
+    print(autoplot(grid_static_res))
   )
 
   # ------------------------------------------------------------------------------
