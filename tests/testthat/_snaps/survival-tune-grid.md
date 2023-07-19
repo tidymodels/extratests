@@ -1,4 +1,8 @@
-# grid tuning survival models 
+# grid tuning survival models with dynamic metric
+
+    No evaluation time was set; a value of 5 was used.
+
+# grid tuning survival models mixture of metric types
 
     No evaluation time was set; a value of 5 was used.
 
@@ -37,8 +41,4 @@
       1         10 brier_survival_i~ standard           NA 0.125    10 0.00897 Prepro~
       2          2 brier_survival_i~ standard           NA 0.137    10 0.00884 Prepro~
       3          1 brier_survival_i~ standard           NA 0.143    10 0.00865 Prepro~
-
----
-
-    No evaluation time was set; a value of 5 was used.
 
