@@ -7,9 +7,7 @@ library(finetune)
 
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
-# ------------------------------------------------------------------------------
-
-test_that("sim annealing tuning survival models with static metrics", {
+test_that("sim annealing tuning survival models with static metric", {
   skip_if_not_installed("coin") # required for partykit engine
   skip_if_not_installed("prodlim")
 
@@ -84,7 +82,7 @@ test_that("sim annealing tuning survival models with static metrics", {
   )
 })
 
-test_that("sim annealing tuning survival models with integrated metrics", {
+test_that("sim annealing tuning survival models with integrated metric", {
   skip_if_not_installed("coin") # required for partykit engine
   skip_if_not_installed("prodlim")
 
@@ -173,7 +171,7 @@ test_that("sim annealing tuning survival models with integrated metrics", {
   )
 })
 
-test_that("sim annealing tuning survival models with dynamic metrics", {
+test_that("sim annealing tuning survival models with dynamic metric", {
   skip_if_not_installed("coin") # required for partykit engine
   skip_if_not_installed("prodlim")
 
