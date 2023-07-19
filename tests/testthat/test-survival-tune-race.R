@@ -5,7 +5,7 @@ library(censored)
 library(yardstick)
 library(finetune)
 
-# ------------------------------------------------------------------------------
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that('race tuning survival models ', {
   skip_if_not_installed("BradleyTerry2")
