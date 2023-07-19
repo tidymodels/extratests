@@ -7,7 +7,7 @@ save_png <- function(code, width = 400, height = 400) {
   path
 }
 
-expect_snapshot_plot <- function(name, code) {
+expect_snapshot_plot <- function(code, name) {
   skip_on_os("windows")
   skip_on_os("linux")
   skip_on_os("solaris")

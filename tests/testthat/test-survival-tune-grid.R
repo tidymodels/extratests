@@ -76,13 +76,13 @@ test_that('grid tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "mixed-metric-grid-search-with-two-time-points",
-    print(autoplot(grid_mixed_res, eval_time = c(1, 5)))
+    print(autoplot(grid_mixed_res, eval_time = c(1, 5))),
+    "mixed-metric-grid-search-with-two-time-points"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "mixed-metric-grid-search-with-no-set-time-points",
-      print(autoplot(grid_mixed_res))
+      print(autoplot(grid_mixed_res)),
+      "mixed-metric-grid-search-with-no-set-time-points"
     )
   )
 
@@ -120,8 +120,8 @@ test_that('grid tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "static-metric-grid-search",
-    print(autoplot(grid_static_res))
+    print(autoplot(grid_static_res)),
+    "static-metric-grid-search"
   )
 
   # ------------------------------------------------------------------------------
@@ -159,8 +159,8 @@ test_that('grid tuning survival models ', {
   # TODO this should throw a warning
   # expect_snapshot_plot(autoplot(grid_integrated_res, eval_time = c(1, 5)))
   expect_snapshot_plot(
-    "integrated-metric-grid-search",
-    print(autoplot(grid_integrated_res))
+    print(autoplot(grid_integrated_res)),
+    "integrated-metric-grid-search"
   )
 
   # ------------------------------------------------------------------------------
@@ -195,8 +195,8 @@ test_that('grid tuning survival models ', {
 
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "dynamic-metric-grid-search",
-      print(autoplot(grid_dynamic_res))
+      print(autoplot(grid_dynamic_res)),
+      "dynamic-metric-grid-search"
     )
   )
 

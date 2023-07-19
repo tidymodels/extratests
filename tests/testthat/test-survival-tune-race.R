@@ -99,43 +99,43 @@ test_that('race tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "aov-racing-plot",
-    print(plot_race(aov_mixed_res))
+    print(plot_race(aov_mixed_res)),
+    "aov-racing-plot"
   )
   expect_snapshot_plot(
-    "wl-racing-plot",
-    print(plot_race(wl_mixed_res))
+    print(plot_race(wl_mixed_res)),
+    "wl-racing-plot"
   )
 
   expect_snapshot_plot(
-    "mixed-metric-aov-racing-with-two-time-points",
-    print(autoplot(aov_mixed_res, eval_time = c(1, 5)))
+    print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
+    "mixed-metric-aov-racing-with-two-time-points"
   )
   expect_snapshot_plot(
-    "mixed-metric-wl-racing-with-two-time-points",
-    print(autoplot(wl_mixed_res, eval_time = c(1, 5)))
+    print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
+    "mixed-metric-wl-racing-with-two-time-points"
   )
 
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "mixed-metric-aov-racing-with-no-set-time-points",
-      print(autoplot(aov_mixed_res))
+      print(autoplot(aov_mixed_res)),
+      "mixed-metric-aov-racing-with-no-set-time-points"
     )
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "mixed-metric-wl-racing-with-no-set-time-points",
-      print(autoplot(wl_mixed_res))
+      print(autoplot(wl_mixed_res)),
+      "mixed-metric-wl-racing-with-no-set-time-points"
     )
   )
 
   expect_snapshot_plot(
-    "mixed-metric-aov-racing-with-two-time-points-marginals",
-    print(autoplot(aov_mixed_res, eval_time = 1, type = "marginals"))
+    print(autoplot(aov_mixed_res, eval_time = 1, type = "marginals")),
+    "mixed-metric-aov-racing-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "mixed-metric-wl-racing-with-two-time-points-marginals",
-    print(autoplot(wl_mixed_res, eval_time = 1, type = "marginals"))
+    print(autoplot(wl_mixed_res, eval_time = 1, type = "marginals")),
+    "mixed-metric-wl-racing-with-two-time-points-marginals"
   )
 
   # test some S3 methods for any tune_result object
@@ -189,30 +189,30 @@ test_that('race tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "static-aov-racing-plot",
-    print(plot_race(aov_static_res))
+    print(plot_race(aov_static_res)),
+    "static-aov-racing-plot"
   )
   expect_snapshot_plot(
-    "static-wl-racing-plot",
-    print(plot_race(wl_static_res))
-  )
-
-  expect_snapshot_plot(
-    "static-metric-aov-racing-with-two-time-points",
-    print(autoplot(aov_static_res))
-  )
-  expect_snapshot_plot(
-    "static-metric-wl-racing-with-two-time-points",
-    print(autoplot(wl_static_res))
+    print(plot_race(wl_static_res)),
+    "static-wl-racing-plot"
   )
 
   expect_snapshot_plot(
-    "static-metric-aov-racing-with-two-time-points-marginals",
-    print(autoplot(aov_static_res, type = "marginals"))
+    print(autoplot(aov_static_res)),
+    "static-metric-aov-racing-with-two-time-points"
   )
   expect_snapshot_plot(
-    "static-metric-wl-racing-with-two-time-points-marginals",
-    print(autoplot(wl_static_res, type = "marginals"))
+    print(autoplot(wl_static_res)),
+    "static-metric-wl-racing-with-two-time-points"
+  )
+
+  expect_snapshot_plot(
+    print(autoplot(aov_static_res, type = "marginals")),
+    "static-metric-aov-racing-with-two-time-points-marginals"
+  )
+  expect_snapshot_plot(
+    print(autoplot(wl_static_res, type = "marginals")),
+    "static-metric-wl-racing-with-two-time-points-marginals"
   )
 
   # ------------------------------------------------------------------------------
@@ -276,43 +276,43 @@ test_that('race tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "dyn-aov-racing-plot",
-    print(plot_race(aov_dyn_res))
+    print(plot_race(aov_dyn_res)),
+    "dyn-aov-racing-plot"
   )
   expect_snapshot_plot(
-    "dyn-wl-racing-plot",
-    print(plot_race(wl_dyn_res))
+    print(plot_race(wl_dyn_res)),
+    "dyn-wl-racing-plot"
   )
 
   expect_snapshot_plot(
-    "dyn-metric-aov-racing-with-two-time-points",
-    print(autoplot(aov_dyn_res, eval_time = c(1, 5)))
+    print(autoplot(aov_dyn_res, eval_time = c(1, 5))),
+    "dyn-metric-aov-racing-with-two-time-points"
   )
   expect_snapshot_plot(
-    "dyn-metric-wl-racing-with-two-time-points",
-    print(autoplot(wl_dyn_res, eval_time = c(1, 5)))
+    print(autoplot(wl_dyn_res, eval_time = c(1, 5))),
+    "dyn-metric-wl-racing-with-two-time-points"
   )
 
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "dyn-metric-aov-racing-with-no-set-time-points",
-      print(autoplot(aov_dyn_res))
+      print(autoplot(aov_dyn_res)),
+      "dyn-metric-aov-racing-with-no-set-time-points"
     )
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "dyn-metric-wl-racing-with-no-set-time-points",
-      print(autoplot(wl_dyn_res))
+      print(autoplot(wl_dyn_res)),
+      "dyn-metric-wl-racing-with-no-set-time-points"
     )
   )
 
   expect_snapshot_plot(
-    "dyn-metric-aov-racing-with-two-time-points-marginals",
-    print(autoplot(aov_dyn_res, eval_time = 1, type = "marginals"))
+    print(autoplot(aov_dyn_res, eval_time = 1, type = "marginals")),
+    "dyn-metric-aov-racing-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "dyn-metric-wl-racing-with-two-time-points-marginals",
-    print(autoplot(wl_dyn_res, eval_time = 1, type = "marginals"))
+    print(autoplot(wl_dyn_res, eval_time = 1, type = "marginals")),
+    "dyn-metric-wl-racing-with-two-time-points-marginals"
   )
 
 })

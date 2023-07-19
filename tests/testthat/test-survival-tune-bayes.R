@@ -87,22 +87,22 @@ test_that('Bayesian tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "mixed-metric-bayes-search-with-two-time-points",
-    print(autoplot(bayes_mixed_res, eval_time = c(1, 5)))
+    print(autoplot(bayes_mixed_res, eval_time = c(1, 5))),
+    "mixed-metric-bayes-search-with-two-time-points"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "mixed-metric-bayes-search-with-no-set-time-points",
-      print(autoplot(bayes_mixed_res))
+      print(autoplot(bayes_mixed_res)),
+      "mixed-metric-bayes-search-with-no-set-time-points"
     )
   )
   expect_snapshot_plot(
-    "mixed-metric-bayes-search-with-two-time-points-marginals",
-    print(autoplot(bayes_mixed_res, eval_time = 1, type = "marginals"))
+    print(autoplot(bayes_mixed_res, eval_time = 1, type = "marginals")),
+    "mixed-metric-bayes-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "mixed-metric-bayes-search-with-two-time-points-performance",
-    print(autoplot(bayes_mixed_res, eval_time = 1, type = "performance"))
+    print(autoplot(bayes_mixed_res, eval_time = 1, type = "performance")),
+    "mixed-metric-bayes-search-with-two-time-points-performance"
   )
 
   # test some S3 methods for any tune_result object
@@ -151,17 +151,17 @@ test_that('Bayesian tuning survival models ', {
   )
 
   expect_snapshot_plot(
-    "static-metric-bayes-search",
-    print(autoplot(bayes_static_res))
+    print(autoplot(bayes_static_res)),
+    "static-metric-bayes-search"
   )
 
   expect_snapshot_plot(
-    "static-bayes-search-with-two-time-points-marginals",
-    print(autoplot(bayes_static_res, type = "marginals"))
+    print(autoplot(bayes_static_res, type = "marginals")),
+    "static-bayes-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "static-bayes-search-with-two-time-points-performance",
-    print(autoplot(bayes_static_res, type = "performance"))
+    print(autoplot(bayes_static_res, type = "performance")),
+    "static-bayes-search-with-two-time-points-performance"
   )
 
   # ------------------------------------------------------------------------------
@@ -212,16 +212,16 @@ test_that('Bayesian tuning survival models ', {
   # TODO this should throw a warning
   # expect_snapshot_plot(autoplot(bayes_integrated_res, eval_time = c(1, 5)))
   expect_snapshot_plot(
-    "integrated-metric-bayes-search",
-    print(autoplot(bayes_integrated_res))
+    print(autoplot(bayes_integrated_res)),
+    "integrated-metric-bayes-search"
   )
   expect_snapshot_plot(
-    "integrated-metric-bayes-search-with-two-time-points-marginals",
-    print(autoplot(bayes_integrated_res, type = "marginals"))
+    print(autoplot(bayes_integrated_res, type = "marginals")),
+    "integrated-metric-bayes-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "integrated-metric-bayes-search-with-two-time-points-performance",
-    print(autoplot(bayes_integrated_res, type = "performance"))
+    print(autoplot(bayes_integrated_res, type = "performance")),
+    "integrated-metric-bayes-search-with-two-time-points-performance"
   )
 
   # ------------------------------------------------------------------------------
@@ -269,17 +269,17 @@ test_that('Bayesian tuning survival models ', {
 
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "dynamic-metric-bayes-search",
-      print(autoplot(bayes_dynamic_res))
+      print(autoplot(bayes_dynamic_res)),
+      "dynamic-metric-bayes-search"
     )
   )
   expect_snapshot_plot(
-    "dynamic-metric-bayes-search-with-two-time-points-marginals",
-    print(autoplot(bayes_dynamic_res, eval_time = 1, type = "marginals"))
+    print(autoplot(bayes_dynamic_res, eval_time = 1, type = "marginals")),
+    "dynamic-metric-bayes-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "dynamic-metric-bayes-search-with-two-time-points-performance",
-    print(autoplot(bayes_dynamic_res, eval_time = 1, type = "performance"))
+    print(autoplot(bayes_dynamic_res, eval_time = 1, type = "performance")),
+    "dynamic-metric-bayes-search-with-two-time-points-performance"
   )
 
 })

@@ -70,17 +70,17 @@ test_that("sim annealing tuning survival models with static metrics", {
   )
 
   expect_snapshot_plot(
-    "static-metric-sa-search",
-    print(autoplot(sa_static_res))
+    print(autoplot(sa_static_res)),
+    "static-metric-sa-search"
   )
 
   expect_snapshot_plot(
-    "static-sa-search-with-two-time-points-marginals",
-    print(autoplot(sa_static_res, type = "marginals"))
+    print(autoplot(sa_static_res, type = "marginals")),
+    "static-sa-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "static-sa-search-with-two-time-points-performance",
-    print(autoplot(sa_static_res, type = "performance"))
+    print(autoplot(sa_static_res, type = "performance")),
+    "static-sa-search-with-two-time-points-performance"
   )
 })
 
@@ -160,16 +160,16 @@ test_that("sim annealing tuning survival models with integrated metrics", {
   # TODO this should throw a warning
   # expect_snapshot_plot(autoplot(sa_integrated_res, eval_time = c(1, 5)))
   expect_snapshot_plot(
-    "integrated-metric-sa-search",
-    print(autoplot(sa_integrated_res))
+    print(autoplot(sa_integrated_res)),
+    "integrated-metric-sa-search"
   )
   expect_snapshot_plot(
-    "integrated-metric-sa-search-with-two-time-points-marginals",
-    print(autoplot(sa_integrated_res, type = "marginals"))
+    print(autoplot(sa_integrated_res, type = "marginals")),
+    "integrated-metric-sa-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "integrated-metric-sa-search-with-two-time-points-performance",
-    print(autoplot(sa_integrated_res, type = "performance"))
+    print(autoplot(sa_integrated_res, type = "performance")),
+    "integrated-metric-sa-search-with-two-time-points-performance"
   )
 })
 
@@ -246,17 +246,17 @@ test_that("sim annealing tuning survival models with dynamic metrics", {
 
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "dynamic-metric-sa-search",
-      print(autoplot(sa_dynamic_res))
+      print(autoplot(sa_dynamic_res)),
+      "dynamic-metric-sa-search"
     )
   )
   expect_snapshot_plot(
-    "dynamic-metric-sa-search-with-two-time-points-marginals",
-    print(autoplot(sa_dynamic_res, eval_time = 1, type = "marginals"))
+    print(autoplot(sa_dynamic_res, eval_time = 1, type = "marginals")),
+    "dynamic-metric-sa-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "dynamic-metric-sa-search-with-two-time-points-performance",
-    print(autoplot(sa_dynamic_res, eval_time = 1, type = "performance"))
+    print(autoplot(sa_dynamic_res, eval_time = 1, type = "performance")),
+    "dynamic-metric-sa-search-with-two-time-points-performance"
   )
 })
 
@@ -332,22 +332,22 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   )
 
   expect_snapshot_plot(
-    "mixed-metric-sa-search-with-two-time-points",
-    print(autoplot(sa_mixed_res, eval_time = c(1, 5)))
+    print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
+    "mixed-metric-sa-search-with-two-time-points"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
-      "mixed-metric-sa-search-with-no-set-time-points",
-      print(autoplot(sa_mixed_res))
+      print(autoplot(sa_mixed_res)),
+      "mixed-metric-sa-search-with-no-set-time-points"
     )
   )
   expect_snapshot_plot(
-    "mixed-metric-sa-search-with-two-time-points-marginals",
-    print(autoplot(sa_mixed_res, eval_time = 1, type = "marginals"))
+    print(autoplot(sa_mixed_res, eval_time = 1, type = "marginals")),
+    "mixed-metric-sa-search-with-two-time-points-marginals"
   )
   expect_snapshot_plot(
-    "mixed-metric-sa-search-with-two-time-points-performance",
-    print(autoplot(sa_mixed_res, eval_time = 1, type = "performance"))
+    print(autoplot(sa_mixed_res, eval_time = 1, type = "performance")),
+    "mixed-metric-sa-search-with-two-time-points-performance"
   )
 
   # test some S3 methods for any tune_result object
