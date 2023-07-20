@@ -1,0 +1,116 @@
+skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
+skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+
+library(tidymodels)
+library(censored)
+
+lung <- lung |>
+  tidyr::drop_na() |>
+  dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
+test_that("can `fit()` a censored workflow with a formula", {
+  mod <- survival_reg()
+  mod <- set_engine(mod, "survival")
+  mod <- set_mode(mod, "censored regression")
+
+  workflow <- workflow()
+  workflow <- add_formula(workflow, surv ~ .)
+  workflow <- add_model(workflow, mod)
+
+  wf_fit <- fit(workflow, lung)
+
+  expect_s3_class(wf_fit$fit$fit, "model_fit")
+
+  expect_equal(
+    coef(wf_fit$fit$fit$fit),
+    coef(survreg(surv ~ ., data = lung, model = TRUE))
+  )
+})
+
+test_that("can `fit()` a censored workflow with a recipe", {
+  rec <- recipes::recipe(surv ~ ., lung)
+
+  mod <- survival_reg()
+  mod <- set_engine(mod, "survival")
+  mod <- set_mode(mod, "censored regression")
+
+  workflow <- workflow()
+  workflow <- add_recipe(workflow, rec)
+  workflow <- add_model(workflow, mod)
+
+  wf_fit <- fit(workflow, lung)
+
+  expect_s3_class(wf_fit$fit$fit, "model_fit")
+
+  expect_equal(
+    coef(wf_fit$fit$fit$fit),
+    coef(survreg(surv ~ ., data = lung, model = TRUE))
+  )
+})
+
+test_that("can `predict()` a censored workflow with a formula", {
+  mod <- survival_reg()
+  mod <- set_engine(mod, "survival")
+  mod <- set_mode(mod, "censored regression")
+
+  workflow <- workflow()
+  workflow <- add_formula(workflow, surv ~ .)
+  workflow <- add_model(workflow, mod)
+
+  wf_fit <- fit(workflow, lung)
+
+  preds <- predict(wf_fit, new_data = lung)
+
+  expect_identical(names(preds), ".pred_time")
+  expect_type(preds$.pred_time, "double")
+
+  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+
+  expect_identical(names(preds), ".pred")
+  expect_type(preds$.pred, "list")
+  expect_true(
+    all(purrr::map_lgl(
+      preds$.pred,
+       ~ identical(names(.x), c(".eval_time", ".pred_survival"))
+    ))
+  )
+
+  expect_error(
+    predict(wf_fit, new_data = lung, type = "numeric")
+  )
+})
+
+test_that("can `predict()` a censored workflow with a recipe", {
+  rec <- recipes::recipe(surv ~ ., lung)
+
+  mod <- survival_reg()
+  mod <- set_engine(mod, "survival")
+  mod <- set_mode(mod, "censored regression")
+
+  workflow <- workflow()
+  workflow <- add_recipe(workflow, rec)
+  workflow <- add_model(workflow, mod)
+
+  wf_fit <- fit(workflow, lung)
+
+  preds <- predict(wf_fit, new_data = lung)
+
+  expect_identical(names(preds), ".pred_time")
+  expect_type(preds$.pred_time, "double")
+
+  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+
+  expect_identical(names(preds), ".pred")
+  expect_type(preds$.pred, "list")
+  expect_true(
+    all(purrr::map_lgl(
+      preds$.pred,
+      ~ identical(names(.x), c(".eval_time", ".pred_survival"))
+    ))
+  )
+
+  expect_error(
+    predict(wf_fit, new_data = lung, type = "numeric")
+  )
+})
