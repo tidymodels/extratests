@@ -10,9 +10,7 @@ lung <- lung |>
   dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
 test_that("can `fit()` a censored workflow with a formula", {
-  mod <- survival_reg()
-  mod <- set_engine(mod, "survival")
-  mod <- set_mode(mod, "censored regression")
+  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
   workflow <- add_formula(workflow, surv ~ .)
@@ -23,17 +21,15 @@ test_that("can `fit()` a censored workflow with a formula", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   expect_equal(
-    coef(wf_fit$fit$fit$fit),
-    coef(survreg(surv ~ ., data = lung, model = TRUE))
+    wf_fit$fit$fit$fit$fit$beta,
+    censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
 })
 
 test_that("can `fit()` a censored workflow with a recipe", {
   rec <- recipes::recipe(surv ~ ., lung)
 
-  mod <- survival_reg()
-  mod <- set_engine(mod, "survival")
-  mod <- set_mode(mod, "censored regression")
+  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
   workflow <- add_recipe(workflow, rec)
@@ -44,15 +40,13 @@ test_that("can `fit()` a censored workflow with a recipe", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   expect_equal(
-    coef(wf_fit$fit$fit$fit),
-    coef(survreg(surv ~ ., data = lung, model = TRUE))
+    wf_fit$fit$fit$fit$fit$beta,
+    censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
 })
 
 test_that("can `predict()` a censored workflow with a formula", {
-  mod <- survival_reg()
-  mod <- set_engine(mod, "survival")
-  mod <- set_mode(mod, "censored regression")
+  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
   workflow <- add_formula(workflow, surv ~ .)
@@ -84,9 +78,7 @@ test_that("can `predict()` a censored workflow with a formula", {
 test_that("can `predict()` a censored workflow with a recipe", {
   rec <- recipes::recipe(surv ~ ., lung)
 
-  mod <- survival_reg()
-  mod <- set_engine(mod, "survival")
-  mod <- set_mode(mod, "censored regression")
+  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
   workflow <- add_recipe(workflow, rec)
