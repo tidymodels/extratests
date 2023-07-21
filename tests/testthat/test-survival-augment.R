@@ -27,10 +27,6 @@ test_that('augmenting survival models ', {
     survival_reg() %>%
     fit(event_time ~ ., data = sim_tr)
 
-  expect_snapshot(error = TRUE, {
-    augment(sr_fit, new_data = sim_tr)
-  })
-
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
   expect_equal(nrow(sr_aug), nrow(sim_tr))
   expect_equal(names(sr_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
@@ -87,4 +83,15 @@ test_that("augment() for survival models skips unavailble prediction type", {
     c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
       ".weight_censored")
   )
+})
+
+test_that("augment() for survival models errors if eval_time is missing", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9004")
+
+  sr_fit <- survival_reg() %>%
+    fit(Surv(time, status) ~ ., data = lung)
+
+  expect_snapshot(error = TRUE, {
+    augment(sr_fit, lung)
+  })
 })
