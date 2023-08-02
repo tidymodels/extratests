@@ -511,3 +511,41 @@ test_that("base-R families: type NULL", {
   mpred_class <- multi_predict(f_fit, lending_club[1:5,], type = "class")
   expect_identical(mpred, mpred_class)
 })
+
+test_that("data descriptors and quosures work", {
+  skip_if_not_installed("glmnet")
+
+  data("lending_club", package = "modeldata", envir = rlang::current_env())
+  lending_club <- lending_club[1:200, ]
+
+  my_penalty <- 1
+  my_mixture <- 0.3
+  my_penalties <- c(0.05, 1)
+
+  # use data descriptor .cols()
+  # formula has 3 predictor columns, thus penalty is 1
+  f_fit <- logistic_reg(penalty = .cols() - 2, mixture = my_mixture) %>%
+    set_engine("glmnet", nlambda = 15) %>%
+    fit(Class ~ log(funded_amnt) + int_rate + term, data = lending_club)
+
+  expect_identical(
+    predict(f_fit, lending_club[1:3,]),
+    predict(f_fit, lending_club[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    predict(f_fit, lending_club[1:3,], penalty = my_penalty),
+    predict(f_fit, lending_club[1:3,], penalty = 1)
+  )
+
+  expect_identical(
+    multi_predict(f_fit, lending_club[1:3, ], penalty = my_penalties) %>%
+      tidyr::unnest(cols = .pred) %>%
+      dplyr::arrange(penalty) %>%
+      dplyr::pull(.pred_class),
+    c(
+      predict(f_fit, lending_club[1:3,], penalty = 0.05) %>% pull(.pred_class),
+      predict(f_fit, lending_club[1:3,], penalty = 1) %>% pull(.pred_class)
+    )
+  )
+})
