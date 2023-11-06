@@ -1,4 +1,4 @@
-test_that('error with model formula (workflow, no tune)', {
+test_that('error without model formula (workflow, no tune)', {
   skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
 
   library(parsnip)
@@ -14,7 +14,7 @@ test_that('error with model formula (workflow, no tune)', {
   )
 })
 
-test_that('error with model formula (workflow, with tune)', {
+test_that('error without model formula (workflow, with tune)', {
   skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
 
   library(parsnip)
@@ -33,7 +33,7 @@ test_that('error with model formula (workflow, with tune)', {
   expect_snapshot(show_notes(gam_res))
 })
 
-test_that('error with model formula (no workflow, with tune)', {
+test_that('error without model formula (no workflow, with tune)', {
   skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
 
   library(parsnip)
