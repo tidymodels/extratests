@@ -1,6 +1,8 @@
 library(testthat)
 library(tidymodels)
 
+withr::local_options(lifecycle_verbosity = "quiet")
+
 rec_1 <- recipe(mpg ~ ., mtcars) %>%
   step_center(all_predictors()) %>%
   step_impute_knn(all_predictors(), neighbors = varying()) %>%
@@ -14,6 +16,7 @@ rec_2 <- recipe(mpg ~ ., mtcars) %>%
 rec_3 <- recipe(mpg ~ ., mtcars)
 
 test_that('recipe parameters', {
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   # un-randomify the id names
   rec_1_id <- rec_1
@@ -57,6 +60,7 @@ test_that('recipe parameters', {
 })
 
 test_that("recipe steps with non-varying args error if specified as varying()", {
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   rec_bad_varying <- rec_1
   rec_bad_varying$steps[[1]]$skip <- varying()
@@ -68,6 +72,7 @@ test_that("recipe steps with non-varying args error if specified as varying()", 
 })
 
 test_that("`full = FALSE` returns only varying arguments", {
+  withr::local_options(lifecycle_verbosity = "quiet")
 
   x_spec <- rand_forest(min_n = varying())  %>%
     set_engine("ranger", sample.fraction = varying())
