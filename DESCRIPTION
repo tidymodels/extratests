@@ -70,7 +70,8 @@ Suggests:
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
-    r-lib/pillar
+    r-lib/pillar,
+    lme4/lme4
 biocViews: mixOmics
 Config/testthat/edition: 3
 Config/testthat/start-first: parsnip-extension-messaging
