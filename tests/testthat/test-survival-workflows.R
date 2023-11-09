@@ -5,11 +5,11 @@ skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
 library(tidymodels)
 library(censored)
 
-lung <- lung |>
-  tidyr::drop_na() |>
-  dplyr::mutate(surv = Surv(time, status), .keep = "unused")
-
 test_that("can `fit()` a censored workflow with a formula", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
@@ -27,6 +27,10 @@ test_that("can `fit()` a censored workflow with a formula", {
 })
 
 test_that("can `fit()` a censored workflow with variables", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
@@ -44,6 +48,10 @@ test_that("can `fit()` a censored workflow with variables", {
 })
 
 test_that("can `fit()` a censored workflow with a recipe", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   rec <- recipes::recipe(surv ~ ., lung)
 
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
@@ -63,6 +71,10 @@ test_that("can `fit()` a censored workflow with a recipe", {
 })
 
 test_that("can `predict()` a censored workflow with a formula", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
@@ -93,6 +105,10 @@ test_that("can `predict()` a censored workflow with a formula", {
 })
 
 test_that("can `predict()` a censored workflow with a recipe", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
@@ -123,6 +139,10 @@ test_that("can `predict()` a censored workflow with a recipe", {
 })
 
 test_that("can `predict()` a censored workflow with a recipe", {
+  lung <- lung |>
+    tidyr::drop_na() |>
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+
   rec <- recipes::recipe(surv ~ ., lung)
 
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
