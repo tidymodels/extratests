@@ -1,5 +1,6 @@
 test_that("augment survival workflows with eval_time", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("glmnet")
   skip_if_not_installed("parsnip",   minimum_version = "1.1.0.9001")
   skip_if_not_installed("workflows", minimum_version = "1.1.3.9000")
 
@@ -54,4 +55,15 @@ test_that("augment survival workflows with eval_time", {
   expect_equal(res_1_row$.pred[[1]][0,], exp_pred_col, ignore_attr = TRUE)
   expect_equal(nrow(res_1_row$.pred[[1]]), 1)
   expect_equal(res_1_row$.pred[[1]]$.eval_time, times[1])
+
+  ## Obligatory glmnet example for "what could go wrong" coverage:
+  ## This will need to be updated when https://github.com/tidymodels/workflows/issues/209 is resolved
+  expect_snapshot(
+    workflow() %>%
+      add_model(proportional_hazards(penalty = 0.001) %>% set_engine("glmnet")) %>%
+      add_formula(event_time ~ .) %>%
+      fit(data = sim_dat) %>%
+      augment(new_data = sim_dat),
+    error = TRUE
+  )
 })
