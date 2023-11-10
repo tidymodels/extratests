@@ -38,7 +38,8 @@ test_that('single tree Bayesian search', {
   expect_error(
     tree_search <-
       tree_mod %>%
-      tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2),
+      tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2) %>%
+      suppressMessages(),
     regex = NA
   )
   expect_equal(nrow(collect_metrics(tree_search)), 10)
@@ -61,7 +62,8 @@ test_that('boosted tree Bayesian search', {
   expect_error(
     boost_search <-
       boost_mod %>%
-      tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2),
+      tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2) %>%
+      suppressMessages(),
     regex = NA
   )
   expect_equal(nrow(collect_metrics(boost_search)), 10)
