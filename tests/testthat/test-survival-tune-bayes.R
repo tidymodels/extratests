@@ -16,7 +16,9 @@ test_that("Bayesian tuning survival models with static metric", {
 
   stc_mtrc  <- metric_set(concordance_survival)
 
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -39,7 +41,10 @@ test_that("Bayesian tuning survival models with static metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Bayes with static metrics
 
   set.seed(2193)
   init_grid_static_res <-
@@ -115,8 +120,6 @@ test_that("Bayesian tuning survival models with integrated metric", {
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
   # standard setup end
-
-  # TODO no eval_time column when you collect_metrics
 
   set.seed(2193)
   init_grid_integrated_res <-
