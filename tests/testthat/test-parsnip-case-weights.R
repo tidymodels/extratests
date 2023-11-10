@@ -7,7 +7,6 @@ skip_if_not_installed("recipes",   "1.0.0")
 
 # load all extension packages to register the engines
 library(parsnip)
-library(censored)
 library(baguette)
 library(rules)
 library(poissonreg)
@@ -41,33 +40,6 @@ test_that('bag_tree - rpart case weights', {
     fit(Class ~ ., data = two_class_dat)
 
   expect_unequal(unwt_fit$fit$imp, wt_fit$fit$imp)
-})
-
-test_that('bag_tree - rpart censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  dat <- make_cens_wts()
-
-  expect_error({
-    set.seed(1)
-    wt_fit <-
-      bag_tree() %>%
-      set_engine("rpart") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  set.seed(1)
-  unwt_fit <-
-    bag_tree() %>%
-    set_engine("rpart") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
-
-  # the resulting `$mtrees` objects are the same but
-  # weights is included in the call
-  expect_snapshot(wt_fit$fit$call)
 })
 
 test_that('bag_tree - C50 case weights', {
@@ -181,23 +153,6 @@ test_that('boost_tree - C50 case weights', {
 
 })
 
-test_that("boost_tree - mboost censored case weights", {
-  skip_if_not_installed("censored", "0.1.0")
-
-  dat <- make_cens_wts()
-
-  expect_error({
-    set.seed(1)
-    wt_fit <-
-      boost_tree() %>%
-      set_engine("mboost") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  expect_equal(wt_fit$fit$`(weights)`, as.vector(dat$wts))
-})
 
 
 # C5_rules ----------------------------------------------------------------
@@ -274,28 +229,6 @@ test_that('decision_tree - rpart case weights', {
   expect_unequal(unwt_fit$fit$variable.importance, wt_fit$fit$variable.importance)
 })
 
-test_that('decision_tree - rpart censored case weights', {
-  skip("only dev version of pec package (wrapping rpart) handles weights")
-  skip_if_not_installed("censored", "0.1.0")
-
-  # see https://github.com/tagteam/pec/issues/3
-  dat <- make_cens_wts()
-
-  expect_error({
-    wt_fit <-
-      decision_tree() %>%
-      set_engine("rpart") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  terms_data_classes <- attr(wt_fit$fit$rpart$terms, "dataClasses")
-  expect_true(
-  "(weights)" %in% names(terms_data_classes)
-  )
-})
-
 test_that('decision_tree - C50 case weights', {
 
   data("two_class_dat", package = "modeldata")
@@ -319,28 +252,6 @@ test_that('decision_tree - C50 case weights', {
 
   expect_true(wt_fit$fit$caseWeights)
   expect_unequal(unwt_fit$fit$tree, wt_fit$fit$tree)
-})
-
-test_that('decision_tree - partykit censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  data(time_to_million, package = "censored", envir = rlang::current_env())
-
-  set.seed(1)
-  dat <- time_to_million[1:100, c("time", "event", "released_theaters", "rated")]
-  wts <- sample(0:1, nrow(dat), replace = TRUE)
-  wts <- frequency_weights(wts)
-
-  expect_error({
-    wt_fit <-
-      decision_tree() %>%
-      set_engine("partykit") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat, case_weights = wts)
-  },
-  regexp = NA)
-
-  expect_true(wt_fit$fit$info$control$caseweights)
 })
 
 
@@ -986,56 +897,6 @@ test_that('poisson_reg - lme4::glmer case weights', {
 })
 
 
-# proportional_hazards ----------------------------------------------------
-
-test_that('proportional_hazards - survival censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  # survival engine can only take weights > 0
-  data(time_to_million, package = "censored", envir = rlang::current_env())
-
-  set.seed(1)
-  dat <- time_to_million[1:100, c("time", "event", "released_theaters", "rated")]
-  wts <- runif(nrow(dat))
-  wts <- importance_weights(wts)
-
-  expect_error({
-    wt_fit <-
-      proportional_hazards() %>%
-      set_engine("survival") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat, case_weights = wts)
-  },
-  regexp = NA)
-
-  expect_equal(wt_fit$fit$weights, as.vector(wts))
-})
-
-test_that('proportional_hazards - glmnet censored case weights', {
-  skip_if_not_installed("censored", "0.1.1.9001")
-
-  dat <- make_cens_wts()
-
-  expect_error({
-    wt_fit <-
-      proportional_hazards(penalty = 0.1) %>%
-      set_engine("glmnet") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  unwt_fit <-
-    proportional_hazards(penalty = 0.1) %>%
-    set_engine("glmnet") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
-
-  expect_snapshot(wt_fit$fit$fit$call)
-  expect_unequal(coef(unwt_fit$fit$fit), coef(wt_fit$fit$fit))
-})
-
-
 # rand_forest -------------------------------------------------------------
 
 test_that('rand_forest - ranger case weights', {
@@ -1060,86 +921,3 @@ test_that('rand_forest - ranger case weights', {
 
   expect_snapshot(print(wt_fit$fit$call))
 })
-
-test_that('rand_forest - partykit censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  dat <- make_cens_wts()
-
-  expect_error({
-    wt_fit <-
-      rand_forest(mtry = 2) %>%
-      set_engine("partykit") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
-
-  unwt_fit <-
-    rand_forest(mtry = 2) %>%
-    set_engine("partykit") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
-
-  # no call available in `wt_fit$fit` for a snapshot test
-  expect_unequal(unwt_fit$fit$fitted, wt_fit$fit$fitted)
-})
-
-
-# survival_reg ------------------------------------------------------------
-
-test_that('survival_reg - survival censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  # survival engine can only take weights > 0
-  data(time_to_million, package = "censored", envir = rlang::current_env())
-
-  set.seed(1)
-  dat <- time_to_million[1:100, c("time", "event", "released_theaters", "rated")]
-  wts <- runif(nrow(dat))
-  wts <- importance_weights(wts)
-
-  expect_error({
-    wt_fit <-
-      survival_reg() %>%
-      set_engine("survival") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ ., data = dat, case_weights = wts)
-  },
-  regexp = NA)
-
-  expect_equal(unname(wt_fit$fit$weights), as.vector(wts))
-})
-
-test_that('survival_reg - flexsurv censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  # flexsurv engine can only take weights > 0
-  data(time_to_million, package = "censored", envir = rlang::current_env())
-
-  set.seed(1)
-  dat <- time_to_million[1:100, c("time", "event", "released_theaters", "rated")]
-  wts <- runif(nrow(dat))
-  wts <- importance_weights(wts)
-
-  expect_error({
-    wt_fit <-
-      survival_reg() %>%
-      set_engine("flexsurv") %>%
-      set_mode("censored regression") %>%
-      fit(Surv(time, event) ~ released_theaters + rated, data = dat, case_weights = wts) %>%
-      suppressWarnings()
-  },
-  regexp = NA)
-
-  unwt_fit <-
-    survival_reg() %>%
-    set_engine("flexsurv") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ released_theaters + rated, data = dat)%>%
-    suppressWarnings()
-
-  expect_snapshot(wt_fit$fit$call)
-  expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
-})
-
