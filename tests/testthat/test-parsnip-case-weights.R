@@ -457,6 +457,8 @@ test_that('linear_reg - glmnet case weights', {
 
 test_that('linear_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
+  skip_if_not_installed("lme4", "1.1-35.1.9001")
+  skip_if_not_installed("Matrix", "	1.6-3")
 
   dat <- make_msa_wts()
 
@@ -611,6 +613,8 @@ test_that('logistic_reg - stan case weights', {
 
 test_that('logistic_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
+  skip_if_not_installed("lme4", "1.1-35.1.9001")
+  skip_if_not_installed("Matrix", "	1.6-3")
 
   data("two_class_dat", package = "modeldata")
 
@@ -842,6 +846,8 @@ test_that('poisson_reg - glm case weights', {
 
 test_that('poisson_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
+  skip_if_not_installed("lme4", "1.1-35.1.9001")
+  skip_if_not_installed("Matrix", "	1.6-3")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
 
