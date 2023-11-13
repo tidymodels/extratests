@@ -16,11 +16,11 @@
       show_best(grid_mixed_res, metric = "brier_survival", eval_time = 1)
     Output
       # A tibble: 3 x 8
-        tree_depth .metric        .estimator .eval_time   mean     n std_err .config  
-             <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>    
-      1          1 brier_survival standard            1 0.0209    10 0.00501 Preproce~
-      2         10 brier_survival standard            1 0.0210    10 0.00496 Preproce~
-      3          2 brier_survival standard            1 0.0210    10 0.00499 Preproce~
+        penalty .metric        .estimator .eval_time   mean     n std_err .config     
+          <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>       
+      1  0.1    brier_survival standard            1 0.0208    10 0.00503 Preprocesso~
+      2  0.01   brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
+      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
 
 ---
 
@@ -36,9 +36,9 @@
       show_best(grid_mixed_res, metric = "brier_survival_integrated")
     Output
       # A tibble: 3 x 8
-        tree_depth .metric           .estimator .eval_time  mean     n std_err .config
-             <dbl> <chr>             <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1         10 brier_survival_i~ standard           NA 0.125    10 0.00897 Prepro~
-      2          2 brier_survival_i~ standard           NA 0.137    10 0.00884 Prepro~
-      3          1 brier_survival_i~ standard           NA 0.143    10 0.00865 Prepro~
+        penalty .metric              .estimator .eval_time  mean     n std_err .config
+          <dbl> <chr>                <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
+      1  0.0001 brier_survival_inte~ standard           NA 0.113    10 0.00941 Prepro~
+      2  0.01   brier_survival_inte~ standard           NA 0.113    10 0.00941 Prepro~
+      3  0.1    brier_survival_inte~ standard           NA 0.116    10 0.00934 Prepro~
 

@@ -1,8 +1,7 @@
 library(testthat)
 library(tidymodels)
-library(censored)
+suppressPackageStartupMessages(library(censored))
 library(yardstick)
-library(finetune)
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
@@ -11,11 +10,10 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("grid tuning survival models with static metric", {
   skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
-  stc_mtrc  <- metric_set(concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -30,14 +28,19 @@ test_that("grid tuning survival models with static metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_pred = TRUE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Grid search with static metrics
+
+  stc_mtrc  <- metric_set(concordance_survival)
 
   set.seed(2193)
   grid_static_res <-
@@ -53,7 +56,7 @@ test_that("grid tuning survival models with static metric", {
   expect_false(".eval_time" %in% names(grid_static_res$.metrics[[1]]))
   expect_equal(
     names(grid_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+    c(".pred_time", ".row", "penalty", "event_time", ".config")
   )
 
   expect_snapshot_plot(
@@ -64,11 +67,10 @@ test_that("grid tuning survival models with static metric", {
 
 test_that("grid tuning survival models with integrated metric", {
   skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
-  sint_mtrc <- metric_set(brier_survival_integrated)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -83,16 +85,19 @@ test_that("grid tuning survival models with integrated metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_pred = TRUE)
-  # standard setup end
 
-  # TODO no eval_time column when you collect_metrics
+  # standard setup end
+  # ------------------------------------------------------------------------------
+  # Grid search with integrated metrics
+
+  sint_mtrc <- metric_set(brier_survival_integrated)
 
   set.seed(2193)
   grid_integrated_res <-
@@ -109,7 +114,7 @@ test_that("grid tuning survival models with integrated metric", {
   expect_false(".eval_time" %in% names(grid_integrated_res$.metrics[[1]]))
   expect_equal(
     names(grid_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "penalty", "event_time", ".config")
   )
   expect_true(is.list(grid_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -121,8 +126,6 @@ test_that("grid tuning survival models with integrated metric", {
     time_points
   )
 
-  # TODO this should throw a warning
-  # expect_snapshot_plot(autoplot(grid_integrated_res, eval_time = c(1, 5)))
   expect_snapshot_plot(
     print(autoplot(grid_integrated_res)),
     "integrated-metric-grid-search"
@@ -131,11 +134,10 @@ test_that("grid tuning survival models with integrated metric", {
 
 test_that("grid tuning survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
-  dyn_mtrc  <- metric_set(brier_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -150,14 +152,19 @@ test_that("grid tuning survival models with dynamic metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_pred = TRUE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Grid search with dynamic metrics
+
+  dyn_mtrc  <- metric_set(brier_survival)
 
   set.seed(2193)
   grid_dynamic_res <-
@@ -174,7 +181,7 @@ test_that("grid tuning survival models with dynamic metric", {
   expect_true(".eval_time" %in% names(grid_dynamic_res$.metrics[[1]]))
   expect_equal(
     names(grid_dynamic_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "penalty", "event_time", ".config")
   )
   expect_true(is.list(grid_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -192,15 +199,20 @@ test_that("grid tuning survival models with dynamic metric", {
       "dynamic-metric-grid-search"
     )
   )
+
+  expect_snapshot_plot(
+    print(autoplot(grid_dynamic_res, eval_time = 1)),
+    "dynamic-metric-grid-search_1"
+  )
+
 })
 
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -215,14 +227,19 @@ test_that("grid tuning survival models mixture of metric types", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_pred = TRUE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Grid search with a mixture of metrics
+
+  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
   set.seed(2193)
   grid_mixed_res <-
@@ -239,7 +256,7 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
   expect_equal(
     names(grid_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+    c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config")
   )
   expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
