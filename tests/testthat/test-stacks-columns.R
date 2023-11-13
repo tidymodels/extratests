@@ -43,8 +43,10 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
   expect_true(".pred_Adelie.1_tuned_1_1" %in% colnames(data_st))
 
   # glmnet will likely present warnings
-  blended <- data_st %>%
+  suppressMessages(
+    blended <- data_st %>%
     blend_predictions()
+  )
 
   # ...though model fitting should work as expected
   expect_silent(

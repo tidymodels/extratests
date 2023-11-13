@@ -18,7 +18,8 @@ test_that('grid search', {
   expect_error(
     rf_tune <-
       rf_mod %>%
-      tune_grid(mpg ~ ., resamples = rs, grid = 4),
+      tune_grid(mpg ~ ., resamples = rs, grid = 4) %>%
+      suppressMessages(),
     regex = NA
   )
   expect_equal(nrow(collect_metrics(rf_tune)), 8)
@@ -32,7 +33,8 @@ test_that('Bayes search', {
   expect_error(
     rf_search <-
       rf_mod %>%
-      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2),
+      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2) %>%
+      suppressMessages(),
     regex = NA
   )
   expect_equal(nrow(collect_metrics(rf_search)), 10)

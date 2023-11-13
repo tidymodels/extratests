@@ -1,7 +1,6 @@
 
 ## -----------------------------------------------------------------------------
 
-library(rlang)
 library(poissonreg)
 library(tidyr)
 
@@ -21,10 +20,6 @@ glmn_spec <- poisson_reg(penalty = .01, mixture = .3) %>% set_engine("glmnet")
 stan_spec <- poisson_reg() %>% set_engine("stan", refresh = 0)
 hurdle_spec <- poisson_reg() %>% set_engine("hurdle")
 zeroinfl_spec <- poisson_reg() %>% set_engine("zeroinfl")
-
-new_empty_quosure <- function(expr) {
-  new_quosure(expr, env = empty_env())
-}
 
 # ------------------------------------------------------------------------------
 
@@ -142,6 +137,3 @@ test_that('stan intervals', {
                tolerance = 1e-2,
                ignore_attr = TRUE)
 })
-
-
-
