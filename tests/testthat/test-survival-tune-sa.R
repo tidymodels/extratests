@@ -1,19 +1,21 @@
-library(testthat)
-library(tidymodels)
-library(prodlim)
-library(censored)
-library(yardstick)
-library(finetune)
+suppressPackageStartupMessages(library(tidymodels))
+suppressPackageStartupMessages(library(censored))
+suppressPackageStartupMessages(library(finetune))
 
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
+skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
+skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that("sim annealing tuning survival models with static metric", {
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("mboost") # required for engine
   skip_if_not_installed("prodlim")
 
-  stc_mtrc  <- metric_set(concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -28,15 +30,25 @@ test_that("sim annealing tuning survival models with static metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    boost_tree(trees = tune()) %>%
+    set_engine("mboost") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  mod_param <-
+    mod_spec %>%
+    extract_parameter_set_dials() %>%
+    update(trees = trees(c(1, 50)))
+
+  grid <- tibble(trees = c(1, 5, 20))
 
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with static metrics
+
+  stc_mtrc  <- metric_set(concordance_survival)
 
   set.seed(2193)
   init_grid_static_res <-
@@ -56,16 +68,23 @@ test_that("sim annealing tuning survival models with static metric", {
       event_time ~ X1 + X2,
       resamples = sim_rs,
       iter = 2,
+      param_info = mod_param,
       metrics = stc_mtrc,
       control = sctrl,
       initial = init_grid_static_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(sa_static_res$.metrics[[1]]))
   expect_equal(
     names(sa_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+    c(".pred_time", ".row", "trees", "event_time", ".config")
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(autoplot(sa_static_res)),
@@ -73,22 +92,26 @@ test_that("sim annealing tuning survival models with static metric", {
   )
 
   expect_snapshot_plot(
-    print(autoplot(sa_static_res, type = "marginals")),
-    "static-sa-search-with-two-time-points-marginals"
+    print(autoplot(sa_static_res, type = "parameters")),
+    "static-sa-search-parameters"
   )
   expect_snapshot_plot(
     print(autoplot(sa_static_res, type = "performance")),
-    "static-sa-search-with-two-time-points-performance"
+    "static-sa-search-performance"
   )
+
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
 })
 
 test_that("sim annealing tuning survival models with integrated metric", {
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("mboost") # required for engine
   skip_if_not_installed("prodlim")
 
-  sint_mtrc <- metric_set(brier_survival_integrated)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -103,17 +126,25 @@ test_that("sim annealing tuning survival models with integrated metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    boost_tree(trees = tune()) %>%
+    set_engine("mboost") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  mod_param <-
+    mod_spec %>%
+    extract_parameter_set_dials() %>%
+    update(trees = trees(c(1, 50)))
+
+  grid <- tibble(trees = c(10, 20))
 
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
-  # standard setup end
 
-  # TODO no eval_time column when you collect_metrics
+  # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with integrated metrics
+
+  sint_mtrc <- metric_set(brier_survival_integrated)
 
   set.seed(2193)
   init_grid_integrated_res <-
@@ -134,16 +165,20 @@ test_that("sim annealing tuning survival models with integrated metric", {
       event_time ~ X1 + X2,
       resamples = sim_rs,
       iter = 2,
+      param_info = mod_param,
       metrics = sint_mtrc,
       eval_time = time_points,
       control = sctrl,
       initial = init_grid_integrated_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(sa_integrated_res$.metrics[[1]]))
   expect_equal(
     names(sa_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "trees", "event_time", ".config")
   )
   expect_true(is.list(sa_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -155,29 +190,36 @@ test_that("sim annealing tuning survival models with integrated metric", {
     time_points
   )
 
-  # TODO this should throw a warning
-  # expect_snapshot_plot(autoplot(sa_integrated_res, eval_time = c(1, 5)))
+  # ------------------------------------------------------------------------------
+  # test autoplot
+
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res)),
     "integrated-metric-sa-search"
   )
   expect_snapshot_plot(
-    print(autoplot(sa_integrated_res, type = "marginals")),
-    "integrated-metric-sa-search-with-two-time-points-marginals"
+    print(autoplot(sa_integrated_res, type = "parameters")),
+    "integrated-metric-sa-search-parameters"
   )
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res, type = "performance")),
-    "integrated-metric-sa-search-with-two-time-points-performance"
+    "integrated-metric-sa-search-performance"
   )
+
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
+
+
 })
 
 test_that("sim annealing tuning survival models with dynamic metric", {
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("mboost") # required for engine
   skip_if_not_installed("prodlim")
 
-  dyn_mtrc  <- metric_set(brier_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -192,15 +234,25 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    boost_tree(trees = tune()) %>%
+    set_engine("mboost") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  mod_param <-
+    mod_spec %>%
+    extract_parameter_set_dials() %>%
+    update(trees = trees(c(1, 50)))
+
+  grid <- tibble(trees = c(10, 20))
 
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with a dynamic metric
+
+  dyn_mtrc  <- metric_set(brier_survival)
 
   set.seed(2193)
   init_grid_dynamic_res <-
@@ -221,16 +273,20 @@ test_that("sim annealing tuning survival models with dynamic metric", {
       event_time ~ X1 + X2,
       resamples = sim_rs,
       iter = 2,
+      param_info = mod_param,
       metrics = dyn_mtrc,
       eval_time = time_points,
       control = sctrl,
       initial = init_grid_dynamic_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_true(".eval_time" %in% names(sa_dynamic_res$.metrics[[1]]))
   expect_equal(
     names(sa_dynamic_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "trees", "event_time", ".config")
   )
   expect_true(is.list(sa_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -242,6 +298,9 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     time_points
   )
 
+  # ------------------------------------------------------------------------------
+  # test autoplot
+
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(sa_dynamic_res)),
@@ -249,22 +308,27 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     )
   )
   expect_snapshot_plot(
-    print(autoplot(sa_dynamic_res, eval_time = 1, type = "marginals")),
-    "dynamic-metric-sa-search-with-two-time-points-marginals"
+    print(autoplot(sa_dynamic_res, eval_time = 1, type = "parameters")),
+    "dynamic-metric-sa-search-parameters"
   )
   expect_snapshot_plot(
-    print(autoplot(sa_dynamic_res, eval_time = 1, type = "performance")),
-    "dynamic-metric-sa-search-with-two-time-points-performance"
+    print(autoplot(sa_dynamic_res, eval_time = 10, type = "performance")),
+    "dynamic-metric-sa-search-performance"
   )
+
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
+
 })
 
 test_that("sim annealing tuning survival models with mixture of metric types", {
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("mboost") # required for engine
   skip_if_not_installed("prodlim")
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -279,15 +343,25 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    boost_tree(trees = tune()) %>%
+    set_engine("mboost") %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  mod_param <-
+    mod_spec %>%
+    extract_parameter_set_dials() %>%
+    update(trees = trees(c(1, 50)))
+
+  grid <- tibble(trees = c(10, 20))
 
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with a mixture of metrics
+
+  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
   set.seed(2193)
   init_grid_mixed_res <-
@@ -308,16 +382,20 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       event_time ~ X1 + X2,
       resamples = sim_rs,
       iter = 2,
+      param_info = mod_param,
       metrics = mix_mtrc,
       eval_time = time_points,
       initial = init_grid_mixed_res,
       control = sctrl
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_true(".eval_time" %in% names(sa_mixed_res$.metrics[[1]]))
   expect_equal(
     names(sa_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+    c(".pred", ".row", "trees", ".pred_time", "event_time", ".config")
   )
   expect_true(is.list(sa_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -328,6 +406,9 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     sa_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
@@ -340,15 +421,20 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     )
   )
   expect_snapshot_plot(
-    print(autoplot(sa_mixed_res, eval_time = 1, type = "marginals")),
-    "mixed-metric-sa-search-with-two-time-points-marginals"
+    print(autoplot(sa_mixed_res, eval_time = 1, type = "parameters")),
+    "mixed-metric-sa-search-parameters"
   )
   expect_snapshot_plot(
-    print(autoplot(sa_mixed_res, eval_time = 1, type = "performance")),
-    "mixed-metric-sa-search-with-two-time-points-performance"
+    print(autoplot(sa_mixed_res, eval_time = 10, type = "performance")),
+    "mixed-metric-sa-search-performance"
   )
 
-  # test some S3 methods for any tune_result object
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
+  # ------------------------------------------------------------------------------
+  # test show/select methods
+
   expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot_error(
