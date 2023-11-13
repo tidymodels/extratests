@@ -1,4 +1,4 @@
-# sim annealing tuning survival models with dynamic metrics
+# sim annealing tuning survival models with dynamic metric
 
     No evaluation time was set; a value of 10 was used.
 
