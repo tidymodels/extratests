@@ -2,7 +2,7 @@
 
     Code
       bag_tree() %>% set_engine("rpart") %>% set_mode("regression")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` regression model specifications using the `rpart` engine.
       i The parsnip extension package baguette implements support for this specification.
       i Please install (if needed) and load to continue.
@@ -20,7 +20,7 @@
 
     Code
       bag_tree() %>% set_mode("censored regression")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` censored regression model specifications.
       i The parsnip extension package censored implements support for this specification.
       i Please install (if needed) and load to continue.
@@ -38,7 +38,7 @@
 
     Code
       bag_tree()
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` model specifications.
       i The parsnip extension packages censored and baguette implement support for this specification.
       i Please install (if needed) and load to continue.
@@ -56,7 +56,7 @@
 
     Code
       bag_tree() %>% set_engine("rpart")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` model specifications using the `rpart` engine.
       i The parsnip extension packages censored and baguette implement support for this specification.
       i Please install (if needed) and load to continue.
@@ -102,7 +102,7 @@
 
     Code
       bag_tree() %>% set_mode("regression") %>% set_engine("rpart")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` regression model specifications using the `rpart` engine.
       i The parsnip extension package baguette implements support for this specification.
       i Please install (if needed) and load to continue.
@@ -120,7 +120,7 @@
 
     Code
       bag_tree() %>% set_mode("classification") %>% set_engine("C5.0")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `bag_tree` classification model specifications using the `C5.0` engine.
       i The parsnip extension package baguette implements support for this specification.
       i Please install (if needed) and load to continue.
@@ -182,7 +182,7 @@
 
     Code
       decision_tree() %>% set_engine("partykit") %>% set_mode("regression")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `decision_tree` regression model specifications using the `partykit` engine.
       i The parsnip extension package bonsai implements support for this specification.
       i Please install (if needed) and load to continue.
@@ -216,7 +216,7 @@
 
     Code
       decision_tree() %>% set_mode("regression") %>% set_engine("partykit")
-    Message <rlang_message>
+    Message
       ! parsnip could not locate an implementation for `decision_tree` regression model specifications using the `partykit` engine.
       i The parsnip extension package bonsai implements support for this specification.
       i Please install (if needed) and load to continue.
