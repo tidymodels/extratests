@@ -2,6 +2,7 @@
 
     Code
       augment(sr_fit, lung)
-    Error <rlang_error>
-      The `eval_time` argument is missing, with no default.
+    Condition
+      Error in `augment()`:
+      ! The `eval_time` argument is missing, with no default.
 

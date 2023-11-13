@@ -34,7 +34,8 @@ test_that('tune recipe and model, which has_unknowns', {
   )
   folds <- vfold_cv(mtcars)
   res <- tune_bayes(wflow, resamples = folds, param_info = pset,
-                    initial = iter1, iter = iter2)
+                    initial = iter1, iter = iter2) %>%
+    suppressMessages()
   expect_equal(unique(res$id), folds$id)
   expect_equal(
     colnames(res$.metrics[[1]]),

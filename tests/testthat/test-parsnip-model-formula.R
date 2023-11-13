@@ -1,5 +1,5 @@
 test_that('error without model formula (workflow, no tune)', {
-  skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
 
   library(parsnip)
   library(workflows)
@@ -15,7 +15,7 @@ test_that('error without model formula (workflow, no tune)', {
 })
 
 test_that('error without model formula (workflow, with tune)', {
-  skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
 
   library(parsnip)
   library(workflows)
@@ -28,13 +28,14 @@ test_that('error without model formula (workflow, with tune)', {
 
   expect_warning(
     gam_res <- gam_wflow %>% fit_resamples(bootstraps(mtcars))
-  )
+  ) %>%
+    suppressMessages()
 
   expect_snapshot(show_notes(gam_res))
 })
 
 test_that('error without model formula (no workflow, with tune)', {
-  skip_if_not_installed("parsnip", min_version = "1.1.1.9001")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
 
   library(parsnip)
   library(tune)
@@ -44,7 +45,8 @@ test_that('error without model formula (no workflow, with tune)', {
 
   expect_warning(
     gam_res <- gam_spec %>% fit_resamples(mpg ~ ., bootstraps(mtcars))
-  )
+  ) %>%
+    suppressMessages()
 
   expect_snapshot(show_notes(gam_res))
 })

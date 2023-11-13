@@ -1,6 +1,5 @@
 library(testthat)
 library(parsnip)
-library(rlang)
 library(tibble)
 library(modeldata)
 

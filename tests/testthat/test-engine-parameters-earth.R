@@ -29,7 +29,8 @@ test_that('Bayes search', {
   expect_error(
     mars_search <-
       mars_mod %>%
-      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2),
+      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2) %>%
+      suppressMessages(),
     regex = NA
   )
   expect_equal(nrow(collect_metrics(mars_search)), 10)
