@@ -17,14 +17,6 @@
 ---
 
     Code
-      .censoring_weights_graf(wrong_model, lung2)
-    Condition
-      Error in `.check_censor_model()`:
-      ! The model needs to be for mode 'censored regression', not for mode 'regression'.
-
----
-
-    Code
       .censoring_weights_graf(cox_model, lung)
     Condition
       Error:
@@ -62,4 +54,12 @@
       1 <tibble [2 x 5]>   306 
       2 <tibble [2 x 5]>   455 
       3 <tibble [2 x 5]>  1010+
+
+# error for .censoring_weights_graf() from .check_censor_model()
+
+    Code
+      .censoring_weights_graf(wrong_model, mtcars)
+    Condition
+      Error in `.check_censor_model()`:
+      ! The model needs to be for mode 'censored regression', not for mode 'regression'.
 

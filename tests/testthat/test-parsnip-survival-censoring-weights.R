@@ -172,9 +172,11 @@ test_that("error messages in context of .censoring_weights_graf()", {
 
   expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
 
-  # trigger `.check_censor_model()`
-  wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
-  expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, lung2)) # FIXME
+  # temporarily moved to its own test below to allow skipping of (only) this test
+  # based on dev version number
+  # # trigger `.check_censor_model()`
+  # wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
+  # expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, mtcars))
 
   # trigger `.find_surv_col()`
   cox_model <- proportional_hazards() %>% fit(surv ~ ., data = lung2)
@@ -205,4 +207,11 @@ test_that("error messages in context of .censoring_weights_graf()", {
       cens_predictors = "shouldn't be using this anyway!"
     )
   })
+})
+
+test_that("error for .censoring_weights_graf() from .check_censor_model()", {
+  # temporarily its own test, see above
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+  wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
+  expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, mtcars))
 })
