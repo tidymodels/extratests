@@ -1,9 +1,5 @@
-library(testthat)
-library(tidymodels)
-library(prodlim)
-library(censored)
-library(yardstick)
-library(finetune)
+suppressPackageStartupMessages(library(tidymodels))
+suppressPackageStartupMessages(library(censored))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
@@ -69,11 +65,17 @@ test_that("Bayesian tuning survival models with static metric", {
       initial = init_grid_static_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(bayes_static_res$.metrics[[1]]))
   expect_equal(
     names(bayes_static_res$.predictions[[1]]),
     c(".pred_time", ".row", "tree_depth", "event_time", ".config")
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(autoplot(bayes_static_res)),
@@ -88,6 +90,9 @@ test_that("Bayesian tuning survival models with static metric", {
     print(autoplot(bayes_static_res, type = "performance")),
     "static-bayes-search-with-two-time-points-performance"
   )
+
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
   metric_sum <- collect_metrics(bayes_static_res)
   exp_metric_sum <-
@@ -189,6 +194,9 @@ test_that("Bayesian tuning survival models with integrated metric", {
       initial = init_grid_integrated_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(bayes_integrated_res$.metrics[[1]]))
   expect_equal(
     names(bayes_integrated_res$.predictions[[1]]),
@@ -204,8 +212,9 @@ test_that("Bayesian tuning survival models with integrated metric", {
     time_points
   )
 
-  # TODO this should throw a warning
-  # expect_snapshot_plot(autoplot(bayes_integrated_res, eval_time = c(1, 5)))
+  # ------------------------------------------------------------------------------
+  # test autoplot
+
   expect_snapshot_plot(
     print(autoplot(bayes_integrated_res)),
     "integrated-metric-bayes-search"
@@ -219,6 +228,8 @@ test_that("Bayesian tuning survival models with integrated metric", {
     "integrated-metric-bayes-search-with-two-time-points-performance"
   )
 
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
   metric_sum <- collect_metrics(bayes_integrated_res)
   exp_metric_sum <-
@@ -264,7 +275,6 @@ test_that("Bayesian tuning survival models with integrated metric", {
 test_that("Bayesian tuning survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
-
 
   # ------------------------------------------------------------------------------
   # standard setup start
@@ -322,6 +332,9 @@ test_that("Bayesian tuning survival models with dynamic metric", {
       initial = init_grid_dynamic_res
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_true(".eval_time" %in% names(bayes_dynamic_res$.metrics[[1]]))
   expect_equal(
     names(bayes_dynamic_res$.predictions[[1]]),
@@ -336,6 +349,9 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     bayes_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_warning(
     expect_snapshot_plot(
@@ -352,6 +368,8 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     "dynamic-metric-bayes-search-with-two-time-points-performance"
   )
 
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
   metric_sum <- collect_metrics(bayes_dynamic_res)
   exp_metric_sum <-
@@ -455,6 +473,9 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
       control = bctrl
     )
 
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
   expect_equal(
     names(bayes_mixed_res$.predictions[[1]]),
@@ -469,6 +490,9 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     bayes_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(autoplot(bayes_mixed_res, eval_time = c(1, 5))),
@@ -489,19 +513,8 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     "mixed-metric-bayes-search-with-two-time-points-performance"
   )
 
-  # test some S3 methods for any tune_result object
-  expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001))
-  )
-  expect_snapshot_error(
-    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
-  )
-  expect_snapshot(
-    show_best(bayes_mixed_res, metric = "brier_survival_integrated")
-  )
-
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
   metric_sum <- collect_metrics(bayes_mixed_res)
   exp_metric_sum <-
@@ -546,4 +559,20 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 100)
   expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
+
+  # ------------------------------------------------------------------------------
+  # test show/select methods
+
+  expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
+  expect_snapshot_error(
+    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  )
+  expect_snapshot_error(
+    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  )
+  expect_snapshot(
+    show_best(bayes_mixed_res, metric = "brier_survival_integrated")
+  )
+
 })
