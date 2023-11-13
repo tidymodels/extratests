@@ -9,8 +9,7 @@ test_that("graf_weight_time_vec() calculates weight time", {
     event = c(1, 1)
   )
   expect_equal(
-    parsnip:::graf_weight_time_vec(event_before_or_at_eval_time, eval_time = eval_time_10) %>%
-      unname(),
+    parsnip:::graf_weight_time_vec(event_before_or_at_eval_time, eval_time = eval_time_10),
     c(eval_time_10 - 1, eval_time_10)
   )
 
@@ -30,8 +29,7 @@ test_that("graf_weight_time_vec() calculates weight time", {
     event = c(0, 0)
   )
   expect_equal(
-    parsnip:::graf_weight_time_vec(censoring_before_or_at_eval_time, eval_time = eval_time_10) %>%
-      unname(),
+    parsnip:::graf_weight_time_vec(censoring_before_or_at_eval_time, eval_time = eval_time_10),
     c(NA, NA)
   )
 })
@@ -52,8 +50,7 @@ test_that("graf_weight_time_vec() guards against information leakage via `eps`",
       event_before_or_at_eval_time,
       eval_time = eval_time_10,
       eps = 2
-    ) %>%
-      unname(),
+    ),
     time_before_or_at_eval_time - 2
   )
 
@@ -82,8 +79,7 @@ test_that("graf_weight_time_vec() does not return negative weight times", {
   # unmodified weight time is event_time < eps
   event_time_lt_eps <- survival::Surv(time = c(-1, 0), event = c(1, 1))
   expect_equal(
-    parsnip:::graf_weight_time_vec(event_time_lt_eps, eval_time = 10) %>%
-      unname(),
+    parsnip:::graf_weight_time_vec(event_time_lt_eps, eval_time = 10),
     c(0, 0)
   )
 
