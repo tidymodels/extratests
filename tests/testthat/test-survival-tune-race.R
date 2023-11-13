@@ -111,7 +111,68 @@ test_that("race tuning survival models with static metric", {
   }
 
   # ------------------------------------------------------------------------------
-  # test metric collection
+  #  test metrics collection
+
+  exp_metric_sum <-
+    structure(
+      list(
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        mean = numeric(0),
+        n = integer(0),
+        std_err = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_all <-
+    structure(
+      list(
+        id = character(0),
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .estimate = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+
+  ###
+
+  aov_finished <-
+    map_dfr(aov_static_res$.metrics, I) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_aov_sum <- collect_metrics(aov_static_res)
+
+  expect_equal(nrow(aov_finished), nrow(metric_aov_sum))
+  expect_equal(metric_aov_sum[0,], exp_metric_sum)
+  expect_true(all(metric_aov_sum$.metric == "concordance_survival"))
+
+  wl_finished <-
+    map_dfr(wl_static_res$.metrics, I) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_static_res)
+
+  expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
+  expect_equal(metric_wl_sum[0,], exp_metric_sum)
+  expect_true(all(metric_wl_sum$.metric == "concordance_survival"))
+
+  ###
+
+  metric_aov_all <- collect_metrics(aov_static_res, summarize = FALSE)
+  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_aov_all[0,], exp_metric_all)
+  expect_true(all(metric_aov_all$.metric == "concordance_survival"))
+
+  metric_wl_all <- collect_metrics(aov_static_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_wl_all[0,], exp_metric_all)
+  expect_true(all(metric_wl_all$.metric == "concordance_survival"))
 
 })
 
@@ -242,6 +303,66 @@ test_that("race tuning survival models with integrated metric", {
   # ------------------------------------------------------------------------------
   # test metric collection
 
+  exp_metric_sum <-
+    structure(
+      list(
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        mean = numeric(0),
+        n = integer(0),
+        std_err = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_all <-
+    structure(
+      list(
+        id = character(0),
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .estimate = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+
+  ###
+
+  aov_finished <-
+    map_dfr(aov_integrated_res$.metrics, I) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_aov_sum <- collect_metrics(aov_integrated_res)
+
+  expect_equal(nrow(aov_finished), nrow(metric_aov_sum))
+  expect_equal(metric_aov_sum[0,], exp_metric_sum)
+  expect_true(all(metric_aov_sum$.metric == "brier_survival_integrated"))
+
+  wl_finished <-
+    map_dfr(wl_integrated_res$.metrics, I) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_integrated_res)
+
+  expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
+  expect_equal(metric_wl_sum[0,], exp_metric_sum)
+  expect_true(all(metric_wl_sum$.metric == "brier_survival_integrated"))
+
+  ###
+
+  metric_aov_all <- collect_metrics(aov_integrated_res, summarize = FALSE)
+  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_aov_all[0,], exp_metric_all)
+  expect_true(all(metric_aov_all$.metric == "brier_survival_integrated"))
+
+  metric_wl_all <- collect_metrics(aov_integrated_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_wl_all[0,], exp_metric_all)
+  expect_true(all(metric_wl_all$.metric == "brier_survival_integrated"))
 
 })
 
@@ -389,7 +510,73 @@ test_that("race tuning survival models with dynamic metrics", {
   )
 
   # ------------------------------------------------------------------------------
-  # test metric collection
+  #  test metrics collection
+
+  exp_metric_sum <-
+    structure(
+      list(
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        mean = numeric(0),
+        n = integer(0),
+        std_err = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_all <-
+    structure(
+      list(
+        id = character(0),
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        .estimate = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+
+  ###
+
+  aov_finished <-
+    map_dfr(aov_dyn_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_aov_sum <- collect_metrics(aov_dyn_res)
+
+  expect_equal(nrow(aov_finished) * length(time_points), nrow(metric_aov_sum))
+  expect_equal(metric_aov_sum[0,], exp_metric_sum)
+  expect_true(all(metric_aov_sum$.metric == "brier_survival"))
+
+  wl_finished <-
+    map_dfr(wl_dyn_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_dyn_res)
+
+  expect_equal(nrow(wl_finished) * length(time_points), nrow(metric_wl_sum))
+  expect_equal(metric_wl_sum[0,], exp_metric_sum)
+  expect_true(all(metric_wl_sum$.metric == "brier_survival"))
+
+  ###
+
+  metric_aov_all <- collect_metrics(aov_dyn_res, summarize = FALSE)
+  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs) * length(time_points))
+  expect_equal(metric_aov_all[0,], exp_metric_all)
+  expect_true(all(metric_aov_all$.metric == "brier_survival"))
+
+  metric_wl_all <- collect_metrics(aov_dyn_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs) * length(time_points))
+  expect_equal(metric_wl_all[0,], exp_metric_all)
+  expect_true(all(metric_wl_all$.metric == "brier_survival"))
+
 
 })
 
@@ -458,8 +645,8 @@ test_that("race tuning survival models with mixture of metric types", {
     },
     type = "message")
 
-  num_final_aov <- unique(show_best(aov_mixed_res, eval_time = 5)$cost_complexity)
-  num_final_wl  <- unique(show_best(wl_mixed_res, eval_time = 5)$cost_complexity)
+  num_final_aov <- unique(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
 
   # TODO add a test for checking the evaluation time in this message:
   # https://github.com/tidymodels/finetune/issues/81
@@ -546,6 +733,79 @@ test_that("race tuning survival models with mixture of metric types", {
   # ------------------------------------------------------------------------------
   # test metric collection
 
+
+  # ------------------------------------------------------------------------------
+  #  test metrics collection
+
+  exp_metric_sum <-
+    structure(
+      list(
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        mean = numeric(0),
+        n = integer(0),
+        std_err = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_all <-
+    structure(
+      list(
+        id = character(0),
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        .estimate = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+  num_metrics <- length(time_points) + 2
+
+  ###
+
+  aov_finished <-
+    map_dfr(aov_mixed_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_aov_sum <- collect_metrics(aov_mixed_res)
+
+  expect_equal(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
+  expect_equal(metric_aov_sum[0,], exp_metric_sum)
+  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
+  expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
+
+  wl_finished <-
+    map_dfr(wl_mixed_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_mixed_res)
+
+  expect_equal(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
+  expect_equal(metric_wl_sum[0,], exp_metric_sum)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+
+  ###
+
+  metric_aov_all <- collect_metrics(aov_mixed_res, summarize = FALSE)
+  expect_true(nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_aov_all[0,], exp_metric_all)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+
+  metric_wl_all <- collect_metrics(wl_mixed_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == num_metrics * nrow(wl_finished) * nrow(sim_rs))
+  expect_equal(metric_wl_all[0,], exp_metric_all)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
 
   # ------------------------------------------------------------------------------
   # test show/select methods
