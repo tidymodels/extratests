@@ -86,7 +86,8 @@ test_that("stacking with grid search works", {
       seed = 1,
       resamples = folds,
       metrics = metric
-    )
+    ) %>%
+    suppressMessages()
 
   data_st_grid <-
     stacks() %>%
@@ -129,11 +130,13 @@ test_that("stacking with Bayesian tuning works", {
       seed = 1,
       resamples = folds,
       metrics = metric
-    )
+    ) %>%
+    suppressMessages()
 
   data_st_bayes <-
     stacks() %>%
-    add_candidates(wf_set_bayes)
+    add_candidates(wf_set_bayes) %>%
+    suppressMessages()
 
   expect_true(inherits(data_st_bayes, "tbl_df"))
 
@@ -234,7 +237,14 @@ test_that("stacking with finetune works (sim_anneal)", {
 
   wf_set_sim_anneal <-
     workflow_map(
-      wf_set  %>% option_add(control = control_sim_anneal(save_pred = TRUE, save_workflow = TRUE)),
+      wf_set  %>%
+        option_add(
+          control = control_sim_anneal(
+            save_pred = TRUE,
+            save_workflow = TRUE,
+            verbose_iter = FALSE
+          )
+        ),
       fn = "tune_sim_anneal",
       seed = 1,
       resamples = folds,
@@ -282,7 +292,6 @@ test_that("stacking with finetune works (sim_anneal)", {
   expect_true(inherits(preds_sim_anneal, "tbl_df"))
 })
 
-
 test_that("stacking with finetune works (win_loss)", {
   skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
 
@@ -293,7 +302,8 @@ test_that("stacking with finetune works (win_loss)", {
       seed = 1,
       resamples = folds,
       metrics = metric
-    )
+    ) %>%
+    suppressMessages()
 
   data_st_win_loss <-
     stacks() %>%

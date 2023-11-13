@@ -28,7 +28,8 @@ test_that('error without model formula (workflow, with tune)', {
 
   expect_warning(
     gam_res <- gam_wflow %>% fit_resamples(bootstraps(mtcars))
-  )
+  ) %>%
+    suppressMessages()
 
   expect_snapshot(show_notes(gam_res))
 })
@@ -44,7 +45,8 @@ test_that('error without model formula (no workflow, with tune)', {
 
   expect_warning(
     gam_res <- gam_spec %>% fit_resamples(mpg ~ ., bootstraps(mtcars))
-  )
+  ) %>%
+    suppressMessages()
 
   expect_snapshot(show_notes(gam_res))
 })
