@@ -121,19 +121,25 @@ test_that("formula interface can deal with missing values", {
   expect_true(is.na(f_pred$.pred[1]))
 })
 
-test_that('error traps', {
+test_that("model errors on missing penalty value", {
   skip_if_not_installed("glmnet")
 
-  expect_snapshot(error = TRUE, {
-    poisson_reg(penalty = 0.1) %>%
-      set_engine("glmnet") %>%
-      fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
-      predict(mtcars[-(1:4), ], penalty = 0:1)
-  })
   skip_if_not_installed("parsnip", minimum_version = "1.0.3.9000")
   expect_snapshot(error = TRUE, {
     poisson_reg() %>%
       set_engine("glmnet") %>%
       fit(mpg ~ ., data = mtcars[-(1:4), ])
+  })
+})
+
+test_that("predict() errors with multiple penalty values", {
+  skip_if_not_installed("glmnet")
+
+  skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
+  expect_snapshot(error = TRUE, {
+    poisson_reg(penalty = 0.1) %>%
+      set_engine("glmnet") %>%
+      fit(mpg ~ ., data = mtcars[-(1:4), ]) %>%
+      predict(mtcars[-(1:4), ], penalty = 0:1)
   })
 })
