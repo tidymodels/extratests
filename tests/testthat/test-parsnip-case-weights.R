@@ -457,7 +457,7 @@ test_that('linear_reg - glmnet case weights', {
 
 test_that('linear_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   dat <- make_msa_wts()
@@ -483,7 +483,7 @@ test_that('linear_reg - stan_glmer case weights', {
 
 test_that('linear_reg - lme4::lmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   dat <- make_msa_wts()
@@ -613,7 +613,7 @@ test_that('logistic_reg - stan case weights', {
 
 test_that('logistic_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   data("two_class_dat", package = "modeldata")
@@ -644,7 +644,7 @@ test_that('logistic_reg - stan_glmer case weights', {
 
 test_that('logistic_reg - lme4::glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   data("two_class_dat", package = "modeldata")
@@ -846,7 +846,7 @@ test_that('poisson_reg - glm case weights', {
 
 test_that('poisson_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
@@ -965,7 +965,7 @@ test_that('poisson_reg - stan case weights', {
 
 test_that('poisson_reg - lme4::glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
-  skip_if_not_installed("Matrix", "	1.6-2")
+  skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
