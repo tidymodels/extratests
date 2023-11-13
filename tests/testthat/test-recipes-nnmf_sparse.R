@@ -85,9 +85,10 @@ test_that('can prep recipes with no keep_original_cols', {
 
   rec$steps[[1]]$keep_original_cols <- NULL
 
+  skip_if_not_installed("recipes", minimum_version = "1.0.8.9000")
   expect_warning(
     nnmf_trained <- prep(rec, training = iris, verbose = FALSE),
-    "'keep_original_cols' was added to"
+    "`keep_original_cols` was added to"
   )
 
   expect_error(

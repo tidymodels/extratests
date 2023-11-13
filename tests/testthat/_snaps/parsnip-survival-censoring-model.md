@@ -9,6 +9,7 @@
 
     Code
       predict(alt_obj, time = 100)
-    Error <rlang_error>
-      Don't know how to predict with a censoring model of type: reverse_km
+    Condition
+      Error in `predict()`:
+      ! Don't know how to predict with a censoring model of type: reverse_km
 
