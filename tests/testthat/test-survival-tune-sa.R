@@ -551,7 +551,6 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   # ------------------------------------------------------------------------------
   # test metric collection
 
-
   metric_sum <- collect_metrics(sa_mixed_res)
   exp_metric_sum <-
     structure(

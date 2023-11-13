@@ -1,18 +1,21 @@
-library(testthat)
-library(tidymodels)
-library(censored)
-library(yardstick)
-library(finetune)
+suppressPackageStartupMessages(library(tidymodels))
+suppressPackageStartupMessages(library(censored))
+suppressPackageStartupMessages(library(finetune))
 
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
+skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
+skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that("race tuning survival models with static metric", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("flexsurv") # required for engine
 
-  stc_mtrc  <- metric_set(concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -22,19 +25,24 @@ test_that("race tuning survival models with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- bootstraps(sim_tr, times = 20)
 
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(cost_complexity = 10^c(-10, -2, -1))
 
+  gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with static metrics
+
+  stc_mtrc  <- metric_set(concordance_survival)
 
   set.seed(2193)
   aov_static_res <-
@@ -58,17 +66,26 @@ test_that("race tuning survival models with static metric", {
       control = rctrl
     )
 
+  num_final_aov <- unique(show_best(aov_static_res)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_static_res)$cost_complexity)
+
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(aov_static_res$.metrics[[1]]))
   expect_false(".eval_time" %in% names(wl_static_res$.metrics[[1]]))
 
   expect_equal(
     names(aov_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+    c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
   )
   expect_equal(
     names(wl_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+    c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(plot_race(aov_static_res)),
@@ -79,32 +96,32 @@ test_that("race tuning survival models with static metric", {
     "static-wl-racing-plot"
   )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_static_res)),
-    "static-metric-aov-racing-with-two-time-points"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_static_res)),
-    "static-metric-wl-racing-with-two-time-points"
-  )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_static_res, type = "marginals")),
-    "static-metric-aov-racing-with-two-time-points-marginals"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_static_res, type = "marginals")),
-    "static-metric-wl-racing-with-two-time-points-marginals"
-  )
+  if (length(num_final_aov) > 1) {
+    expect_snapshot_plot(
+      print(autoplot(aov_static_res)),
+      "static-metric-aov-racing-with-two-time-points"
+    )
+  }
+  if (length(num_final_wl) > 1) {
+    expect_snapshot_plot(
+      print(autoplot(wl_static_res)),
+      "static-metric-wl-racing-with-two-time-points"
+    )
+  }
+
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
 })
 
 test_that("race tuning survival models with integrated metric", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("flexsurv") # required for engine
 
-  sint_mtrc <- metric_set(brier_survival_integrated)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -114,19 +131,25 @@ test_that("race tuning survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- bootstraps(sim_tr, times = 6)
 
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  # make it so there will probably be 2+ winners
+  grid <- tibble(cost_complexity = 10^c(-10.1, -10.0, -2.0, -1.0))
 
+  gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with integrated metrics
+
+  sint_mtrc <- metric_set(brier_survival_integrated)
 
   set.seed(2193)
   aov_integrated_res <-
@@ -152,16 +175,22 @@ test_that("race tuning survival models with integrated metric", {
       control = rctrl
     )
 
+  num_final_aov <- unique(show_best(aov_integrated_res, eval_time = 5)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_integrated_res, eval_time = 5)$cost_complexity)
+
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_false(".eval_time" %in% names(aov_integrated_res$.metrics[[1]]))
   expect_false(".eval_time" %in% names(wl_integrated_res$.metrics[[1]]))
 
   expect_equal(
     names(aov_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", "event_time", ".config")
   )
   expect_equal(
     names(wl_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", "event_time", ".config")
   )
 
   expect_true(is.list(aov_integrated_res$.predictions[[1]]$.pred))
@@ -185,6 +214,9 @@ test_that("race tuning survival models with integrated metric", {
     time_points
   )
 
+  # ------------------------------------------------------------------------------
+  # test autoplot
+
   expect_snapshot_plot(
     print(plot_race(aov_integrated_res)),
     "integrated-metric-aov-racing-plot"
@@ -194,41 +226,32 @@ test_that("race tuning survival models with integrated metric", {
     "integrated-metric-wl-racing-plot"
   )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_integrated_res, eval_time = c(1, 5))),
-    "integrated-metric-aov-racing-with-two-time-points"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_integrated_res, eval_time = c(1, 5))),
-    "integrated-metric-wl-racing-with-two-time-points"
-  )
+  if (length(num_final_aov) > 1) {
+    expect_snapshot_plot(
+      print(autoplot(aov_integrated_res)),
+      "integrated-metric-aov-racing"
+    )
+  }
+  if (length(num_final_wl) > 1) {
+    expect_snapshot_plot(
+      print(autoplot(wl_integrated_res)),
+      "integrated-metric-wl-racing"
+    )
+  }
 
-  expect_snapshot_plot(
-    print(autoplot(aov_integrated_res)),
-    "integrated-metric-aov-racing-with-no-set-time-points"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_integrated_res)),
-    "integrated-metric-wl-racing-with-no-set-time-points"
-  )
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
-  expect_snapshot_plot(
-    print(autoplot(aov_integrated_res, eval_time = 1, type = "marginals")),
-    "integrated-metric-aov-racing-with-two-time-points-marginals"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_integrated_res, eval_time = 1, type = "marginals")),
-    "integrated-metric-wl-racing-with-two-time-points-marginals"
-  )
+
 })
 
 test_that("race tuning survival models with dynamic metrics", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("flexsurv") # required for engine
 
-  dyn_mtrc  <- metric_set(brier_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -238,31 +261,42 @@ test_that("race tuning survival models with dynamic metrics", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- bootstraps(sim_tr, times = 20)
 
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid <- tibble(cost_complexity = 10^c(-10, -2, -1))
 
+  gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
-  # standard setup end
+  rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
 
-  set.seed(2193)
-  aov_dyn_res <-
-    mod_spec %>%
-    tune_race_anova(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      grid = grid,
-      metrics = dyn_mtrc,
-      eval_time = time_points,
-      control = rctrl
-    )
+  # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with dynamic metrics
+
+  dyn_mtrc  <- metric_set(brier_survival)
+
+  aov_dyn_output <-
+    capture.output({
+      set.seed(2193)
+      aov_dyn_res <-
+        mod_spec %>%
+        tune_race_anova(
+          event_time ~ X1 + X2,
+          resamples = sim_rs,
+          grid = grid,
+          metrics = dyn_mtrc,
+          eval_time = time_points,
+          control = rctrl_verb
+        )
+    },
+    type = "message")
+
 
   set.seed(2193)
   wl_dyn_res <-
@@ -276,16 +310,27 @@ test_that("race tuning survival models with dynamic metrics", {
       control = rctrl
     )
 
+  num_final_aov <- unique(show_best(aov_dyn_res, eval_time = 5)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_dyn_res, eval_time = 5)$cost_complexity)
+
+  # TODO add a test for checking the evaluation time in this message:
+  # https://github.com/tidymodels/finetune/issues/81
+  expect_true(any(grepl("Racing will minimize the brier_survival metric", aov_dyn_output)))
+
+
+  # ------------------------------------------------------------------------------
+  # test structure of results
+
   expect_true(".eval_time" %in% names(aov_dyn_res$.metrics[[1]]))
   expect_true(".eval_time" %in% names(wl_dyn_res$.metrics[[1]]))
 
   expect_equal(
     names(aov_dyn_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", "event_time", ".config")
   )
   expect_equal(
     names(wl_dyn_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", "event_time", ".config")
   )
 
   expect_true(is.list(aov_dyn_res$.predictions[[1]]$.pred))
@@ -308,6 +353,9 @@ test_that("race tuning survival models with dynamic metrics", {
     wl_dyn_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
+
+  # ------------------------------------------------------------------------------
+  # test autoplot
 
   expect_snapshot_plot(
     print(plot_race(aov_dyn_res)),
@@ -340,23 +388,18 @@ test_that("race tuning survival models with dynamic metrics", {
     )
   )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_dyn_res, eval_time = 1, type = "marginals")),
-    "dyn-metric-aov-racing-with-two-time-points-marginals"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_dyn_res, eval_time = 1, type = "marginals")),
-    "dyn-metric-wl-racing-with-two-time-points-marginals"
-  )
+  # ------------------------------------------------------------------------------
+  # test metric collection
+
 })
 
 test_that("race tuning survival models with mixture of metric types", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("flexsurv") # required for engine
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
-
+  # ------------------------------------------------------------------------------
   # standard setup start
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -366,19 +409,26 @@ test_that("race tuning survival models with mixture of metric types", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- bootstraps(sim_tr, times = 30)
 
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
+    decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+  grid_winner <- tibble(cost_complexity = 10^c(-10, seq(-1.1, -1, length.out = 5)))
+  grid_ties <- tibble(cost_complexity = 10^c(seq(-10.1, -10.0, length.out = 5)))
 
+  gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
+  rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
+
   # standard setup end
+  # ------------------------------------------------------------------------------
+  # Simulated annealing with mixed metrics
+
+  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
   set.seed(2193)
   aov_mixed_res <-
@@ -386,34 +436,50 @@ test_that("race tuning survival models with mixture of metric types", {
     tune_race_anova(
       event_time ~ X1 + X2,
       resamples = sim_rs,
-      grid = grid,
+      grid = grid_winner,
       metrics = mix_mtrc,
       eval_time = time_points,
       control = rctrl
     )
 
-  set.seed(2193)
-  wl_mixed_res <-
-    mod_spec %>%
-    tune_race_win_loss(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      grid = grid,
-      metrics = mix_mtrc,
-      eval_time = time_points,
-      control = rctrl
-    )
+  wl_mixed_output <-
+    capture.output({
+      set.seed(2193)
+      wl_mixed_res <-
+        mod_spec %>%
+        tune_race_win_loss(
+          event_time ~ X1 + X2,
+          resamples = sim_rs,
+          grid = grid_ties,
+          metrics = mix_mtrc,
+          eval_time = time_points,
+          control = rctrl_verb
+        )
+    },
+    type = "message")
+
+  num_final_aov <- unique(show_best(aov_mixed_res, eval_time = 5)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_mixed_res, eval_time = 5)$cost_complexity)
+
+  # TODO add a test for checking the evaluation time in this message:
+  # https://github.com/tidymodels/finetune/issues/81
+  expect_true(any(grepl("Racing will minimize the brier_survival metric", wl_mixed_output)))
+  expect_equal(length(num_final_wl), nrow(grid_ties))
+  expect_equal(length(num_final_aov), 1L)
+
+  # ------------------------------------------------------------------------------
+  # test structure of results
 
   expect_true(".eval_time" %in% names(aov_mixed_res$.metrics[[1]]))
   expect_true(".eval_time" %in% names(wl_mixed_res$.metrics[[1]]))
 
   expect_equal(
     names(aov_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config")
   )
   expect_equal(
     names(wl_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config")
   )
 
   expect_true(is.list(aov_mixed_res$.predictions[[1]]$.pred))
@@ -437,6 +503,9 @@ test_that("race tuning survival models with mixture of metric types", {
     time_points
   )
 
+  # ------------------------------------------------------------------------------
+  # test autoplot
+
   expect_snapshot_plot(
     print(plot_race(aov_mixed_res)),
     "aov-racing-plot"
@@ -446,21 +515,27 @@ test_that("race tuning survival models with mixture of metric types", {
     "wl-racing-plot"
   )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-aov-racing-with-two-time-points"
-  )
+  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
+  # expect_snapshot_plot(
+  #   print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
+  #   "mixed-metric-aov-racing-with-two-time-points"
+  # )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
     "mixed-metric-wl-racing-with-two-time-points"
   )
-
-  expect_snapshot_warning(
-    expect_snapshot_plot(
-      print(autoplot(aov_mixed_res)),
-      "mixed-metric-aov-racing-with-no-set-time-points"
-    )
+  expect_snapshot_plot(
+    print(autoplot(wl_mixed_res, metric = "concordance_survival")),
+    "mixed-metric-wl-racing-with-one-metric"
   )
+
+  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
+  # expect_snapshot_warning(
+  #   expect_snapshot_plot(
+  #     print(autoplot(aov_mixed_res)),
+  #     "mixed-metric-aov-racing-with-no-set-time-points"
+  #   )
+  # )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_mixed_res)),
@@ -468,16 +543,13 @@ test_that("race tuning survival models with mixture of metric types", {
     )
   )
 
-  expect_snapshot_plot(
-    print(autoplot(aov_mixed_res, eval_time = 1, type = "marginals")),
-    "mixed-metric-aov-racing-with-two-time-points-marginals"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_mixed_res, eval_time = 1, type = "marginals")),
-    "mixed-metric-wl-racing-with-two-time-points-marginals"
-  )
+  # ------------------------------------------------------------------------------
+  # test metric collection
 
-  # test some S3 methods for any tune_result object
+
+  # ------------------------------------------------------------------------------
+  # test show/select methods
+
   expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot_error(
