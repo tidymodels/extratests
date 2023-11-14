@@ -18,7 +18,6 @@ test_that("grid tuning with static metric", {
   } else {
     stc_mtrc  <- metric_set(concordance_survival)
 
-    # standard setup start
     set.seed(1)
     sim_dat <- prodlim::SimSurv(500) %>%
       mutate(event_time = Surv(time, event)) %>%
@@ -40,7 +39,6 @@ test_that("grid tuning with static metric", {
     grid <- tibble(tree_depth = c(1, 2, 10))
 
     gctrl <- control_grid(save_pred = TRUE)
-    # standard setup end
 
     set.seed(2193)
     grid_static_res <-
@@ -60,8 +58,6 @@ test_that("grid tuning with static metric", {
 
 
 test_that("grid tuning with static metric - check structure", {
-  skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
   is_object_available(grid_static_res, fail = TRUE)
   grid_static_res <- return_object(grid_static_res)
@@ -74,8 +70,6 @@ test_that("grid tuning with static metric - check structure", {
 })
 
 test_that("grid tuning with static metric - autoplot", {
-  skip_if_not_installed("prodlim")
-  skip_if_not_installed("coin") # required for partykit engine
 
   is_object_available(grid_static_res, fail = TRUE)
   grid_static_res <- return_object(grid_static_res)
