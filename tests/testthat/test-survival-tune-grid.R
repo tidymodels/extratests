@@ -65,7 +65,7 @@ test_that("grid tuning survival models with static metric", {
 
   expect_snapshot_plot(
     print(autoplot(grid_static_res)),
-    "static-metric-grid-search"
+    "stc-grid"
   )
 
   # ------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ test_that("grid tuning survival models with integrated metric", {
 
   expect_snapshot_plot(
     print(autoplot(grid_integrated_res)),
-    "integrated-metric-grid-search"
+    "int-grid"
   )
 
   # ------------------------------------------------------------------------------
@@ -296,13 +296,13 @@ test_that("grid tuning survival models with dynamic metric", {
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(grid_dynamic_res)),
-      "dynamic-metric-grid-search"
+      "dyn-grid"
     )
   )
 
   expect_snapshot_plot(
     print(autoplot(grid_dynamic_res, eval_time = 1)),
-    "dynamic-metric-grid-search_1"
+    "dyn-grid-1"
   )
 
   # ------------------------------------------------------------------------------
@@ -419,12 +419,12 @@ test_that("grid tuning survival models mixture of metric types", {
 
   expect_snapshot_plot(
     print(autoplot(grid_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-grid-search-with-two-time-points"
+    "mix-grid-2-times"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(grid_mixed_res)),
-      "mixed-metric-grid-search-with-no-set-time-points"
+      "mix-grid-0-times"
     )
   )
 

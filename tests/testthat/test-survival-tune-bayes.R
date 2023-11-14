@@ -79,16 +79,16 @@ test_that("Bayesian tuning survival models with static metric", {
 
   expect_snapshot_plot(
     print(autoplot(bayes_static_res)),
-    "static-metric-bayes-search"
+    "stc-bayes"
   )
 
   expect_snapshot_plot(
     print(autoplot(bayes_static_res, type = "marginals")),
-    "static-bayes-search-with-two-time-points-marginals"
+    "stc-bayes-2-times-marg"
   )
   expect_snapshot_plot(
     print(autoplot(bayes_static_res, type = "performance")),
-    "static-bayes-search-with-two-time-points-performance"
+    "stc-bayes-2-times-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -217,15 +217,15 @@ test_that("Bayesian tuning survival models with integrated metric", {
 
   expect_snapshot_plot(
     print(autoplot(bayes_integrated_res)),
-    "integrated-metric-bayes-search"
+    "int-bayes"
   )
   expect_snapshot_plot(
     print(autoplot(bayes_integrated_res, type = "marginals")),
-    "integrated-metric-bayes-search-with-two-time-points-marginals"
+    "int-bayes-2-times-marg"
   )
   expect_snapshot_plot(
     print(autoplot(bayes_integrated_res, type = "performance")),
-    "integrated-metric-bayes-search-with-two-time-points-performance"
+    "int-bayes-2-times-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -356,16 +356,16 @@ test_that("Bayesian tuning survival models with dynamic metric", {
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(bayes_dynamic_res)),
-      "dynamic-metric-bayes-search"
+      "dyn-bayes"
     )
   )
   expect_snapshot_plot(
     print(autoplot(bayes_dynamic_res, eval_time = 1, type = "marginals")),
-    "dynamic-metric-bayes-search-with-two-time-points-marginals"
+    "dyn-bayes-2-times-marg"
   )
   expect_snapshot_plot(
     print(autoplot(bayes_dynamic_res, eval_time = 1, type = "performance")),
-    "dynamic-metric-bayes-search-with-two-time-points-performance"
+    "dyn-bayes-2-times-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -496,21 +496,21 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   expect_snapshot_plot(
     print(autoplot(bayes_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-bayes-search-with-two-time-points"
+    "mix-bayes-2-times"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(bayes_mixed_res)),
-      "mixed-metric-bayes-search-with-no-set-time-points"
+      "mix-bayes-0-times"
     )
   )
   expect_snapshot_plot(
     print(autoplot(bayes_mixed_res, eval_time = 1, type = "marginals")),
-    "mixed-metric-bayes-search-with-two-time-points-marginals"
+    "mix-bayes-2-times-marg"
   )
   expect_snapshot_plot(
     print(autoplot(bayes_mixed_res, eval_time = 1, type = "performance")),
-    "mixed-metric-bayes-search-with-two-time-points-performance"
+    "mix-bayes-2-times-perf"
   )
 
   # ------------------------------------------------------------------------------

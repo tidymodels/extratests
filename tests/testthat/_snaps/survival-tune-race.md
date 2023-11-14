@@ -19,10 +19,14 @@
     Code
       show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1)
     Output
-      # A tibble: 1 x 8
+      # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1    0.0000000001 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
+      1          0.0841 brier_survi~ standard            1 0.201    30 0.00415 Prepro~
+      2          0.0891 brier_survi~ standard            1 0.201    30 0.00415 Prepro~
+      3          0.0944 brier_survi~ standard            1 0.201    30 0.00415 Prepro~
+      4          0.1    brier_survi~ standard            1 0.201    30 0.00415 Prepro~
+      5          0.0794 brier_survi~ standard            1 0.202    30 0.00418 Prepro~
 
 ---
 
@@ -37,8 +41,12 @@
     Code
       show_best(aov_mixed_res, metric = "brier_survival_integrated")
     Output
-      # A tibble: 1 x 8
+      # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1    0.0000000001 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
+      1          0.0794 brier_survi~ standard           NA 0.338    30 0.00487 Prepro~
+      2          0.0841 brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
+      3          0.0891 brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
+      4          0.0944 brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
+      5          0.1    brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
 

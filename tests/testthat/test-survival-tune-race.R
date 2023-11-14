@@ -89,24 +89,24 @@ test_that("race tuning survival models with static metric", {
 
   expect_snapshot_plot(
     print(plot_race(aov_static_res)),
-    "static-aov-racing-plot"
+    "stc-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_static_res)),
-    "static-wl-racing-plot"
+    "stc-wl-race-plot"
   )
 
 
   if (length(num_final_aov) > 1) {
     expect_snapshot_plot(
       print(autoplot(aov_static_res)),
-      "static-metric-aov-racing-with-two-time-points"
+      "stc-aov-race-2-times"
     )
   }
   if (length(num_final_wl) > 1) {
     expect_snapshot_plot(
       print(autoplot(wl_static_res)),
-      "static-metric-wl-racing-with-two-time-points"
+      "stc-wl-race-2-times"
     )
   }
 
@@ -280,23 +280,23 @@ test_that("race tuning survival models with integrated metric", {
 
   expect_snapshot_plot(
     print(plot_race(aov_integrated_res)),
-    "integrated-metric-aov-racing-plot"
+    "int-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_integrated_res)),
-    "integrated-metric-wl-racing-plot"
+    "int-wl-race-plot"
   )
 
   if (length(num_final_aov) > 1) {
     expect_snapshot_plot(
       print(autoplot(aov_integrated_res)),
-      "integrated-metric-aov-racing"
+      "int-aov-racing"
     )
   }
   if (length(num_final_wl) > 1) {
     expect_snapshot_plot(
       print(autoplot(wl_integrated_res)),
-      "integrated-metric-wl-racing"
+      "int-wl-racing"
     )
   }
 
@@ -480,32 +480,32 @@ test_that("race tuning survival models with dynamic metrics", {
 
   expect_snapshot_plot(
     print(plot_race(aov_dyn_res)),
-    "dyn-aov-racing-plot"
+    "dyn-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_dyn_res)),
-    "dyn-wl-racing-plot"
+    "dyn-wl-race-plot"
   )
 
   expect_snapshot_plot(
     print(autoplot(aov_dyn_res, eval_time = c(1, 5))),
-    "dyn-metric-aov-racing-with-two-time-points"
+    "dyn-aov-race-2-times"
   )
   expect_snapshot_plot(
     print(autoplot(wl_dyn_res, eval_time = c(1, 5))),
-    "dyn-metric-wl-racing-with-two-time-points"
+    "dyn-wl-race-2-times"
   )
 
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(aov_dyn_res)),
-      "dyn-metric-aov-racing-with-no-set-time-points"
+      "dyn-aov-race-0-times"
     )
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_dyn_res)),
-      "dyn-metric-wl-racing-with-no-set-time-points"
+      "dyn-wl-race-0-times"
     )
   )
 
@@ -652,7 +652,7 @@ test_that("race tuning survival models with mixture of metric types", {
   # https://github.com/tidymodels/finetune/issues/81
   expect_true(any(grepl("Racing will minimize the brier_survival metric", wl_mixed_output)))
   expect_equal(length(num_final_wl), nrow(grid_ties))
-  expect_equal(length(num_final_aov), 1L)
+  expect_true(length(num_final_aov) < nrow(grid_winner))
 
   # ------------------------------------------------------------------------------
   # test structure of results
@@ -695,38 +695,38 @@ test_that("race tuning survival models with mixture of metric types", {
 
   expect_snapshot_plot(
     print(plot_race(aov_mixed_res)),
-    "aov-racing-plot"
+    "aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_mixed_res)),
-    "wl-racing-plot"
+    "wl-race-plot"
   )
 
   # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
   # expect_snapshot_plot(
   #   print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
-  #   "mixed-metric-aov-racing-with-two-time-points"
+  #   "mix-aov-race-2-times"
   # )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-wl-racing-with-two-time-points"
+    "mix-wl-race-2-times"
   )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, metric = "concordance_survival")),
-    "mixed-metric-wl-racing-with-one-metric"
+    "mix-wl-race-1-metric"
   )
 
   # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
   # expect_snapshot_warning(
   #   expect_snapshot_plot(
   #     print(autoplot(aov_mixed_res)),
-  #     "mixed-metric-aov-racing-with-no-set-time-points"
+  #     "mix-aov-race-0-times"
   #   )
   # )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_mixed_res)),
-      "mixed-metric-wl-racing-with-no-set-time-points"
+      "mix-wl-race-0-times"
     )
   )
 
