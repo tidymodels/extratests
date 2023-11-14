@@ -9,58 +9,77 @@ skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
-test_that("grid tuning survival models with static metric", {
+test_that("grid tuning with static metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  if (is_object_available(grid_static_res)) {
+    grid_static_res <- return_object(grid_static_res)
+  } else {
+    stc_mtrc  <- metric_set(concordance_survival)
 
-  # standard setup start
-  set.seed(1)
-  sim_dat <- prodlim::SimSurv(500) %>%
-    mutate(event_time = Surv(time, event)) %>%
-    select(event_time, X1, X2)
+    set.seed(1)
+    sim_dat <- prodlim::SimSurv(500) %>%
+      mutate(event_time = Surv(time, event)) %>%
+      select(event_time, X1, X2)
 
-  set.seed(2)
-  split <- initial_split(sim_dat)
-  sim_tr <- training(split)
-  sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+    set.seed(2)
+    split <- initial_split(sim_dat)
+    sim_tr <- training(split)
+    sim_te <- testing(split)
+    sim_rs <- vfold_cv(sim_tr)
 
-  time_points <- c(10, 1, 5, 15)
+    time_points <- c(10, 1, 5, 15)
 
-  mod_spec <-
-    decision_tree(tree_depth = tune(), min_n = 4) %>%
-    set_engine("partykit") %>%
-    set_mode("censored regression")
+    mod_spec <-
+      decision_tree(tree_depth = tune(), min_n = 4) %>%
+      set_engine("partykit") %>%
+      set_mode("censored regression")
 
-  grid <- tibble(tree_depth = c(1, 2, 10))
+    grid <- tibble(tree_depth = c(1, 2, 10))
 
-  gctrl <- control_grid(save_pred = TRUE)
-  # standard setup end
+    gctrl <- control_grid(save_pred = TRUE)
 
-  set.seed(2193)
-  grid_static_res <-
-    mod_spec %>%
-    tune_grid(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      grid = grid,
-      metrics = stc_mtrc,
-      control = gctrl
-    )
+    set.seed(2193)
+    grid_static_res <-
+      mod_spec %>%
+      tune_grid(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        grid = grid,
+        metrics = stc_mtrc,
+        control = gctrl
+      )
+    save_object(grid_static_res)
+  }
+
+  expect_s3_class(grid_static_res, "tune_results")
+})
+
+
+test_that("grid tuning with static metric - check structure", {
+
+  is_object_available(grid_static_res, fail = TRUE)
+  grid_static_res <- return_object(grid_static_res)
 
   expect_false(".eval_time" %in% names(grid_static_res$.metrics[[1]]))
   expect_equal(
     names(grid_static_res$.predictions[[1]]),
     c(".pred_time", ".row", "tree_depth", "event_time", ".config")
   )
+})
+
+test_that("grid tuning with static metric - autoplot", {
+
+  is_object_available(grid_static_res, fail = TRUE)
+  grid_static_res <- return_object(grid_static_res)
 
   expect_snapshot_plot(
     print(autoplot(grid_static_res)),
     "static-metric-grid-search"
   )
 })
+
 
 test_that("grid tuning survival models with integrated metric", {
   skip_if_not_installed("prodlim")
