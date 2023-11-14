@@ -12,6 +12,7 @@ on:
   schedule:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
+  workflow_dispatch:
 
 name: spark-R-CMD-check
 
