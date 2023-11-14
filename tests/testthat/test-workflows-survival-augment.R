@@ -1,7 +1,7 @@
 test_that("augment survival workflows with eval_time", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip",   minimum_version = "1.1.0.9001")
+  skip_if_not_installed("parsnip",   minimum_version = "1.1.0.9002")
   skip_if_not_installed("workflows", minimum_version = "1.1.3.9000")
 
   library(tidymodels)
@@ -50,8 +50,10 @@ test_that("augment survival workflows with eval_time", {
   # Predicting a single row and eval time
   res_1_row <- augment(wflow_fit, new_data = head(sim_dat, 1), eval_time = times[1])
   expect_true(nrow(res_1_row) == 1)
-  expect_true(".pred" %in% names(res_1_row))
-  expect_true(".pred_time" %in% names(res_1_row))
+  expect_equal(
+    names(res_1_row),
+    c(".pred", ".pred_time", "event_time", "X1", "X2")
+  )
   expect_true(is.numeric(res_1_row$.pred_time))
   expect_true(is.list(res_1_row$.pred))
   expect_equal(res_1_row$.pred[[1]][0,], exp_pred_col)
