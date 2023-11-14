@@ -37,8 +37,10 @@ test_that("augment survival workflows with eval_time", {
   times <- c(2.0, 1.0)
   res <- augment(wflow_fit, new_data = head(sim_dat), eval_time = times)
   expect_equal(nrow(res), nrow(head(sim_dat)))
-  expect_true(".pred" %in% names(res))
-  expect_true(".pred_time" %in% names(res))
+  expect_equal(
+    names(res),
+    c(".pred", ".pred_time", "event_time", "X1", "X2")
+  )
   expect_true(is.numeric(res$.pred_time))
   expect_true(is.list(res$.pred))
   expect_equal(res$.pred[[1]][0,], exp_pred_col)
