@@ -138,6 +138,7 @@ test_that("error for .censoring_weights_graf() from .check_censor_model()", {
 
 test_that("no names in weight values", {
   # See tidymodels/parsnip#1023 tidymodels/parsnip#1024
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9002")
 
   surv_obj <-
     structure(
