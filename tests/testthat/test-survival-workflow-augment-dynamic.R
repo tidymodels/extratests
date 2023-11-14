@@ -36,7 +36,7 @@ test_that("augment survival workflows with eval_time", {
 
   times <- c(2.0, 1.0)
   res <- augment(wflow_fit, new_data = head(sim_dat), eval_time = times)
-  expect_true(nrow(res) == nrow(head(sim_dat)))
+  expect_equal(nrow(res), nrow(head(sim_dat)))
   expect_true(".pred" %in% names(res))
   expect_true(".pred_time" %in% names(res))
   expect_true(is.numeric(res$.pred_time))
@@ -52,12 +52,13 @@ test_that("augment survival workflows with eval_time", {
   expect_true(".pred_time" %in% names(res_1_row))
   expect_true(is.numeric(res_1_row$.pred_time))
   expect_true(is.list(res_1_row$.pred))
-  expect_equal(res_1_row$.pred[[1]][0,], exp_pred_col, ignore_attr = TRUE)
+  expect_equal(res_1_row$.pred[[1]][0,], exp_pred_col)
   expect_equal(nrow(res_1_row$.pred[[1]]), 1)
   expect_equal(res_1_row$.pred[[1]]$.eval_time, times[1])
 
   ## Obligatory glmnet example for "what could go wrong" coverage:
   ## This will need to be updated when https://github.com/tidymodels/workflows/issues/209 is resolved
+  skip("until workflows/#209 is fixed")
   expect_snapshot(
     workflow() %>%
       add_model(proportional_hazards(penalty = 0.001) %>% set_engine("glmnet")) %>%
