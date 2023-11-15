@@ -10,8 +10,7 @@ test_that("Bayesian tuning survival models with static metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -36,7 +35,6 @@ test_that("Bayesian tuning survival models with static metric", {
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
 
-  # standard setup end
   # Bayes with static metrics --------------------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
@@ -64,8 +62,7 @@ test_that("Bayesian tuning survival models with static metric", {
       initial = init_grid_static_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(bayes_static_res$.metrics[[1]]))
   expect_equal(
@@ -73,8 +70,7 @@ test_that("Bayesian tuning survival models with static metric", {
     c(".pred_time", ".row", "tree_depth", "event_time", ".config")
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(bayes_static_res)),
@@ -90,8 +86,7 @@ test_that("Bayesian tuning survival models with static metric", {
     "stc-bayes-2-times-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(bayes_static_res)
   exp_metric_sum <- tibble(
@@ -129,8 +124,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -153,9 +147,8 @@ test_that("Bayesian tuning survival models with integrated metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Bayes with integrated metric
+
+  # Bayes with integrated metric -----------------------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -184,8 +177,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
       initial = init_grid_integrated_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(bayes_integrated_res$.metrics[[1]]))
   expect_equal(
@@ -202,8 +194,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot -------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(bayes_integrated_res)),
@@ -218,8 +209,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
     "int-bayes-2-times-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(bayes_integrated_res)
   exp_metric_sum <- tibble(
@@ -257,8 +247,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -282,9 +271,8 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Bayes with dynamic metric
+
+  # Bayes with dynamic metric --------------------------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -313,8 +301,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
       initial = init_grid_dynamic_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(bayes_dynamic_res$.metrics[[1]]))
   expect_equal(
@@ -331,8 +318,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_warning(
     expect_snapshot_plot(
@@ -349,8 +335,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     "dyn-bayes-2-times-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(bayes_dynamic_res)
   exp_metric_sum <- tibble(
@@ -390,8 +375,8 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
+
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
     mutate(event_time = Surv(time, event)) %>%
@@ -414,9 +399,8 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   gctrl <- control_grid(save_pred = TRUE)
   bctrl <- control_bayes(save_pred = TRUE)
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Bayes with a mixture of all three types
+
+  # Bayes with a mixture of all three types ------------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -445,8 +429,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
       control = bctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
   expect_equal(
@@ -463,8 +446,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(bayes_mixed_res, eval_time = c(1, 5))),
@@ -485,8 +467,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     "mix-bayes-2-times-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(bayes_mixed_res)
   exp_metric_sum <- tibble(
@@ -523,8 +504,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_true(sum(is.na(metric_all$.eval_time)) == 100)
   expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
-  # ------------------------------------------------------------------------------
-  # test show_best()
+  # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))

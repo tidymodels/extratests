@@ -13,8 +13,7 @@ test_that("race tuning survival models with static metric", {
   skip_if_not_installed("BradleyTerry2")
   skip_if_not_installed("flexsurv")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -38,9 +37,7 @@ test_that("race tuning survival models with static metric", {
   gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Racing with static metrics
+  # Racing with static metrics -------------------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -69,8 +66,7 @@ test_that("race tuning survival models with static metric", {
   num_final_aov <- unique(show_best(aov_static_res)$cost_complexity)
   num_final_wl  <- unique(show_best(wl_static_res)$cost_complexity)
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(aov_static_res$.metrics[[1]]))
   expect_false(".eval_time" %in% names(wl_static_res$.metrics[[1]]))
@@ -84,8 +80,7 @@ test_that("race tuning survival models with static metric", {
     c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(plot_race(aov_static_res)),
@@ -110,8 +105,7 @@ test_that("race tuning survival models with static metric", {
     )
   }
 
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
    exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
@@ -171,8 +165,7 @@ test_that("race tuning survival models with integrated metric", {
   skip_if_not_installed("BradleyTerry2")
   skip_if_not_installed("flexsurv")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -197,9 +190,7 @@ test_that("race tuning survival models with integrated metric", {
   gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Racing with integrated metrics
+  # Racing with integrated metrics ---------------------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -230,8 +221,7 @@ test_that("race tuning survival models with integrated metric", {
   num_final_aov <- unique(show_best(aov_integrated_res, eval_time = 5)$cost_complexity)
   num_final_wl  <- unique(show_best(wl_integrated_res, eval_time = 5)$cost_complexity)
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(aov_integrated_res$.metrics[[1]]))
   expect_false(".eval_time" %in% names(wl_integrated_res$.metrics[[1]]))
@@ -266,8 +256,7 @@ test_that("race tuning survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(plot_race(aov_integrated_res)),
@@ -291,7 +280,6 @@ test_that("race tuning survival models with integrated metric", {
     )
   }
 
-  # ------------------------------------------------------------------------------
   # test metric collection
 
   exp_metric_sum <- tibble(
@@ -352,8 +340,7 @@ test_that("race tuning survival models with dynamic metrics", {
   skip_if_not_installed("BradleyTerry2")
   skip_if_not_installed("flexsurv")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -378,9 +365,7 @@ test_that("race tuning survival models with dynamic metrics", {
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
   rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Racing with dynamic metrics
+  # Racing with dynamic metrics ------------------------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -421,8 +406,7 @@ test_that("race tuning survival models with dynamic metrics", {
   expect_true(any(grepl("Racing will minimize the brier_survival metric", aov_dyn_output)))
 
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(aov_dyn_res$.metrics[[1]]))
   expect_true(".eval_time" %in% names(wl_dyn_res$.metrics[[1]]))
@@ -457,8 +441,7 @@ test_that("race tuning survival models with dynamic metrics", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(plot_race(aov_dyn_res)),
@@ -491,8 +474,7 @@ test_that("race tuning survival models with dynamic metrics", {
     )
   )
 
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
     exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
@@ -504,7 +486,7 @@ test_that("race tuning survival models with dynamic metrics", {
     std_err = numeric(0),
     .config = character(0)
   )
-  
+
   exp_metric_all <- tibble(
     id = character(0),
     cost_complexity = numeric(0),
@@ -558,8 +540,7 @@ test_that("race tuning survival models with mixture of metric types", {
   skip_if_not_installed("BradleyTerry2")
   skip_if_not_installed("flexsurv")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -585,9 +566,7 @@ test_that("race tuning survival models with mixture of metric types", {
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
   rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Racing with mixed metrics
+  # Racing with mixed metrics --------------------------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -626,8 +605,7 @@ test_that("race tuning survival models with mixture of metric types", {
   expect_equal(length(num_final_wl), nrow(grid_ties))
   expect_true(length(num_final_aov) < nrow(grid_winner))
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(aov_mixed_res$.metrics[[1]]))
   expect_true(".eval_time" %in% names(wl_mixed_res$.metrics[[1]]))
@@ -662,8 +640,7 @@ test_that("race tuning survival models with mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(plot_race(aov_mixed_res)),
@@ -702,12 +679,7 @@ test_that("race tuning survival models with mixture of metric types", {
     )
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
-
-
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
     exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
@@ -771,8 +743,7 @@ test_that("race tuning survival models with mixture of metric types", {
   expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
   expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
 
-  # ------------------------------------------------------------------------------
-  # test show_best()
+  # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
