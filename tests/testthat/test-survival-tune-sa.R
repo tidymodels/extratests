@@ -10,7 +10,7 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that("sim annealing tuning survival models with static metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
   # ------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ test_that("sim annealing tuning survival models with static metric", {
 })
 
 test_that("sim annealing tuning survival models with integrated metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
   # ------------------------------------------------------------------------------
@@ -292,7 +292,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
 })
 
 test_that("sim annealing tuning survival models with dynamic metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
   # ------------------------------------------------------------------------------
@@ -442,7 +442,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
 })
 
 test_that("sim annealing tuning survival models with mixture of metric types", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
   # ------------------------------------------------------------------------------
@@ -596,15 +596,17 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_equal(as.vector(table(metric_all$.metric)), c(140L, 50L, 50L))
 
   # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best()
 
   expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival_integrated")

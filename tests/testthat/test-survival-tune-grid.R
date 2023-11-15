@@ -474,15 +474,17 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L))
 
   # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best()
 
   expect_snapshot_warning(show_best(grid_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(grid_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival_integrated")

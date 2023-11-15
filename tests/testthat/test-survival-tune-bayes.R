@@ -561,15 +561,17 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
   # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best()
 
   expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival_integrated")

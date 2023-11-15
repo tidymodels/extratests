@@ -11,7 +11,7 @@ skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that("race tuning survival models with static metric", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("flexsurv") # required for engine
+  skip_if_not_installed("flexsurv")
 
   # ------------------------------------------------------------------------------
   # standard setup start
@@ -40,7 +40,7 @@ test_that("race tuning survival models with static metric", {
 
   # standard setup end
   # ------------------------------------------------------------------------------
-  # Simulated annealing with static metrics
+  # Racing with static metrics
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -178,7 +178,7 @@ test_that("race tuning survival models with static metric", {
 
 test_that("race tuning survival models with integrated metric", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("flexsurv") # required for engine
+  skip_if_not_installed("flexsurv")
 
   # ------------------------------------------------------------------------------
   # standard setup start
@@ -208,7 +208,7 @@ test_that("race tuning survival models with integrated metric", {
 
   # standard setup end
   # ------------------------------------------------------------------------------
-  # Simulated annealing with integrated metrics
+  # Racing with integrated metrics
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -368,7 +368,7 @@ test_that("race tuning survival models with integrated metric", {
 
 test_that("race tuning survival models with dynamic metrics", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("flexsurv") # required for engine
+  skip_if_not_installed("flexsurv")
 
   # ------------------------------------------------------------------------------
   # standard setup start
@@ -398,7 +398,7 @@ test_that("race tuning survival models with dynamic metrics", {
 
   # standard setup end
   # ------------------------------------------------------------------------------
-  # Simulated annealing with dynamic metrics
+  # Racing with dynamic metrics
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -582,7 +582,7 @@ test_that("race tuning survival models with dynamic metrics", {
 
 test_that("race tuning survival models with mixture of metric types", {
   skip_if_not_installed("BradleyTerry2")
-  skip_if_not_installed("flexsurv") # required for engine
+  skip_if_not_installed("flexsurv")
 
   # ------------------------------------------------------------------------------
   # standard setup start
@@ -613,31 +613,19 @@ test_that("race tuning survival models with mixture of metric types", {
 
   # standard setup end
   # ------------------------------------------------------------------------------
-  # Simulated annealing with mixed metrics
+  # Racing with mixed metrics
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
-  set.seed(2193)
-  aov_mixed_res <-
-    mod_spec %>%
-    tune_race_anova(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      grid = grid_winner,
-      metrics = mix_mtrc,
-      eval_time = time_points,
-      control = rctrl
-    )
-
-  wl_mixed_output <-
+  aov_mixed_output <-
     capture.output({
       set.seed(2193)
-      wl_mixed_res <-
+      aov_mixed_res <-
         mod_spec %>%
-        tune_race_win_loss(
+        tune_race_anova(
           event_time ~ X1 + X2,
           resamples = sim_rs,
-          grid = grid_ties,
+          grid = grid_winner,
           metrics = mix_mtrc,
           eval_time = time_points,
           control = rctrl_verb
@@ -645,12 +633,22 @@ test_that("race tuning survival models with mixture of metric types", {
     },
     type = "message")
 
+  set.seed(2193)
+  wl_mixed_res <-
+    mod_spec %>%
+    tune_race_win_loss(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid_ties,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = rctrl
+    )
+
   num_final_aov <- unique(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
   num_final_wl  <- unique(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
 
-  # TODO add a test for checking the evaluation time in this message:
-  # https://github.com/tidymodels/finetune/issues/81
-  expect_true(any(grepl("Racing will minimize the brier_survival metric", wl_mixed_output)))
+  expect_true(any(grepl("Racing will minimize the brier_survival metric at time 10", aov_mixed_output)))
   expect_equal(length(num_final_wl), nrow(grid_ties))
   expect_true(length(num_final_aov) < nrow(grid_winner))
 
@@ -808,15 +806,17 @@ test_that("race tuning survival models with mixture of metric types", {
   expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
 
   # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best()
 
   expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival_integrated")
