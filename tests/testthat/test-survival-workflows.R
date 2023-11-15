@@ -104,7 +104,7 @@ test_that("can `predict()` a censored workflow with a formula", {
   )
 })
 
-test_that("can `predict()` a censored workflow with a recipe", {
+test_that("can `predict()` a censored workflow with variables", {
   lung <- lung |>
     tidyr::drop_na() |>
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
