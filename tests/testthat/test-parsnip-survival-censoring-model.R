@@ -1,7 +1,7 @@
 skip_if_not_installed("censored")
 skip_if_not_installed("prodlim")
 
-library(censored)
+suppressPackageStartupMessages(library(censored))
 
 test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   mod_fit <- survival_reg() %>%

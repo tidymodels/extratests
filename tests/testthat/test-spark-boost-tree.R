@@ -14,7 +14,7 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 test_that('spark execution', {
 
   skip_if_not_installed("sparklyr")
-  library(sparklyr)
+  suppressPackageStartupMessages(library(sparklyr))
 
   sc <- try(spark_connect(master = "local"), silent = TRUE)
 

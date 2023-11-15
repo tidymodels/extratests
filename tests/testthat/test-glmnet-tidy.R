@@ -1,6 +1,7 @@
 
 test_that('linear regression', {
   skip_if_not_installed("glmnet")
+  suppressPackageStartupMessages(library(glmnet))
 
   ps_mod <-
     linear_reg(penalty = .1) %>%

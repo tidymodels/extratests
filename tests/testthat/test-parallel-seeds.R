@@ -1,7 +1,7 @@
 library(testthat)
 library(tidymodels)
 library(modeldata)
-library(doParallel)
+suppressPackageStartupMessages(library(doParallel))
 data(two_class_dat)
 
 # ------------------------------------------------------------------------------

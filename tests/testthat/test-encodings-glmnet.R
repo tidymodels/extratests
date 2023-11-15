@@ -1,4 +1,5 @@
 library(tidymodels)
+suppressPackageStartupMessages(library(glmnet))
 data(ames, package = "modeldata")
 
 ## -----------------------------------------------------------------------------

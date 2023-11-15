@@ -1,6 +1,6 @@
 library(testthat)
 library(recipes)
-library(Matrix) # Waiting for fix in RcppML
+suppressPackageStartupMessages(library(Matrix)) # Waiting for fix in RcppML
 
 recipes_version <- function() paste0("recipes", packageVersion("recipes"))
 
