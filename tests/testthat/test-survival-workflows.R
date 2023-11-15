@@ -3,7 +3,7 @@ skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
 
 library(tidymodels)
-library(censored)
+suppressPackageStartupMessages(library(censored))
 
 test_that("can `fit()` a censored workflow with a formula", {
   lung <- lung |>
