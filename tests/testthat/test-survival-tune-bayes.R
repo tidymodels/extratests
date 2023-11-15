@@ -37,8 +37,7 @@ test_that("Bayesian tuning survival models with static metric", {
   bctrl <- control_bayes(save_pred = TRUE)
 
   # standard setup end
-  # ------------------------------------------------------------------------------
-  # Bayes with static metrics
+  # Bayes with static metrics --------------------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -95,40 +94,31 @@ test_that("Bayesian tuning survival models with static metric", {
   # test metric collection
 
   metric_sum <- collect_metrics(bayes_static_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 5)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
   metric_all <- collect_metrics(bayes_static_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+exp_metric_all <- tibble(
+  id = character(0),
+  tree_depth = numeric(0),
+  .metric = character(0),
+  .estimator = character(0),
+  .estimate = numeric(0),
+  .config = character(0),
+  .iter = integer(0)
+)
 
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -232,40 +222,31 @@ test_that("Bayesian tuning survival models with integrated metric", {
   # test metric collection
 
   metric_sum <- collect_metrics(bayes_integrated_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 5)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
   metric_all <- collect_metrics(bayes_integrated_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -372,42 +353,33 @@ test_that("Bayesian tuning survival models with dynamic metric", {
   # test metric collection
 
   metric_sum <- collect_metrics(bayes_dynamic_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 20)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
   metric_all <- collect_metrics(bayes_dynamic_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 200)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -517,21 +489,17 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   # test metric collection
 
   metric_sum <- collect_metrics(bayes_mixed_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 30)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -539,21 +507,16 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(bayes_mixed_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        tree_depth = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    tree_depth = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 300)
   expect_equal(metric_all[0,], exp_metric_all)

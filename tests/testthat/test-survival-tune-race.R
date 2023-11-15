@@ -113,32 +113,23 @@ test_that("race tuning survival models with static metric", {
   # ------------------------------------------------------------------------------
   #  test metrics collection
 
-  exp_metric_sum <-
-    structure(
-      list(
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+   exp_metric_sum <- tibble(
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+  exp_metric_all <- tibble(
+    id = character(0),
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   ###
 
@@ -303,32 +294,23 @@ test_that("race tuning survival models with integrated metric", {
   # ------------------------------------------------------------------------------
   # test metric collection
 
-  exp_metric_sum <-
-    structure(
-      list(
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_sum <- tibble(
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+  exp_metric_all <- tibble(
+    id = character(0),
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   ###
 
@@ -512,34 +494,26 @@ test_that("race tuning survival models with dynamic metrics", {
   # ------------------------------------------------------------------------------
   #  test metrics collection
 
-  exp_metric_sum <-
-    structure(
-      list(
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+    exp_metric_sum <- tibble(
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+  
+  exp_metric_all <- tibble(
+    id = character(0),
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   ###
 
@@ -735,34 +709,26 @@ test_that("race tuning survival models with mixture of metric types", {
   # ------------------------------------------------------------------------------
   #  test metrics collection
 
-  exp_metric_sum <-
-    structure(
-      list(
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        cost_complexity = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+    exp_metric_sum <- tibble(
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+
+  exp_metric_all <- tibble(
+    id = character(0),
+    cost_complexity = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
   num_metrics <- length(time_points) + 2
 
   ###
