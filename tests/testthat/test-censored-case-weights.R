@@ -5,7 +5,7 @@ skip_if_not_installed("yardstick", "1.0.0")
 skip_if_not_installed("workflows", "1.0.0")
 skip_if_not_installed("recipes",   "1.0.0")
 
-library(censored)
+suppressPackageStartupMessages(library(censored))
 
 # bagged trees ------------------------------------------------------------
 

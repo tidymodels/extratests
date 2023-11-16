@@ -9,8 +9,7 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 test_that("grid tuning survival models with static metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -34,9 +33,7 @@ test_that("grid tuning survival models with static metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Grid search with static metrics
+  # Grid search with static metrics --------------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -51,8 +48,7 @@ test_that("grid tuning survival models with static metric", {
       control = gctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(grid_static_res$.metrics[[1]]))
   expect_equal(
@@ -60,50 +56,39 @@ test_that("grid tuning survival models with static metric", {
     c(".pred_time", ".row", "penalty", "event_time", ".config")
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(grid_static_res)),
     "stc-grid"
   )
 
-  # ------------------------------------------------------------------------------
   # test metric collection
 
   metric_sum <- collect_metrics(grid_static_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_sum) == 3)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
   metric_all <- collect_metrics(grid_static_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_all) == 30)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -114,8 +99,7 @@ test_that("grid tuning survival models with static metric", {
 test_that("grid tuning survival models with integrated metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -139,9 +123,7 @@ test_that("grid tuning survival models with integrated metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Grid search with integrated metrics
+  # Grid search with integrated metrics ----------------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -157,8 +139,7 @@ test_that("grid tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(grid_integrated_res$.metrics[[1]]))
   expect_equal(
@@ -175,50 +156,39 @@ test_that("grid tuning survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(grid_integrated_res)),
     "int-grid"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  ## test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(grid_integrated_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_sum) == 3)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
   metric_all <- collect_metrics(grid_integrated_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_all) == 30)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -229,8 +199,7 @@ test_that("grid tuning survival models with integrated metric", {
 test_that("grid tuning survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -254,9 +223,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Grid search with dynamic metrics
+  # Grid search with dynamic metrics -------------------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -272,8 +239,7 @@ test_that("grid tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(grid_dynamic_res$.metrics[[1]]))
   expect_equal(
@@ -290,8 +256,7 @@ test_that("grid tuning survival models with dynamic metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_warning(
     expect_snapshot_plot(
@@ -305,44 +270,34 @@ test_that("grid tuning survival models with dynamic metric", {
     "dyn-grid-1"
   )
 
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(grid_dynamic_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_sum) == 12)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
   metric_all <- collect_metrics(grid_dynamic_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_all) == 120)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -353,8 +308,7 @@ test_that("grid tuning survival models with dynamic metric", {
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -378,9 +332,7 @@ test_that("grid tuning survival models mixture of metric types", {
 
   gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Grid search with a mixture of metrics
+  # Grid search with a mixture of metrics --------------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -396,8 +348,7 @@ test_that("grid tuning survival models mixture of metric types", {
       control = gctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
   expect_equal(
@@ -414,8 +365,7 @@ test_that("grid tuning survival models mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(grid_mixed_res, eval_time = c(1, 5))),
@@ -428,24 +378,19 @@ test_that("grid tuning survival models mixture of metric types", {
     )
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(grid_mixed_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_sum) == 18)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -453,36 +398,32 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_equal(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L))
 
   metric_all <- collect_metrics(grid_mixed_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        penalty = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
 
   expect_true(nrow(metric_all) == 180)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 60)
   expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L))
 
-  # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(grid_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(grid_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival_integrated")

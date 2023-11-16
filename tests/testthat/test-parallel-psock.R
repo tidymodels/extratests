@@ -1,9 +1,9 @@
 library(testthat)
-library(discrim)
+suppressPackageStartupMessages(library(discrim))
 library(themis)
 library(tidymodels)
 library(modeldata)
-library(doParallel)
+suppressPackageStartupMessages(library(doParallel))
 data(two_class_dat)
 
 # ------------------------------------------------------------------------------

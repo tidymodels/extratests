@@ -7,8 +7,7 @@ skip_if_not_installed("recipes",   "1.0.0")
 
 # load all extension packages to register the engines
 library(parsnip)
-library(sparklyr)
-
+suppressPackageStartupMessages(library(sparklyr))
 
 # boosted trees -----------------------------------------------------------
 
@@ -323,6 +322,8 @@ test_that('logistic_reg - spark case weights', {
 # mars --------------------------------------------------------------------
 
 test_that('mars - earth case weights', {
+  suppressPackageStartupMessages(library(earth))
+
   dat <- make_two_class_wts()
 
   expect_error({

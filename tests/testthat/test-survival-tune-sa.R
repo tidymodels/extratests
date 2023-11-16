@@ -10,11 +10,10 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
 test_that("sim annealing tuning survival models with static metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -44,9 +43,7 @@ test_that("sim annealing tuning survival models with static metric", {
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Simulated annealing with static metrics
+  # Simulated annealing with static metrics ------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -74,8 +71,7 @@ test_that("sim annealing tuning survival models with static metric", {
       initial = init_grid_static_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(sa_static_res$.metrics[[1]]))
   expect_equal(
@@ -83,8 +79,7 @@ test_that("sim annealing tuning survival models with static metric", {
     c(".pred_time", ".row", "trees", "event_time", ".config")
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(sa_static_res)),
@@ -100,44 +95,34 @@ test_that("sim annealing tuning survival models with static metric", {
     "stc-sa-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(sa_static_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 5)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
   metric_all <- collect_metrics(sa_static_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -146,11 +131,10 @@ test_that("sim annealing tuning survival models with static metric", {
 })
 
 test_that("sim annealing tuning survival models with integrated metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -180,9 +164,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Simulated annealing with integrated metrics
+  # Simulated annealing with integrated metrics --------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -212,8 +194,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
       initial = init_grid_integrated_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(sa_integrated_res$.metrics[[1]]))
   expect_equal(
@@ -230,8 +211,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res)),
@@ -246,44 +226,34 @@ test_that("sim annealing tuning survival models with integrated metric", {
     "int-sa-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(sa_integrated_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 5)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
   metric_all <- collect_metrics(sa_integrated_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -292,11 +262,10 @@ test_that("sim annealing tuning survival models with integrated metric", {
 })
 
 test_that("sim annealing tuning survival models with dynamic metric", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -326,9 +295,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Simulated annealing with a dynamic metric
+  # Simulated annealing with a dynamic metric ----------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -358,8 +325,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
       initial = init_grid_dynamic_res
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(sa_dynamic_res$.metrics[[1]]))
   expect_equal(
@@ -376,8 +342,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_warning(
     expect_snapshot_plot(
@@ -394,46 +359,36 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     "dyn-sa-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(sa_dynamic_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 14)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
   metric_all <- collect_metrics(sa_dynamic_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  exp_metric_all <- tibble(
+    id = character(0),
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) == 140)
   expect_equal(metric_all[0,], exp_metric_all)
@@ -442,11 +397,10 @@ test_that("sim annealing tuning survival models with dynamic metric", {
 })
 
 test_that("sim annealing tuning survival models with mixture of metric types", {
-  skip_if_not_installed("mboost") # required for engine
+  skip_if_not_installed("mboost")
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -476,9 +430,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   gctrl <- control_grid(save_pred = TRUE)
   sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # Simulated annealing with a mixture of metrics
+  # Simulated annealing with a mixture of metrics ------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -508,8 +460,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       control = sctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(sa_mixed_res$.metrics[[1]]))
   expect_equal(
@@ -526,8 +477,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test autoplot
+  # test autoplot --------------------------------------------------------------
 
   expect_snapshot_plot(
     print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
@@ -548,25 +498,20 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     "mix-sa-perf"
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(sa_mixed_res)
-  exp_metric_sum <-
-    structure(
-      list(
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_sum <- tibble(
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_sum) == 24L)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -574,20 +519,15 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_equal(as.vector(table(metric_sum$.metric)), c(14L, 5L, 5L))
 
   metric_all <- collect_metrics(sa_mixed_res, summarize = FALSE)
-  exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        trees = numeric(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0),
-        .iter = integer(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
+  exp_metric_all <- tibble(
+      id = character(0),
+      trees = numeric(0),
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .estimate = numeric(0),
+      .config = character(0),
+      .iter = integer(0)
     )
 
   expect_true(nrow(metric_all) == 240L)
@@ -595,16 +535,17 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
   expect_equal(as.vector(table(metric_all$.metric)), c(140L, 50L, 50L))
 
-  # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival_integrated")

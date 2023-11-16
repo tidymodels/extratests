@@ -26,11 +26,19 @@
 
 ---
 
-    No evaluation times matched a value of 1.001.
+    Code
+      show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+    Condition
+      Error in `choose_eval_time()`:
+      ! No evaluation times matched a value of 1.001.
 
 ---
 
-    Please pick a single evaluation time point.
+    Code
+      show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+    Condition
+      Error in `choose_eval_time()`:
+      ! Please pick a single evaluation time point.
 
 ---
 

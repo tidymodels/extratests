@@ -1,6 +1,6 @@
 library(recipes)
 library(butcher)
-library(Matrix) # Waiting for fix in RcppML
+suppressPackageStartupMessages(library(Matrix)) # Waiting for fix in RcppML
 
 # Data sets used for testing
 data(biomass)
