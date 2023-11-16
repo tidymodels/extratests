@@ -30,6 +30,8 @@ Suggests:
     flexsurv,
     glmnet,
     hardhat,
+    kknn,
+    LiblineaR,
     lubridate,
     Matrix,
     mda,
