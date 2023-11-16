@@ -449,11 +449,6 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     "wl-race-plot"
   )
 
-  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
-  # expect_snapshot_plot(
-  #   print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
-  #   "mix-aov-race-2-times"
-  # )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
     "mix-wl-race-2-times"
@@ -463,13 +458,6 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     "mix-wl-race-1-metric"
   )
 
-  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
-  # expect_snapshot_warning(
-  #   expect_snapshot_plot(
-  #     print(autoplot(aov_mixed_res)),
-  #     "mix-aov-race-0-times"
-  #   )
-  # )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_mixed_res)),
@@ -525,18 +513,17 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # test show_best() -----------------------------------------------------------
 
-  # TODO make these use wl_mixed_res instead (has not yet been tested)
-  expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
+  expect_snapshot_warning(show_best(wl_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
   expect_snapshot(
-    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
     error = TRUE
   )
   expect_snapshot(
-    show_best(aov_mixed_res, metric = "brier_survival_integrated")
+    show_best(wl_mixed_res, metric = "brier_survival_integrated")
   )
 })
