@@ -37,7 +37,7 @@ test_that('calculate weight time', {
 
 test_that('compute Graf weights', {
   library(tidymodels)
-  library(censored)
+  suppressPackageStartupMessages(library(censored))
 
   times <- c(9, 1:9)
   cens <- rep(0:1, 5)

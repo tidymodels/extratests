@@ -37,7 +37,7 @@ test_that("spark descriptor", {
 
   skip_if_not_installed("sparklyr")
 
-  library(sparklyr)
+  suppressPackageStartupMessages(library(sparklyr))
   library(dplyr)
 
   sc <- try(spark_connect(master = "local"), silent = TRUE)

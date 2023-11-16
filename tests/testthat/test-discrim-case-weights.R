@@ -6,7 +6,7 @@ skip_if_not_installed("workflows", "1.0.0")
 skip_if_not_installed("recipes",   "1.0.0")
 
 # load all extension packages to register the engines
-library(discrim)
+suppressPackageStartupMessages(library(discrim))
 
 # discrim_flexible --------------------------------------------------------
 

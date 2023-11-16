@@ -30,7 +30,7 @@ test_that('messaging with unknown implementation (bag tree, tidymodels/parsnip#7
   )
 
   # inter-extension interactions --------------------------------------------
-  library(censored)
+  suppressPackageStartupMessages(library(censored))
 
   # do not message -- well-specified spec
   expect_snapshot(
@@ -98,7 +98,7 @@ test_that('messaging with unknown implementation (decision tree, tidymodels/pars
   )
 
   # inter-extension interactions --------------------------------------------
-  library(censored)
+  suppressPackageStartupMessages(library(censored))
 
   # do not message -- well-specified spec
   expect_snapshot(
@@ -183,7 +183,7 @@ test_that('missing implementation checks prompt conservatively with old objects 
   expect_snapshot(dt_censored)
 
   # message continues to not appear after loading needed extension
-  library(censored)
+  suppressPackageStartupMessages(library(censored))
 
   expect_snapshot(dt_censored)
 })

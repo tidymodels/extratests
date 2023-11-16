@@ -1,8 +1,7 @@
 library(testthat)
 library(tidymodels)
 library(prodlim)
-library(censored)
-
+suppressPackageStartupMessages(library(censored))
 
 # ------------------------------------------------------------------------------
 
