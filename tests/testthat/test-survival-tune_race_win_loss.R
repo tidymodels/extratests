@@ -111,8 +111,8 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   ###
 
-  metric_wl_all <- collect_metrics(aov_static_res, summarize = FALSE) # FIXME
-  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs)) # FIXME
+  metric_wl_all <- collect_metrics(wl_static_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs))
   expect_equal(metric_wl_all[0,], exp_metric_all)
   expect_true(all(metric_wl_all$.metric == "concordance_survival"))
 
@@ -234,8 +234,8 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   ###
 
-  metric_wl_all <- collect_metrics(aov_integrated_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs))
+  metric_wl_all <- collect_metrics(wl_integrated_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs))
   expect_equal(metric_wl_all[0,], exp_metric_all)
   expect_true(all(metric_wl_all$.metric == "brier_survival_integrated"))
 
@@ -365,8 +365,8 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   ###
 
-  metric_wl_all <- collect_metrics(aov_dyn_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == nrow(aov_finished) * nrow(sim_rs) * length(time_points))
+  metric_wl_all <- collect_metrics(wl_dyn_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs) * length(time_points))
   expect_equal(metric_wl_all[0,], exp_metric_all)
   expect_true(all(metric_wl_all$.metric == "brier_survival"))
 
