@@ -29,7 +29,7 @@ test_that("grid tuning survival models with static metric", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^c(-4, -1, 0))
 
   gctrl <- control_grid(save_pred = TRUE)
 
@@ -93,6 +93,45 @@ test_that("grid tuning survival models with static metric", {
   expect_true(nrow(metric_all) == 30)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
+
+  # test show_best() -----------------------------------------------------------
+
+  expect_equal(
+    grid_static_res %>% collect_metrics() %>% arrange(desc(mean)),
+    show_best(grid_static_res)
+  )
+
+  # test select_best() ---------------------------------------------------------
+  # select_best() calls show_best() so we test the result size
+
+  expect_equal(
+    grid_static_res %>% collect_metrics() %>% slice_max(mean) %>% select(penalty, .config),
+    select_best(grid_static_res)
+  )
+
+  # test select_by_one_std_err() -----------------------------------------------
+
+  expect_equal(
+    grid_static_res %>%
+      collect_metrics() %>%
+      mutate(best = max(mean), lower = best - std_err) %>%
+      filter(mean < best & mean > lower) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_one_std_err(grid_static_res, desc(penalty))
+  )
+
+  # test select_by_pct_loss() --------------------------------------------------
+
+  expect_equal(
+    grid_static_res %>%
+      collect_metrics() %>%
+      mutate(best = max(mean), loss = (best - mean) / best * 100) %>%
+      filter(mean < best & loss <= 1) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_pct_loss(grid_static_res, desc(penalty))
+  )
 
 })
 
@@ -194,6 +233,45 @@ test_that("grid tuning survival models with integrated metric", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
 
+  # test show_best() -----------------------------------------------------------
+
+  expect_equal(
+    grid_integrated_res %>% collect_metrics() %>% arrange(mean),
+    show_best(grid_integrated_res)
+  )
+
+  # test select_best() ---------------------------------------------------------
+  # select_best() calls show_best() so we test the result size
+
+  expect_equal(
+    grid_integrated_res %>% collect_metrics() %>% slice_min(mean) %>% select(penalty, .config),
+    select_best(grid_integrated_res)
+  )
+
+  # test select_by_one_std_err() -----------------------------------------------
+
+  expect_equal(
+    grid_integrated_res %>%
+      collect_metrics() %>%
+      mutate(best = min(mean), upper = best + std_err) %>%
+      filter(mean > best & mean < upper) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_one_std_err(grid_integrated_res, desc(penalty))
+  )
+
+  # test select_by_pct_loss() --------------------------------------------------
+
+  expect_equal(
+    grid_integrated_res %>%
+      collect_metrics() %>%
+      mutate(best = min(mean), loss = - (best - mean) / best * 100) %>%
+      filter(mean > best & loss <= 1) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_pct_loss(grid_integrated_res, desc(penalty))
+  )
+
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -219,7 +297,7 @@ test_that("grid tuning survival models with dynamic metric", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^c(-4, -1, 0))
 
   gctrl <- control_grid(save_pred = TRUE)
 
@@ -303,6 +381,48 @@ test_that("grid tuning survival models with dynamic metric", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
 
+
+  # test show_best() -----------------------------------------------------------
+
+  expect_equal(
+    grid_dynamic_res %>% collect_metrics() %>% arrange(mean) %>% filter(.eval_time == 1),
+    show_best(grid_dynamic_res, eval_time = 1)
+  )
+
+  # test select_best() ---------------------------------------------------------
+  # select_best() calls show_best() so we test the result size
+
+  expect_equal(
+    grid_dynamic_res %>% collect_metrics() %>% slice_min(mean) %>% filter(.eval_time == 1) %>% select(penalty, .config),
+    select_best(grid_dynamic_res, eval_time = 1)
+  )
+
+  # test select_by_one_std_err() -----------------------------------------------
+
+  expect_equal(
+    grid_dynamic_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1) %>%
+      mutate(best = min(mean), upper = best + std_err) %>%
+      filter(mean > best & mean < upper) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_one_std_err(grid_dynamic_res, desc(penalty), eval_time = 1)
+  )
+
+  # test select_by_pct_loss() --------------------------------------------------
+
+  expect_equal(
+    grid_dynamic_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1) %>%
+      mutate(best = min(mean), loss = - (best - mean) / best * 100) %>%
+      filter(mean > best & loss <= 2) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_pct_loss(grid_dynamic_res, desc(penalty), eval_time = 1, limit = 2)
+  )
+
 })
 
 test_that("grid tuning survival models mixture of metric types", {
@@ -328,7 +448,7 @@ test_that("grid tuning survival models mixture of metric types", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^c(-4, -1, 0))
 
   gctrl <- control_grid(save_pred = TRUE)
 
@@ -428,4 +548,94 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival_integrated")
   )
+
+  # test show_best() -----------------------------------------------------------
+
+  expect_snapshot_warning(show_best(grid_mixed_res, eval_time = 1))
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1 & .metric == "brier_survival") %>%
+      arrange(mean),
+    show_best(grid_mixed_res, metric = "brier_survival", eval_time = 1)
+  )
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.metric == "brier_survival_integrated") %>%
+      arrange(mean),
+    show_best(grid_mixed_res, metric = "brier_survival_integrated")
+  )
+
+  # test select_best() ---------------------------------------------------------
+  # select_best() calls show_best() so we test the result size
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1 & .metric == "brier_survival") %>%
+      slice_min(mean) %>%
+      select(penalty, .config),
+    select_best(grid_mixed_res, metric = "brier_survival", eval_time = 1)
+  )
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.metric == "brier_survival_integrated") %>%
+      slice_min(mean) %>%
+      select(penalty, .config),
+    select_best(grid_mixed_res, metric = "brier_survival_integrated")
+  )
+
+  # test select_by_one_std_err() -----------------------------------------------
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1 & .metric == "brier_survival") %>%
+      mutate(best = min(mean), upper = best + std_err) %>%
+      filter(mean > best & mean < upper) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_one_std_err(grid_mixed_res, desc(penalty), metric = "brier_survival", eval_time = 1)
+  )
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.metric == "brier_survival_integrated") %>%
+      mutate(best = min(mean), upper = best + std_err) %>%
+      filter(mean > best & mean < upper) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_one_std_err(grid_mixed_res, desc(penalty), metric = "brier_survival_integrated")
+  )
+
+  # test select_by_pct_loss() --------------------------------------------------
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.eval_time == 1 & .metric == "brier_survival") %>%
+      mutate(best = min(mean), loss = - (best - mean) / best * 100) %>%
+      filter(mean > best & loss <= 2) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_pct_loss(grid_mixed_res, desc(penalty), metric = "brier_survival", eval_time = 1, limit = 2)
+  )
+
+  expect_equal(
+    grid_mixed_res %>%
+      collect_metrics() %>%
+      filter(.metric == "brier_survival_integrated") %>%
+      mutate(best = min(mean), loss = - (best - mean) / best * 100) %>%
+      filter(mean > best & loss <= 4) %>%
+      slice_max(penalty) %>%
+      select(penalty, .config),
+    select_by_pct_loss(grid_mixed_res, desc(penalty), metric = "brier_survival_integrated", limit = 4)
+  )
+
 })
