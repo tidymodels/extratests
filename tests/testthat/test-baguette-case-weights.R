@@ -68,6 +68,8 @@ test_that('bag_tree - C50 case weights', {
 test_that('bag_mars - earth case weights', {
   skip_if_not_installed("baguette", "1.0.0")
 
+  suppressPackageStartupMessages(library(earth))
+
   dat <- make_ames_wts()
 
   expect_error({
