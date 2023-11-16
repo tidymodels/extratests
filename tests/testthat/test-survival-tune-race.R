@@ -24,6 +24,8 @@ test_that("race tuning survival models with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
+  # high-ish number of bootstraps to simulate a case where the race gets down to 
+  # a single configuration
   sim_rs <- bootstraps(sim_tr, times = 20)
 
   time_points <- c(10, 1, 5, 15)
@@ -176,6 +178,7 @@ test_that("race tuning survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
+  # needs at least 3 bootstraps for the race to finish at a single configuration
   sim_rs <- bootstraps(sim_tr, times = 6)
 
   time_points <- c(10, 1, 5, 15)
@@ -369,6 +372,8 @@ test_that("race tuning survival models with dynamic metrics", {
 
   dyn_mtrc  <- metric_set(brier_survival)
 
+  # use `capture.output()` instead of `expect_snapshot_test()`
+  # https://github.com/tidymodels/extratests/pull/134#discussion_r1394534647
   aov_dyn_output <-
     capture.output({
       set.seed(2193)
