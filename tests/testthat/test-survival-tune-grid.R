@@ -63,7 +63,7 @@ test_that("grid tuning survival models with static metric", {
     "stc-grid"
   )
 
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(grid_static_res)
   exp_metric_sum <- tibble(

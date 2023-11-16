@@ -9,8 +9,7 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 test_that("last fit for survival models with static metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -25,9 +24,7 @@ test_that("last fit for survival models with static metric", {
 
   time_points <- c(10, 1, 5, 15)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # last fit for models with static metrics
+  # last fit for models with static metrics ------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -40,8 +37,7 @@ test_that("last fit for survival models with static metric", {
       metrics = stc_mtrc
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_equal(
     names(rs_static_res),
@@ -54,20 +50,16 @@ test_that("last fit for survival models with static metric", {
   )
   expect_s3_class(rs_static_res$.workflow[[1]], "workflow")
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_static_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .estimate = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == 1)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -78,8 +70,7 @@ test_that("last fit for survival models with static metric", {
 test_that("last fit for survival models with integrated metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -94,9 +85,7 @@ test_that("last fit for survival models with integrated metric", {
 
   time_points <- c(10, 1, 5, 15)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # last fit for models with integrated metrics
+  # last fit for models with integrated metrics --------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -110,8 +99,7 @@ test_that("last fit for survival models with integrated metric", {
       eval_time = time_points
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_equal(
     names(rs_integrated_res),
@@ -132,20 +120,16 @@ test_that("last fit for survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_integrated_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .estimate = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == 1)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -156,8 +140,7 @@ test_that("last fit for survival models with integrated metric", {
 test_that("last fit for survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -172,9 +155,7 @@ test_that("last fit for survival models with dynamic metric", {
 
   time_points <- c(10, 1, 5, 15)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # last fit for models with dynamic metrics
+  # last fit for models with dynamic metrics -----------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -188,8 +169,7 @@ test_that("last fit for survival models with dynamic metric", {
       eval_time = time_points
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_equal(
     names(rs_dynamic_res),
@@ -210,21 +190,17 @@ test_that("last fit for survival models with dynamic metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_dynamic_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .estimate = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == length(time_points))
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -234,8 +210,7 @@ test_that("last fit for survival models with dynamic metric", {
 test_that("last fit for survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -250,9 +225,7 @@ test_that("last fit for survival models mixture of metric types", {
 
   time_points <- c(10, 1, 5, 15)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # last fit for models with a mixture of metrics
+  # last fit for models with a mixture of metrics ------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -266,8 +239,7 @@ test_that("last fit for survival models mixture of metric types", {
       eval_time = time_points
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_equal(
     names(rs_mixed_res),
@@ -288,21 +260,17 @@ test_that("last fit for survival models mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_mixed_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .estimate = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == length(time_points) + 2)
   expect_equal(metric_sum[0,], exp_metric_sum)

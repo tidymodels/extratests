@@ -10,8 +10,7 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 test_that("resampling survival models with static metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -32,9 +31,7 @@ test_that("resampling survival models with static metric", {
 
   rsctrl <- control_resamples(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # resampling models with static metrics
+  # resampling models with static metrics --------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -48,8 +45,7 @@ test_that("resampling survival models with static metric", {
       control = rsctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(rs_static_res$.metrics[[1]]))
   expect_equal(
@@ -57,22 +53,18 @@ test_that("resampling survival models with static metric", {
     c(".pred_time", ".row", "event_time", ".config")
   )
 
-  # ------------------------------------------------------------------------------
-  # test metric collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_static_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      std_err = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == 1)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -80,16 +72,12 @@ test_that("resampling survival models with static metric", {
 
   metric_all <- collect_metrics(rs_static_res, summarize = FALSE)
   exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
+    tibble(
+      id = character(0),
+      .metric = character(0),
+      .estimator = character(0),
+      .estimate = numeric(0),
+      .config = character(0)
     )
 
   expect_true(nrow(metric_all) == 10)
@@ -101,8 +89,7 @@ test_that("resampling survival models with static metric", {
 test_that("resampling survival models with integrated metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -123,9 +110,7 @@ test_that("resampling survival models with integrated metric", {
 
   rsctrl <- control_resamples(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # resampling models with integrated metrics
+  # resampling models with integrated metrics ----------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -140,8 +125,7 @@ test_that("resampling survival models with integrated metric", {
       control = rsctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(rs_integrated_res$.metrics[[1]]))
   expect_equal(
@@ -158,22 +142,18 @@ test_that("resampling survival models with integrated metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_integrated_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      std_err = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == 1)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -181,16 +161,12 @@ test_that("resampling survival models with integrated metric", {
 
   metric_all <- collect_metrics(rs_integrated_res, summarize = FALSE)
   exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
+    tibble(
+      id = character(0),
+      .metric = character(0),
+      .estimator = character(0),
+      .estimate = numeric(0),
+      .config = character(0)
     )
 
   expect_true(nrow(metric_all) == 10)
@@ -202,8 +178,7 @@ test_that("resampling survival models with integrated metric", {
 test_that("resampling survival models with dynamic metric", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -224,9 +199,7 @@ test_that("resampling survival models with dynamic metric", {
 
   rsctrl <- control_resamples(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # resampling models with dynamic metrics
+  # resampling models with dynamic metrics -------------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -241,8 +214,7 @@ test_that("resampling survival models with dynamic metric", {
       control = rsctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(rs_dynamic_res$.metrics[[1]]))
   expect_equal(
@@ -259,23 +231,19 @@ test_that("resampling survival models with dynamic metric", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  #  test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_dynamic_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      mean = numeric(0),
+      n = integer(0),
+      std_err = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == length(time_points))
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -283,17 +251,13 @@ test_that("resampling survival models with dynamic metric", {
 
   metric_all <- collect_metrics(rs_dynamic_res, summarize = FALSE)
   exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
+    tibble(
+      id = character(0),
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .estimate = numeric(0),
+      .config = character(0)
     )
 
   expect_true(nrow(metric_all) == length(time_points) * nrow(sim_rs))
@@ -305,8 +269,7 @@ test_that("resampling survival models with dynamic metric", {
 test_that("resampling survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
 
-  # ------------------------------------------------------------------------------
-  # standard setup start
+  # standard setup start -------------------------------------------------------
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -327,9 +290,7 @@ test_that("resampling survival models mixture of metric types", {
 
   rsctrl <- control_resamples(save_pred = TRUE)
 
-  # standard setup end
-  # ------------------------------------------------------------------------------
-  # resampling models with a mixture of metrics
+  # resampling models with a mixture of metrics --------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -344,8 +305,7 @@ test_that("resampling survival models mixture of metric types", {
       control = rsctrl
     )
 
-  # ------------------------------------------------------------------------------
-  # test structure of results
+  # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(rs_mixed_res$.metrics[[1]]))
   expect_equal(
@@ -362,23 +322,19 @@ test_that("resampling survival models mixture of metric types", {
     time_points
   )
 
-  # ------------------------------------------------------------------------------
-  # test metrics collection
+  # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(rs_mixed_res)
   exp_metric_sum <-
-    structure(
-      list(
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        mean = numeric(0),
-        n = integer(0),
-        std_err = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      mean = numeric(0),
+      n = integer(0),
+      std_err = numeric(0),
+      .config = character(0)
+    )
 
   expect_true(nrow(metric_sum) == length(time_points) + 2)
   expect_equal(metric_sum[0,], exp_metric_sum)
@@ -387,17 +343,13 @@ test_that("resampling survival models mixture of metric types", {
 
   metric_all <- collect_metrics(rs_mixed_res, summarize = FALSE)
   exp_metric_all <-
-    structure(
-      list(
-        id = character(0),
-        .metric = character(0),
-        .estimator = character(0),
-        .eval_time = numeric(0),
-        .estimate = numeric(0),
-        .config = character(0)
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
+    tibble(
+      id = character(0),
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .estimate = numeric(0),
+      .config = character(0)
     )
 
   expect_true(nrow(metric_all) == (length(time_points) + 2) * nrow(sim_rs))
@@ -405,16 +357,17 @@ test_that("resampling survival models mixture of metric types", {
   expect_true(sum(is.na(metric_all$.eval_time)) == 2* nrow(sim_rs))
   expect_equal(as.vector(table(metric_all$.metric)), c(length(time_points), 1L, 1L) * nrow(sim_rs))
 
-  # ------------------------------------------------------------------------------
-  # test show/select methods
+  # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(rs_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival", eval_time = 1))
-  expect_snapshot_error(
-    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+  expect_snapshot(
+    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    error = TRUE
   )
-  expect_snapshot_error(
-    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+  expect_snapshot(
+    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
+    error = TRUE
   )
   expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival_integrated")
