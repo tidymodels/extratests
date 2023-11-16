@@ -1,16 +1,8 @@
-# race tuning survival models with dynamic metrics
+# race tuning (anova) survival models with dynamic metrics
 
     No evaluation time was set; a value of 5 was used.
 
----
-
-    No evaluation time was set; a value of 5 was used.
-
-# race tuning survival models with mixture of metric types
-
-    No evaluation time was set; a value of 5 was used.
-
----
+# race tuning (anova) survival models with mixture of metric types
 
     No evaluation time was set; a value of 5 was used.
 
