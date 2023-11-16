@@ -525,8 +525,8 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   metric_aov_all <- collect_metrics(aov_mixed_res, summarize = FALSE)
   expect_true(nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs))
   expect_equal(metric_aov_all[0,], exp_metric_all)
-  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
-  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
+  expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
 
   # test show_best() -----------------------------------------------------------
 
