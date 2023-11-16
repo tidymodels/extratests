@@ -88,16 +88,16 @@ test_that("sim annealing tuning survival models with static metric", {
 
   expect_snapshot_plot(
     print(autoplot(sa_static_res)),
-    "static-metric-sa-search"
+    "stc-sa"
   )
 
   expect_snapshot_plot(
     print(autoplot(sa_static_res, type = "parameters")),
-    "static-sa-search-parameters"
+    "stc-sa-param"
   )
   expect_snapshot_plot(
     print(autoplot(sa_static_res, type = "performance")),
-    "static-sa-search-performance"
+    "stc-sa-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -235,15 +235,15 @@ test_that("sim annealing tuning survival models with integrated metric", {
 
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res)),
-    "integrated-metric-sa-search"
+    "int-sa"
   )
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res, type = "parameters")),
-    "integrated-metric-sa-search-parameters"
+    "int-sa-param"
   )
   expect_snapshot_plot(
     print(autoplot(sa_integrated_res, type = "performance")),
-    "integrated-metric-sa-search-performance"
+    "int-sa-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -382,16 +382,16 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(sa_dynamic_res)),
-      "dynamic-metric-sa-search"
+      "dyn-sa"
     )
   )
   expect_snapshot_plot(
     print(autoplot(sa_dynamic_res, eval_time = 1, type = "parameters")),
-    "dynamic-metric-sa-search-parameters"
+    "dyn-sa-param"
   )
   expect_snapshot_plot(
     print(autoplot(sa_dynamic_res, eval_time = 10, type = "performance")),
-    "dynamic-metric-sa-search-performance"
+    "dyn-sa-perf"
   )
 
   # ------------------------------------------------------------------------------
@@ -531,21 +531,21 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
 
   expect_snapshot_plot(
     print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-sa-search-with-two-time-points"
+    "mix-sa-2-times"
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(sa_mixed_res)),
-      "mixed-metric-sa-search-with-no-set-time-points"
+      "mix-sa-0-times"
     )
   )
   expect_snapshot_plot(
     print(autoplot(sa_mixed_res, eval_time = 1, type = "parameters")),
-    "mixed-metric-sa-search-parameters"
+    "mix-sa-param"
   )
   expect_snapshot_plot(
     print(autoplot(sa_mixed_res, eval_time = 10, type = "performance")),
-    "mixed-metric-sa-search-performance"
+    "mix-sa-perf"
   )
 
   # ------------------------------------------------------------------------------

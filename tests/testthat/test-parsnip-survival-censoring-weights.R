@@ -134,3 +134,23 @@ test_that("error for .censoring_weights_graf() from .check_censor_model()", {
   wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
   expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, mtcars))
 })
+
+
+test_that("no names in weight values", {
+  # See tidymodels/parsnip#1023 tidymodels/parsnip#1024
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9002")
+
+  surv_obj <-
+    structure(
+      c(9, 13, 13, 18, 23, 28, 1, 1, 0, 1, 1, 0),
+      dim = c(6L, 2L),
+      dimnames = list(NULL, c("time", "status")),
+      type = "right",
+      class = "Surv"
+    )
+
+  row_1 <- parsnip:::graf_weight_time_vec(surv_obj[1,,drop = FALSE], 1.0)
+  row_5 <- parsnip:::graf_weight_time_vec(surv_obj, 1.0)
+  expect_null(names(row_1))
+  expect_null(names(row_5))
+})

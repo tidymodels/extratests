@@ -89,24 +89,24 @@ test_that("race tuning survival models with static metric", {
 
   expect_snapshot_plot(
     print(plot_race(aov_static_res)),
-    "static-aov-racing-plot"
+    "stc-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_static_res)),
-    "static-wl-racing-plot"
+    "stc-wl-race-plot"
   )
 
 
   if (length(num_final_aov) > 1) {
     expect_snapshot_plot(
       print(autoplot(aov_static_res)),
-      "static-metric-aov-racing-with-two-time-points"
+      "stc-aov-race-2-times"
     )
   }
   if (length(num_final_wl) > 1) {
     expect_snapshot_plot(
       print(autoplot(wl_static_res)),
-      "static-metric-wl-racing-with-two-time-points"
+      "stc-wl-race-2-times"
     )
   }
 
@@ -280,23 +280,23 @@ test_that("race tuning survival models with integrated metric", {
 
   expect_snapshot_plot(
     print(plot_race(aov_integrated_res)),
-    "integrated-metric-aov-racing-plot"
+    "int-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_integrated_res)),
-    "integrated-metric-wl-racing-plot"
+    "int-wl-race-plot"
   )
 
   if (length(num_final_aov) > 1) {
     expect_snapshot_plot(
       print(autoplot(aov_integrated_res)),
-      "integrated-metric-aov-racing"
+      "int-aov-racing"
     )
   }
   if (length(num_final_wl) > 1) {
     expect_snapshot_plot(
       print(autoplot(wl_integrated_res)),
-      "integrated-metric-wl-racing"
+      "int-wl-racing"
     )
   }
 
@@ -480,32 +480,32 @@ test_that("race tuning survival models with dynamic metrics", {
 
   expect_snapshot_plot(
     print(plot_race(aov_dyn_res)),
-    "dyn-aov-racing-plot"
+    "dyn-aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_dyn_res)),
-    "dyn-wl-racing-plot"
+    "dyn-wl-race-plot"
   )
 
   expect_snapshot_plot(
     print(autoplot(aov_dyn_res, eval_time = c(1, 5))),
-    "dyn-metric-aov-racing-with-two-time-points"
+    "dyn-aov-race-2-times"
   )
   expect_snapshot_plot(
     print(autoplot(wl_dyn_res, eval_time = c(1, 5))),
-    "dyn-metric-wl-racing-with-two-time-points"
+    "dyn-wl-race-2-times"
   )
 
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(aov_dyn_res)),
-      "dyn-metric-aov-racing-with-no-set-time-points"
+      "dyn-aov-race-0-times"
     )
   )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_dyn_res)),
-      "dyn-metric-wl-racing-with-no-set-time-points"
+      "dyn-wl-race-0-times"
     )
   )
 
@@ -645,14 +645,14 @@ test_that("race tuning survival models with mixture of metric types", {
     },
     type = "message")
 
-  num_final_aov <- unique(show_best(aov_mixed_res, eval_time = 5)$cost_complexity)
-  num_final_wl  <- unique(show_best(wl_mixed_res, eval_time = 5)$cost_complexity)
+  num_final_aov <- unique(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
+  num_final_wl  <- unique(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
 
   # TODO add a test for checking the evaluation time in this message:
   # https://github.com/tidymodels/finetune/issues/81
   expect_true(any(grepl("Racing will minimize the brier_survival metric", wl_mixed_output)))
   expect_equal(length(num_final_wl), nrow(grid_ties))
-  expect_equal(length(num_final_aov), 1L)
+  expect_true(length(num_final_aov) < nrow(grid_winner))
 
   # ------------------------------------------------------------------------------
   # test structure of results
@@ -695,44 +695,117 @@ test_that("race tuning survival models with mixture of metric types", {
 
   expect_snapshot_plot(
     print(plot_race(aov_mixed_res)),
-    "aov-racing-plot"
+    "aov-race-plot"
   )
   expect_snapshot_plot(
     print(plot_race(wl_mixed_res)),
-    "wl-racing-plot"
+    "wl-race-plot"
   )
 
   # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
   # expect_snapshot_plot(
   #   print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
-  #   "mixed-metric-aov-racing-with-two-time-points"
+  #   "mix-aov-race-2-times"
   # )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
-    "mixed-metric-wl-racing-with-two-time-points"
+    "mix-wl-race-2-times"
   )
   expect_snapshot_plot(
     print(autoplot(wl_mixed_res, metric = "concordance_survival")),
-    "mixed-metric-wl-racing-with-one-metric"
+    "mix-wl-race-1-metric"
   )
 
   # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
   # expect_snapshot_warning(
   #   expect_snapshot_plot(
   #     print(autoplot(aov_mixed_res)),
-  #     "mixed-metric-aov-racing-with-no-set-time-points"
+  #     "mix-aov-race-0-times"
   #   )
   # )
   expect_snapshot_warning(
     expect_snapshot_plot(
       print(autoplot(wl_mixed_res)),
-      "mixed-metric-wl-racing-with-no-set-time-points"
+      "mix-wl-race-0-times"
     )
   )
 
   # ------------------------------------------------------------------------------
   # test metric collection
 
+
+  # ------------------------------------------------------------------------------
+  #  test metrics collection
+
+  exp_metric_sum <-
+    structure(
+      list(
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        mean = numeric(0),
+        n = integer(0),
+        std_err = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+  exp_metric_all <-
+    structure(
+      list(
+        id = character(0),
+        cost_complexity = numeric(0),
+        .metric = character(0),
+        .estimator = character(0),
+        .eval_time = numeric(0),
+        .estimate = numeric(0),
+        .config = character(0)
+      ),
+      row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+  num_metrics <- length(time_points) + 2
+
+  ###
+
+  aov_finished <-
+    map_dfr(aov_mixed_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_aov_sum <- collect_metrics(aov_mixed_res)
+
+  expect_equal(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
+  expect_equal(metric_aov_sum[0,], exp_metric_sum)
+  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
+  expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
+
+  wl_finished <-
+    map_dfr(wl_mixed_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_mixed_res)
+
+  expect_equal(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
+  expect_equal(metric_wl_sum[0,], exp_metric_sum)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+
+  ###
+
+  metric_aov_all <- collect_metrics(aov_mixed_res, summarize = FALSE)
+  expect_true(nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs))
+  expect_equal(metric_aov_all[0,], exp_metric_all)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+
+  metric_wl_all <- collect_metrics(wl_mixed_res, summarize = FALSE)
+  expect_true(nrow(metric_wl_all) == num_metrics * nrow(wl_finished) * nrow(sim_rs))
+  expect_equal(metric_wl_all[0,], exp_metric_all)
+  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
 
   # ------------------------------------------------------------------------------
   # test show/select methods
