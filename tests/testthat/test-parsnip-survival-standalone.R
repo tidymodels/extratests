@@ -61,6 +61,23 @@ test_that(".extract_surv_time()", {
   )
 })
 
+test_that(".extract_surv_time() vector results are unnamed", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9002")
+
+  times <- seq(1, 100, length.out = 5)
+  events <- c(1, 0, 1, 0, 1)
+
+  right_c <- survival::Surv(times, events)
+  left_c <- survival::Surv(times, events, type = "left")
+
+  expect_named(parsnip:::.extract_surv_time(right_c), NULL)
+  expect_named(parsnip:::.extract_surv_time(left_c), NULL)
+
+  # single observation
+  expect_named(parsnip:::.extract_surv_time(right_c[1]), NULL)
+  expect_named(parsnip:::.extract_surv_time(left_c[1]), NULL)
+})
+
 test_that(".extract_surv_status()", {
   times <- seq(1, 100, length.out = 5)
   times2 <- seq(100, 200, length.out = 5)
@@ -87,6 +104,30 @@ test_that(".extract_surv_status()", {
     parsnip:::.extract_surv_status(count_c),
     events
   )
+})
+
+test_that(".extract_surv_status() results are unnamed", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9002")
+
+  times <- seq(1, 100, length.out = 5)
+  times2 <- seq(100, 200, length.out = 5)
+  events <- c(1, 0, 1, 0, 1)
+
+  right_c <- survival::Surv(times, events)
+  left_c <- survival::Surv(times, events, type = "left")
+  intv_c <- survival::Surv(times, times2, events, type = "interval")
+  count_c <- survival::Surv(times, times2, events)
+
+  expect_named(parsnip:::.extract_surv_status(right_c), NULL)
+  expect_named(parsnip:::.extract_surv_status(left_c), NULL)
+  expect_named(parsnip:::.extract_surv_status(intv_c), NULL)
+  expect_named(parsnip:::.extract_surv_status(count_c), NULL)
+
+  # single observation
+  expect_named(parsnip:::.extract_surv_status(right_c[1]), NULL)
+  expect_named(parsnip:::.extract_surv_status(left_c[1]), NULL)
+  expect_named(parsnip:::.extract_surv_status(intv_c[1]), NULL)
+  expect_named(parsnip:::.extract_surv_status(count_c[1]), NULL)
 })
 
 test_that(".extract_surv_status() does not transform status for interval censoring", {
