@@ -59,7 +59,25 @@ test_that(".extract_surv_time()", {
     parsnip:::.extract_surv_time(count_c),
     tibble::tibble(start = times, stop = times2)
   )
+
+  expect_equal(
+    parsnip:::.extract_surv_time(right_c[1]),
+    times[1]
+  )
+  expect_equal(
+    parsnip:::.extract_surv_time(left_c[1]),
+    times[1]
+  )
+  expect_equal(
+    parsnip:::.extract_surv_time(intv_c[1]),
+    tibble::tibble(time1 = times[1], time2 = 1.0)
+  )
+  expect_equal(
+    parsnip:::.extract_surv_time(count_c[1]),
+    tibble::tibble(start = times[1], stop = times2[1])
+  )
 })
+
 
 test_that(".extract_surv_time() vector results are unnamed", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9002")
