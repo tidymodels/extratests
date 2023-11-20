@@ -3,10 +3,10 @@ library(tidymodels)
 library(prodlim)
 suppressPackageStartupMessages(library(censored))
 
-# ------------------------------------------------------------------------------
-
-test_that('augmenting survival models ', {
+test_that("augmenting survival models", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9001")
+
+  # General setup --------------------------------------------------------------
 
   set.seed(1)
   sim_dat <- SimSurv(500) %>%
@@ -20,7 +20,7 @@ test_that('augmenting survival models ', {
 
   time_points <- c(1, 5, 10)
 
-  # ------------------------------------------------------------------------------
+  # survival_reg() -------------------------------------------------------------
 
   sr_fit <-
     survival_reg() %>%
@@ -36,7 +36,7 @@ test_that('augmenting survival models ', {
       ".weight_censored")
   )
 
-  # ------------------------------------------------------------------------------
+  # proportional_hazards() -----------------------------------------------------
 
   glmn_fit <-
     proportional_hazards(penalty = 0.1) %>%
