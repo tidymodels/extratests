@@ -34,6 +34,8 @@ test_that(".is_censored_right()", {
 })
 
 test_that(".extract_surv_time()", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9003")
+
   times <- seq(1, 100, length.out = 5)
   times2 <- seq(100, 200, length.out = 5)
   events <- c(1, 0, 1, 0, 1)
