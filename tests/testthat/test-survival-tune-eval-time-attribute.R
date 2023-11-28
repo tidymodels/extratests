@@ -178,3 +178,54 @@ test_that("tune*_() saves eval_time", {
   expect_equal(.get_tune_eval_times(wl_res), time_points)
 
 })
+
+
+test_that("last_fit saves eval_time", {
+  skip_if_not_installed("prodlim")
+
+  tidymodels_prefer()
+
+  # ------------------------------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  time_points <- c(10, 1, 5, 15)
+
+  ## ------------------------------------------------------------------------------
+
+  tree_spec <-
+    decision_tree() %>%
+    set_mode("censored regression") %>%
+    set_engine("partykit")
+
+  ## ------------------------------------------------------------------------------
+
+  srv_mtrc  <- metric_set(brier_survival)
+
+  set.seed(2193)
+  tree_res <-
+    tree_spec %>%
+    last_fit(
+      event_time ~ X1 + X2,
+      split,
+      metrics = srv_mtrc,
+      eval_time = time_points
+    )
+
+  ## ------------------------------------------------------------------------------
+
+  expect_true("eval_time" %in% names(attributes(tree_res)))
+  expect_equal(attributes(tree_res)$eval_time, time_points)
+  expect_equal(.get_tune_eval_times(tree_res), time_points)
+
+})
+
