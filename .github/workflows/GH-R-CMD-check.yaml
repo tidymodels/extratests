@@ -60,7 +60,7 @@ jobs:
         run: |
           try(pak::pkg_install("tidymodels/baguette"))
           try(pak::pkg_install("tidymodels/bonsai"))
-          try(pak::pkg_install("tidymodels/censored#266"))
+          try(pak::pkg_install("tidymodels/censored"))
           try(pak::pkg_install("tidymodels/dials"))
           try(pak::pkg_install("tidymodels/discrim"))
           try(pak::pkg_install("tidymodels/hardhat"))
