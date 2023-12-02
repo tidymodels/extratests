@@ -11,8 +11,6 @@ skip_if_not_installed("finetune", minimum_version = "1.1.0.9003")
 test_that("fit_resamples save eval_time", {
   skip_if_not_installed("prodlim")
 
-  tidymodels_prefer()
-
   # ------------------------------------------------------------------------------
 
   set.seed(1)
