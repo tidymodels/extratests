@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(baguette))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9002")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("resampling survival models with static metric", {
@@ -366,8 +366,7 @@ test_that("resampling survival models mixture of metric types", {
     error = TRUE
   )
   expect_snapshot(
-    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
-    error = TRUE
+    show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival_integrated")
