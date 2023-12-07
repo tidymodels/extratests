@@ -1,6 +1,6 @@
 # resampling survival models mixture of metric types
 
-    No evaluation time was set; a value of 5 was used.
+    4 evaluation times were specified during tuning; the first (10) will be used.
 
 ---
 
@@ -17,16 +17,21 @@
     Code
       show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001))
     Condition
-      Error in `choose_eval_time()`:
-      ! No evaluation times matched a value of 1.001.
+      Error in `show_best()`:
+      ! Evaluation time 1 is not in the results.
 
 ---
 
     Code
       show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
     Condition
-      Error in `choose_eval_time()`:
-      ! Please pick a single evaluation time point.
+      Warning:
+      2 evaluation times were specified during tuning; the first (1) will be used.
+    Output
+      # A tibble: 1 x 7
+        .metric        .estimator .eval_time   mean     n std_err .config             
+        <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>               
+      1 brier_survival standard            1 0.0208    10 0.00501 Preprocessor1_Model1
 
 ---
 
