@@ -68,7 +68,7 @@ jobs:
 
       - name: Install devel versions
         run: |
-          try(pak::pkg_install("tidymodels/parsnip"))
+          try(pak::pkg_install("tidymodels/parsnip#1035"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
