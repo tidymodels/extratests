@@ -89,7 +89,9 @@ test_that("error messages in context of .censoring_weights_graf()", {
 
   expect_snapshot(error = TRUE, .censoring_weights_graf("nothing useful"))
 
-  expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
+  # temporarily moved to its own test below to allow skipping of (only) this test
+  # based on dev version number
+  #expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
 
   # temporarily moved to its own test below to allow skipping of (only) this test
   # based on dev version number
@@ -126,6 +128,12 @@ test_that("error messages in context of .censoring_weights_graf()", {
       cens_predictors = "shouldn't be using this anyway!"
     )
   })
+})
+
+test_that("error for .censoring_weights_graf.workflow()", {
+  # temporarily its own test, see above
+  skip_if_not_installed("workflows", minimum_version = "1.1.3.9001")
+  expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
 })
 
 test_that("error for .censoring_weights_graf() from .check_censor_model()", {
