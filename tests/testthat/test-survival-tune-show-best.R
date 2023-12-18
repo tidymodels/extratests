@@ -119,11 +119,11 @@ test_that("show_best with censored data - static metric - anova racing", {
     count(.config) %>%
     filter(n == num_rs) %>%
     arrange(.config) %>%
-    slice(1:5) %>%
+    slice(1:3) %>%
     pluck(".config")
 
   expect_equal(
-    sort(show_best(race_stc_res, metric = "concordance_survival")$.config),
+    sort(show_best(race_stc_res, metric = "concordance_survival", n = 3)$.config),
     winners
   )
   expect_snapshot_warning(
