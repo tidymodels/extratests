@@ -101,18 +101,18 @@ test_that("last fit for survival models with integrated metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_equal(
-    names(rs_integrated_res),
+  expect_named(
+    rs_integrated_res,
     c("splits", "id", ".metrics", ".notes", ".predictions", ".workflow")
   )
   expect_false(".eval_time" %in% names(rs_integrated_res$.metrics[[1]]))
-  expect_equal(
-    names(rs_integrated_res$.predictions[[1]]),
+  expect_named(
+    rs_integrated_res$.predictions[[1]],
     c(".pred", ".row", "event_time", ".config")
   )
   expect_true(is.list(rs_integrated_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(rs_integrated_res$.predictions[[1]]$.pred[[1]]),
+  expect_named(
+    rs_integrated_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
@@ -171,18 +171,18 @@ test_that("last fit for survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_equal(
-    names(rs_dynamic_res),
+  expect_named(
+    rs_dynamic_res,
     c("splits", "id", ".metrics", ".notes", ".predictions", ".workflow")
   )
   expect_true(".eval_time" %in% names(rs_dynamic_res$.metrics[[1]]))
-  expect_equal(
-    names(rs_dynamic_res$.predictions[[1]]),
+  expect_named(
+    rs_dynamic_res$.predictions[[1]],
     c(".pred", ".row", "event_time", ".config")
   )
   expect_true(is.list(rs_dynamic_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(rs_dynamic_res$.predictions[[1]]$.pred[[1]]),
+  expect_named(
+    rs_dynamic_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
