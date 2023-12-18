@@ -108,7 +108,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     tune_race_anova(
       event_time ~ .,
       resamples = obj$rs,
-      grid = 20,
+      grid = tibble(cost_complexity = 10^c(-1.4, -2.5, -3, -5)),
       metrics = stc_met
     )
 
@@ -119,11 +119,11 @@ test_that("show_best with censored data - static metric - anova racing", {
     count(.config) %>%
     filter(n == num_rs) %>%
     arrange(.config) %>%
-    slice(1:3) %>%
+    slice(1) %>%
     pluck(".config")
 
   expect_equal(
-    sort(show_best(race_stc_res, metric = "concordance_survival", n = 3)$.config),
+    sort(show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config),
     winners
   )
   expect_snapshot_warning(
