@@ -109,6 +109,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     count(.config) %>%
     filter(n == num_rs) %>%
     arrange(.config) %>%
+    slice(1:5)
     pluck(".config")
 
   expect_equal(
