@@ -1,6 +1,9 @@
 
 test_that("show_best with censored data - integrated metric - grid", {
-  skip_if_not_installed("mboost")
+
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+
   obj <- make_churn_cens_objects()
 
   g_ctrl <- control_grid(save_pred = TRUE)
@@ -38,7 +41,10 @@ test_that("show_best with censored data - integrated metric - grid", {
 
 
 test_that("show_best with censored data - dynamic metric - bayes", {
-  skip_if_not_installed("mboost")
+
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+
   obj <- make_churn_cens_objects()
 
   tree_spec <-
@@ -82,9 +88,13 @@ test_that("show_best with censored data - dynamic metric - bayes", {
 
 
 test_that("show_best with censored data - static metric - anova racing", {
-  skip_if_not_installed("mboost")
+
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+  skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+
   obj <- make_churn_cens_objects()
-  suppressPackageStartupMessages(require("finetune"))
+  suppressPackageStartupMessages(library("finetune"))
 
   tree_spec <-
     decision_tree(cost_complexity = tune(), min_n = 2) %>%
@@ -109,7 +119,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     count(.config) %>%
     filter(n == num_rs) %>%
     arrange(.config) %>%
-    slice(1:5)
+    slice(1:5) %>%
     pluck(".config")
 
   expect_equal(
@@ -131,9 +141,13 @@ test_that("show_best with censored data - static metric - anova racing", {
 
 
 test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
-  skip_if_not_installed("mboost")
+
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+  skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+
   obj <- make_churn_cens_objects()
-  suppressPackageStartupMessages(require("finetune"))
+  suppressPackageStartupMessages(library("finetune"))
 
   tree_spec <-
     decision_tree(cost_complexity = tune(), min_n = 2) %>%
@@ -188,8 +202,12 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
 
 
 test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+  skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+
   obj <- make_churn_cens_objects()
-  suppressPackageStartupMessages(require("finetune"))
+  suppressPackageStartupMessages(library("finetune"))
 
   boost_spec <-
     boost_tree(trees = tune()) %>%
