@@ -39,8 +39,8 @@ test_that("last fit for survival models with static metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_equal(
-    names(rs_static_res),
+  expect_named(
+    rs_static_res,
     c("splits", "id", ".metrics", ".notes", ".predictions", ".workflow")
   )
   expect_false(".eval_time" %in% names(rs_static_res$.metrics[[1]]))
@@ -207,7 +207,7 @@ test_that("last fit for survival models with dynamic metric", {
   expect_true(all(metric_sum$.metric == "brier_survival"))
 })
 
-test_that("last fit for survival models mixture of metric types", {
+test_that("last fit for survival models with mixture of metrics", {
   skip_if_not_installed("prodlim")
 
   # standard setup start -------------------------------------------------------
@@ -241,18 +241,18 @@ test_that("last fit for survival models mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_equal(
-    names(rs_mixed_res),
+  expect_named(
+    rs_mixed_res,
     c("splits", "id", ".metrics", ".notes", ".predictions", ".workflow")
   )
   expect_true(".eval_time" %in% names(rs_mixed_res$.metrics[[1]]))
-  expect_equal(
-    names(rs_mixed_res$.predictions[[1]]),
+  expect_named(
+    rs_mixed_res$.predictions[[1]],
     c(".pred", ".row", ".pred_time", "event_time", ".config")
   )
   expect_true(is.list(rs_mixed_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(rs_mixed_res$.predictions[[1]]$.pred[[1]]),
+  expect_named(
+    rs_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
   expect_equal(
