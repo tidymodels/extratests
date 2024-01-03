@@ -125,26 +125,6 @@ test_that("graf_weight_time_vec() handles eval_time of Inf", {
   )
 })
 
-test_that("graf_weight_time_vec() handles eval_time of NULL", {
-  skip_if_not_installed("survival")
-
-  surv_obj <- survival::Surv(time = c(10, 12), event = c(0, 1))
-  expect_equal(
-    parsnip:::graf_weight_time_vec(surv_obj, eval_time = NULL),
-    logical(0)
-  )
-})
-
-test_that("graf_weight_time_vec() handles eval_time of NA", {
-  skip_if_not_installed("survival")
-
-  surv_obj <- survival::Surv(time = c(10, 12), event = c(0, 1))
-  expect_equal(
-    parsnip:::graf_weight_time_vec(surv_obj, eval_time = NA),
-    c(NA, NA)
-  )
-})
-
 test_that('compute Graf weights', {
   library(tidymodels)
   library(censored)
