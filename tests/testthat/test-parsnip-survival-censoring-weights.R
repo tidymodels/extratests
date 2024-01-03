@@ -96,6 +96,35 @@ test_that("graf_weight_time_vec() does not return negative weight times", {
   # weight time is NA, thus no check here
 })
 
+test_that("graf_weight_time_vec() handles eval_time of Inf", {
+  skip_if_not_installed("survival")
+
+  eval_time_inf <- Inf
+
+  # Graf et al (1999) Category 1
+  event_before_or_at_eval_time <- survival::Surv(
+    time = c(1, eval_time_inf),
+    event = c(1, 1)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(event_before_or_at_eval_time, eval_time = eval_time_inf),
+    c(1, eval_time_inf)
+  )
+
+  # Graf et al (1999) Category 2
+  # for eval_time = Inf there is no "after"
+
+  # Graf et al (1999) Category 3
+  censoring_before_or_at_eval_time <- survival::Surv(
+    time =  c(1, eval_time_inf),
+    event = c(0, 0)
+  )
+  expect_equal(
+    parsnip:::graf_weight_time_vec(censoring_before_or_at_eval_time, eval_time = eval_time_inf),
+    c(NA, NA)
+  )
+})
+
 test_that("graf_weight_time_vec() handles eval_time of NULL", {
   skip_if_not_installed("survival")
 
