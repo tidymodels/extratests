@@ -113,7 +113,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     )
 
   num_rs <- nrow(obj$rs)
-  winners <-
+  winner <-
     race_stc_res %>%
     collect_metrics(summarize = FALSE) %>%
     count(.config) %>%
@@ -124,7 +124,7 @@ test_that("show_best with censored data - static metric - anova racing", {
 
   expect_equal(
     sort(show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config),
-    winners
+    winner
   )
   expect_snapshot_warning(
     show_best(race_stc_res)

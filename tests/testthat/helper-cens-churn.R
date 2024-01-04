@@ -9,7 +9,7 @@ make_churn_cens_objects <- function(x) {
     mlc_churn %>%
     mutate(
       churned = ifelse(churn == "yes", 1, 0),
-      event_time = Surv(account_length, churned)
+      event_time = survival::Surv(account_length, churned)
     ) %>%
     select(event_time, account_length, area_code, total_eve_calls)
 
