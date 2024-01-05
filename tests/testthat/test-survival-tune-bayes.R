@@ -3,7 +3,7 @@ suppressPackageStartupMessages(library(censored))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("Bayesian tuning survival models with static metric", {
@@ -185,18 +185,20 @@ test_that("Bayesian tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  set.seed(2193)
-  bayes_integrated_res <-
-    mod_spec %>%
-    tune_bayes(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      metrics = sint_mtrc,
-      eval_time = time_points,
-      control = bctrl,
-      initial = init_grid_integrated_res
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    bayes_integrated_res <-
+      mod_spec %>%
+      tune_bayes(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        metrics = sint_mtrc,
+        eval_time = time_points,
+        control = bctrl,
+        initial = init_grid_integrated_res
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -342,18 +344,20 @@ test_that("Bayesian tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  set.seed(2193)
-  bayes_dynamic_res <-
-    mod_spec %>%
-    tune_bayes(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      metrics = dyn_mtrc,
-      eval_time = time_points,
-      control = bctrl,
-      initial = init_grid_dynamic_res
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    bayes_dynamic_res <-
+      mod_spec %>%
+      tune_bayes(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        metrics = dyn_mtrc,
+        eval_time = time_points,
+        control = bctrl,
+        initial = init_grid_dynamic_res
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -504,18 +508,21 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
       control = gctrl
     )
 
-  set.seed(2193)
-  bayes_mixed_res <-
-    mod_spec %>%
-    tune_bayes(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      metrics = mix_mtrc,
-      eval_time = time_points,
-      initial = init_grid_mixed_res,
-      control = bctrl
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    bayes_mixed_res <-
+      mod_spec %>%
+      tune_bayes(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        metrics = mix_mtrc,
+        eval_time = time_points,
+        initial = init_grid_mixed_res,
+        control = bctrl
+      )
+  })
+
 
   # test structure of results --------------------------------------------------
 
@@ -630,7 +637,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
 
