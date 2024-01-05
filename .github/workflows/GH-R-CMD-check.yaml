@@ -76,7 +76,7 @@ jobs:
           try(pak::pkg_install("tidymodels/stacks"))
           try(pak::pkg_install("tidymodels/themis"))
           try(pak::pkg_install("tidymodels/tidymodels"))
-          try(pak::pkg_install("tidymodels/tune"))
+          try(pak::pkg_install("tidymodels/tune#798"))
           try(pak::pkg_install("tidymodels/workflows"))
           try(pak::pkg_install("tidymodels/yardstick"))
           try(pak::pkg_install("tidymodels/finetune"))
