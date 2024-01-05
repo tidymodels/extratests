@@ -8,7 +8,7 @@
 
 ---
 
-    No evaluation time was set; a value of 5 was used.
+    4 evaluation times were specified during tuning; the first (10) will be used.
 
 ---
 
@@ -29,21 +29,20 @@
     Code
       show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.001))
     Condition
-      Error in `choose_eval_time()`:
-      ! No evaluation times matched a value of 1.001.
+      Error in `show_best()`:
+      ! Evaluation time 1 is not in the results.
 
 ---
 
-    Code
-      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
-    Condition
-      Error in `choose_eval_time()`:
-      ! Please pick a single evaluation time point.
+    2 evaluation times were specified during tuning; the first (1) will be used.
 
 ---
 
     Code
       show_best(wl_mixed_res, metric = "brier_survival_integrated")
+    Condition
+      Warning:
+      Metric "brier_survival" was used to evaluate model candidates in the race but "brier_survival_integrated" has been chosen to rank the candidates. These results may not agree with the race.
     Output
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config

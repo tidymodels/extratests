@@ -132,7 +132,7 @@ test_that("sim annealing tuning survival models with static metric", {
 
   static_ptype <-
     structure(
-      list(id = character(0), .pred_time = numeric(0), .row = integer(0),
+      list(.pred_time = numeric(0), id = character(0), .row = integer(0),
            trees = numeric(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
@@ -145,7 +145,7 @@ test_that("sim annealing tuning survival models with static metric", {
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   sum_pred <- collect_predictions(sa_static_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], static_ptype[-1])
+  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
 })
@@ -283,7 +283,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
 
   integrated_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
+      list(.pred = list(), id = character(0), .row = integer(0),
            trees = numeric(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
@@ -305,13 +305,12 @@ test_that("sim annealing tuning survival models with integrated metric", {
   expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
-  # TODO fails to keep tuning parameter columns
-  # sum_pred <- collect_predictions(sa_integrated_res, summarize = TRUE)
-  # expect_equal(sum_pred[0,], integrated_ptype[-1])
-  # expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
-  #
-  # expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
-  # expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  sum_pred <- collect_predictions(sa_integrated_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -452,7 +451,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
 
   dynamic_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
+      list(.pred = list(), id = character(0), .row = integer(0),
            trees = numeric(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
@@ -474,13 +473,12 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
-  # TODO fails
-  # sum_pred <- collect_predictions(sa_dynamic_res, summarize = TRUE)
-  # expect_equal(sum_pred[0,], dynamic_ptype[-1])
-  # expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
-  #
-  # expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
-  # expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  sum_pred <- collect_predictions(sa_dynamic_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -627,8 +625,8 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
 
   mixed_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
-           trees = numeric(0), .pred_time = numeric(0),
+      list(.pred = list(), .pred_time = numeric(0), id = character(0),
+           .row = integer(0), trees = numeric(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
                                   class = "Surv"),
@@ -650,7 +648,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(sa_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[-1])
+  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
@@ -664,9 +662,8 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
-  expect_snapshot(
+  expect_snapshot_warning(
     show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
-    error = TRUE
   )
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival_integrated")

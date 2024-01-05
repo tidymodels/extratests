@@ -536,9 +536,8 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
-  expect_snapshot(
+  expect_snapshot_warning(
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
-    error = TRUE
   )
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival_integrated")

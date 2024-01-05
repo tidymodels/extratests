@@ -38,3 +38,17 @@
       Error in `choose_eval_time()`:
       ! Please pick a single evaluation time point.
 
+---
+
+    Code
+      show_best(sa_mixed_res, metric = "brier_survival_integrated")
+    Output
+      # A tibble: 5 x 9
+        trees .metric          .estimator .eval_time  mean     n std_err .config .iter
+        <dbl> <chr>            <chr>           <dbl> <dbl> <int>   <dbl> <chr>   <int>
+      1    20 brier_survival_~ standard           NA 0.129    10 0.00812 initia~     0
+      2    15 brier_survival_~ standard           NA 0.134    10 0.00807 Iter1       1
+      3    13 brier_survival_~ standard           NA 0.136    10 0.00804 Iter2       2
+      4     5 brier_survival_~ standard           NA 0.150    10 0.00839 initia~     0
+      5     1 brier_survival_~ standard           NA 0.163    10 0.00886 initia~     0
+

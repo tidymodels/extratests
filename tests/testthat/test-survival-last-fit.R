@@ -69,7 +69,7 @@ test_that("last fit for survival models with static metric", {
 
   static_ptype <-
     structure(
-      list(id = character(0), .pred_time = numeric(0), .row = integer(0),
+      list(.pred_time = numeric(0), id = character(0), .row = integer(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
                                   class = "Surv"),
@@ -81,7 +81,7 @@ test_that("last fit for survival models with static metric", {
   expect_equal(nrow(unsum_pred), nrow(sim_te))
 
   sum_pred <- collect_predictions(rs_static_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], static_ptype[-1])
+  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_te))
 })
 
@@ -157,7 +157,7 @@ test_that("last fit for survival models with integrated metric", {
 
   integrated_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
+      list(.pred = list(), id = character(0), .row = integer(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
                                   class = "Surv"),
@@ -179,7 +179,7 @@ test_that("last fit for survival models with integrated metric", {
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_integrated_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], integrated_ptype[-1])
+  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_te))
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
@@ -260,7 +260,7 @@ test_that("last fit for survival models with dynamic metric", {
 
   dynamic_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
+      list(.pred = list(), id = character(0), .row = integer(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
                                   class = "Surv"),
@@ -282,7 +282,7 @@ test_that("last fit for survival models with dynamic metric", {
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_dynamic_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], dynamic_ptype[-1])
+  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_te))
 
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
@@ -363,8 +363,8 @@ test_that("last fit for survival models with mixture of metrics", {
   # test prediction collection -------------------------------------------------
   mixed_ptype <-
     structure(
-      list(id = character(0), .pred = list(), .row = integer(0),
-           .pred_time = numeric(0),
+      list(.pred = list(), .pred_time = numeric(0), id = character(0),
+           .row = integer(0),
            event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
                                   dimnames = list(NULL, c("time", "status")),
                                   class = "Surv"),
@@ -386,7 +386,7 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[-1])
+  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_te))
 
   expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)

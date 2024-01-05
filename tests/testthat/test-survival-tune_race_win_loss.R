@@ -519,9 +519,8 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
-  expect_snapshot(
-    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
-    error = TRUE
+  expect_snapshot_warning(
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(
     show_best(wl_mixed_res, metric = "brier_survival_integrated")

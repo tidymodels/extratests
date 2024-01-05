@@ -32,6 +32,10 @@
 
 ---
 
+    2 evaluation times were specified during tuning; the first (1) will be used.
+
+---
+
     Code
       show_best(grid_mixed_res, metric = "brier_survival_integrated")
     Output
