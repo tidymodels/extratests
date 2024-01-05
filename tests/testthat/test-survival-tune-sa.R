@@ -5,7 +5,7 @@ suppressPackageStartupMessages(library(finetune))
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 
@@ -200,19 +200,22 @@ test_that("sim annealing tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  set.seed(2193)
-  sa_integrated_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      param_info = mod_param,
-      metrics = sint_mtrc,
-      eval_time = time_points,
-      control = sctrl,
-      initial = init_grid_integrated_res
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    sa_integrated_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        param_info = mod_param,
+        metrics = sint_mtrc,
+        eval_time = time_points,
+        control = sctrl,
+        initial = init_grid_integrated_res
+      )
+  })
+
 
   # test structure of results --------------------------------------------------
 
@@ -364,19 +367,21 @@ test_that("sim annealing tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  set.seed(2193)
-  sa_dynamic_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      param_info = mod_param,
-      metrics = dyn_mtrc,
-      eval_time = time_points,
-      control = sctrl,
-      initial = init_grid_dynamic_res
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    sa_dynamic_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        param_info = mod_param,
+        metrics = dyn_mtrc,
+        eval_time = time_points,
+        control = sctrl,
+        initial = init_grid_dynamic_res
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -427,7 +432,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 14)
+  expect_true(nrow(metric_sum) == (nrow(grid) + 2) * length(time_points))
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
@@ -443,7 +448,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 140)
+  expect_true(nrow(metric_all) == ((nrow(grid) + 2) * length(time_points)) * nrow(sim_rs))
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
 
@@ -532,19 +537,21 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       control = gctrl
     )
 
-  set.seed(2193)
-  sa_mixed_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      param_info = mod_param,
-      metrics = mix_mtrc,
-      eval_time = time_points,
-      initial = init_grid_mixed_res,
-      control = sctrl
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    sa_mixed_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        param_info = mod_param,
+        metrics = mix_mtrc,
+        eval_time = time_points,
+        initial = init_grid_mixed_res,
+        control = sctrl
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -599,10 +606,11 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 24L)
+  grid_size <- (nrow(grid) + 2)
+  expect_true(nrow(metric_sum) == (grid_size * length(time_points)) + grid_size * 2)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 10L)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(14L, 5L, 5L))
+  expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(sa_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -616,10 +624,12 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       .iter = integer(0)
     )
 
-  expect_true(nrow(metric_all) == 240L)
+  expect_true(nrow(metric_all) ==
+                ((nrow(grid) + 2) * length(time_points) + (nrow(grid) + 2) * 2) *
+                nrow(sim_rs))
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
-  expect_equal(as.vector(table(metric_all$.metric)), c(140L, 50L, 50L))
+  expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
   # test prediction collection -------------------------------------------------
 
@@ -659,7 +669,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
   expect_snapshot_warning(
