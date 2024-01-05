@@ -1,8 +1,24 @@
+# race tuning (win_loss) survival models with integrated metric
+
+    Evaluation times are only required when dynmanic or integrated metrics are selected as the primary metric (and will be ignored).
+
+---
+
+    Evaluation times are only required when dynmanic or integrated metrics are selected as the primary metric (and will be ignored).
+
 # race tuning (win_loss) survival models with dynamic metrics
+
+    4 evaluation times were specified during tuning; the first (10) will be used.
+
+---
 
     No evaluation time was set; a value of 5 was used.
 
 # race tuning (win_loss) survival models with mixture of metric types
+
+    4 evaluation times were specified during tuning; the first (10) will be used.
+
+---
 
     No evaluation time was set; a value of 5 was used.
 
@@ -27,10 +43,10 @@
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.001))
+      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1))
     Condition
       Error in `show_best()`:
-      ! Evaluation time 1 is not in the results.
+      ! Evaluation time 1.1 is not in the results.
 
 ---
 

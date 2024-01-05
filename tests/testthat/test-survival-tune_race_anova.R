@@ -5,7 +5,7 @@ suppressPackageStartupMessages(library(finetune))
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9002")
 
@@ -54,7 +54,8 @@ test_that("race tuning (anova) survival models with static metric", {
       control = rctrl
     )
 
-  num_final_aov <- unique(show_best(aov_static_res)$cost_complexity)
+  num_final_aov <-
+    unique(show_best(aov_static_res, metric = "concordance_survival")$cost_complexity)
 
   # test structure of results --------------------------------------------------
 
@@ -81,7 +82,7 @@ test_that("race tuning (anova) survival models with static metric", {
 
   # test metric collection -----------------------------------------------------
 
-   exp_metric_sum <- tibble(
+  exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
     .metric = character(0),
     .estimator = character(0),
@@ -117,6 +118,33 @@ test_that("race tuning (anova) survival models with static metric", {
   expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs))
   expect_equal(metric_aov_all[0,], exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "concordance_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  static_ptype <-
+    structure(
+      list(.pred_time = numeric(0), id = character(0), .row = integer(0),
+           cost_complexity = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  static_oob <-
+    aov_static_res %>%
+    mutate(oob = map_int(splits, ~ nrow(assessment(.x)))) %>%
+    pluck("oob") %>%
+    sum()
+
+  unsum_pred <- collect_predictions(aov_static_res)
+  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(nrow(unsum_pred), static_oob * nrow(aov_finished))
+
+  sum_pred <- collect_predictions(aov_static_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
+
 })
 
 test_that("race tuning (anova) survival models with integrated metric", {
@@ -153,19 +181,26 @@ test_that("race tuning (anova) survival models with integrated metric", {
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
-  set.seed(2193)
-  aov_integrated_res <-
-    mod_spec %>%
-    tune_race_anova(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      grid = grid,
-      metrics = sint_mtrc,
-      eval_time = time_points,
-      control = rctrl
-    )
+  expect_snapshot_warning({
+    set.seed(2193)
+    aov_integrated_res <-
+      mod_spec %>%
+      tune_race_anova(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        grid = grid,
+        metrics = sint_mtrc,
+        eval_time = time_points,
+        control = rctrl
+      )
+  })
 
-  num_final_aov <- unique(show_best(aov_integrated_res, eval_time = 5)$cost_complexity)
+  expect_snapshot_warning({
+    num_final_aov <-
+      show_best(aov_integrated_res, metric = "brier_survival_integrated", eval_time = 5) %>%
+      pluck("cost_complexity") %>%
+      unique()
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -241,6 +276,45 @@ test_that("race tuning (anova) survival models with integrated metric", {
   expect_equal(metric_aov_all[0,], exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "brier_survival_integrated"))
 
+  # test prediction collection -------------------------------------------------
+
+  integrated_ptype <-
+    structure(
+      list(.pred = list(), id = character(0), .row = integer(0),
+           cost_complexity = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  integrated_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  integrated_oob <-
+    aov_integrated_res %>%
+    mutate(oob = map_int(splits, ~ nrow(assessment(.x)))) %>%
+    pluck("oob") %>%
+    sum()
+
+  unsum_pred <- collect_predictions(aov_integrated_res)
+  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(nrow(unsum_pred), integrated_oob * nrow(aov_finished))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+
+  sum_pred <- collect_predictions(aov_integrated_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  expect_equal(nrow(sum_pred), 728)
+
+  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
 test_that("race tuning (anova) survival models with dynamic metrics", {
@@ -278,23 +352,28 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # use `capture.output()` instead of `expect_snapshot_test()`
   # https://github.com/tidymodels/extratests/pull/134#discussion_r1394534647
-  aov_dyn_output <-
-    capture.output({
-      set.seed(2193)
-      aov_dyn_res <-
-        mod_spec %>%
-        tune_race_anova(
-          event_time ~ X1 + X2,
-          resamples = sim_rs,
-          grid = grid,
-          metrics = dyn_mtrc,
-          eval_time = time_points,
-          control = rctrl_verb
-        )
-    },
-    type = "message")
+  expect_snapshot_warning({
+    aov_dyn_output <-
+      capture.output({
+        set.seed(2193)
+        aov_dyn_res <-
+          mod_spec %>%
+          tune_race_anova(
+            event_time ~ X1 + X2,
+            resamples = sim_rs,
+            grid = grid,
+            metrics = dyn_mtrc,
+            eval_time = time_points,
+            control = rctrl_verb
+          )
+      },
+      type = "message")
+  })
 
-  num_final_aov <- unique(show_best(aov_dyn_res, eval_time = 5)$cost_complexity)
+  num_final_aov <-
+    show_best(aov_dyn_res, metric = "brier_survival", eval_time = 5) %>%
+    pluck("cost_complexity") %>%
+    unique()
 
   # TODO add a test for checking the evaluation time in this message:
   # https://github.com/tidymodels/finetune/issues/81
@@ -342,7 +421,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # test metric collection -----------------------------------------------------
 
-    exp_metric_sum <- tibble(
+  exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
     .metric = character(0),
     .estimator = character(0),
@@ -383,6 +462,46 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
   expect_equal(metric_aov_all[0,], exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "brier_survival"))
 
+  # test prediction collection -------------------------------------------------
+
+  dynamic_ptype <-
+    structure(
+      list(.pred = list(), id = character(0), .row = integer(0),
+           cost_complexity = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  dynamic_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  dyn_oob <-
+    aov_dyn_res %>%
+    mutate(oob = map_int(splits, ~ nrow(assessment(.x)))) %>%
+    pluck("oob") %>%
+    sum()
+
+  unsum_pred <- collect_predictions(aov_dyn_res)
+  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(nrow(unsum_pred), dyn_oob * nrow(aov_finished))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+
+  sum_pred <- collect_predictions(aov_dyn_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
+
+  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
 })
 
 test_that("race tuning (anova) survival models with mixture of metric types", {
@@ -419,21 +538,23 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
-  aov_mixed_output <-
-    capture.output({
-      set.seed(2193)
-      aov_mixed_res <-
-        mod_spec %>%
-        tune_race_anova(
-          event_time ~ X1 + X2,
-          resamples = sim_rs,
-          grid = grid_winner,
-          metrics = mix_mtrc,
-          eval_time = time_points,
-          control = rctrl_verb
-        )
-    },
-    type = "message")
+  expect_snapshot_warning({
+    aov_mixed_output <-
+      capture.output({
+        set.seed(2193)
+        aov_mixed_res <-
+          mod_spec %>%
+          tune_race_anova(
+            event_time ~ X1 + X2,
+            resamples = sim_rs,
+            grid = grid_winner,
+            metrics = mix_mtrc,
+            eval_time = time_points,
+            control = rctrl_verb
+          )
+      },
+      type = "message")
+  })
 
   num_final_aov <- unique(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
 
@@ -484,7 +605,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   # test metric collection -----------------------------------------------------
 
-    exp_metric_sum <- tibble(
+  exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
     .metric = character(0),
     .estimator = character(0),
@@ -528,12 +649,51 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
   expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
 
+  # test prediction collection -------------------------------------------------
+
+  mixed_ptype <-
+    structure(
+      list(.pred = list(),  .pred_time = numeric(0),  id = character(0),
+           .row = integer(0), cost_complexity = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  mixed_oob <-
+    aov_mixed_res %>%
+    mutate(oob = map_int(splits, ~ nrow(assessment(.x)))) %>%
+    pluck("oob") %>%
+    sum()
+
+  unsum_pred <- collect_predictions(aov_mixed_res)
+  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(nrow(unsum_pred), mixed_oob * nrow(aov_finished))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(aov_mixed_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
+
+  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
   # test show_best() -----------------------------------------------------------
 
   expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
   expect_snapshot_warning(
