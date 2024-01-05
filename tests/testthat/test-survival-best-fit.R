@@ -33,6 +33,8 @@ test_that("fit best with static metric", {
 
   gctrl <- control_grid(save_workflow = TRUE)
 
+  # standard setup end -------------------------------------------------------
+
   stc_mtrc  <- metric_set(concordance_survival)
 
   set.seed(2193)
@@ -77,6 +79,8 @@ test_that("grid tuning survival models with integrated metric", {
   grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_workflow = TRUE)
+
+  # standard setup end -------------------------------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -125,6 +129,8 @@ test_that("grid tuning survival models with dynamic metric", {
 
   gctrl <- control_grid(save_workflow = TRUE)
 
+  # standard setup end -------------------------------------------------------
+
   dyn_mtrc  <- metric_set(brier_survival)
 
   set.seed(2193)
@@ -172,6 +178,8 @@ test_that("grid tuning survival models mixture of metric types", {
   grid <- tibble(penalty = 10^c(-4, -2, -1))
 
   gctrl <- control_grid(save_workflow = TRUE)
+
+  # standard setup end -------------------------------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
