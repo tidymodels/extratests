@@ -140,7 +140,7 @@ test_that("grid tuning survival models with dynamic metric", {
     )
 
   expect_snapshot_warning(dynamic_res <- fit_best(grid_dynamic_res))
-  # dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
+  dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
   expect_s3_class(dynamic_res, "workflow")
   expect_true(is_trained_workflow(dynamic_res))
 
@@ -188,7 +188,7 @@ test_that("grid tuning survival models mixture of metric types", {
     )
 
   expect_snapshot_warning(mixed_res <- fit_best(grid_mixed_res))
-  # mixed_res <- fit_best(grid_mixed_res, eval_time = 1)
+  mixed_res <- fit_best(grid_mixed_res, eval_time = 1)
   expect_s3_class(mixed_res, "workflow")
   expect_true(is_trained_workflow(mixed_res))
 })
