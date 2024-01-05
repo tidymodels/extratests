@@ -8,7 +8,7 @@
 
 ---
 
-    No evaluation time was set; a value of 5 was used.
+    4 evaluation times were specified during tuning; the first (10) will be used.
 
 ---
 
@@ -27,16 +27,8 @@
     Code
       show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001))
     Condition
-      Error in `choose_eval_time()`:
-      ! No evaluation times matched a value of 1.001.
-
----
-
-    Code
-      show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
-    Condition
-      Error in `choose_eval_time()`:
-      ! Please pick a single evaluation time point.
+      Error in `show_best()`:
+      ! Evaluation time 1 is not in the results.
 
 ---
 

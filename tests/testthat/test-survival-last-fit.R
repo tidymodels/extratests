@@ -65,6 +65,24 @@ test_that("last fit for survival models with static metric", {
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
+  # test prediction collection -------------------------------------------------
+
+  static_ptype <-
+    structure(
+      list(id = character(0), .pred_time = numeric(0), .row = integer(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  unsum_pred <- collect_predictions(rs_static_res)
+  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_te))
+
+  sum_pred <- collect_predictions(rs_static_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], static_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_te))
 })
 
 test_that("last fit for survival models with integrated metric", {
@@ -134,6 +152,38 @@ test_that("last fit for survival models with integrated metric", {
   expect_true(nrow(metric_sum) == 1)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+
+  # test prediction collection -------------------------------------------------
+
+  integrated_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  integrated_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_integrated_res)
+  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_te))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_integrated_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], integrated_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_te))
+
+  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -205,6 +255,39 @@ test_that("last fit for survival models with dynamic metric", {
   expect_true(nrow(metric_sum) == length(time_points))
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  dynamic_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  dynamic_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_dynamic_res)
+  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_te))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_dynamic_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], dynamic_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_te))
+
+  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
 })
 
 test_that("last fit for survival models with mixture of metrics", {
@@ -276,5 +359,37 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 2)
   expect_equal(as.vector(table(metric_sum$.metric)), c(length(time_points), 1L, 1L))
+
+  # test prediction collection -------------------------------------------------
+  mixed_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           .pred_time = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_mixed_res)
+  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_te))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_mixed_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], mixed_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_te))
+
+  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })

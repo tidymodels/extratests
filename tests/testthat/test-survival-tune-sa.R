@@ -128,6 +128,26 @@ test_that("sim annealing tuning survival models with static metric", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
 
+  # test prediction collection -------------------------------------------------
+
+  static_ptype <-
+    structure(
+      list(id = character(0), .pred_time = numeric(0), .row = integer(0),
+           trees = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0), .iter = integer(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  unsum_pred <- collect_predictions(sa_static_res)
+  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  sum_pred <- collect_predictions(sa_static_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], static_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
 })
 
 test_that("sim annealing tuning survival models with integrated metric", {
@@ -258,6 +278,40 @@ test_that("sim annealing tuning survival models with integrated metric", {
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+
+  # test prediction collection -------------------------------------------------
+
+  integrated_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           trees = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0), .iter = integer(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  integrated_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_integrated_res)
+  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  # TODO fails to keep tuning parameter columns
+  # sum_pred <- collect_predictions(sa_integrated_res, summarize = TRUE)
+  # expect_equal(sum_pred[0,], integrated_ptype[-1])
+  # expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  #
+  # expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  # expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -393,6 +447,40 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   expect_true(nrow(metric_all) == 140)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  dynamic_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           trees = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0), .iter = integer(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  dynamic_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_dynamic_res)
+  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  # TODO fails
+  # sum_pred <- collect_predictions(sa_dynamic_res, summarize = TRUE)
+  # expect_equal(sum_pred[0,], dynamic_ptype[-1])
+  # expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  #
+  # expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  # expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -534,6 +622,39 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
   expect_equal(as.vector(table(metric_all$.metric)), c(140L, 50L, 50L))
+
+  # test prediction collection -------------------------------------------------
+
+  mixed_ptype <-
+    structure(
+      list(id = character(0), .pred = list(), .row = integer(0),
+           trees = numeric(0), .pred_time = numeric(0),
+           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
+                                  dimnames = list(NULL, c("time", "status")),
+                                  class = "Surv"),
+           .config = character(0), .iter = integer(0)), row.names = integer(0),
+      class = c("tbl_df", "tbl", "data.frame"))
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_mixed_res)
+  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(sa_mixed_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], mixed_ptype[-1])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 
