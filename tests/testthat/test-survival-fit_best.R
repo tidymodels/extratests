@@ -48,7 +48,7 @@ test_that("fit best with static metric", {
       control = gctrl
     )
 
-  static_res <- fit_best(grid_static_res)
+  expect_silent(static_res <- fit_best(grid_static_res))
   expect_s3_class(static_res, "workflow")
   expect_true(is_trained_workflow(static_res))
 })
@@ -96,7 +96,7 @@ test_that("grid tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  integrated_res <- fit_best(grid_integrated_res)
+  expect_silent(integrated_res <- fit_best(grid_integrated_res))
   expect_s3_class(integrated_res, "workflow")
   expect_true(is_trained_workflow(integrated_res))
 
@@ -145,7 +145,7 @@ test_that("grid tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  expect_snapshot_warning(dynamic_res <- fit_best(grid_dynamic_res))
+  expect_silent(dynamic_res <- fit_best(grid_dynamic_res))
   dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
   expect_s3_class(dynamic_res, "workflow")
   expect_true(is_trained_workflow(dynamic_res))
@@ -195,7 +195,7 @@ test_that("grid tuning survival models mixture of metric types", {
       control = gctrl
     )
 
-  expect_snapshot_warning(mixed_res <- fit_best(grid_mixed_res))
+  expect_silent(mixed_res <- fit_best(grid_mixed_res))
   mixed_res <- fit_best(grid_mixed_res, eval_time = 1)
   expect_s3_class(mixed_res, "workflow")
   expect_true(is_trained_workflow(mixed_res))
