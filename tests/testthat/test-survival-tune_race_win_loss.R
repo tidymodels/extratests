@@ -119,15 +119,14 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   # test prediction collection -------------------------------------------------
 
-  static_ptype <-
-    structure(
-      list(.pred_time = numeric(0), id = character(0), .row = integer(0),
-           cost_complexity = numeric(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  static_ptype <- tibble::tibble(
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    cost_complexity = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   static_oob <-
     wl_static_res %>%
@@ -274,15 +273,14 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   # test prediction collection -------------------------------------------------
 
-  integrated_ptype <-
-    structure(
-      list(.pred = list(), id = character(0), .row = integer(0),
-           cost_complexity = numeric(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  integrated_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    cost_complexity = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   integrated_list_ptype <-
     tibble::tibble(
@@ -447,15 +445,14 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   # test prediction collection -------------------------------------------------
 
-  dynamic_ptype <-
-    structure(
-      list(.pred = list(), id = character(0), .row = integer(0),
-           cost_complexity = numeric(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  dynamic_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    cost_complexity = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   dynamic_list_ptype <-
     tibble::tibble(
@@ -630,15 +627,15 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # test prediction collection -------------------------------------------------
 
-  mixed_ptype <-
-    structure(
-      list(.pred = list(),  .pred_time = numeric(0),  id = character(0),
-           .row = integer(0), cost_complexity = numeric(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  mixed_ptype <- tibble::tibble(
+    .pred = list(),
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    cost_complexity = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   mixed_list_ptype <-
     tibble::tibble(

@@ -67,14 +67,13 @@ test_that("last fit for survival models with static metric", {
 
   # test prediction collection -------------------------------------------------
 
-  static_ptype <-
-    structure(
-      list(.pred_time = numeric(0), id = character(0), .row = integer(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  static_ptype <- tibble::tibble(
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   unsum_pred <- collect_predictions(rs_static_res)
   expect_equal(unsum_pred[0,], static_ptype)
@@ -155,14 +154,13 @@ test_that("last fit for survival models with integrated metric", {
 
   # test prediction collection -------------------------------------------------
 
-  integrated_ptype <-
-    structure(
-      list(.pred = list(), id = character(0), .row = integer(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  integrated_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   integrated_list_ptype <-
     tibble::tibble(
@@ -258,14 +256,13 @@ test_that("last fit for survival models with dynamic metric", {
 
   # test prediction collection -------------------------------------------------
 
-  dynamic_ptype <-
-    structure(
-      list(.pred = list(), id = character(0), .row = integer(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  dynamic_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   dynamic_list_ptype <-
     tibble::tibble(
@@ -361,15 +358,14 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_equal(as.vector(table(metric_sum$.metric)), c(length(time_points), 1L, 1L))
 
   # test prediction collection -------------------------------------------------
-  mixed_ptype <-
-    structure(
-      list(.pred = list(), .pred_time = numeric(0), id = character(0),
-           .row = integer(0),
-           event_time = structure(numeric(0), type = "right", dim = c(0L, 2L),
-                                  dimnames = list(NULL, c("time", "status")),
-                                  class = "Surv"),
-           .config = character(0)), row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame"))
+  mixed_ptype <- tibble::tibble(
+    .pred = list(),
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
 
   mixed_list_ptype <-
     tibble::tibble(
