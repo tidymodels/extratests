@@ -7,7 +7,7 @@ skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9002")
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
 test_that("race tuning (anova) survival models with static metric", {
   skip_if_not_installed("BradleyTerry2")
@@ -161,8 +161,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  # needs at least 3 bootstraps for the race to finish at a single configuration
-  sim_rs <- bootstraps(sim_tr, times = 6)
+  sim_rs <- bootstraps(sim_tr, times = 20)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -309,7 +308,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
 
   sum_pred <- collect_predictions(aov_integrated_res, summarize = TRUE)
   expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
-  expect_equal(nrow(sum_pred), 728)
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
