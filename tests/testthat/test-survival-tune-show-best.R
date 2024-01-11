@@ -2,7 +2,7 @@
 test_that("show_best with censored data - integrated metric - grid", {
 
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9005")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9010")
 
   obj <- make_churn_cens_objects()
 
@@ -33,7 +33,7 @@ test_that("show_best with censored data - integrated metric - grid", {
       arrange(mean) %>%
       slice_min(mean, n = 5)
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(grid_int_res)
   )
 
@@ -72,7 +72,7 @@ test_that("show_best with censored data - dynamic metric - bayes", {
       arrange(mean) %>%
       slice(1:2)
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(bayes_dyn_res)
   )
   expect_snapshot(
@@ -126,10 +126,10 @@ test_that("show_best with censored data - static metric - anova racing", {
     sort(show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config),
     winner
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_stc_res)
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
   )
   expect_snapshot(
@@ -160,19 +160,17 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
 
   surv_met <- metric_set(concordance_survival, brier_survival)
 
-  expect_snapshot_warning({
-    set.seed(326)
-    race_stc_res <-
-      tree_spec %>%
-      tune_race_win_loss(
-        event_time ~ .,
-        resamples = obj$rs,
-        grid = 10,
-        metrics = surv_met,
-        eval_time = 100,
-        param_info = tree_param
-      )
-  })
+  set.seed(326)
+  race_stc_res <-
+    tree_spec %>%
+    tune_race_win_loss(
+      event_time ~ .,
+      resamples = obj$rs,
+      grid = 10,
+      metrics = surv_met,
+      eval_time = 100,
+      param_info = tree_param
+    )
 
   num_rs <- nrow(obj$rs)
   winners <-
@@ -187,10 +185,10 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     show_best(race_stc_res, metric = "concordance_survival")$.config,
     winners
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_stc_res)
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
   )
   expect_snapshot(
@@ -250,10 +248,10 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     show_best(race_dyn_res, metric = "brier_survival")$.config,
     winners
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_dyn_res)
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(race_dyn_res, metric = "concordance_survival")
   )
   expect_snapshot(
