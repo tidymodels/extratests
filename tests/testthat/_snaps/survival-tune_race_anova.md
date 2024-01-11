@@ -4,15 +4,15 @@
 
 # race tuning (anova) survival models with dynamic metrics
 
-    4 evaluation times were specified during tuning; the first (10) will be used.
+    4 evaluation times are available; the first (10) will be used.
 
 # race tuning (anova) survival models with mixture of metric types
 
-    4 evaluation times were specified during tuning; the first (10) will be used.
+    4 evaluation times are available; the first (10) will be used.
 
 ---
 
-    4 evaluation times were specified during tuning; the first (10) will be used.
+    4 evaluation times are available; the first (10) will be used.
 
 ---
 
@@ -38,7 +38,7 @@
 
 ---
 
-    2 evaluation times were specified during tuning; the first (1) will be used.
+    2 evaluation times are available; the first (1) will be used.
 
 ---
 
