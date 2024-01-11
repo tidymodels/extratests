@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(finetune))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9010")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9011")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
@@ -569,20 +569,6 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     print(plot_race(aov_mixed_res)),
     "aov-race-plot"
   )
-
-  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
-  # expect_snapshot_plot(
-  #   print(autoplot(aov_mixed_res, eval_time = c(1, 5))),
-  #   "mix-aov-race-2-times"
-  # )
-
-  # TODO make better plot at resolution of https://github.com/tidymodels/tune/issues/754
-  # expect_snapshot_warning(
-  #   expect_snapshot_plot(
-  #     print(autoplot(aov_mixed_res)),
-  #     "mix-aov-race-0-times"
-  #   )
-  # )
 
   # test metric collection -----------------------------------------------------
 
