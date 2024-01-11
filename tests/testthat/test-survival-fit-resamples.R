@@ -471,13 +471,13 @@ test_that("resampling survival models mixture of metric types", {
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(rs_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(

@@ -363,7 +363,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     sa_dynamic_res <-
       mod_spec %>%
@@ -398,7 +398,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
 
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(sa_dynamic_res)),
       "dyn-sa"
@@ -533,7 +533,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       control = gctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     sa_mixed_res <-
       mod_spec %>%
@@ -572,7 +572,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
     "mix-sa-2-times"
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(sa_mixed_res)),
       "mix-sa-0-times"
@@ -663,13 +663,13 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
   )
   expect_snapshot(

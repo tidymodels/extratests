@@ -309,7 +309,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(grid_dynamic_res)),
       "dyn-grid"
@@ -454,7 +454,7 @@ test_that("grid tuning survival models mixture of metric types", {
     print(autoplot(grid_mixed_res, eval_time = c(1, 5))),
     "mix-grid-2-times"
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(grid_mixed_res)),
       "mix-grid-0-times"
@@ -531,13 +531,13 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(grid_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(grid_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(grid_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(

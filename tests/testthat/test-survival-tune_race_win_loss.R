@@ -188,7 +188,7 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
       control = rctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     num_final_wl <-
       show_best(wl_integrated_res, metric = "brier_survival_integrated", eval_time = 5) %>%
       pluck("cost_complexity") %>%
@@ -340,7 +340,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   dyn_mtrc  <- metric_set(brier_survival)
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     wl_dyn_res <-
       mod_spec %>%
@@ -390,7 +390,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     "dyn-wl-race-2-times"
   )
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(wl_dyn_res)),
       "dyn-wl-race-0-times"
@@ -514,7 +514,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     wl_mixed_res <-
       mod_spec %>%
@@ -569,7 +569,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     "mix-wl-race-1-metric"
   )
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(wl_mixed_res)),
       "mix-wl-race-0-times"
@@ -663,13 +663,13 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(wl_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(wl_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(

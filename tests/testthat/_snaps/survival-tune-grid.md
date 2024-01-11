@@ -1,14 +1,33 @@
 # grid tuning survival models with dynamic metric
 
-    No evaluation time was set; a value of 5 was used.
+    Code
+      expect_snapshot_plot(print(autoplot(grid_dynamic_res)), "dyn-grid")
+    Condition
+      Warning in `filter_plot_eval_time()`:
+      No evaluation time was set; a value of 5 was used.
 
 # grid tuning survival models mixture of metric types
 
-    No evaluation time was set; a value of 5 was used.
+    Code
+      expect_snapshot_plot(print(autoplot(grid_mixed_res)), "mix-grid-0-times")
+    Condition
+      Warning in `filter_plot_eval_time()`:
+      No evaluation time was set; a value of 5 was used.
 
 ---
 
-    4 evaluation times are available; the first (10) will be used.
+    Code
+      show_best(grid_mixed_res, metric = "brier_survival")
+    Condition
+      Warning:
+      4 evaluation times are available; the first (10) will be used.
+    Output
+      # A tibble: 3 x 8
+        penalty .metric        .estimator .eval_time  mean     n std_err .config      
+          <dbl> <chr>          <chr>           <dbl> <dbl> <int>   <dbl> <chr>        
+      1  0.0001 brier_survival standard           10 0.154    10  0.0210 Preprocessor~
+      2  0.01   brier_survival standard           10 0.154    10  0.0210 Preprocessor~
+      3  0.1    brier_survival standard           10 0.159    10  0.0209 Preprocessor~
 
 ---
 
@@ -32,7 +51,18 @@
 
 ---
 
-    2 evaluation times are available; the first (1) will be used.
+    Code
+      show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+    Condition
+      Warning:
+      2 evaluation times are available; the first (1) will be used.
+    Output
+      # A tibble: 3 x 8
+        penalty .metric        .estimator .eval_time   mean     n std_err .config     
+          <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>       
+      1  0.1    brier_survival standard            1 0.0208    10 0.00503 Preprocesso~
+      2  0.01   brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
+      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
 
 ---
 

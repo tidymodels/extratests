@@ -342,7 +342,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     bayes_dynamic_res <-
       mod_spec %>%
@@ -376,7 +376,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(bayes_dynamic_res)),
       "dyn-bayes"
@@ -506,7 +506,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
       control = gctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     set.seed(2193)
     bayes_mixed_res <-
       mod_spec %>%
@@ -545,7 +545,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     print(autoplot(bayes_mixed_res, eval_time = c(1, 5))),
     "mix-bayes-2-times"
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(bayes_mixed_res)),
       "mix-bayes-0-times"
@@ -633,14 +633,14 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(bayes_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
 
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
   )
   expect_snapshot(

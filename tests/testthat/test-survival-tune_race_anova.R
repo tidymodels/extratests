@@ -190,7 +190,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
       control = rctrl
     )
 
-  expect_snapshot_warning({
+  expect_snapshot({
     num_final_aov <-
       show_best(aov_integrated_res, metric = "brier_survival_integrated", eval_time = 5) %>%
       pluck("cost_complexity") %>%
@@ -346,6 +346,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # use `capture.output()` instead of `expect_snapshot_test()`
   # https://github.com/tidymodels/extratests/pull/134#discussion_r1394534647
+  # expect_snapshot_warning() is used so that we can test on the captured output
   expect_snapshot_warning({
     aov_dyn_output <-
       capture.output({
@@ -519,6 +520,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
+  # expect_snapshot_warning() is used so that we can test on the captured output
   expect_snapshot_warning({
     aov_mixed_output <-
       capture.output({
@@ -657,13 +659,13 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(aov_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
   )
   expect_snapshot(
