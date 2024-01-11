@@ -371,7 +371,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # TODO add a test for checking the evaluation time in this message:
   # https://github.com/tidymodels/finetune/issues/81
-  expect_true(any(grepl("Racing will minimize the brier_survival metric", aov_dyn_output)))
+  expect_true(any(grepl("Racing will minimize the brier_survival metric at time", aov_dyn_output)))
 
   # test structure of results --------------------------------------------------
 
