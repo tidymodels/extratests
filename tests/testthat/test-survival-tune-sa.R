@@ -2,12 +2,11 @@ suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(censored))
 suppressPackageStartupMessages(library(finetune))
 
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9010")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
 test_that("sim annealing tuning survival models with static metric", {
   skip_if_not_installed("mboost")
@@ -200,22 +199,19 @@ test_that("sim annealing tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  expect_snapshot_warning({
-    set.seed(2193)
-    sa_integrated_res <-
-      mod_spec %>%
-      tune_sim_anneal(
-        event_time ~ X1 + X2,
-        resamples = sim_rs,
-        iter = 2,
-        param_info = mod_param,
-        metrics = sint_mtrc,
-        eval_time = time_points,
-        control = sctrl,
-        initial = init_grid_integrated_res
-      )
-  })
-
+  set.seed(2193)
+  sa_integrated_res <-
+    mod_spec %>%
+    tune_sim_anneal(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      param_info = mod_param,
+      metrics = sint_mtrc,
+      eval_time = time_points,
+      control = sctrl,
+      initial = init_grid_integrated_res
+    )
 
   # test structure of results --------------------------------------------------
 

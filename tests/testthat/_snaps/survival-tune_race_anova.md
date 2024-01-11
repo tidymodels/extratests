@@ -2,17 +2,9 @@
 
     Evaluation times are only required when dynmanic or integrated metrics are selected as the primary metric (and will be ignored).
 
----
-
-    Evaluation times are only required when dynmanic or integrated metrics are selected as the primary metric (and will be ignored).
-
 # race tuning (anova) survival models with dynamic metrics
 
     4 evaluation times were specified during tuning; the first (10) will be used.
-
----
-
-    No evaluation time was set; a value of 5 was used.
 
 # race tuning (anova) survival models with mixture of metric types
 

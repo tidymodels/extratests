@@ -1,7 +1,3 @@
-# Bayesian tuning survival models with integrated metric
-
-    Evaluation times are only required when dynmanic or integrated metrics are selected as the primary metric (and will be ignored).
-
 # Bayesian tuning survival models with dynamic metric
 
     4 evaluation times were specified during tuning; the first (10) will be used.

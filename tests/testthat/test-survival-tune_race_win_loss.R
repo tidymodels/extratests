@@ -2,10 +2,9 @@ suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(censored))
 suppressPackageStartupMessages(library(finetune))
 
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9009")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9010")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
@@ -177,19 +176,17 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
-  expect_snapshot_warning({
-    set.seed(2193)
-    wl_integrated_res <-
-      mod_spec %>%
-      tune_race_win_loss(
-        event_time ~ X1 + X2,
-        resamples = sim_rs,
-        grid = grid,
-        metrics = sint_mtrc,
-        eval_time = time_points,
-        control = rctrl
-      )
-  })
+  set.seed(2193)
+  wl_integrated_res <-
+    mod_spec %>%
+    tune_race_win_loss(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = sint_mtrc,
+      eval_time = time_points,
+      control = rctrl
+    )
 
   expect_snapshot_warning({
     num_final_wl <-
