@@ -45,6 +45,21 @@ test_that("resampling survival models with static metric", {
       control = rsctrl
     )
 
+  # passing in eval time when not required -------------------------------------
+
+  expect_snapshot({
+    set.seed(2193)
+    rs_static_res <-
+      mod_spec %>%
+      fit_resamples(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        metrics = stc_mtrc,
+        control = rsctrl,
+        eval_time = time_points
+      )
+  })
+
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(rs_static_res$.metrics[[1]]))
