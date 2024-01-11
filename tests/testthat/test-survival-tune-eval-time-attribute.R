@@ -106,17 +106,19 @@ test_that("tune*_() saves eval_time", {
 
   # ------------------------------------------------------------------------------
 
-  set.seed(2193)
-  bayes_res <-
-    mod_spec %>%
-    tune_bayes(
-      event_time ~ X1 + X2,
-      sim_rs,
-      initial = grid_res,
-      iter = 2,
-      metrics = srv_mtrc,
-      eval_time = time_points
-    )
+  expect_snapshot({
+    set.seed(2193)
+    bayes_res <-
+      mod_spec %>%
+      tune_bayes(
+        event_time ~ X1 + X2,
+        sim_rs,
+        initial = grid_res,
+        iter = 2,
+        metrics = srv_mtrc,
+        eval_time = time_points
+      )
+  })
 
   expect_true("eval_time" %in% names(attributes(bayes_res)))
   expect_equal(attributes(bayes_res)$eval_time, time_points)
@@ -124,18 +126,20 @@ test_that("tune*_() saves eval_time", {
 
   # ------------------------------------------------------------------------------
 
-  set.seed(2193)
-  sa_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      sim_rs,
-      initial = grid_res,
-      iter = 2,
-      metrics = srv_mtrc,
-      eval_time = time_points,
-      control = control_sim_anneal(verbose_iter = FALSE)
-    )
+  expect_snapshot({
+    set.seed(2193)
+    sa_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        sim_rs,
+        initial = grid_res,
+        iter = 2,
+        metrics = srv_mtrc,
+        eval_time = time_points,
+        control = control_sim_anneal(verbose_iter = FALSE)
+      )
+  })
 
   expect_true("eval_time" %in% names(attributes(sa_res)))
   expect_equal(attributes(sa_res)$eval_time, time_points)
@@ -143,33 +147,38 @@ test_that("tune*_() saves eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  set.seed(2193)
-  anova_res <-
-    mod_spec %>%
-    tune_race_anova(
-      event_time ~ X1 + X2,
-      sim_rs,
-      grid = grid,
-      metrics = srv_mtrc,
-      eval_time = time_points
-    )
+  conflicted::conflicts_prefer(testthat::is_null, .quiet = TRUE)
 
+  expect_snapshot({
+    set.seed(2193)
+    anova_res <-
+      mod_spec %>%
+      tune_race_anova(
+        event_time ~ X1 + X2,
+        sim_rs,
+        grid = grid,
+        metrics = srv_mtrc,
+        eval_time = time_points
+      )
+  })
   expect_true("eval_time" %in% names(attributes(anova_res)))
   expect_equal(attributes(anova_res)$eval_time, time_points)
   expect_equal(.get_tune_eval_times(anova_res), time_points)
 
   ## ------------------------------------------------------------------------------
 
-  set.seed(2193)
-  wl_res <-
-    mod_spec %>%
-    tune_race_win_loss(
-      event_time ~ X1 + X2,
-      sim_rs,
-      grid = grid,
-      metrics = srv_mtrc,
-      eval_time = time_points
-    )
+  expect_snapshot({
+    set.seed(2193)
+    wl_res <-
+      mod_spec %>%
+      tune_race_win_loss(
+        event_time ~ X1 + X2,
+        sim_rs,
+        grid = grid,
+        metrics = srv_mtrc,
+        eval_time = time_points
+      )
+  })
 
   expect_true("eval_time" %in% names(attributes(wl_res)))
   expect_equal(attributes(wl_res)$eval_time, time_points)
