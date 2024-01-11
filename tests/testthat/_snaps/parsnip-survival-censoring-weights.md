@@ -53,7 +53,7 @@
       .censoring_weights_graf(workflows::workflow())
     Condition
       Error in `.censoring_weights_graf()`:
-      ! There is no `.censoring_weights_graf()` method for objects with class(es): 'workflow'
+      ! The workflow does not have a model fit object.
 
 # error for .censoring_weights_graf() from .check_censor_model()
 
