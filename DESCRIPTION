@@ -18,6 +18,7 @@ Suggests:
     butcher,
     C50,
     censored,
+    conflicted,
     coin,
     dials,
     dimRed,

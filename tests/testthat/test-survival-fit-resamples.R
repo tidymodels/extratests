@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(baguette))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9002")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9011")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("resampling survival models with static metric", {
@@ -99,6 +99,24 @@ test_that("resampling survival models with static metric", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
 
+  # test prediction collection -------------------------------------------------
+
+  static_ptype <- tibble::tibble(
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  unsum_pred <- collect_predictions(rs_static_res)
+  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+
+  sum_pred <- collect_predictions(rs_static_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr))
+
 })
 
 test_that("resampling survival models with integrated metric", {
@@ -187,6 +205,37 @@ test_that("resampling survival models with integrated metric", {
   expect_true(nrow(metric_all) == 10)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+
+  # test prediction collection -------------------------------------------------
+
+  integrated_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  integrated_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_integrated_res)
+  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_integrated_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr))
+
+  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -278,6 +327,37 @@ test_that("resampling survival models with dynamic metric", {
   expect_true(nrow(metric_all) == length(time_points) * nrow(sim_rs))
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  dynamic_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  dynamic_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_dynamic_res)
+  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_dynamic_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr))
+
+  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -372,9 +452,41 @@ test_that("resampling survival models mixture of metric types", {
   expect_true(sum(is.na(metric_all$.eval_time)) == 2* nrow(sim_rs))
   expect_equal(as.vector(table(metric_all$.metric)), c(length(time_points), 1L, 1L) * nrow(sim_rs))
 
+  # test prediction collection -------------------------------------------------
+
+  mixed_ptype <- tibble::tibble(
+    .pred = list(),
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(rs_mixed_res)
+  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(rs_mixed_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr))
+
+  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(rs_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
