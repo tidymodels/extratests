@@ -127,7 +127,7 @@ test_that("grid tuning survival models with frequency case weights", {
 
   ## unweighted ----------------------------------------------------------------
 
-  sim_rs <- apparent(sim_dat %>% slice(-(1:50)))
+  sim_rs <- apparent(sim_dat %>% dplyr::slice(-(1:50)))
 
   set.seed(2193)
   weights_none_tune_res <-
