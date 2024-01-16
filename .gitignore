@@ -6,3 +6,4 @@ tests/testthat/derby.log
 tests/testthat/logs/log4j.spark.log
 derby.log
 logs/log4j.spark.log
+tests/testthat/_snaps/*.new.md
