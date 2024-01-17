@@ -222,7 +222,7 @@ test_that("error messages in context of .censoring_weights_graf()", {
 
 test_that("error for .censoring_weights_graf.workflow()", {
   # temporarily its own test, see above
-  skip_if_not_installed("workflows", minimum_version = "1.1.3.9001")
+  skip_if_not_installed("workflows", minimum_version = "1.1.3.9007")
   expect_snapshot(error = TRUE, .censoring_weights_graf(workflows::workflow()))
 })
 
