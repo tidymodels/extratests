@@ -5,8 +5,8 @@
       rs_static_res <- mod_spec %>% fit_resamples(event_time ~ X1 + X2, resamples = sim_rs,
       metrics = stc_mtrc, control = rsctrl, eval_time = time_points)
     Condition
-      Warning:
-      Evaluation times are only required when dynmanic or integrated metrics are used (and will be ignored here).
+      Warning in `fit_resamples()`:
+      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
 
 # resampling survival models mixture of metric types
 

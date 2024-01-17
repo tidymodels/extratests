@@ -67,7 +67,7 @@
     Code
       show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
     Condition
-      Warning:
+      Warning in `show_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
     Output
       # A tibble: 1 x 7
@@ -107,7 +107,7 @@
     Code
       show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
     Condition
-      Warning:
+      Warning in `show_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
     Output
       # A tibble: 5 x 8

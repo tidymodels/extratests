@@ -4,7 +4,7 @@
       num_final_wl <- show_best(wl_integrated_res, metric = "brier_survival_integrated",
         eval_time = 5) %>% pluck("cost_complexity") %>% unique()
     Condition
-      Warning:
+      Warning in `show_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
 
 # race tuning (win_loss) survival models with dynamic metrics
