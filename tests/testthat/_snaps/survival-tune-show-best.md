@@ -80,8 +80,6 @@
     Code
       show_best(race_stc_res, metric = "brier_survival_integrated")
     Condition
-      Warning:
-      Metric "concordance_survival" was used to evaluate model candidates in the race but "brier_survival_integrated" has been chosen to rank the candidates. These results may not agree with the race.
       Error in `show_best()`:
       ! "brier_survival_integrated" was not in the metric set. Please choose from: "concordance_survival".
 
@@ -124,8 +122,6 @@
     Code
       show_best(race_stc_res, metric = "brier_survival_integrated")
     Condition
-      Warning:
-      Metric "concordance_survival" was used to evaluate model candidates in the race but "brier_survival_integrated" has been chosen to rank the candidates. These results may not agree with the race.
       Error in `show_best()`:
       ! "brier_survival_integrated" was not in the metric set. Please choose from: "concordance_survival" and "brier_survival".
 
@@ -176,8 +172,6 @@
     Code
       show_best(race_dyn_res, metric = "brier_survival_integrated")
     Condition
-      Warning:
-      Metric "brier_survival" was used to evaluate model candidates in the race but "brier_survival_integrated" has been chosen to rank the candidates. These results may not agree with the race.
       Error in `show_best()`:
       ! "brier_survival_integrated" was not in the metric set. Please choose from: "brier_survival" and "concordance_survival".
 
