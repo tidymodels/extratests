@@ -103,6 +103,14 @@
 ---
 
     Code
+      res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3))
+    Condition
+      Error in `show_best()`:
+      ! "unused_metric" was not in the metric set. Please choose from: "brier_survival", "brier_survival_integrated", and "concordance_survival".
+
+---
+
+    Code
       show_best(wl_mixed_res, metric = "brier_survival_integrated")
     Condition
       Warning:
