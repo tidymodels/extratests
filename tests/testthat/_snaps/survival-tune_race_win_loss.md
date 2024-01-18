@@ -125,3 +125,23 @@
       4        9.44e-11 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
       5        1   e-10 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
 
+# race tuning (W/L) - unneeded eval_time
+
+    Code
+      tune_res <- linear_reg(penalty = tune(), engine = "glmnet") %>%
+        tune_race_win_loss(mpg ~ ., resamples = vfold_cv(mtcars, 5), metrics = metric_set(
+          rmse), eval_time = 10)
+    Condition
+      Warning in `tune_race_win_loss()`:
+      Evaluation times are only required when the model mode is "censored regression" (and will be ignored).
+
+---
+
+    Code
+      tune_res <- proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+        tune_race_win_loss(surv ~ ., resamples = vfold_cv(lung_surv, 5), metrics = metric_set(
+          concordance_survival), eval_time = 10)
+    Condition
+      Warning in `tune_race_win_loss()`:
+      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+

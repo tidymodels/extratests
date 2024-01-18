@@ -88,3 +88,23 @@
       4    0.0891       brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
       5    0.0944       brier_survi~ standard           NA 0.338    30 0.00480 Prepro~
 
+# race tuning (anova) - unneeded eval_time
+
+    Code
+      tune_res <- linear_reg(penalty = tune(), engine = "glmnet") %>% tune_race_anova(
+        mpg ~ ., resamples = vfold_cv(mtcars, 5), metrics = metric_set(rmse),
+        eval_time = 10)
+    Condition
+      Warning in `tune_race_anova()`:
+      Evaluation times are only required when the model mode is "censored regression" (and will be ignored).
+
+---
+
+    Code
+      tune_res <- proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+        tune_race_anova(surv ~ ., resamples = vfold_cv(lung_surv, 5), metrics = metric_set(
+          concordance_survival), eval_time = 10)
+    Condition
+      Warning in `tune_race_anova()`:
+      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+

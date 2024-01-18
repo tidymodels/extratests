@@ -672,3 +672,37 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     show_best(aov_mixed_res, metric = "brier_survival_integrated")
   )
 })
+
+test_that("race tuning (anova) - unneeded eval_time", {
+  skip_if_not_installed("BradleyTerry2")
+  skip_if_not_installed("flexsurv")
+
+  lung_surv <- lung %>%
+    mutate(surv = Surv(time, status), .keep = "unused")
+
+  # mode is not censored regression
+  set.seed(2193)
+  expect_snapshot(
+    tune_res <-
+      linear_reg(penalty = tune(), engine = "glmnet") %>%
+      tune_race_anova(
+        mpg ~ .,
+        resamples = vfold_cv(mtcars, 5),
+        metrics = metric_set(rmse),
+        eval_time = 10
+      )
+  )
+
+  # static metric
+  set.seed(2193)
+  expect_snapshot(
+    tune_res <-
+      proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+      tune_race_anova(
+        surv ~ .,
+        resamples = vfold_cv(lung_surv, 5),
+        metrics = metric_set(concordance_survival),
+        eval_time = 10
+      )
+  )
+})
