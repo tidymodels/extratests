@@ -673,6 +673,45 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
   )
   expect_snapshot(
+    res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3)),
+    error = TRUE
+  )
+  expect_snapshot(
     show_best(wl_mixed_res, metric = "brier_survival_integrated")
+  )
+})
+
+
+test_that("race tuning (W/L) - unneeded eval_time", {
+  skip_if_not_installed("BradleyTerry2")
+  skip_if_not_installed("flexsurv")
+
+  lung_surv <- lung %>%
+    mutate(surv = Surv(time, status), .keep = "unused")
+
+  # mode is not censored regression
+  set.seed(2193)
+  expect_snapshot(
+    tune_res <-
+      linear_reg(penalty = tune(), engine = "glmnet") %>%
+      tune_race_win_loss(
+        mpg ~ .,
+        resamples = vfold_cv(mtcars, 5),
+        metrics = metric_set(rmse),
+        eval_time = 10
+      )
+  )
+
+  # static metric
+  set.seed(2193)
+  expect_snapshot(
+    tune_res <-
+      proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+      tune_race_win_loss(
+        surv ~ .,
+        resamples = vfold_cv(lung_surv, 5),
+        metrics = metric_set(concordance_survival),
+        eval_time = 10
+      )
   )
 })
