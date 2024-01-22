@@ -54,6 +54,62 @@ test_that("augmenting survival models", {
   )
 })
 
+test_that("augment() works for tune_results", {
+  skip_if_not_installed("prodlim")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+
+  # Grid search with a mixture of metrics --------------------------------------
+
+  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+
+  set.seed(2193)
+  grid_mixed_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = gctrl
+    )
+
+  expect_snapshot(
+    aug_res <- augment(grid_mixed_res)
+  )
+
+  expect_equal(nrow(aug_res), nrow(sim_tr))
+  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_true(is.list(aug_res$.pred))
+  expect_equal(
+    names(aug_res$.pred[[1]]),
+    c(".eval_time", ".pred_survival", ".weight_censored")
+  )
+})
+
 test_that("augment() for survival models skips unavailble prediction type", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9001")
   skip_if_not_installed("prodlim")

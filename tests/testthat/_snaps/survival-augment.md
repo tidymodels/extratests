@@ -1,9 +1,8 @@
-# augment() for survival models errors if eval_time is missing
+# augment() works for tune_results
 
     Code
-      augment(sr_fit, lung)
+      aug_res <- augment(grid_mixed_res)
     Condition
-      Error in `augment()`:
-      x The `eval_time` argument is missing, with no default.
-      i `eval_time` is required to be able to calculate predictions of survival probability.
+      Warning in `show_best()`:
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
