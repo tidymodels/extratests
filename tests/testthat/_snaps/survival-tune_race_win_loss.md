@@ -15,7 +15,7 @@
       grid = grid, metrics = dyn_mtrc, eval_time = time_points, control = rctrl)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -24,6 +24,8 @@
     Condition
       Warning in `filter_plot_eval_time()`:
       No evaluation time was set; a value of 5 was used.
+      Warning:
+      Adding new file snapshot: 'tests/testthat/_snaps/dyn-wl-race-0-times.png'
 
 # race tuning (win_loss) survival models with mixture of metric types
 
@@ -34,7 +36,7 @@
       control = rctrl)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -43,42 +45,47 @@
     Condition
       Warning in `filter_plot_eval_time()`:
       No evaluation time was set; a value of 5 was used.
+      Warning:
+      Adding new file snapshot: 'tests/testthat/_snaps/mix-wl-race-0-times.png'
 
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival")
+      show_best(wl_mixed_res, metric = "brier_survival") %>% select(-.estimator,
+        -.config)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
-      # A tibble: 5 x 8
-        cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
-                  <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1        7.94e-11 brier_survi~ standard           10 0.633    30  0.0110 Prepro~
-      2        8.41e-11 brier_survi~ standard           10 0.633    30  0.0110 Prepro~
-      3        8.91e-11 brier_survi~ standard           10 0.633    30  0.0110 Prepro~
-      4        9.44e-11 brier_survi~ standard           10 0.633    30  0.0110 Prepro~
-      5        1   e-10 brier_survi~ standard           10 0.633    30  0.0110 Prepro~
+      # A tibble: 5 x 6
+        cost_complexity .metric        .eval_time  mean     n std_err
+                  <dbl> <chr>               <dbl> <dbl> <int>   <dbl>
+      1        7.94e-11 brier_survival         10 0.633    30  0.0110
+      2        8.41e-11 brier_survival         10 0.633    30  0.0110
+      3        8.91e-11 brier_survival         10 0.633    30  0.0110
+      4        9.44e-11 brier_survival         10 0.633    30  0.0110
+      5        1   e-10 brier_survival         10 0.633    30  0.0110
 
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1)
+      show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
     Output
-      # A tibble: 5 x 8
-        cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
-                  <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1        7.94e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      2        8.41e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      3        8.91e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      4        9.44e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      5        1   e-10 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
+      # A tibble: 5 x 6
+        cost_complexity .metric        .eval_time  mean     n std_err
+                  <dbl> <chr>               <dbl> <dbl> <int>   <dbl>
+      1        7.94e-11 brier_survival          1 0.177    30 0.00707
+      2        8.41e-11 brier_survival          1 0.177    30 0.00707
+      3        8.91e-11 brier_survival          1 0.177    30 0.00707
+      4        9.44e-11 brier_survival          1 0.177    30 0.00707
+      5        1   e-10 brier_survival          1 0.177    30 0.00707
 
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1))
+      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1)) %>%
+        select(-.estimator, -.config)
     Condition
       Error in `show_best()`:
       ! Evaluation time 1.1 is not in the results.
@@ -86,24 +93,26 @@
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+      show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3)) %>%
+        select(-.estimator, -.config)
     Condition
       Warning:
-      2 evaluation times are available; the first (1) will be used.
+      2 evaluation times are available; the first will be used (i.e. `eval_time = 1`).
     Output
-      # A tibble: 5 x 8
-        cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
-                  <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1        7.94e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      2        8.41e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      3        8.91e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      4        9.44e-11 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
-      5        1   e-10 brier_survi~ standard            1 0.177    30 0.00707 Prepro~
+      # A tibble: 5 x 6
+        cost_complexity .metric        .eval_time  mean     n std_err
+                  <dbl> <chr>               <dbl> <dbl> <int>   <dbl>
+      1        7.94e-11 brier_survival          1 0.177    30 0.00707
+      2        8.41e-11 brier_survival          1 0.177    30 0.00707
+      3        8.91e-11 brier_survival          1 0.177    30 0.00707
+      4        9.44e-11 brier_survival          1 0.177    30 0.00707
+      5        1   e-10 brier_survival          1 0.177    30 0.00707
 
 ---
 
     Code
-      res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3))
+      res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3)) %>%
+        select(-.estimator, -.config)
     Condition
       Error in `show_best()`:
       ! "unused_metric" was not in the metric set. Please choose from: "brier_survival", "brier_survival_integrated", and "concordance_survival".
@@ -111,19 +120,20 @@
 ---
 
     Code
-      show_best(wl_mixed_res, metric = "brier_survival_integrated")
+      show_best(wl_mixed_res, metric = "brier_survival_integrated") %>% select(
+        -.estimator, -.config)
     Condition
       Warning:
       Metric "brier_survival" was used to evaluate model candidates in the race but "brier_survival_integrated" has been chosen to rank the candidates. These results may not agree with the race.
     Output
-      # A tibble: 5 x 8
-        cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
-                  <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1        7.94e-11 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
-      2        8.41e-11 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
-      3        8.91e-11 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
-      4        9.44e-11 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
-      5        1   e-10 brier_survi~ standard           NA 0.285    30 0.00426 Prepro~
+      # A tibble: 5 x 6
+        cost_complexity .metric                   .eval_time  mean     n std_err
+                  <dbl> <chr>                          <dbl> <dbl> <int>   <dbl>
+      1        7.94e-11 brier_survival_integrated         NA 0.285    30 0.00426
+      2        8.41e-11 brier_survival_integrated         NA 0.285    30 0.00426
+      3        8.91e-11 brier_survival_integrated         NA 0.285    30 0.00426
+      4        9.44e-11 brier_survival_integrated         NA 0.285    30 0.00426
+      5        1   e-10 brier_survival_integrated         NA 0.285    30 0.00426
 
 # race tuning (W/L) - unneeded eval_time
 

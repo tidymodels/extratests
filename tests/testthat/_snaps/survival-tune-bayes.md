@@ -7,7 +7,7 @@
       initial = init_grid_dynamic_res)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -26,7 +26,7 @@
       control = bctrl)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -42,7 +42,7 @@
       show_best(bayes_mixed_res, metric = "brier_survival")
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 5 x 9
         tree_depth .metric     .estimator .eval_time  mean     n std_err .config .iter
@@ -81,7 +81,7 @@
       show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
     Condition
       Warning:
-      2 evaluation times are available; the first (1) will be used.
+      2 evaluation times are available; the first will be used (i.e. `eval_time = 1`).
     Output
       # A tibble: 5 x 9
         tree_depth .metric    .estimator .eval_time   mean     n std_err .config .iter

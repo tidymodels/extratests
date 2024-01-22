@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(finetune))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9011")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 

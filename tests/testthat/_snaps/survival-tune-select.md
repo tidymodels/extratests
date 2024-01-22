@@ -129,7 +129,7 @@
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
         penalty .config              
@@ -152,7 +152,7 @@
       select_best(grid_dynamic_res, metric = "brier_survival", eval_time = c(5, 10))
     Condition
       Warning:
-      2 evaluation times are available; the first (5) will be used.
+      2 evaluation times are available; the first will be used (i.e. `eval_time = 5`).
     Output
       # A tibble: 1 x 2
         penalty .config              
@@ -205,7 +205,7 @@
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
         penalty .config              
