@@ -71,6 +71,21 @@ test_that("predict with reverse Kaplan-Meier curves", {
   expect_equal(pred_vec, exp_pred)
 })
 
+test_that("predict.censoring_model_reverse_km checks empty dots", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9006")
+
+  mod_fit <-
+    survival_reg() %>%
+    fit(Surv(time, status) ~ age + sex, data = lung)
+
+  pred_times <- (7:10) * 100
+
+  expect_snapshot(
+    error = TRUE,
+    predict(mod_fit$censor_probs, time = pred_times, invalid_arg = TRUE)
+  )
+})
+
 test_that("predict() can handle NA times", {
   mod_fit <-
     survival_reg() %>%

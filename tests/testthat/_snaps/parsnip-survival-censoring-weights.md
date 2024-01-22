@@ -9,14 +9,6 @@
 ---
 
     Code
-      .censoring_weights_graf(workflows::workflow())
-    Condition
-      Error in `.censoring_weights_graf()`:
-      ! The workflow does not have a model fit object.
-
----
-
-    Code
       .censoring_weights_graf(cox_model, lung)
     Condition
       Error:
@@ -54,6 +46,14 @@
       1 <tibble [2 x 5]>   306 
       2 <tibble [2 x 5]>   455 
       3 <tibble [2 x 5]>  1010+
+
+# error for .censoring_weights_graf.workflow()
+
+    Code
+      .censoring_weights_graf(workflows::workflow())
+    Condition
+      Error in `.censoring_weights_graf()`:
+      ! The workflow does not have a model fit object.
 
 # error for .censoring_weights_graf() from .check_censor_model()
 

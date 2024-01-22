@@ -2,12 +2,11 @@ suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(censored))
 suppressPackageStartupMessages(library(finetune))
 
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.1.9001")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
-skip_if_not_installed("finetune", minimum_version = "1.1.0.9001")
+skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
 test_that("sim annealing tuning survival models with static metric", {
   skip_if_not_installed("mboost")
@@ -127,6 +126,26 @@ test_that("sim annealing tuning survival models with static metric", {
   expect_true(nrow(metric_all) == 50)
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  static_ptype <- tibble::tibble(
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    trees = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  unsum_pred <- collect_predictions(sa_static_res)
+  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  sum_pred <- collect_predictions(sa_static_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
 })
 
@@ -259,6 +278,39 @@ test_that("sim annealing tuning survival models with integrated metric", {
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
 
+  # test prediction collection -------------------------------------------------
+
+  integrated_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    trees = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  integrated_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_integrated_res)
+  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(sa_integrated_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
 })
 
 test_that("sim annealing tuning survival models with dynamic metric", {
@@ -311,19 +363,21 @@ test_that("sim annealing tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  set.seed(2193)
-  sa_dynamic_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      param_info = mod_param,
-      metrics = dyn_mtrc,
-      eval_time = time_points,
-      control = sctrl,
-      initial = init_grid_dynamic_res
-    )
+  expect_snapshot({
+    set.seed(2193)
+    sa_dynamic_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        param_info = mod_param,
+        metrics = dyn_mtrc,
+        eval_time = time_points,
+        control = sctrl,
+        initial = init_grid_dynamic_res
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -344,7 +398,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
 
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(sa_dynamic_res)),
       "dyn-sa"
@@ -374,7 +428,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 14)
+  expect_true(nrow(metric_sum) == (nrow(grid) + 2) * length(time_points))
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
@@ -390,9 +444,42 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 140)
+  expect_true(nrow(metric_all) == ((nrow(grid) + 2) * length(time_points)) * nrow(sim_rs))
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  dynamic_ptype <- tibble::tibble(
+    .pred = list(),
+    id = character(0),
+    .row = integer(0),
+    trees = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  dynamic_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_dynamic_res)
+  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(sa_dynamic_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
 
@@ -446,19 +533,21 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       control = gctrl
     )
 
-  set.seed(2193)
-  sa_mixed_res <-
-    mod_spec %>%
-    tune_sim_anneal(
-      event_time ~ X1 + X2,
-      resamples = sim_rs,
-      iter = 2,
-      param_info = mod_param,
-      metrics = mix_mtrc,
-      eval_time = time_points,
-      initial = init_grid_mixed_res,
-      control = sctrl
-    )
+  expect_snapshot({
+    set.seed(2193)
+    sa_mixed_res <-
+      mod_spec %>%
+      tune_sim_anneal(
+        event_time ~ X1 + X2,
+        resamples = sim_rs,
+        iter = 2,
+        param_info = mod_param,
+        metrics = mix_mtrc,
+        eval_time = time_points,
+        initial = init_grid_mixed_res,
+        control = sctrl
+      )
+  })
 
   # test structure of results --------------------------------------------------
 
@@ -483,7 +572,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     print(autoplot(sa_mixed_res, eval_time = c(1, 5))),
     "mix-sa-2-times"
   )
-  expect_snapshot_warning(
+  expect_snapshot(
     expect_snapshot_plot(
       print(autoplot(sa_mixed_res)),
       "mix-sa-0-times"
@@ -513,10 +602,11 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 24L)
+  grid_size <- (nrow(grid) + 2)
+  expect_true(nrow(metric_sum) == (grid_size * length(time_points)) + grid_size * 2)
   expect_equal(metric_sum[0,], exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 10L)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(14L, 5L, 5L))
+  expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(sa_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -530,22 +620,57 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
       .iter = integer(0)
     )
 
-  expect_true(nrow(metric_all) == 240L)
+  expect_true(nrow(metric_all) ==
+                ((nrow(grid) + 2) * length(time_points) + (nrow(grid) + 2) * 2) *
+                nrow(sim_rs))
   expect_equal(metric_all[0,], exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
-  expect_equal(as.vector(table(metric_all$.metric)), c(140L, 50L, 50L))
+  expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
+
+  # test prediction collection -------------------------------------------------
+
+  mixed_ptype <- tibble::tibble(
+    .pred = list(),
+    .pred_time = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    trees = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  unsum_pred <- collect_predictions(sa_mixed_res)
+  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(sa_mixed_res, summarize = TRUE)
+  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+
+  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot_warning(show_best(sa_mixed_res, metric = "brier_survival"))
+  expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival"))
   expect_snapshot(show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
+    show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
   )
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival", eval_time = c(1, 3)),
-    error = TRUE
   )
   expect_snapshot(
     show_best(sa_mixed_res, metric = "brier_survival_integrated")
