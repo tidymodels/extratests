@@ -6,7 +6,7 @@
       iter = 2, metrics = srv_mtrc, eval_time = time_points)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -17,7 +17,7 @@
         verbose_iter = FALSE))
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -27,7 +27,7 @@
       metrics = srv_mtrc, eval_time = time_points)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
 
@@ -37,5 +37,5 @@
       metrics = srv_mtrc, eval_time = time_points)
     Condition
       Warning:
-      4 evaluation times are available; the first (10) will be used.
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 

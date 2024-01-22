@@ -6,7 +6,7 @@ skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
-test_that("fit best with static metric", {
+test_that("select_*() with static metric", {
   skip_if_not_installed("prodlim")
 
   # standard setup start -------------------------------------------------------
@@ -20,7 +20,7 @@ test_that("fit best with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, repeats = 3)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -29,11 +29,11 @@ test_that("fit best with static metric", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^seq(-2, -1, length.out = 10))
 
-  gctrl <- control_grid(save_workflow = TRUE)
+  gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end -------------------------------------------------------
+  ## Grid search with static metrics --------------------------------------------
 
   stc_mtrc  <- metric_set(concordance_survival)
 
@@ -48,9 +48,32 @@ test_that("fit best with static metric", {
       control = gctrl
     )
 
-  expect_silent(static_res <- fit_best(grid_static_res))
-  expect_s3_class(static_res, "workflow")
-  expect_true(is_trained_workflow(static_res))
+  ## Test selecting functions --------------------------------------------------
+
+  expect_snapshot(
+    select_best(grid_static_res)
+  )
+
+  expect_snapshot(
+    select_best(grid_static_res, metric = "concordance_survival")
+  )
+
+  expect_snapshot(
+    select_best(grid_static_res, metric = "brier_survival_integrated"),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    select_best(grid_static_res, metric = "concordance_survival", eval_time = 0)
+  )
+
+  expect_snapshot(
+    select_by_one_std_err(grid_static_res, metric = "concordance_survival", penalty)
+  )
+
+  expect_snapshot(
+    select_by_pct_loss(grid_static_res, metric = "concordance_survival", penalty)
+  )
 })
 
 test_that("grid tuning survival models with integrated metric", {
@@ -67,7 +90,7 @@ test_that("grid tuning survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, repeats = 3)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -76,11 +99,11 @@ test_that("grid tuning survival models with integrated metric", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^seq(-2, -1, length.out = 10))
 
-  gctrl <- control_grid(save_workflow = TRUE)
+  gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end -------------------------------------------------------
+  # Grid search with integrated metrics ----------------------------------------
 
   sint_mtrc <- metric_set(brier_survival_integrated)
 
@@ -96,9 +119,27 @@ test_that("grid tuning survival models with integrated metric", {
       control = gctrl
     )
 
-  expect_silent(integrated_res <- fit_best(grid_integrated_res))
-  expect_s3_class(integrated_res, "workflow")
-  expect_true(is_trained_workflow(integrated_res))
+  ## Test selecting functions --------------------------------------------------
+
+  expect_snapshot(
+    select_best(grid_integrated_res)
+  )
+
+  expect_snapshot(
+    select_best(grid_integrated_res, metric = "brier_survival_integrated")
+  )
+
+  expect_snapshot(
+    select_best(grid_integrated_res, metric = "brier_survival_integrated", eval_time = 0)
+  )
+
+  expect_snapshot(
+    select_by_one_std_err(grid_integrated_res, metric = "brier_survival_integrated", penalty)
+  )
+
+  expect_snapshot(
+    select_by_pct_loss(grid_integrated_res, metric = "brier_survival_integrated", penalty)
+  )
 
 })
 
@@ -116,7 +157,7 @@ test_that("grid tuning survival models with dynamic metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, repeats = 3)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -125,11 +166,11 @@ test_that("grid tuning survival models with dynamic metric", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^seq(-2, -1, length.out = 10))
 
-  gctrl <- control_grid(save_workflow = TRUE)
+  gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end -------------------------------------------------------
+  # Grid search with dynamic metrics -------------------------------------------
 
   dyn_mtrc  <- metric_set(brier_survival)
 
@@ -145,10 +186,37 @@ test_that("grid tuning survival models with dynamic metric", {
       control = gctrl
     )
 
-  expect_silent(dynamic_res <- fit_best(grid_dynamic_res))
-  dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
-  expect_s3_class(dynamic_res, "workflow")
-  expect_true(is_trained_workflow(dynamic_res))
+  ## Test selecting functions --------------------------------------------------
+
+  expect_snapshot(
+    select_best(grid_dynamic_res)
+  )
+
+  expect_snapshot(
+    select_best(grid_dynamic_res, metric = "brier_survival", eval_time = 10)
+  )
+
+  expect_snapshot(
+    select_best(grid_dynamic_res, metric = "brier_survival", eval_time = c(5, 10))
+  )
+
+  expect_snapshot(
+    select_best(grid_dynamic_res, metric = "brier_survival_integrated"),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    select_best(grid_dynamic_res, metric = "brier_survival", eval_time = 0),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    select_by_one_std_err(grid_dynamic_res, metric = "brier_survival", penalty, eval_time = 10)
+  )
+
+  expect_snapshot(
+    select_by_pct_loss(grid_dynamic_res, metric = "brier_survival", penalty, eval_time = 10)
+  )
 
 })
 
@@ -166,7 +234,7 @@ test_that("grid tuning survival models mixture of metric types", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, repeats = 3)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -175,11 +243,11 @@ test_that("grid tuning survival models mixture of metric types", {
     set_engine("glmnet") %>%
     set_mode("censored regression")
 
-  grid <- tibble(penalty = 10^c(-4, -2, -1))
+  grid <- tibble(penalty = 10^seq(-2, -1, length.out = 10))
 
-  gctrl <- control_grid(save_workflow = TRUE)
+  gctrl <- control_grid(save_pred = TRUE)
 
-  # standard setup end -------------------------------------------------------
+  # Grid search with a mixture of metrics --------------------------------------
 
   mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
 
@@ -195,8 +263,31 @@ test_that("grid tuning survival models mixture of metric types", {
       control = gctrl
     )
 
-  expect_silent(mixed_res <- fit_best(grid_mixed_res))
-  mixed_res <- fit_best(grid_mixed_res, eval_time = 1)
-  expect_s3_class(mixed_res, "workflow")
-  expect_true(is_trained_workflow(mixed_res))
+  ## Test selecting functions --------------------------------------------------
+
+  expect_snapshot(
+    select_best(grid_mixed_res)
+  )
+
+  expect_snapshot(
+    select_best(grid_mixed_res, metric = "brier_survival", eval_time = 10)
+  )
+
+  expect_snapshot(
+    select_best(grid_mixed_res, metric = "brier_survival_integrated", eval_time = 0)
+  )
+
+  expect_snapshot(
+    select_best(grid_mixed_res, metric = "brier_survival", eval_time = 0),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    select_by_one_std_err(grid_mixed_res, metric = "brier_survival", penalty, eval_time = 10)
+  )
+
+  expect_snapshot(
+    select_by_pct_loss(grid_mixed_res, metric = "brier_survival", penalty, eval_time = 10)
+  )
+
 })

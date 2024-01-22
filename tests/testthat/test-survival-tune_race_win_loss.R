@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(finetune))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9011")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
@@ -663,21 +663,31 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # test show_best() -----------------------------------------------------------
 
-  expect_snapshot(show_best(wl_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1))
   expect_snapshot(
-    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
+    show_best(wl_mixed_res, metric = "brier_survival") %>%
+      select(-.estimator, -.config)
+  )
+  expect_snapshot(
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1) %>%
+      select(-.estimator, -.config)
+  )
+  expect_snapshot(
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1.1)) %>%
+      select(-.estimator, -.config),
     error = TRUE
   )
   expect_snapshot(
-    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3)) %>%
+      select(-.estimator, -.config)
   )
   expect_snapshot(
-    res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3)),
+    res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3)) %>%
+      select(-.estimator, -.config),
     error = TRUE
   )
   expect_snapshot(
-    show_best(wl_mixed_res, metric = "brier_survival_integrated")
+    show_best(wl_mixed_res, metric = "brier_survival_integrated") %>%
+      select(-.estimator, -.config)
   )
 })
 
