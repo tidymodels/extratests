@@ -128,7 +128,7 @@
     Condition
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
-      Warning:
+      Warning in `show_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
@@ -151,7 +151,7 @@
     Code
       select_best(grid_dynamic_res, metric = "brier_survival", eval_time = c(5, 10))
     Condition
-      Warning:
+      Warning in `show_best()`:
       2 evaluation times are available; the first will be used (i.e. `eval_time = 5`).
     Output
       # A tibble: 1 x 2
@@ -204,7 +204,7 @@
     Condition
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
-      Warning:
+      Warning in `show_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
