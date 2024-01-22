@@ -85,7 +85,7 @@ test_that("augment() for survival models skips unavailble prediction type", {
 })
 
 test_that("augment() for survival models errors if eval_time is missing", {
-  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9004")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9008")
 
   sr_fit <- survival_reg() %>%
     fit(Surv(time, status) ~ ., data = lung)

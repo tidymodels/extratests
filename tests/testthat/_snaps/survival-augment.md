@@ -4,5 +4,6 @@
       augment(sr_fit, lung)
     Condition
       Error in `augment()`:
-      ! The `eval_time` argument is missing, with no default.
+      x The `eval_time` argument is missing, with no default.
+      i `eval_time` is required to be able to calculate predictions of survival probability.
 
