@@ -19,7 +19,7 @@
     Code
       show_best(grid_mixed_res, metric = "brier_survival")
     Condition
-      Warning:
+      Warning in `show_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 3 x 8
@@ -54,7 +54,7 @@
     Code
       show_best(grid_mixed_res, metric = "brier_survival", eval_time = c(1, 3))
     Condition
-      Warning:
+      Warning in `show_best()`:
       2 evaluation times are available; the first will be used (i.e. `eval_time = 1`).
     Output
       # A tibble: 3 x 8
