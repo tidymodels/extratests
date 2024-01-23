@@ -56,6 +56,7 @@ test_that("augmenting survival models", {
 
 test_that("augment() works for tune_results", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", "1.1.2.9016")
 
   # standard setup start -------------------------------------------------------
 
@@ -107,6 +108,13 @@ test_that("augment() works for tune_results", {
   expect_equal(
     names(aug_res$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
+  )
+
+  expect_snapshot(
+    aug_res <- augment(grid_mixed_res, eval_time = 10)
+  )
+  expect_no_warning(
+    aug_res <- augment(grid_mixed_res, parameters = tibble(penalty = 0.1))
   )
 })
 
