@@ -11,7 +11,6 @@ suppressPackageStartupMessages(library(censored))
 
 test_that('bag_tree - rpart censored case weights', {
   skip_if_not_installed("censored", "0.1.0")
-  skip("Need to rectify CI and local results - see #160")
 
   dat <- make_cens_wts()
 
