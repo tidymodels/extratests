@@ -7,7 +7,7 @@ test_that("percentile internals for survival models with static metric", {
 
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
   skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9013")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9015")
   skip_if_not_installed("yardstick", minimum_version = "1.3.0")
 
   # standard setup start -------------------------------------------------------
