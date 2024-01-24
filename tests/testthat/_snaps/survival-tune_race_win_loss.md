@@ -14,7 +14,7 @@
       wl_dyn_res <- mod_spec %>% tune_race_win_loss(event_time ~ X1 + X2, resamples = sim_rs,
       grid = grid, metrics = dyn_mtrc, eval_time = time_points, control = rctrl)
     Condition
-      Warning:
+      Warning in `tune_race_win_loss_workflow()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -24,8 +24,6 @@
     Condition
       Warning in `filter_plot_eval_time()`:
       No evaluation time was set; a value of 5 was used.
-      Warning:
-      Adding new file snapshot: 'tests/testthat/_snaps/dyn-wl-race-0-times.png'
 
 # race tuning (win_loss) survival models with mixture of metric types
 
@@ -35,7 +33,7 @@
       resamples = sim_rs, grid = grid_ties, metrics = mix_mtrc, eval_time = time_points,
       control = rctrl)
     Condition
-      Warning:
+      Warning in `tune_race_win_loss_workflow()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -45,8 +43,6 @@
     Condition
       Warning in `filter_plot_eval_time()`:
       No evaluation time was set; a value of 5 was used.
-      Warning:
-      Adding new file snapshot: 'tests/testthat/_snaps/mix-wl-race-0-times.png'
 
 ---
 
@@ -54,7 +50,7 @@
       show_best(wl_mixed_res, metric = "brier_survival") %>% select(-.estimator,
         -.config)
     Condition
-      Warning:
+      Warning in `show_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 5 x 6
@@ -96,7 +92,7 @@
       show_best(wl_mixed_res, metric = "brier_survival", eval_time = c(1, 3)) %>%
         select(-.estimator, -.config)
     Condition
-      Warning:
+      Warning in `show_best()`:
       2 evaluation times are available; the first will be used (i.e. `eval_time = 1`).
     Output
       # A tibble: 5 x 6
