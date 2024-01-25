@@ -102,7 +102,7 @@ test_that("augment() works for tune_results", {
       control = gctrl
     )
 
-  expect_snapshot(
+  expect_silent(
     aug_res <- augment(grid_mixed_res)
   )
 
@@ -114,9 +114,6 @@ test_that("augment() works for tune_results", {
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
 
-  expect_snapshot(
-    aug_res <- augment(grid_mixed_res, eval_time = 10)
-  )
   expect_no_warning(
     aug_res <- augment(grid_mixed_res, parameters = tibble(penalty = 0.1))
   )
