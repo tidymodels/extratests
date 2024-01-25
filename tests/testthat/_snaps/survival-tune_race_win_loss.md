@@ -14,7 +14,7 @@
       wl_dyn_res <- mod_spec %>% tune_race_win_loss(event_time ~ X1 + X2, resamples = sim_rs,
       grid = grid, metrics = dyn_mtrc, eval_time = time_points, control = rctrl)
     Condition
-      Warning in `tune_race_win_loss_workflow()`:
+      Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -33,7 +33,7 @@
       resamples = sim_rs, grid = grid_ties, metrics = mix_mtrc, eval_time = time_points,
       control = rctrl)
     Condition
-      Warning in `tune_race_win_loss_workflow()`:
+      Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
