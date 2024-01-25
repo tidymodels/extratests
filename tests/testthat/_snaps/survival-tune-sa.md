@@ -6,7 +6,7 @@
       iter = 2, param_info = mod_param, metrics = dyn_mtrc, eval_time = time_points,
       control = sctrl, initial = init_grid_dynamic_res)
     Condition
-      Warning in `tune_sim_anneal_workflow()`:
+      Warning in `tune_sim_anneal()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -25,7 +25,7 @@
       iter = 2, param_info = mod_param, metrics = mix_mtrc, eval_time = time_points,
       initial = init_grid_mixed_res, control = sctrl)
     Condition
-      Warning in `tune_sim_anneal_workflow()`:
+      Warning in `tune_sim_anneal()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
