@@ -5,7 +5,7 @@
       bayes_res <- mod_spec %>% tune_bayes(event_time ~ X1 + X2, sim_rs, initial = grid_res,
       iter = 2, metrics = srv_mtrc, eval_time = time_points)
     Condition
-      Warning:
+      Warning in `tune_bayes()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -16,7 +16,7 @@
       iter = 2, metrics = srv_mtrc, eval_time = time_points, control = control_sim_anneal(
         verbose_iter = FALSE))
     Condition
-      Warning:
+      Warning in `tune_sim_anneal()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -26,7 +26,7 @@
       anova_res <- mod_spec %>% tune_race_anova(event_time ~ X1 + X2, sim_rs, grid = grid,
       metrics = srv_mtrc, eval_time = time_points)
     Condition
-      Warning:
+      Warning in `tune_race_anova()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
 ---
@@ -36,6 +36,6 @@
       wl_res <- mod_spec %>% tune_race_win_loss(event_time ~ X1 + X2, sim_rs, grid = grid,
       metrics = srv_mtrc, eval_time = time_points)
     Condition
-      Warning:
+      Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 

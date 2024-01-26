@@ -34,7 +34,7 @@
     Code
       select_best(grid_static_res, metric = "concordance_survival", eval_time = 0)
     Condition
-      Warning in `show_best()`:
+      Warning in `select_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
     Output
       # A tibble: 1 x 2
@@ -91,7 +91,7 @@
       select_best(grid_integrated_res, metric = "brier_survival_integrated",
         eval_time = 0)
     Condition
-      Warning in `show_best()`:
+      Warning in `select_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
     Output
       # A tibble: 1 x 2
@@ -128,7 +128,7 @@
     Condition
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
-      Warning:
+      Warning in `select_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
@@ -151,7 +151,7 @@
     Code
       select_best(grid_dynamic_res, metric = "brier_survival", eval_time = c(5, 10))
     Condition
-      Warning:
+      Warning in `select_best()`:
       2 evaluation times are available; the first will be used (i.e. `eval_time = 5`).
     Output
       # A tibble: 1 x 2
@@ -172,7 +172,7 @@
     Code
       select_best(grid_dynamic_res, metric = "brier_survival", eval_time = 0)
     Condition
-      Error in `show_best()`:
+      Error in `select_best()`:
       ! Evaluation time 0 is not in the results.
 
 ---
@@ -204,7 +204,7 @@
     Condition
       Warning in `select_best()`:
       No value of `metric` was given; "brier_survival" will be used.
-      Warning:
+      Warning in `select_best()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
     Output
       # A tibble: 1 x 2
@@ -227,7 +227,7 @@
     Code
       select_best(grid_mixed_res, metric = "brier_survival_integrated", eval_time = 0)
     Condition
-      Warning in `show_best()`:
+      Warning in `select_best()`:
       An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
     Output
       # A tibble: 1 x 2
@@ -240,7 +240,7 @@
     Code
       select_best(grid_mixed_res, metric = "brier_survival", eval_time = 0)
     Condition
-      Error in `show_best()`:
+      Error in `select_best()`:
       ! Evaluation time 0 is not in the results.
 
 ---
