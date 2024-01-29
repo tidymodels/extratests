@@ -771,13 +771,10 @@ test_that("autoplot-ting survival models with different metric types", {
         iter = 2,
         metrics = mix_mtrc,
         eval_time = time_points,
-        initial = init_grid_mixed_res,
+        initial = grid_mixed_res,
         control = bctrl
       )
   })
-
-  # ------------------------------------------------------------------------------
-
 
   # ------------------------------------------------------------------------------
 
@@ -796,7 +793,7 @@ test_that("autoplot-ting survival models with different metric types", {
   expect_equal(exp_data_ptype, mix_grid$data[0,])
   expect_equal(
     unique(mix_grid$data$name),
-    c("Cost-Complexity Parameter (log-10)", "Minimal Node Size")
+    c("Tree Depth")
   )
   expect_equal(
     rlang::expr_text(mix_grid$mapping$x),
@@ -807,12 +804,16 @@ test_that("autoplot-ting survival models with different metric types", {
     "~mean"
   )
   expect_equal(
-    rlang::expr_text(mix_grid$facet$params$facets$name),
-    "~name"
+    rlang::expr_text(mix_grid$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_grid$data$.metric)),
+    c("brier_survival @10", "brier_survival_integrated", "concordance_survival")
   )
   expect_equal(
     map(mix_grid$labels, as.character),
-    list(y = "brier_survival @10", x = "")
+    list(x = "Tree Depth", y = "")
   )
 
   # ------------------------------------------------------------------------------
@@ -832,11 +833,7 @@ test_that("autoplot-ting survival models with different metric types", {
   expect_equal(exp_data_ptype, mix_mult_grid$data[0,])
   expect_equal(
     unique(mix_mult_grid$data$name),
-    c("Cost-Complexity Parameter (log-10)", "Minimal Node Size")
-  )
-  expect_equal(
-    unique(mix_mult_grid$data$.metric),
-    c("brier_survival @ 1", "brier_survival @10")
+    c("Tree Depth")
   )
   expect_equal(
     rlang::expr_text(mix_mult_grid$mapping$x),
@@ -847,32 +844,28 @@ test_that("autoplot-ting survival models with different metric types", {
     "~mean"
   )
   expect_equal(
-    names(mix_mult_grid$facet$params$rows),
-    ".metric"
+    rlang::expr_text(mix_mult_grid$facet$params$facets$.metric),
+    "~.metric"
   )
   expect_equal(
-    names(mix_mult_grid$facet$params$cols),
-    "name"
+    sort(unique(mix_mult_grid$data$.metric)),
+    c("brier_survival @ 1", "brier_survival @10", "brier_survival_integrated",
+      "concordance_survival")
   )
   expect_equal(
     map(mix_mult_grid$labels, as.character),
-    list(y = "", x = "")
+    list(x = "Tree Depth", y = "")
   )
 
   # ------------------------------------------------------------------------------
 
   mix_marginal <- autoplot(bayes_mixed_res)
 
-  exp_data_ptype <-
-    tibble::tibble(
-      mean = numeric(0),
-      `# resamples` = integer(0),
-      .metric = character(0),
-      name = character(0),
-      value = numeric(0)
-    )
-
   expect_equal(exp_data_ptype, mix_marginal$data[0,])
+  expect_equal(
+    unique(mix_marginal$data$name),
+    c("Tree Depth")
+  )
   expect_equal(
     rlang::expr_text(mix_marginal$mapping$x),
     "~value"
@@ -882,12 +875,17 @@ test_that("autoplot-ting survival models with different metric types", {
     "~mean"
   )
   expect_equal(
-    rlang::expr_text(mix_marginal$facet$params$facets$name),
-    "~name"
+    rlang::expr_text(mix_marginal$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_marginal$data$.metric)),
+    c("brier_survival @10", "brier_survival_integrated",
+      "concordance_survival")
   )
   expect_equal(
     map(mix_marginal$labels, as.character),
-    list(y = "brier_survival @10", x = "")
+    list(x = "Tree Depth", y = "")
   )
 
   # ------------------------------------------------------------------------------
@@ -895,25 +893,11 @@ test_that("autoplot-ting survival models with different metric types", {
   # multiple times
   mix_mult_marginal <- autoplot(bayes_mixed_res, eval_time = c(1, 5))
 
-  exp_data_ptype <-
-    tibble::tibble(
-      mean = numeric(0),
-      `# resamples` = integer(0),
-      .metric = character(0),
-      name = character(0),
-      value = numeric(0)
-    )
-
   expect_equal(exp_data_ptype, mix_mult_marginal$data[0,])
   expect_equal(
     unique(mix_mult_marginal$data$name),
-    c("Cost-Complexity Parameter (log-10)", "Minimal Node Size")
+    c("Tree Depth")
   )
-  expect_equal(
-    unique(mix_mult_marginal$data$.metric),
-    c("brier_survival @1", "brier_survival @5")
-  )
-
   expect_equal(
     rlang::expr_text(mix_mult_marginal$mapping$x),
     "~value"
@@ -923,16 +907,17 @@ test_that("autoplot-ting survival models with different metric types", {
     "~mean"
   )
   expect_equal(
-    names(mix_mult_marginal$facet$params$rows),
-    ".metric"
+    rlang::expr_text(mix_mult_marginal$facet$params$facets$.metric),
+    "~.metric"
   )
   expect_equal(
-    names(mix_mult_marginal$facet$params$cols),
-    "name"
+    sort(unique(mix_mult_marginal$data$.metric)),
+    c("brier_survival @ 1", "brier_survival @ 5", "brier_survival_integrated",
+      "concordance_survival")
   )
   expect_equal(
     map(mix_mult_marginal$labels, as.character),
-    list(y = "", x = "")
+    list(x = "Tree Depth", y = "")
   )
 
   # ------------------------------------------------------------------------------
@@ -941,8 +926,7 @@ test_that("autoplot-ting survival models with different metric types", {
 
   exp_data_ptype <-
     tibble::tibble(
-      cost_complexity = numeric(0),
-      min_n = integer(0),
+      tree_depth = numeric(0),
       .metric = character(0),
       .estimator = character(0),
       .eval_time = numeric(0),
@@ -955,6 +939,14 @@ test_that("autoplot-ting survival models with different metric types", {
 
   expect_equal(exp_data_ptype, mix_perf$data[0,])
   expect_equal(
+    rlang::expr_text(mix_perf$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_perf$data$.metric)),
+    c("brier_survival @10", "brier_survival_integrated", "concordance_survival")
+  )
+  expect_equal(
     rlang::expr_text(mix_perf$mapping$x),
     "~.iter"
   )
@@ -964,8 +956,9 @@ test_that("autoplot-ting survival models with different metric types", {
   )
   expect_equal(
     mix_perf$labels,
-    list(y = "brier_survival @10",
-         x = "Iteration")
+    list(x = "Iteration", y = "mean",
+         ymin = "mean - const * std_err",
+         ymax = "mean + const * std_err")
   )
 
   # ------------------------------------------------------------------------------
@@ -973,10 +966,10 @@ test_that("autoplot-ting survival models with different metric types", {
   # multiple times
   mix_mult_perf <- autoplot(bayes_mixed_res, type = "performance", eval_time = c(1, 5))
 
+
   exp_data_ptype <-
     tibble::tibble(
-      cost_complexity = numeric(0),
-      min_n = integer(0),
+      tree_depth = numeric(0),
       .metric = character(0),
       .estimator = character(0),
       .eval_time = numeric(0),
@@ -989,10 +982,15 @@ test_that("autoplot-ting survival models with different metric types", {
 
   expect_equal(exp_data_ptype, mix_mult_perf$data[0,])
   expect_equal(
-    unique(mix_mult_perf$data$.metric),
-    c("brier_survival @1", "brier_survival @5")
+    rlang::expr_text(mix_mult_perf$facet$params$facets$.metric),
+    "~.metric"
   )
-
+  expect_equal(
+    sort(unique(mix_mult_perf$data$.metric)),
+    c("brier_survival @ 1", "brier_survival @ 5",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
   expect_equal(
     rlang::expr_text(mix_mult_perf$mapping$x),
     "~.iter"
@@ -1002,12 +1000,10 @@ test_that("autoplot-ting survival models with different metric types", {
     "~mean"
   )
   expect_equal(
-    rlang::expr_text(mix_marginal$facet$params$facets$name),
-    "~name"
-  )
-  expect_equal(
     mix_mult_perf$labels,
-    list(x = "Iteration", y = "mean")
+    list(x = "Iteration", y = "mean",
+         ymin = "mean - const * std_err",
+         ymax = "mean + const * std_err")
   )
 
   # ------------------------------------------------------------------------------
@@ -1030,44 +1026,13 @@ test_that("autoplot-ting survival models with different metric types", {
     "~value"
   )
   expect_equal(
-    rlang::expr_text(mix_param$facet$params$facets$name),
-    "~name"
-  )
-  expect_equal(
     mix_param$labels,
-    list(y = "", x = "Iteration")
+    list(y = "Tree Depth", x = "Iteration")
   )
-
-  # ------------------------------------------------------------------------------
 
   expect_snapshot(
     mix_mult_param <- autoplot(bayes_mixed_res, type = "parameters", eval_time = c(10, 15))
   )
-  exp_data_ptype <-
-    tibble::tibble(
-      .iter = integer(0),
-      name = character(0),
-      value = double(0)
-    )
-  expect_equal(exp_data_ptype, mix_mult_param$data[0,])
-
-  expect_equal(
-    rlang::expr_text(mix_mult_param$mapping$x),
-    "~.iter"
-  )
-  expect_equal(
-    rlang::expr_text(mix_mult_param$mapping$y),
-    "~value"
-  )
-  expect_equal(
-    rlang::expr_text(mix_mult_param$facet$params$facets$name),
-    "~name"
-  )
-  expect_equal(
-    mix_mult_param$labels,
-    list(y = "", x = "Iteration")
-  )
-
 
 })
 
