@@ -38,3 +38,19 @@
       Warning:
       Evaluation times are not required with `autoplot(..., type = 'parameters')`.
 
+# autoplot() warning for unneeded evaluation times
+
+    Code
+      p1 <- autoplot(tune_res, eval_time = 10, metric = "concordance_survival")
+    Condition
+      Warning in `autoplot()`:
+      Evaluation times are only required when the results of a dynamic survival metric are being visualized (and will be ignored).
+
+---
+
+    Code
+      p2 <- autoplot(tune_res, eval_time = 10, metric = "brier_survival_integrated")
+    Condition
+      Warning in `autoplot()`:
+      Evaluation times are only required when the results of a dynamic survival metric are being visualized (and will be ignored).
+

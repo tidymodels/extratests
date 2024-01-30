@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(finetune))
 
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-skip_if_not_installed("tune", minimum_version = "1.1.2.9017")
+skip_if_not_installed("tune", minimum_version = "1.1.2.9018")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 skip_if_not_installed("finetune", minimum_version = "1.1.0.9005")
 
@@ -1035,4 +1035,31 @@ test_that("autoplot-ting survival models with different metric types", {
   )
 
 })
+
+test_that("autoplot() warning for unneeded evaluation times", {
+  skip_if_not_installed("glmnet")
+
+  lung_surv <- lung %>%
+    dplyr::mutate(surv = Surv(time, status), .keep = "unused")
+  set.seed(2193)
+  tune_res <-
+    proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+    tune_grid(
+      surv ~ .,
+      resamples = vfold_cv(lung_surv, 2),
+      grid = 2,
+      metrics = metric_set(concordance_survival, brier_survival_integrated),
+      eval_time = c(10, 20)
+    )
+
+  expect_snapshot(
+    p1 <- autoplot(tune_res, eval_time = 10, metric = "concordance_survival")
+  )
+  expect_snapshot(
+    p2 <- autoplot(tune_res, eval_time = 10, metric = "brier_survival_integrated")
+  )
+
+})
+
+
 
