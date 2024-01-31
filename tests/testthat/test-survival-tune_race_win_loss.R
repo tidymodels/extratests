@@ -63,19 +63,70 @@ test_that("race tuning (win_loss) survival models with static metric", {
     c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
   )
 
-  # test autoplot --------------------------------------------------------------
+  # test race plot -------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(wl_static_res)),
-    "stc-wl-race-plot"
+  stc_race_plot <- plot_race(wl_static_res)
+
+  expect_equal(
+    stc_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
   )
 
-  if (length(num_final_wl) > 1) {
-    expect_snapshot_plot(
-      print(autoplot(wl_static_res)),
-      "stc-wl-race-2-times"
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    stc_race_plot$labels,
+    list(y = "concordance_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
+  # test autoplot --------------------------------------------------------------
+
+  stc_autoplot <- autoplot(wl_static_res)
+
+  expect_equal(
+    stc_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
     )
-  }
+  )
+
+  expect_equal(
+    rlang::expr_text(stc_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(stc_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    stc_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
+  )
 
   # test metric collection -----------------------------------------------------
 
@@ -215,19 +266,70 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
     time_points
   )
 
-  # test autoplot --------------------------------------------------------------
+  # test race plot -------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(wl_integrated_res)),
-    "int-wl-race-plot"
+  int_race_plot <- plot_race(wl_integrated_res)
+
+  expect_equal(
+    int_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
   )
 
-  if (length(num_final_wl) > 1) {
-    expect_snapshot_plot(
-      print(autoplot(wl_integrated_res)),
-      "int-wl-racing"
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    int_race_plot$labels,
+    list(y = "brier_survival_integrated", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
+  # test autoplot --------------------------------------------------------------
+
+  int_autoplot <- autoplot(wl_integrated_res)
+
+  expect_equal(
+    int_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
     )
-  }
+  )
+
+  expect_equal(
+    rlang::expr_text(int_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(int_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    int_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "brier_survival_integrated",  alpha = "# resamples", size = "# resamples")
+  )
 
   # test metric collection
 
@@ -378,24 +480,71 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     time_points
   )
 
-  # test autoplot --------------------------------------------------------------
+  # test race plot -------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(wl_dyn_res)),
-    "dyn-wl-race-plot"
-  )
+  dyn_race_plot <- plot_race(wl_dyn_res)
 
-  expect_snapshot_plot(
-    print(autoplot(wl_dyn_res, eval_time = c(1, 5))),
-    "dyn-wl-race-2-times"
-  )
-
-  expect_snapshot(
-    expect_snapshot_plot(
-      print(autoplot(wl_dyn_res)),
-      "dyn-wl-race-0-times"
+  expect_equal(
+    dyn_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
     )
   )
+
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    dyn_race_plot$labels,
+    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
+  # test autoplot --------------------------------------------------------------
+
+  dyn_autoplot <- autoplot(wl_dyn_res)
+
+  expect_equal(
+    dyn_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(dyn_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    dyn_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "brier_survival @10",  alpha = "# resamples", size = "# resamples")
+  )
+
 
   # test metric collection -----------------------------------------------------
 
@@ -553,27 +702,152 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     time_points
   )
 
+  # test race plot -------------------------------------------------------------
+
+  mix_race_plot <- plot_race(wl_mixed_res)
+
+  expect_equal(
+    mix_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    mix_race_plot$labels,
+    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(wl_mixed_res)),
-    "wl-race-plot"
-  )
+  mix_autoplot <- autoplot(wl_mixed_res)
 
-  expect_snapshot_plot(
-    print(autoplot(wl_mixed_res, eval_time = c(1, 5))),
-    "mix-wl-race-2-times"
-  )
-  expect_snapshot_plot(
-    print(autoplot(wl_mixed_res, metric = "concordance_survival")),
-    "mix-wl-race-1-metric"
-  )
-
-  expect_snapshot(
-    expect_snapshot_plot(
-      print(autoplot(wl_mixed_res)),
-      "mix-wl-race-0-times"
+  expect_equal(
+    mix_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
     )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_autoplot$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_autoplot$data$.metric)),
+    c("brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
+
+  expect_equal(
+    mix_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "",  alpha = "# resamples", size = "# resamples")
+  )
+
+  ###
+
+  mix_multi_autoplot <- autoplot(wl_mixed_res, eval_time = c(1, 10))
+
+  expect_equal(
+    mix_multi_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_multi_autoplot$data$.metric)),
+    c("brier_survival @ 1","brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
+
+  expect_equal(
+    mix_multi_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "",  alpha = "# resamples", size = "# resamples")
+  )
+
+  ###
+
+  mix_alt_autoplot <- autoplot(wl_mixed_res, metric = "concordance_survival")
+
+  expect_equal(
+    mix_alt_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    mix_alt_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
   )
 
   # test metric collection -----------------------------------------------------

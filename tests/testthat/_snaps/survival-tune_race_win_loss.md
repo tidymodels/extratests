@@ -17,14 +17,6 @@
       Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
----
-
-    Code
-      expect_snapshot_plot(print(autoplot(wl_dyn_res)), "dyn-wl-race-0-times")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
-
 # race tuning (win_loss) survival models with mixture of metric types
 
     Code
@@ -35,14 +27,6 @@
     Condition
       Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
-
----
-
-    Code
-      expect_snapshot_plot(print(autoplot(wl_mixed_res)), "mix-wl-race-0-times")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
 
 ---
 
