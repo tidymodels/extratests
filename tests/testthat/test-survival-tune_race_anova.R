@@ -726,7 +726,6 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     time_points
   )
 
-
   # test race plot -------------------------------------------------------------
 
   mix_race_plot <- plot_race(aov_mixed_res)
@@ -804,6 +803,77 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
          y = "",  alpha = "# resamples", size = "# resamples")
   )
 
+
+  ###
+
+  mix_multi_autoplot <- autoplot(aov_mixed_res, eval_time = c(1, 10))
+
+  expect_equal(
+    mix_multi_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_multi_autoplot$data$.metric)),
+    c("brier_survival @ 1","brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
+
+  expect_equal(
+    mix_multi_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "",  alpha = "# resamples", size = "# resamples")
+  )
+
+  ###
+
+  mix_alt_autoplot <- autoplot(aov_mixed_res, metric = "concordance_survival")
+
+  expect_equal(
+    mix_alt_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    mix_alt_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
+  )
 
   # test metric collection -----------------------------------------------------
 
