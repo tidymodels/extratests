@@ -194,6 +194,18 @@ test_that("race tuning (anova) survival models with static metric", {
   expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_static_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with integrated metric", {
@@ -411,6 +423,19 @@ test_that("race tuning (anova) survival models with integrated metric", {
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_integrated_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    brier_survival_integrated = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with dynamic metrics", {
@@ -645,6 +670,19 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_dyn_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with mixture of metric types", {
@@ -983,6 +1021,22 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     show_best(aov_mixed_res, metric = "brier_survival_integrated") %>%
       select(-.estimator, -.config)
   )
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_mixed_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) - unneeded eval_time", {
