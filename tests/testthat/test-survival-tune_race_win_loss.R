@@ -192,6 +192,19 @@ test_that("race tuning (win_loss) survival models with static metric", {
   expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(wl_static_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
+
 })
 
 test_that("race tuning (win_loss) survival models with integrated metric", {
@@ -408,6 +421,19 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(wl_integrated_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    brier_survival_integrated = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (win_loss) survival models with dynamic metrics", {
@@ -628,6 +654,19 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(wl_dyn_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (win_loss) survival models with mixture of metric types", {
@@ -963,6 +1002,22 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     show_best(wl_mixed_res, metric = "brier_survival_integrated") %>%
       select(-.estimator, -.config)
   )
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(wl_mixed_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 
