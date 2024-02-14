@@ -42,11 +42,11 @@
       # A tibble: 5 x 6
         cost_complexity .metric        .eval_time  mean     n std_err
                   <dbl> <chr>               <dbl> <dbl> <int>   <dbl>
-      1          0.0841 brier_survival          1 0.201    30 0.00415
-      2          0.0891 brier_survival          1 0.201    30 0.00415
-      3          0.0944 brier_survival          1 0.201    30 0.00415
-      4          0.1    brier_survival          1 0.201    30 0.00415
-      5          0.0794 brier_survival          1 0.202    30 0.00418
+      1    0.0000000001 brier_survival          1 0.177    30 0.00707
+      2    0.0841       brier_survival          1 0.201    30 0.00415
+      3    0.0891       brier_survival          1 0.201    30 0.00415
+      4    0.0944       brier_survival          1 0.201    30 0.00415
+      5    0.1          brier_survival          1 0.201    30 0.00415
 
 ---
 
@@ -69,11 +69,11 @@
       # A tibble: 5 x 6
         cost_complexity .metric        .eval_time  mean     n std_err
                   <dbl> <chr>               <dbl> <dbl> <int>   <dbl>
-      1          0.0841 brier_survival          1 0.201    30 0.00415
-      2          0.0891 brier_survival          1 0.201    30 0.00415
-      3          0.0944 brier_survival          1 0.201    30 0.00415
-      4          0.1    brier_survival          1 0.201    30 0.00415
-      5          0.0794 brier_survival          1 0.202    30 0.00418
+      1    0.0000000001 brier_survival          1 0.177    30 0.00707
+      2    0.0841       brier_survival          1 0.201    30 0.00415
+      3    0.0891       brier_survival          1 0.201    30 0.00415
+      4    0.0944       brier_survival          1 0.201    30 0.00415
+      5    0.1          brier_survival          1 0.201    30 0.00415
 
 ---
 
@@ -87,11 +87,11 @@
       # A tibble: 5 x 6
         cost_complexity .metric                   .eval_time  mean     n std_err
                   <dbl> <chr>                          <dbl> <dbl> <int>   <dbl>
-      1          0.0794 brier_survival_integrated         NA 0.338    30 0.00487
-      2          0.0841 brier_survival_integrated         NA 0.338    30 0.00480
-      3          0.0891 brier_survival_integrated         NA 0.338    30 0.00480
-      4          0.0944 brier_survival_integrated         NA 0.338    30 0.00480
-      5          0.1    brier_survival_integrated         NA 0.338    30 0.00480
+      1    0.0000000001 brier_survival_integrated         NA 0.285    30 0.00426
+      2    0.0794       brier_survival_integrated         NA 0.338    30 0.00487
+      3    0.0841       brier_survival_integrated         NA 0.338    30 0.00480
+      4    0.0891       brier_survival_integrated         NA 0.338    30 0.00480
+      5    0.0944       brier_survival_integrated         NA 0.338    30 0.00480
 
 # race tuning (anova) - unneeded eval_time
 

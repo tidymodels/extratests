@@ -65,19 +65,70 @@ test_that("race tuning (anova) survival models with static metric", {
     c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
   )
 
-  # test autoplot --------------------------------------------------------------
+  # test race plot -------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(aov_static_res)),
-    "stc-aov-race-plot"
+  stc_race_plot <- plot_race(aov_static_res)
+
+  expect_equal(
+    stc_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
   )
 
-  if (length(num_final_aov) > 1) {
-    expect_snapshot_plot(
-      print(autoplot(aov_static_res)),
-      "stc-aov-race-2-times"
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(stc_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    stc_race_plot$labels,
+    list(y = "concordance_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
+  # test autoplot --------------------------------------------------------------
+
+  stc_autoplot <- autoplot(aov_static_res)
+
+  expect_equal(
+    stc_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
     )
-  }
+  )
+
+  expect_equal(
+    rlang::expr_text(stc_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(stc_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    stc_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
+  )
 
   # test metric collection -----------------------------------------------------
 
@@ -143,6 +194,18 @@ test_that("race tuning (anova) survival models with static metric", {
   expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_static_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with integrated metric", {
@@ -218,21 +281,72 @@ test_that("race tuning (anova) survival models with integrated metric", {
     time_points
   )
 
-  # test autoplot --------------------------------------------------------------
+  # test race plot -------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(aov_integrated_res)),
-    "int-aov-race-plot"
+  int_race_plot <- plot_race(aov_integrated_res)
+
+  expect_equal(
+    int_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
   )
 
-  if (length(num_final_aov) > 1) {
-    expect_snapshot_plot(
-      print(autoplot(aov_integrated_res)),
-      "int-aov-racing"
-    )
-  }
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(int_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    int_race_plot$labels,
+    list(y = "brier_survival_integrated", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
 
-  # test metric collection
+  # test autoplot --------------------------------------------------------------
+
+  int_autoplot <- autoplot(aov_integrated_res)
+
+  expect_equal(
+    int_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(int_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(int_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    int_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "brier_survival_integrated",  alpha = "# resamples", size = "# resamples")
+  )
+
+  # test metric collection -----------------------------------------------------
 
   exp_metric_sum <- tibble(
     cost_complexity = numeric(0),
@@ -309,6 +423,19 @@ test_that("race tuning (anova) survival models with integrated metric", {
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_integrated_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    brier_survival_integrated = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with dynamic metrics", {
@@ -395,12 +522,71 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
     time_points
   )
 
+  # test race plot -------------------------------------------------------------
+
+  dyn_race_plot <- plot_race(aov_dyn_res)
+
+  expect_equal(
+    dyn_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    dyn_race_plot$labels,
+    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(aov_dyn_res)),
-    "dyn-aov-race-plot"
+  dyn_autoplot <- autoplot(aov_dyn_res)
+
+  expect_equal(
+    dyn_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
   )
+
+  expect_equal(
+    rlang::expr_text(dyn_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(dyn_autoplot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    dyn_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "brier_survival @10",  alpha = "# resamples", size = "# resamples")
+  )
+
 
   # test metric collection -----------------------------------------------------
 
@@ -484,6 +670,19 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_dyn_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with mixture of metric types", {
@@ -565,11 +764,153 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     time_points
   )
 
+  # test race plot -------------------------------------------------------------
+
+  mix_race_plot <- plot_race(aov_mixed_res)
+
+  expect_equal(
+    mix_race_plot$data[0,],
+    tibble::tibble(
+      .config = character(0),
+      mean = numeric(0),
+      n = integer(0),
+      stage = integer(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$x),
+    "~stage"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$y),
+    "~mean"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$group),
+    "~.config"
+  )
+  expect_equal(
+    rlang::expr_text(mix_race_plot$mapping$colour),
+    "~.config"
+  )
+  expect_equal(
+    mix_race_plot$labels,
+    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
+         colour = ".config")
+  )
+
   # test autoplot --------------------------------------------------------------
 
-  expect_snapshot_plot(
-    print(plot_race(aov_mixed_res)),
-    "aov-race-plot"
+  mix_autoplot <- autoplot(aov_mixed_res)
+
+  expect_equal(
+    mix_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_autoplot$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_autoplot$data$.metric)),
+    c("brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
+
+  expect_equal(
+    mix_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "",  alpha = "# resamples", size = "# resamples")
+  )
+
+
+  ###
+
+  mix_multi_autoplot <- autoplot(aov_mixed_res, eval_time = c(1, 10))
+
+  expect_equal(
+    mix_multi_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_multi_autoplot$facet$params$facets$.metric),
+    "~.metric"
+  )
+  expect_equal(
+    sort(unique(mix_multi_autoplot$data$.metric)),
+    c("brier_survival @ 1","brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival")
+  )
+
+  expect_equal(
+    mix_multi_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "",  alpha = "# resamples", size = "# resamples")
+  )
+
+  ###
+
+  mix_alt_autoplot <- autoplot(aov_mixed_res, metric = "concordance_survival")
+
+  expect_equal(
+    mix_alt_autoplot$data[0,],
+    tibble::tibble(
+      mean = numeric(0),
+      `# resamples` = integer(0),
+      .metric = character(0),
+      name = character(0),
+      value = numeric(0)
+    )
+  )
+
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$x),
+    "~value"
+  )
+  expect_equal(
+    rlang::expr_text(mix_alt_autoplot$mapping$y),
+    "~mean"
+  )
+
+  expect_equal(
+    mix_alt_autoplot$labels,
+    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
+         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
   )
 
   # test metric collection -----------------------------------------------------
@@ -680,6 +1021,22 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     show_best(aov_mixed_res, metric = "brier_survival_integrated") %>%
       select(-.estimator, -.config)
   )
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(aov_mixed_res, type = "wide")
+  exp_metric_all <- tibble(
+    cost_complexity = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) - unneeded eval_time", {

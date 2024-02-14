@@ -113,6 +113,18 @@ test_that("grid tuning survival models with static metric", {
   expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(grid_static_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    concordance_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with integrated metric", {
@@ -245,6 +257,18 @@ test_that("grid tuning survival models with integrated metric", {
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(grid_integrated_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    brier_survival_integrated = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -386,6 +410,19 @@ test_that("grid tuning survival models with dynamic metric", {
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(grid_dynamic_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models mixture of metric types", {
@@ -543,4 +580,18 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_snapshot(
     show_best(grid_mixed_res, metric = "brier_survival_integrated")
   )
+
+  # test metric collection pivoting --------------------------------------------
+
+  skip_if_not_installed("tune", "1.1.2.9019")
+
+  metric_all <- collect_metrics(grid_mixed_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% slice(), exp_metric_all)
 })
