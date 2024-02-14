@@ -16,7 +16,7 @@
         10, 15))
     Condition
       Warning:
-      Evaluation times are not required with `autoplot(..., type = 'parameters')`.
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
 
 # autoplot-ting survival models with different metric types
 
@@ -36,7 +36,7 @@
         10, 15))
     Condition
       Warning:
-      Evaluation times are not required with `autoplot(..., type = 'parameters')`.
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
 
 # autoplot() warning for unneeded evaluation times
 
@@ -44,7 +44,7 @@
       p1 <- autoplot(tune_res, eval_time = 10, metric = "concordance_survival")
     Condition
       Warning in `autoplot()`:
-      Evaluation times are only required when the results of a dynamic survival metric are being visualized (and will be ignored).
+      `eval_time` is only used for dynamic survival metrics.
 
 ---
 
@@ -52,5 +52,5 @@
       p2 <- autoplot(tune_res, eval_time = 10, metric = "brier_survival_integrated")
     Condition
       Warning in `autoplot()`:
-      Evaluation times are only required when the results of a dynamic survival metric are being visualized (and will be ignored).
+      `eval_time` is only used for dynamic survival metrics.
 
