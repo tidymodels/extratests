@@ -90,7 +90,7 @@ test_that("show_best with censored data - dynamic metric - bayes", {
 test_that("show_best with censored data - static metric - anova racing", {
 
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9020")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
 
   obj <- make_churn_cens_objects()
@@ -143,7 +143,7 @@ test_that("show_best with censored data - static metric - anova racing", {
 test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
 
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9020")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
 
   obj <- make_churn_cens_objects()
