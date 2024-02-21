@@ -5,7 +5,7 @@
         eval_time = 5) %>% pluck("cost_complexity") %>% unique()
     Condition
       Warning in `show_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
 
 # race tuning (anova) survival models with dynamic metrics
 
@@ -101,7 +101,7 @@
         eval_time = 10)
     Condition
       Warning in `tune_race_anova()`:
-      Evaluation times are only required when the model mode is "censored regression" (and will be ignored).
+      `eval_time` is only used for models with mode "censored regression".
 
 ---
 
@@ -111,5 +111,5 @@
           concordance_survival), eval_time = 10)
     Condition
       Warning in `tune_race_anova()`:
-      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+      `eval_time` is only used for dynamic or integrated survival metrics.
 

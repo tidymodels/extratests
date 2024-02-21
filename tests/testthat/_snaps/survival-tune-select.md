@@ -35,7 +35,7 @@
       select_best(grid_static_res, metric = "concordance_survival", eval_time = 0)
     Condition
       Warning in `select_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
     Output
       # A tibble: 1 x 2
         penalty .config              
@@ -92,7 +92,7 @@
         eval_time = 0)
     Condition
       Warning in `select_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
     Output
       # A tibble: 1 x 2
         penalty .config              
@@ -228,7 +228,7 @@
       select_best(grid_mixed_res, metric = "brier_survival_integrated", eval_time = 0)
     Condition
       Warning in `select_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
     Output
       # A tibble: 1 x 2
         penalty .config              

@@ -6,7 +6,7 @@
       metrics = stc_mtrc, control = rsctrl, eval_time = time_points)
     Condition
       Warning in `fit_resamples()`:
-      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+      `eval_time` is only used for dynamic or integrated survival metrics.
 
 # resampling survival models mixture of metric types
 

@@ -68,7 +68,7 @@
       show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
     Condition
       Warning in `show_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
     Output
       # A tibble: 1 x 7
         cost_complexity .metric              .estimator  mean     n std_err .config   
@@ -106,7 +106,7 @@
       show_best(race_stc_res, metric = "concordance_survival", eval_time = 1)
     Condition
       Warning in `show_best()`:
-      An evaluation time is only required when a dynamic metric is selected (and `eval_time` will thus be ignored).
+      `eval_time` is only used for dynamic survival metrics.
     Output
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
