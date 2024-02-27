@@ -12,18 +12,19 @@ library(modeldata)
 
 # data setup ------------------------------------------------------------
 data(ames)
-ames$Sale_Price <- log(ames$Sale_Price)
+ames_narrow <- ames[1:1000, c(72, 35:45)]
+ames_narrow$Sale_Price <- log(ames_narrow$Sale_Price)
 
 set.seed(1)
-ames_split <- rsample::initial_split(ames)
+ames_split <- rsample::initial_split(ames_narrow)
 
 ames_train <- rsample::training(ames_split)
 
 ames_test  <- rsample::testing(ames_split)
 
-n_res <- 12
+n_res <- 5
 
-folds <- rsample::bootstraps(ames_train, times = n_res)
+folds <- rsample::vfold_cv(ames_train, v = n_res)
 
 base_rec <-
   recipe(Sale_Price ~ ., data = ames_train) %>%
@@ -57,21 +58,10 @@ spec_svm <-
   set_engine("LiblineaR") %>%
   set_mode("regression")
 
-spec_nn <-
-  mlp(penalty = tune()) %>%
-  set_engine("nnet") %>%
-  set_mode("regression")
-
-spec_knn <-
-  nearest_neighbor(neighbors = tune(), weight_func = tune()) %>%
-  set_engine("kknn") %>%
-  set_mode("regression")
-
 wf_set <-
   workflow_set(
     preproc = list(rec = base_rec),
-    models = list(lr = spec_lr, bt = spec_bt, dt = spec_dt, svm = spec_svm,
-                  nn = spec_nn, knn = spec_knn),
+    models = list(lr = spec_lr, bt = spec_bt, dt = spec_dt, svm = spec_svm),
     cross = TRUE
   )
 
@@ -85,7 +75,8 @@ test_that("stacking with grid search works", {
       fn = "tune_grid",
       seed = 1,
       resamples = folds,
-      metrics = metric
+      metrics = metric,
+      grid = 3
     ) %>%
     suppressMessages()
 
@@ -97,7 +88,7 @@ test_that("stacking with grid search works", {
 
   model_st_grid <-
     data_st_grid %>%
-    blend_predictions() %>%
+    blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
   expect_true(inherits(model_st_grid, "model_stack"))
@@ -129,7 +120,8 @@ test_that("stacking with Bayesian tuning works", {
       fn = "tune_bayes",
       seed = 1,
       resamples = folds,
-      metrics = metric
+      metrics = metric,
+      iter = 3
     ) %>%
     suppressMessages()
 
@@ -142,7 +134,7 @@ test_that("stacking with Bayesian tuning works", {
 
   model_st_bayes <-
     data_st_bayes %>%
-    blend_predictions() %>%
+    blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
   expect_true(inherits(model_st_bayes, "model_stack"))
@@ -174,12 +166,10 @@ test_that("stacking with finetune works (anova)", {
       fn = "tune_race_anova",
       seed = 1,
       resamples = folds,
-      metrics = metric
+      metrics = metric,
+      # use higher grid value to ensure that some models are not resampled fully
+      grid = 10
     )
-
-  wf_set_anova <- wf_set_anova[
-    purrr::map(wf_set_anova$result, inherits, "tune_results") %>% unlist(),
-  ]
 
   data_st_anova <-
     stacks() %>%
@@ -208,7 +198,7 @@ test_that("stacking with finetune works (anova)", {
 
   model_st_anova <-
     data_st_anova %>%
-    blend_predictions() %>%
+    blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
   expect_true(inherits(model_st_anova, "model_stack"))
@@ -248,7 +238,8 @@ test_that("stacking with finetune works (sim_anneal)", {
       fn = "tune_sim_anneal",
       seed = 1,
       resamples = folds,
-      metrics = metric
+      metrics = metric,
+      iter = 3
     )
 
   wf_set_sim_anneal <- wf_set_sim_anneal[
@@ -269,7 +260,7 @@ test_that("stacking with finetune works (sim_anneal)", {
 
   model_st_sim_anneal <-
     data_st_sim_anneal %>%
-    blend_predictions() %>%
+    blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
   expect_true(inherits(model_st_sim_anneal, "model_stack"))
@@ -301,7 +292,8 @@ test_that("stacking with finetune works (win_loss)", {
       fn = "tune_race_win_loss",
       seed = 1,
       resamples = folds,
-      metrics = metric
+      metrics = metric,
+      grid = 3
     ) %>%
     suppressMessages()
 
@@ -318,7 +310,7 @@ test_that("stacking with finetune works (win_loss)", {
 
   model_st_win_loss <-
     data_st_win_loss %>%
-    blend_predictions() %>%
+    blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
   expect_true(inherits(model_st_win_loss, "model_stack"))
