@@ -18,7 +18,8 @@ test_that('grid search', {
       tune_grid(mpg ~ ., resamples = rs, grid = 4),
     regex = NA
   )
-  expect_equal(nrow(collect_metrics(mars_tune)), 8)
+  num_mtrc <- nrow(as_tibble(.get_tune_metrics(mars_tune)))
+  expect_equal(nrow(collect_metrics(mars_tune)), num_mtrc * 4)
 })
 
 
@@ -33,7 +34,8 @@ test_that('Bayes search', {
       suppressMessages(),
     regex = NA
   )
-  expect_equal(nrow(collect_metrics(mars_search)), 10)
+  num_mtrc <- nrow(as_tibble(.get_tune_metrics(mars_search)))
+  expect_equal(nrow(collect_metrics(mars_search)), num_mtrc * 5)
 })
 
 

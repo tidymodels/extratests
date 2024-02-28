@@ -22,7 +22,8 @@ test_that('grid search', {
       suppressMessages(),
     regex = NA
   )
-  expect_equal(nrow(collect_metrics(rf_tune)), 8)
+  num_mtrc <- nrow(as_tibble(.get_tune_metrics(rf_tune)))
+  expect_equal(nrow(collect_metrics(rf_tune)), num_mtrc * 4)
 })
 
 
@@ -37,6 +38,7 @@ test_that('Bayes search', {
       suppressMessages(),
     regex = NA
   )
-  expect_equal(nrow(collect_metrics(rf_search)), 10)
+  num_mtrc <- nrow(as_tibble(.get_tune_metrics(rf_search)))
+  expect_equal(nrow(collect_metrics(rf_search)), num_mtrc * 5)
 })
 
