@@ -5,7 +5,7 @@
         resamples = sim_rs, metrics = stc_mtrc, eval_time = time_points, control = ctrl)
     Condition
       Warning in `tune::fit_resamples()`:
-      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+      `eval_time` is only used for dynamic or integrated survival metrics.
       Warning in `tune::fit_resamples()`:
-      Evaluation times are only required when dynamic or integrated metrics are used (and will be ignored here).
+      `eval_time` is only used for dynamic or integrated survival metrics.
 
