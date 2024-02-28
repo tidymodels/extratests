@@ -81,7 +81,7 @@ jobs:
           try(pak::pkg_install("tidymodels/yardstick"))
           try(pak::pkg_install("tidymodels/finetune"))
           try(pak::pkg_install("business-science/modeltime"))
-          try(pak::pkg_install("tidymodels/workflowsets#144"))
+          try(pak::pkg_install("tidymodels/workflowsets"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
