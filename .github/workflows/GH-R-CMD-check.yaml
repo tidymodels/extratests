@@ -79,7 +79,7 @@ jobs:
           try(pak::pkg_install("tidymodels/workflows"))
           try(pak::pkg_install("tidymodels/yardstick"))
           try(pak::pkg_install("business-science/modeltime"))
-          try(pak::pkg_install("tidymodels/workflowsets"))
+          try(pak::pkg_install("tidymodels/workflowsets#149"))
           try(pak::pkg_install("tidymodels/finetune#105"))
           try(pak::pkg_install("tidymodels/tune#863"))
         shell: Rscript {0}
