@@ -78,7 +78,7 @@ test_that('bag_mars - earth case weights', {
       bag_mars() %>%
       set_engine("earth", times = 2) %>%
       set_mode("regression") %>%
-      fit(Sale_Price ~ ., data = dat$full, case_weights = dat$wts)
+      fit(Sale_Price ~ ., data = dat$full[1:100,], case_weights = dat$wts[1:100])
   },
   regexp = NA)
 
@@ -87,7 +87,7 @@ test_that('bag_mars - earth case weights', {
     bag_mars() %>%
     set_engine("earth", times = 2) %>%
     set_mode("regression") %>%
-    fit(Sale_Price ~ ., data = dat$full)
+    fit(Sale_Price ~ ., data = dat$full[1:100,])
 
   expect_unequal(unwt_fit$fit$imp, wt_fit$fit$imp)
 })
