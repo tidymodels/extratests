@@ -274,3 +274,70 @@ test_that("percentile internals for survival models mixture of metric types", {
   expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "concordance_survival"])))
 
 })
+
+test_that("percentile internals for subset of eval times", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+  skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
+  skip_if_not_installed("tune", minimum_version = "1.1.2.9013")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.0")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    bag_tree() %>%
+    set_mode("censored regression")
+
+  rsctrl <- control_resamples(save_pred = TRUE)
+
+  # resampling models with a mixture of metrics --------------------------------
+
+  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+
+  set.seed(2193)
+  rs_mixed_res <-
+    mod_spec %>%
+    fit_resamples(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = rsctrl
+    )
+
+  set.seed(1)
+  mixed_int <- int_pctl(rs_mixed_res, times = 1001, eval_time = c(10, 5))
+
+  exp_ptype <-
+    tibble::tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .eval_time = numeric(0),
+      .lower = numeric(0),
+      .estimate = numeric(0),
+      .upper = numeric(0),
+      .config = character(0),
+    )
+
+  expect_equal(mixed_int[0,], exp_ptype)
+  expect_true(nrow(mixed_int) == (2 + 2))
+  expect_true(sum(mixed_int$.metric == "brier_survival") == 2)
+  expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
+  expect_true(sum(mixed_int$.metric == "concordance_survival") == 1)
+  expect_true(all(!is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])))
+  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival_integrated"])))
+  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "concordance_survival"])))
+})
