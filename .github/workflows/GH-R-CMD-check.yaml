@@ -85,7 +85,7 @@ jobs:
           try(pak::pkg_install(c(
             "tidymodels/dials",
             "tidymodels/hardhat",
-            "tidymodels/modeldata"
+            "tidymodels/modeldata",
             "tidymodels/rsample",
             "tidymodels/spatialsample",
             "tidymodels/yardstick"
