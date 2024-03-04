@@ -399,6 +399,7 @@ test_that("class predictions are factors with all levels", {
 
 test_that('error traps', {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.0.9001")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
@@ -413,7 +414,6 @@ test_that('error traps', {
       set_engine("glmnet") %>%
       fit(class ~ ., data = hpc_data)
   })
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
   expect_snapshot(error = TRUE, {
     multinom_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
