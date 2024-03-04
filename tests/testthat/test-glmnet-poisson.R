@@ -134,6 +134,7 @@ test_that("model errors on missing penalty value", {
 
 test_that("predict() errors with multiple penalty values", {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.0.9001")
 
   skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
   expect_snapshot(error = TRUE, {

@@ -377,6 +377,7 @@ test_that("class predictions are factors with all levels", {
 
 test_that('error traps', {
   skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.0.9001")
 
   data("lending_club", package = "modeldata", envir = rlang::current_env())
 
@@ -393,7 +394,6 @@ test_that('error traps', {
       fit(Class ~ log(funded_amnt) + int_rate + term,
           data = lending_club)
   })
-  skip_if_not_installed("parsnip", minimum_version = "1.0.4.9003")
   expect_snapshot(error = TRUE, {
     logistic_reg(penalty = 0.01) %>%
       set_engine("glmnet") %>%
