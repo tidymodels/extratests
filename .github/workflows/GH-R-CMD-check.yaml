@@ -58,30 +58,38 @@ jobs:
 
       - name: Install devel versions
         run: |
-          try(pak::pkg_install("tidymodels/baguette"))
-          try(pak::pkg_install("tidymodels/bonsai"))
-          try(pak::pkg_install("tidymodels/censored"))
-          try(pak::pkg_install("tidymodels/dials"))
-          try(pak::pkg_install("tidymodels/discrim"))
-          try(pak::pkg_install("tidymodels/hardhat"))
-          try(pak::pkg_install("tidymodels/modeldata"))
-          try(pak::pkg_install("tidymodels/multilevelmod"))
-          try(pak::pkg_install("tidymodels/parsnip"))
-          try(pak::pkg_install("tidymodels/plsmod"))
-          try(pak::pkg_install("tidymodels/poissonreg"))
-          try(pak::pkg_install("tidymodels/recipes"))
-          try(pak::pkg_install("tidymodels/rsample"))
-          try(pak::pkg_install("tidymodels/rules"))
-          try(pak::pkg_install("tidymodels/spatialsample"))
-          try(pak::pkg_install("tidymodels/stacks"))
-          try(pak::pkg_install("tidymodels/themis"))
-          try(pak::pkg_install("tidymodels/tidymodels"))
-          try(pak::pkg_install("tidymodels/tune"))
-          try(pak::pkg_install("tidymodels/workflows"))
-          try(pak::pkg_install("tidymodels/yardstick"))
-          try(pak::pkg_install("tidymodels/finetune"))
-          try(pak::pkg_install("business-science/modeltime"))
-          try(pak::pkg_install("tidymodels/workflowsets"))
+          # from most dependency-heavy to least
+          try(pak::pkg_install(c(
+            "business-science/modeltime",
+            "tidymodels/finetune",
+            "tidymodels/recipes",
+            "tidymodels/stacks",
+            "tidymodels/themis",
+            "tidymodels/tidymodels",
+            "tidymodels/tune",
+            "tidymodels/workflowsets",
+            "tidymodels/workflows"
+          )))
+          # parsnip and its extensions
+          try(pak::pkg_install(c(
+            "tidymodels/baguette",
+            "tidymodels/bonsai",
+            "tidymodels/censored",
+            "tidymodels/discrim",
+            "tidymodels/multilevelmod",
+            "tidymodels/parsnip",
+            "tidymodels/plsmod",
+            "tidymodels/poissonreg",
+            "tidymodels/rules"
+          )))
+          try(pak::pkg_install(c(
+            "tidymodels/dials",
+            "tidymodels/hardhat",
+            "tidymodels/modeldata",
+            "tidymodels/rsample",
+            "tidymodels/spatialsample",
+            "tidymodels/yardstick"
+          )))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
