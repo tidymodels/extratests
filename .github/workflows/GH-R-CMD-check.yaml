@@ -64,6 +64,7 @@ jobs:
             "tidymodels/finetune",
             "tidymodels/recipes",
             "tidymodels/stacks",
+            "tidymodels/themis",
             "tidymodels/tidymodels",
             "tidymodels/tune",
             "tidymodels/workflowsets",
@@ -79,8 +80,7 @@ jobs:
             "tidymodels/parsnip",
             "tidymodels/plsmod",
             "tidymodels/poissonreg",
-            "tidymodels/rules",
-            "tidymodels/themis"
+            "tidymodels/rules"
           )))
           try(pak::pkg_install(c(
             "tidymodels/dials",
