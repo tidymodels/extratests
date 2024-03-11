@@ -124,7 +124,7 @@ test_that("grid tuning survival models with static metric", {
     concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with integrated metric", {
@@ -268,7 +268,7 @@ test_that("grid tuning survival models with integrated metric", {
     brier_survival_integrated = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -422,7 +422,7 @@ test_that("grid tuning survival models with dynamic metric", {
     brier_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models mixture of metric types", {
@@ -593,5 +593,5 @@ test_that("grid tuning survival models mixture of metric types", {
     brier_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })

@@ -70,7 +70,7 @@ test_that("show_best with censored data - dynamic metric - bayes", {
     bayes_dyn_res %>%
       collect_metrics() %>%
       arrange(mean) %>%
-      slice(1:2)
+      dplyr::slice(1:2)
   )
   expect_snapshot(
     show_best(bayes_dyn_res)
@@ -119,7 +119,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     count(.config) %>%
     filter(n == num_rs) %>%
     arrange(.config) %>%
-    slice(1) %>%
+    dplyr::slice(1) %>%
     pluck(".config")
 
   expect_equal(
@@ -178,7 +178,7 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     collect_metrics() %>%
     filter(.metric == "concordance_survival" & n == num_rs) %>%
     arrange(desc(mean)) %>%
-    slice(1:5) %>%
+    dplyr::slice(1:5) %>%
     pluck(".config")
 
   expect_equal(
@@ -241,7 +241,7 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     collect_metrics() %>%
     filter(.metric == "brier_survival" & n == num_rs) %>%
     arrange(mean) %>%
-    slice(1:5) %>%
+    dplyr::slice(1:5) %>%
     pluck(".config")
 
   expect_equal(
