@@ -205,7 +205,7 @@ test_that("race tuning (anova) survival models with static metric", {
     concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with integrated metric", {
@@ -435,7 +435,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
     brier_survival_integrated = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with dynamic metrics", {
@@ -682,7 +682,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
     brier_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) survival models with mixture of metric types", {
@@ -1036,7 +1036,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% slice(), exp_metric_all)
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) - unneeded eval_time", {

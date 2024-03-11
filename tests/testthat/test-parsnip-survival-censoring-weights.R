@@ -150,7 +150,7 @@ test_that('compute Graf weights', {
       predict(mod_fit, df, type = "time"),
       df
     ) %>%
-    slice(5)
+    dplyr::slice(5)
 
   wt_times <-
     parsnip:::graf_weight_time_vec(pred_surv$surv,
