@@ -10,7 +10,13 @@
     Message
       > A | warning: ope! yikes.
       > B | error:   AHHhH
-      There were issues with some computations   A: x5   B: x5
+
+---
+
+    Code
+      catalog_summary_test
+    Output
+      A: x5   B: x5
 
 ---
 
@@ -25,5 +31,11 @@
     Message
       > A | warning: ope! yikes.
       > B | error:   AHHhH
-      There were issues with some computations   A: x75   B: x75
+
+---
+
+    Code
+      catalog_summary_test
+    Output
+      A: x75   B: x75
 
