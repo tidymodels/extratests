@@ -31,23 +31,19 @@ test_that("interactive logger works (finetune integration, error)", {
   expect_snapshot(
     {res_anova <-
       tune_race_anova(
-        parsnip::decision_tree(
-          cost_complexity = tune(), min_n = tune(), mode = "regression"
-        ),
+        parsnip::nearest_neighbor("regression", "kknn", neighbors = tune()),
         Sale_Price ~ .,
         rsample::vfold_cv(modeldata::ames[, c(72, 40:45)], 5),
         control = control_race(extract = function(x) {raise_warning(); raise_error()})
       )},
-    transform = catalog_lines("A: x39   B: x39")
+    transform = catalog_lines("A: x5   B: x5")
   )
 
   set.seed(1)
   expect_snapshot(
     {res_sa <-
       tune_sim_anneal(
-        parsnip::decision_tree(
-          cost_complexity = tune(), min_n = tune(), mode = "regression"
-        ),
+        parsnip::nearest_neighbor("regression", "kknn", neighbors = tune()),
         Sale_Price ~ .,
         rsample::vfold_cv(modeldata::ames[, c(72, 40:45)], 5),
         initial = res_anova,
