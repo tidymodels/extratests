@@ -157,15 +157,11 @@ test_that("workflow with tunable recipe and model", {
 
 
 test_that('test tunable parameter values', {
-  # depends on whether tune >= 0.1.6.9001 is installed
-  skip_if(inherits(try(tunable(), silent = TRUE), "try-error"))
-
   print_parameters <- function(x) {
     params <- tunable(x)
     info <- params$call_info
-    names(info) <- params$names
-    print(info)
-    invisible(NULL)
+    names(info) <- params$name
+    info
   }
 
   expect_snapshot(
@@ -175,7 +171,7 @@ test_that('test tunable parameter values', {
   )
 
   expect_snapshot(
-    rules::C5_rules(trees = tune(), min_n = tune()) %>%
+    C5_rules(trees = tune(), min_n = tune()) %>%
       set_engine('C5.0') %>%
       print_parameters()
   )
