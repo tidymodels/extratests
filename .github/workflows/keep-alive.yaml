@@ -1,0 +1,26 @@
+# keeps Actions alive by pushing a dummy commit to main after 45 days
+# of inactivity
+name: Keep Actions alive
+on:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  main-job:
+    name: Main Job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+  keepalive-job:
+    name: Keep alive
+    if: ${{ always() }}
+    needs: main-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          use_api: false
+          committer_username: ${{ github.repository_owner }}
+          committer_email: ${{ github.repository_owner }}@users.noreply.github.com
