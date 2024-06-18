@@ -1,0 +1,25 @@
+# keeps Actions alive by pushing a dummy commit to main once a month
+name: Keep Actions alive
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  empty-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Make an empty commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Monthly empty commit"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin main
