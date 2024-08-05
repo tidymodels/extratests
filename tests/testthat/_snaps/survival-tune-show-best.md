@@ -26,11 +26,11 @@
       # A tibble: 5 x 9
         cost_complexity .metric     .estimator .eval_time   mean     n std_err .config
                   <dbl> <chr>       <chr>           <dbl>  <dbl> <int>   <dbl> <chr>  
-      1        1.26e- 9 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
-      2        1.31e- 6 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
-      3        3.55e- 8 brier_surv~ standard          100 0.0114    10 0.00312 Iter2  
-      4        1.00e-10 brier_surv~ standard          100 0.0114    10 0.00312 Iter3  
-      5        3.91e- 5 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
+      1        7.81e- 5 brier_surv~ standard          100 0.0110    10 0.00316 Prepro~
+      2        1.03e-10 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
+      3        9.12e- 8 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
+      4        3.56e- 6 brier_surv~ standard          100 0.0114    10 0.00312 Iter1  
+      5        2.24e- 9 brier_surv~ standard          100 0.0114    10 0.00312 Iter2  
       # i 1 more variable: .iter <int>
 
 ---
@@ -94,11 +94,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0706    concordance~ standard           NA 0.297    10  0.0118 Prepro~
-      2       0.0000128 concordance~ standard           NA 0.278    10  0.0147 Prepro~
-      3       0.0000591 concordance~ standard           NA 0.275    10  0.0152 Prepro~
-      4       0.0000959 concordance~ standard           NA 0.274    10  0.0149 Prepro~
-      5       0.000374  concordance~ standard           NA 0.256    10  0.0133 Prepro~
+      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 Prepro~
+      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 Prepro~
+      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 Prepro~
+      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 Prepro~
+      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 Prepro~
 
 ---
 
@@ -111,11 +111,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0706    concordance~ standard           NA 0.297    10  0.0118 Prepro~
-      2       0.0000128 concordance~ standard           NA 0.278    10  0.0147 Prepro~
-      3       0.0000591 concordance~ standard           NA 0.275    10  0.0152 Prepro~
-      4       0.0000959 concordance~ standard           NA 0.274    10  0.0149 Prepro~
-      5       0.000374  concordance~ standard           NA 0.256    10  0.0133 Prepro~
+      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 Prepro~
+      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 Prepro~
+      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 Prepro~
+      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 Prepro~
+      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 Prepro~
 
 ---
 
@@ -136,11 +136,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric     .estimator .eval_time   mean     n std_err .config
                   <dbl> <chr>       <chr>           <dbl>  <dbl> <int>   <dbl> <chr>  
-      1       0.0000591 brier_surv~ standard          100 0.0110    10 0.00314 Prepro~
-      2       0.0000959 brier_surv~ standard          100 0.0110    10 0.00317 Prepro~
-      3       0.0000128 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
-      4       0.000374  brier_surv~ standard          100 0.0114    10 0.00340 Prepro~
-      5       0.000822  brier_surv~ standard          100 0.0124    10 0.00319 Prepro~
+      1       0.000327  brier_surv~ standard          100 0.0108    10 0.00329 Prepro~
+      2       0.000118  brier_surv~ standard          100 0.0110    10 0.00317 Prepro~
+      3       0.0000192 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
+      4       0.0000384 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
+      5       0.0000107 brier_surv~ standard          100 0.0114    10 0.00312 Prepro~
 
 ---
 
@@ -153,11 +153,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0000128 concordance~ standard           NA 0.278    10  0.0147 Prepro~
-      2       0.0000591 concordance~ standard           NA 0.275    10  0.0152 Prepro~
-      3       0.0000959 concordance~ standard           NA 0.274    10  0.0149 Prepro~
-      4       0.000374  concordance~ standard           NA 0.256    10  0.0133 Prepro~
-      5       0.000822  concordance~ standard           NA 0.238    10  0.0182 Prepro~
+      1       0.0000192 concordance~ standard           NA 0.279    10  0.0147 Prepro~
+      2       0.0000107 concordance~ standard           NA 0.278    10  0.0147 Prepro~
+      3       0.0000384 concordance~ standard           NA 0.277    10  0.0156 Prepro~
+      4       0.000118  concordance~ standard           NA 0.270    10  0.0141 Prepro~
+      5       0.000327  concordance~ standard           NA 0.260    10  0.0142 Prepro~
 
 ---
 
