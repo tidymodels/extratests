@@ -157,7 +157,7 @@
       2       0.0000107 concordance~ standard           NA 0.278    10  0.0147 Prepro~
       3       0.0000384 concordance~ standard           NA 0.277    10  0.0156 Prepro~
       4       0.000118  concordance~ standard           NA 0.270    10  0.0141 Prepro~
-      5       0.000327  concordance~ standard           NA 0.260    10  0.0142 Prepro~
+      5       0.000327  concordance~ standard           NA 0.259    10  0.0142 Prepro~
 
 ---
 
