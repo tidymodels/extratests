@@ -13,7 +13,8 @@
         predict(hpc_data, penalty = 0:1)
     Condition
       Error in `.check_glmnet_penalty_predict()`:
-      ! `penalty` should be a single numeric value. `multi_predict()` can be used to get multiple predictions per row of data.
+      ! `penalty` should be a single numeric value.
+      i `multi_predict()` can be used to get multiple predictions per row of data.
 
 ---
 
@@ -21,10 +22,10 @@
       multinom_reg() %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc_data)
     Condition
       Error in `.check_glmnet_penalty_fit()`:
-      ! For the glmnet engine, `penalty` must be a single number (or a value of `tune()`).
-      * There are 0 values for `penalty`.
-      * To try multiple values for total regularization, use the tune package.
-      * To predict multiple penalties, use `multi_predict()`
+      x For the glmnet engine, `penalty` must be a single number (or a value of `tune()`).
+      ! There are 0 values for `penalty`.
+      i To try multiple values for total regularization, use the tune package.
+      i To predict multiple penalties, use `multi_predict()`.
 
 ---
 
