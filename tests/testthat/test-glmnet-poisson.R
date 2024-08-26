@@ -124,7 +124,7 @@ test_that("formula interface can deal with missing values", {
 test_that("model errors on missing penalty value", {
   skip_if_not_installed("glmnet")
 
-  skip_if_not_installed("parsnip", minimum_version = "1.0.3.9000")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.0.9000")
   expect_snapshot(error = TRUE, {
     poisson_reg() %>%
       set_engine("glmnet") %>%
