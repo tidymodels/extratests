@@ -65,9 +65,9 @@ test_that("recipe steps with non-varying args error if specified as varying()", 
   rec_bad_varying <- rec_1
   rec_bad_varying$steps[[1]]$skip <- varying()
 
-  expect_error(
+  expect_snapshot(
     varying_args(rec_bad_varying),
-    "The following argument for a recipe step of type 'step_center' is not allowed to vary: 'skip'."
+    error = TRUE
   )
 })
 
