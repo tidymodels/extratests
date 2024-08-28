@@ -174,6 +174,8 @@ test_that('compute Graf weights', {
 })
 
 test_that("error messages in context of .censoring_weights_graf()", {
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
+
   lung2 <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -228,7 +230,7 @@ test_that("error for .censoring_weights_graf.workflow()", {
 
 test_that("error for .censoring_weights_graf() from .check_censor_model()", {
   # temporarily its own test, see above
-  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
   wrong_model <- fit(linear_reg(), mpg ~ ., data = mtcars)
   expect_snapshot(error = TRUE, .censoring_weights_graf(wrong_model, mtcars))
 })

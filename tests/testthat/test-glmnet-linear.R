@@ -265,7 +265,7 @@ test_that('multi_predict() with default or single penalty value', {
 
 test_that('error traps', {
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9001")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
 
   expect_snapshot(error = TRUE, {
     linear_reg(penalty = 0.01) %>%

@@ -36,6 +36,6 @@
         funded_amnt) + int_rate + term, data = lending_club) %>% multi_predict(
         lending_club, type = "time")
     Condition
-      Error in `check_pred_type()`:
+      Error in `multi_predict()`:
       ! For event time predictions, the object should be a censored regression.
 
