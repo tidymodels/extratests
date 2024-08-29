@@ -12,7 +12,7 @@
       parsnip:::.check_cens_type(left_c, type = "right", fail = TRUE)
     Condition
       Error:
-      ! For this usage, the allowed censoring type is right.
+      ! For this usage, the allowed censoring type is "right".
 
 ---
 
@@ -20,5 +20,5 @@
       parsnip:::.check_cens_type(left_c, type = c("right", "interval"), fail = TRUE)
     Condition
       Error:
-      ! For this usage, the allowed censoring types are right or interval.
+      ! For this usage, the allowed censoring types are "right" or "interval".
 

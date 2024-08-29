@@ -22,7 +22,7 @@
       .censoring_weights_graf(cox_model, lung_left)
     Condition
       Error in `.censoring_weights_graf()`:
-      ! For this usage, the allowed censoring type is right.
+      ! For this usage, the allowed censoring type is "right".
 
 ---
 
@@ -61,5 +61,5 @@
       .censoring_weights_graf(wrong_model, mtcars)
     Condition
       Error in `.censoring_weights_graf()`:
-      ! The model needs to be for mode 'censored regression', not for mode 'regression'.
+      ! The model needs to be for mode "censored regression", not for mode 'regression'.
 

@@ -13,9 +13,6 @@
 
     Code
       expect_snapshot_plot(print(autoplot(bayes_dynamic_res)), "dyn-bayes")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
 
 # Bayesian tuning survival models with mixture of metric types
 
@@ -32,9 +29,6 @@
 
     Code
       expect_snapshot_plot(print(autoplot(bayes_mixed_res)), "mix-bayes-0-times")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
 
 ---
 

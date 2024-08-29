@@ -5,10 +5,10 @@
     Condition
       Warning:
       ! 1000 columns were requested but there were 6 predictors in the data.
-      i 6 will be used.
+      i 6 predictors will be used.
       Warning:
       ! 1000 samples were requested but there were 333 rows in the data.
-      i 333 will be used.
+      i 333 samples will be used.
 
 ---
 
@@ -17,8 +17,8 @@
     Condition
       Warning:
       ! 1000 columns were requested but there were 6 predictors in the data.
-      i 6 will be used.
+      i 6 predictors will be used.
       Warning:
       ! 1000 samples were requested but there were 333 rows in the data.
-      i 333 will be used.
+      i 333 samples will be used.
 
