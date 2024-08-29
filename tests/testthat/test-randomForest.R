@@ -218,6 +218,7 @@ test_that('randomForest regression prediction', {
 test_that('argument checks for data dimensions', {
 
   skip_if_not_installed("randomForest")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
 
   data(penguins, package = "modeldata")
   penguins <- na.omit(penguins)

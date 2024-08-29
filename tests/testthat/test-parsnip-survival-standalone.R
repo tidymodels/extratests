@@ -11,6 +11,7 @@ test_that(".is_surv()", {
 })
 
 test_that(".check_cens_type()", {
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
   times <- seq(1, 100, length.out = 5)
   events <- c(1, 0, 1, 0, 1)
   left_c <- survival::Surv(times, events, type = "left")
