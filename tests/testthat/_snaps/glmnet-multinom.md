@@ -33,6 +33,6 @@
       multinom_reg(penalty = 0.01) %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc_data) %>%
         multi_predict(hpc_data, type = "numeric")
     Condition
-      Error in `check_pred_type()`:
+      Error in `multi_predict()`:
       ! For numeric predictions, the object should be a regression model.
 

@@ -4,7 +4,7 @@
       .censoring_weights_graf("nothing useful")
     Condition
       Error in `.censoring_weights_graf()`:
-      ! There is no `.censoring_weights_graf()` method for objects with class(es): 'character'
+      ! There is no `.censoring_weights_graf()` method for objects with class <character>.
 
 ---
 
@@ -12,7 +12,7 @@
       .censoring_weights_graf(cox_model, lung)
     Condition
       Error:
-      ! There should be a single column of class `Surv`
+      ! There should be a single column of class <Surv>.
 
 ---
 
@@ -22,7 +22,7 @@
       .censoring_weights_graf(cox_model, lung_left)
     Condition
       Error in `.censoring_weights_graf()`:
-      ! For this usage, the allowed censoring type is: 'right'
+      ! For this usage, the allowed censoring type is "right".
 
 ---
 
@@ -30,7 +30,7 @@
       .censoring_weights_graf(cox_model, lung2)
     Condition
       Error:
-      ! The input should have a list column called `.pred`.
+      ! The input should have a list column called ".pred".
 
 ---
 
@@ -38,7 +38,7 @@
       .censoring_weights_graf(cox_model, preds, cens_predictors = "shouldn't be using this anyway!")
     Condition
       Warning:
-      The 'cens_predictors' argument to the survival weighting function is not currently used.
+      `cens_predictors` is not currently used.
     Output
       # A tibble: 3 x 2
         .pred              surv
@@ -60,6 +60,6 @@
     Code
       .censoring_weights_graf(wrong_model, mtcars)
     Condition
-      Error in `.check_censor_model()`:
-      ! The model needs to be for mode 'censored regression', not for mode 'regression'.
+      Error in `.censoring_weights_graf()`:
+      ! The model needs to be for mode "censored regression", not for mode 'regression'.
 

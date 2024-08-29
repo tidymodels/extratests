@@ -21,5 +21,5 @@
       predict(alt_obj, time = 100)
     Condition
       Error in `predict()`:
-      ! Don't know how to predict with a censoring model of type: reverse_km
+      ! Don't know how to predict with a censoring model of type reverse_km.
 

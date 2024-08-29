@@ -25,6 +25,6 @@
       linear_reg(penalty = 0.01) %>% set_engine("glmnet") %>% fit(mpg ~ ., data = mtcars) %>%
         multi_predict(mtcars, type = "class")
     Condition
-      Error in `check_pred_type()`:
+      Error in `multi_predict()`:
       ! For class predictions, the object should be a classification model.
 
