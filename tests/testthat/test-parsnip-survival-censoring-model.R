@@ -115,7 +115,7 @@ test_that("predict() avoids zero probabilities", {
 })
 
 test_that("Handle unknown censoring model", {
-  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9002")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
   mod_fit <-
     survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
