@@ -73,8 +73,7 @@ Suggests:
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
-    r-lib/pillar,
-    tidymodels/parsnip#1162
+    r-lib/pillar
 biocViews: mixOmics
 Config/testthat/edition: 3
 Config/testthat/start-first: parsnip-extension-messaging
