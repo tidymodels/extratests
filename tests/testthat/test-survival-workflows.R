@@ -6,7 +6,7 @@ library(tidymodels)
 suppressPackageStartupMessages(library(censored))
 
 test_that("can `fit()` a censored workflow with a formula", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -28,7 +28,7 @@ test_that("can `fit()` a censored workflow with a formula", {
 })
 
 test_that("can `fit()` a censored workflow with a model formula", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -53,7 +53,7 @@ test_that("can `fit()` a censored workflow with a model formula", {
 })
 
 test_that("can `fit()` a censored workflow with variables", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -75,7 +75,7 @@ test_that("can `fit()` a censored workflow with variables", {
 })
 
 test_that("can `fit()` a censored workflow with a recipe", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -99,7 +99,7 @@ test_that("can `fit()` a censored workflow with a recipe", {
 })
 
 test_that("can `predict()` a censored workflow with a formula", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -133,7 +133,7 @@ test_that("can `predict()` a censored workflow with a formula", {
 })
 
 test_that("can `predict()` a censored workflow with a model formula", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -169,7 +169,7 @@ test_that("can `predict()` a censored workflow with a model formula", {
 })
 
 test_that("can `predict()` a censored workflow with variables", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
@@ -203,7 +203,7 @@ test_that("can `predict()` a censored workflow with variables", {
 })
 
 test_that("can `predict()` a censored workflow with a recipe", {
-  lung <- lung %>%
+  lung <- survival::lung %>%
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
