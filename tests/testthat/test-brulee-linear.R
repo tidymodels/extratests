@@ -17,7 +17,7 @@ test_that("linear regression via brulee", {
   # ------------------------------------------------------------------------------
 
   lr_spec <-
-    linear_reg(penalty = tune()) %>% #TODO  mixture = tune()
+    linear_reg(penalty = tune(), mixture = tune()) %>%
     set_engine("brulee", epochs = tune(), learn_rate = tune(), stop_iter = tune()) %>%
     set_mode("regression")
 

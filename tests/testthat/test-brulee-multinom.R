@@ -24,9 +24,9 @@ test_that("multinomial regression via brulee", {
   # ------------------------------------------------------------------------------
 
   mnl_spec <-
-    multinom_reg(penalty = tune()) %>% #TODO  mixture = tune()
-    set_engine("brulee", epochs = tune()) %>%  # TODO learn_rate = tune(),
-    # stop_iter = tune(), class_weights = tune()
+    multinom_reg(penalty = tune(), mixture = tune()) %>%
+    set_engine("brulee", epochs = tune(), learn_rate = tune(),
+               stop_iter = tune(), class_weights = tune()) %>%
     set_mode("classification")
 
   mnl_param <-
