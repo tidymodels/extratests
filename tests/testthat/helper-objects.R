@@ -29,3 +29,15 @@ spark_not_installed <- function() {
   }
   need_install
 }
+
+# ------------------------------------------------------------------------------
+
+is_torch_working <- function() {
+  res <- try(torch::torch_tensor(1), silent = TRUE)
+  if (inherits(res, "try-error")) {
+    ret <- FALSE
+  } else {
+    ret <- TRUE
+  }
+  ret
+}
