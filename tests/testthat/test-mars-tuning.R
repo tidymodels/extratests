@@ -24,11 +24,12 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
   )
 
   set.seed(123)
-  params_grid <- grid_latin_hypercube(
+  params_grid <- grid_space_filling(
     num_terms() %>% range_set(c(1L, 12L)),
     prod_degree(),
     prune_method(values = c("backward", "none", "forward")),
-    size = 7)
+    size = 7,
+    type = "latin_hypercube")
 
   expect_equal(nrow(params_grid), 7)
 
