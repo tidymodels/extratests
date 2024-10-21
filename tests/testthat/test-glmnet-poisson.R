@@ -2,7 +2,6 @@ library(poissonreg)
 
 test_that("glmnet model object", {
   skip_if_not_installed("glmnet")
-
   data(seniors, package = "poissonreg", envir = rlang::current_env())
   seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
   seniors_y <- seniors$count
@@ -122,9 +121,9 @@ test_that("formula interface can deal with missing values", {
 })
 
 test_that("model errors on missing penalty value", {
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9003")
   skip_if_not_installed("glmnet")
 
-  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9001")
   expect_snapshot(error = TRUE, {
     poisson_reg() %>%
       set_engine("glmnet") %>%
