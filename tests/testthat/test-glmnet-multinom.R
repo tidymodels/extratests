@@ -399,7 +399,7 @@ test_that("class predictions are factors with all levels", {
 
 test_that('error traps', {
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
+  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9003")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
