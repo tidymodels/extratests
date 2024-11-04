@@ -66,7 +66,7 @@ jobs:
             "tidymodels/stacks",
             "tidymodels/themis",
             "tidymodels/tidymodels",
-            "tidymodels/tune",
+            "tidymodels/tune#960",
             "tidymodels/workflowsets",
             "tidymodels/workflows"
           )))
