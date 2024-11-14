@@ -5,5 +5,5 @@
     Condition
       Error in `recompose()`:
       ! `data` must only contain numeric columns.
-      i These columns aren't numeric: "international_plan".
+      i This column isn't numeric: "international_plan".
 
