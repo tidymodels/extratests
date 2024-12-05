@@ -4,6 +4,7 @@ suppressPackageStartupMessages(library(censored))
 skip_if_not_installed("parsnip", minimum_version = "1.1.0.9004")
 
 test_that("determine prediction column names for workflows", {
+  skip_if_not_installed("parsnip", "1.2.1.9004")
   # complement to tidymodels/parsnip#1224
 
   ### classification
@@ -34,6 +35,7 @@ test_that("determine prediction column names for workflows", {
 })
 
 test_that("determine prediction column names for censored regression", {
+  skip_if_not_installed("parsnip", "1.2.1.9004")
   # complement to tidymodels/parsnip#1224
 
   surv_fit <- survival_reg() %>% fit(Surv(time, status) ~ ., data = lung)
