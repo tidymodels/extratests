@@ -82,14 +82,8 @@ jobs:
             "tidymodels/poissonreg",
             "tidymodels/rules"
           )))
-          try(pak::pkg_install(c(
-            "tidymodels/dials",
-            "tidymodels/hardhat",
-            "tidymodels/modeldata",
-            "tidymodels/rsample",
-            "tidymodels/spatialsample",
-            "tidymodels/yardstick"
-          )))
+          # Temp due to dimRed removal from CRAN
+          try(pak::pkg_install("gdkrmr/dimRed"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2

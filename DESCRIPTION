@@ -9,7 +9,8 @@ Authors@R: c(
 Description: A place for units tests that depend on multiple packages.
 License: MIT + file LICENSE
 Depends: 
-    tidymodels
+    tidymodels,
+    pak
 Suggests: 
     aorsf,
     baguette,
@@ -21,7 +22,6 @@ Suggests:
     conflicted,
     coin,
     dials,
-    dimRed,
     discrim,
     doParallel,
     dplyr,
