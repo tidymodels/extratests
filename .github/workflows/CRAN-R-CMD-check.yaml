@@ -56,6 +56,12 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Install dimRed versions
+        run: |
+          # Temp due to dimRed removal from CRAN
+          try(pak::pkg_install("gdkrmr/dimRed"))
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
 
       - name: Notify slack fail
