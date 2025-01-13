@@ -84,6 +84,8 @@ jobs:
           )))
           # Temp due to dimRed removal from CRAN
           try(pak::pkg_install("gdkrmr/dimRed"))
+          # Not intended to be merged--test butcher change
+          pak::pkg_install("tidymodels/butcher#278")
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
