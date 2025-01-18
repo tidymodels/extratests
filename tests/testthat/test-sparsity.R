@@ -49,9 +49,9 @@ test_that("id: 1, recipe sparsity: yes, sparsity: high, model support: yes, arg:
   local_mocked_bindings(
     xgb_train = function(x, ...) {
       if (methods::is(x, "sparseMatrix")) {
-        cli::cli_abort("correct: x is sparse matrix")
+        stop("correct: x is sparse matrix")
       } else {
-        cli::cli_abort("wrong: x is dense matrix")
+        stop("wrong: x is dense matrix")
       }
     }, 
     .package = "parsnip"
