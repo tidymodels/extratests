@@ -1,3 +1,5 @@
+# https://github.com/tidymodels/extratests/issues/229
+#
 # recipe sparsity: yes
 # step_dummy(all_nominal_predictors())
 # recipe sparsity: no
