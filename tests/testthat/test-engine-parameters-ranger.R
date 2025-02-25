@@ -9,6 +9,11 @@ rf_mod <-
   ) %>%
   set_mode("regression")
 
+rf_param <-
+  rf_mod %>%
+  extract_parameter_set_dials() %>%
+  update(regularization.factor = regularization_factor(c(.1, 1)))
+
 set.seed(192)
 rs <- bootstraps(mtcars, times = 5)
 
@@ -22,7 +27,7 @@ test_that('grid search', {
   expect_error(
     rf_tune <-
       rf_mod %>%
-      tune_grid(mpg ~ ., resamples = rs, grid = 4) %>%
+      tune_grid(mpg ~ ., resamples = rs, grid = 4, param_info = rf_param) %>%
       suppressMessages(),
     regex = NA
   )
@@ -41,7 +46,7 @@ test_that('Bayes search', {
   expect_error(
     rf_search <-
       rf_mod %>%
-      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2) %>%
+      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2, param_info = rf_param) %>%
       suppressMessages(),
     regex = NA
   )
