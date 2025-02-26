@@ -9,20 +9,24 @@ rf_mod <-
   ) %>%
   set_mode("regression")
 
+rf_param <-
+  rf_mod %>%
+  extract_parameter_set_dials() %>%
+  update(regularization.factor = regularization_factor(c(.1, 1)))
+
 set.seed(192)
 rs <- bootstraps(mtcars, times = 5)
 
 ## -----------------------------------------------------------------------------
 
 test_that('grid search', {
-  # pending tidymodels/dials#347
   skip_if_not_installed("dials", minimum_version = "1.3.0.9001")
 
   set.seed(2893)
   expect_error(
     rf_tune <-
       rf_mod %>%
-      tune_grid(mpg ~ ., resamples = rs, grid = 4) %>%
+      tune_grid(mpg ~ ., resamples = rs, grid = 4, param_info = rf_param) %>%
       suppressMessages(),
     regex = NA
   )
@@ -34,14 +38,19 @@ test_that('grid search', {
 ## -----------------------------------------------------------------------------
 
 test_that('Bayes search', {
-  # pending tidymodels/dials#347
   skip_if_not_installed("dials", minimum_version = "1.3.0.9001")
 
   set.seed(2893)
   expect_error(
     rf_search <-
       rf_mod %>%
-      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2) %>%
+      tune_bayes(
+        mpg ~ .,
+        resamples = rs,
+        initial = 3,
+        iter = 2,
+        param_info = rf_param
+      ) %>%
       suppressMessages(),
     regex = NA
   )
