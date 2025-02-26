@@ -20,7 +20,6 @@ rs <- bootstraps(mtcars, times = 5)
 ## -----------------------------------------------------------------------------
 
 test_that('grid search', {
-  # pending tidymodels/dials#347
   skip_if_not_installed("dials", minimum_version = "1.3.0.9001")
 
   set.seed(2893)
@@ -39,14 +38,19 @@ test_that('grid search', {
 ## -----------------------------------------------------------------------------
 
 test_that('Bayes search', {
-  # pending tidymodels/dials#347
   skip_if_not_installed("dials", minimum_version = "1.3.0.9001")
 
   set.seed(2893)
   expect_error(
     rf_search <-
       rf_mod %>%
-      tune_bayes(mpg ~ ., resamples = rs, initial = 3, iter = 2, param_info = rf_param) %>%
+      tune_bayes(
+        mpg ~ .,
+        resamples = rs,
+        initial = 3,
+        iter = 2,
+        param_info = rf_param
+      ) %>%
       suppressMessages(),
     regex = NA
   )
