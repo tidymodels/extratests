@@ -30,7 +30,7 @@ test_that("id: 1, recipe sparsity: yes, sparsity: high, model support: yes, arg:
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -73,7 +73,7 @@ test_that("id: 2, recipe sparsity: yes, sparsity: high, model support: yes, arg:
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -116,7 +116,7 @@ test_that("id: 3, recipe sparsity: yes, sparsity: high, model support: yes, arg:
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -159,7 +159,7 @@ test_that("id: 4, recipe sparsity: yes, sparsity: high, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -202,7 +202,7 @@ test_that("id: 5, recipe sparsity: yes, sparsity: high, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -245,7 +245,7 @@ test_that("id: 6, recipe sparsity: yes, sparsity: high, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -290,7 +290,7 @@ test_that("id: 7, recipe sparsity: yes, sparsity: low, model support: yes, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -338,7 +338,7 @@ test_that("id: 8, recipe sparsity: yes, sparsity: low, model support: yes, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -386,7 +386,7 @@ test_that("id: 9, recipe sparsity: yes, sparsity: low, model support: yes, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -434,7 +434,7 @@ test_that("id: 10, recipe sparsity: yes, sparsity: low, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -482,7 +482,7 @@ test_that("id: 11, recipe sparsity: yes, sparsity: low, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -530,7 +530,7 @@ test_that("id: 12, recipe sparsity: yes, sparsity: low, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -580,7 +580,7 @@ test_that("id: 13, recipe sparsity: no, sparsity: high, model support: yes, arg:
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -632,7 +632,7 @@ test_that("id: 16, recipe sparsity: no, sparsity: high, model support: no, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -684,7 +684,7 @@ test_that("id: 19, recipe sparsity: no, sparsity: low, model support: yes, arg: 
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
@@ -741,7 +741,7 @@ test_that("id: 22, recipe sparsity: no, sparsity: low, model support: no, arg: a
   skip_if_not_installed("xgboost")
   skip_if_not_installed("modeldata")
   skip_if_not_installed("hardhat", "1.4.0.9002")
-  skip_if_not_installed("recipes", "1.1.0.9001")
+  skip_if_not_installed("recipes", "1.1.1.9000")
   skip_if_not_installed("parsnip", "1.2.1.9004")
   skip_if_not_installed("workflows", "1.1.4.9001")
 
