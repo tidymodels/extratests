@@ -55,4 +55,27 @@ test_that('multinomial regression', {
   }
 })
 
+test_that('check proper penalty range', {
+  skip_if_not_installed("glmnet")
+  skip_if_not_installed("parsnip", minimum_version = "1.3.0.9000")
+
+  data(Chicago, package = "modeldata")
+
+  Chicago <- Chicago %>% select(ridership, Clark_Lake, Austin, Harlem)
+
+  glmnet_spec <-
+    linear_reg(penalty = 0.1, mixture = 0.95) %>%
+    set_engine("glmnet")
+
+  glmnet_wflow <-
+    workflow() %>%
+    add_model(glmnet_spec) %>%
+    add_formula(ridership ~ .)
+
+  glmnet_fit <- fit(glmnet_wflow, Chicago)
+
+  res <- try(tidy(glmnet_fit, penalty = 5.5620), silent = TRUE)
+  expect_s3_class(res, c("tbl_df", "tbl", "data.frame"))
+
+})
 
