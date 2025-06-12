@@ -33,6 +33,7 @@ Suggests:
     hardhat,
     kknn,
     LiblineaR,
+    lightgbm,
     lubridate,
     Matrix,
     mda,
