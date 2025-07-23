@@ -1,5 +1,7 @@
 suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(censored))
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+
 suppressPackageStartupMessages(library(finetune))
 
 test_that("percentile internals for survival models with static metric", {
@@ -7,7 +9,6 @@ test_that("percentile internals for survival models with static metric", {
 
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
   skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9015")
   skip_if_not_installed("yardstick", minimum_version = "1.3.0")
 
   # standard setup start -------------------------------------------------------
@@ -68,7 +69,6 @@ test_that("percentile internals for survival models with integrated metric", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
   skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
-  skip_if_not_installed("tune", minimum_version = "1.1.2.9013")
   skip_if_not_installed("yardstick", minimum_version = "1.3.0")
 
   # standard setup start -------------------------------------------------------

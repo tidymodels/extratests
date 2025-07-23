@@ -1,6 +1,7 @@
 library(testthat)
 
 # ------------------------------------------------------------------------------
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
 data(two_class_dat, package = "modeldata")
 set.seed(7898)

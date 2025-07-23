@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+
 # copied from https://github.com/tidymodels/tune/blob/main/tests/testthat/helper-tune-package.R
 catalog_lines <- function(lines) {
   lines[grepl("^>", lines)]

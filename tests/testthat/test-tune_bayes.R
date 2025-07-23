@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+
 library(tidymodels)
 
 test_that('tune recipe and model, which has_unknowns', {
