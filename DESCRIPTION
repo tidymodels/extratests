@@ -74,7 +74,8 @@ Suggests:
     yardstick
 Remotes:
     mixOmicsTeam/mixOmics,
-    r-lib/pillar
+    r-lib/pillar,
+    sparklyr/sparklyr@v1.9.0
 biocViews: mixOmics
 Config/testthat/edition: 3
 Config/testthat/start-first: parsnip-extension-messaging

@@ -19,13 +19,12 @@ run_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
 
 spark_not_installed <- function() {
 
-  quietly_inquire_re_spark <- purrr:::quietly(sparklyr::spark_install_find)()
-  need_install <- try(quietly_inquire_re_spark(), silent = TRUE)
+  need_install <- purrr:::quietly(sparklyr::spark_install_find)()
 
   if(inherits(need_install, "try-error")) {
     need_install <- TRUE
   } else {
-    need_install <- !isTRUE(need_install$installed)
+    need_install <- !isTRUE(need_install$result$installed)
   }
   need_install
 }
