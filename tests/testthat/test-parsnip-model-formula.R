@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+
 test_that('error without model formula (workflow, no tune)', {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
 
