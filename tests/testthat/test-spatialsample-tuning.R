@@ -16,6 +16,7 @@ tree_spec <-
 
 
 test_that("can tune with spatialsample object", {
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
   expect_error(
     rs <- workflow() %>%
@@ -26,12 +27,13 @@ test_that("can tune with spatialsample object", {
   )
 
   expect_error(tree_metrics <- collect_metrics(rs), NA)
-  expect_equal(tree_metrics$.config, paste0("Preprocessor1_Model", 1:5))
+  expect_equal(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
   expect_equal(unique(tree_metrics$.metric), "rmse")
 
 })
 
 test_that("can tune with sf-based spatialsample object", {
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
   set.seed(7898)
   block <- spatial_block_cv(boston_canopy, v = 20, radius = 1, buffer = 1)
@@ -44,7 +46,7 @@ test_that("can tune with sf-based spatialsample object", {
     NA
   )
   expect_error(tree_metrics <- collect_metrics(rs), NA)
-  expect_equal(tree_metrics$.config, paste0("Preprocessor1_Model", 1:5))
+  expect_equal(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
   expect_equal(unique(tree_metrics$.metric), "rmse")
 
   # ensure that:
