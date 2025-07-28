@@ -93,11 +93,7 @@ test_that("race tuning (win_loss) survival models with static metric", {
     rlang::expr_text(stc_race_plot$mapping$colour),
     "~.config"
   )
-  expect_equal(
-    stc_race_plot$labels,
-    list(y = "concordance_survival", x = "Analysis Stage", group = ".config",
-         colour = ".config")
-  )
+  expect_snapshot(ggplot2::get_labs(stc_race_plot))
 
   # test autoplot --------------------------------------------------------------
 
@@ -122,11 +118,7 @@ test_that("race tuning (win_loss) survival models with static metric", {
     rlang::expr_text(stc_autoplot$mapping$y),
     "~mean"
   )
-  expect_equal(
-    stc_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(stc_autoplot))
 
   # test metric collection -----------------------------------------------------
 
@@ -309,11 +301,7 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
     rlang::expr_text(int_race_plot$mapping$colour),
     "~.config"
   )
-  expect_equal(
-    int_race_plot$labels,
-    list(y = "brier_survival_integrated", x = "Analysis Stage", group = ".config",
-         colour = ".config")
-  )
+  expect_snapshot(ggplot2::get_labs(int_race_plot))
 
   # test autoplot --------------------------------------------------------------
 
@@ -338,11 +326,7 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
     rlang::expr_text(int_autoplot$mapping$y),
     "~mean"
   )
-  expect_equal(
-    int_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "brier_survival_integrated",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(int_autoplot))
 
   # test metric collection
 
@@ -536,11 +520,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     rlang::expr_text(dyn_race_plot$mapping$colour),
     "~.config"
   )
-  expect_equal(
-    dyn_race_plot$labels,
-    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
-         colour = ".config")
-  )
+  expect_snapshot(ggplot2::get_labs(dyn_race_plot))
 
   # test autoplot --------------------------------------------------------------
 
@@ -565,11 +545,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     rlang::expr_text(dyn_autoplot$mapping$y),
     "~mean"
   )
-  expect_equal(
-    dyn_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "brier_survival @10",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(dyn_autoplot))
 
 
   # test metric collection -----------------------------------------------------
@@ -771,11 +747,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     rlang::expr_text(mix_race_plot$mapping$colour),
     "~.config"
   )
-  expect_equal(
-    mix_race_plot$labels,
-    list(y = "brier_survival", x = "Analysis Stage", group = ".config",
-         colour = ".config")
-  )
+  expect_snapshot(ggplot2::get_labs(mix_race_plot))
 
   # test autoplot --------------------------------------------------------------
 
@@ -812,11 +784,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
       "concordance_survival")
   )
 
-  expect_equal(
-    mix_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(mix_autoplot))
 
   ###
 
@@ -853,11 +821,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
       "concordance_survival")
   )
 
-  expect_equal(
-    mix_multi_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(mix_multi_autoplot))
 
   ###
 
@@ -883,11 +847,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     "~mean"
   )
 
-  expect_equal(
-    mix_alt_autoplot$labels,
-    list(x = c(cost_complexity = "Cost-Complexity Parameter"),
-         y = "concordance_survival",  alpha = "# resamples", size = "# resamples")
-  )
+  expect_snapshot(ggplot2::get_labs(mix_alt_autoplot))
 
   # test metric collection -----------------------------------------------------
 
