@@ -1,9 +1,10 @@
 # theses are needed for all case-weights tests
 skip_if_not_installed("parsnip",   "1.0.1")
-skip_if_not_installed("hardhat",   "1.2.0")
-skip_if_not_installed("yardstick", "1.0.0")
-skip_if_not_installed("workflows", "1.0.0")
-skip_if_not_installed("recipes",   "1.0.0")
+skip_if_not_installed("hardhat",   minimum_version = "1.2.0")
+skip_if_not_installed("yardstick", minimum_version = "1.0.0")
+skip_if_not_installed("workflows", minimum_version = "1.0.0")
+skip_if_not_installed("recipes",   minimum_version =  "1.0.0")
+skip_if_not_installed("sparklyr",  minimum_version = "1.9.1.9000")
 
 # load all extension packages to register the engines
 library(parsnip)

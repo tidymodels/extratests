@@ -1,5 +1,6 @@
 ## Skip entire file is Spark is not installed
 skip_if(spark_not_installed())
+skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
 
 library(testthat)
 library(parsnip)
@@ -10,6 +11,19 @@ library(dplyr)
 hpc <- hpc_data[1:150, c(2:5, 8)]
 
 # ------------------------------------------------------------------------------
+
+test_that('Reminder to check for CRAN sparklyr > 1.9.1.9000', {
+
+  check_spark_version <- packageVersion("sparklyr") < "1.9.2"
+  check_time <- Sys.Date() >= as.Date("2025-09-01")
+
+  time_to_look_for_new_sparklyr_version <- check_spark_version & check_time
+
+  expect_false(time_to_look_for_new_sparklyr_version)
+
+})
+
+
 
 test_that('spark execution', {
 
