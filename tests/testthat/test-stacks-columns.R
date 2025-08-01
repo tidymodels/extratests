@@ -40,7 +40,7 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
   )
 
   expect_true(inherits(data_st, "data_stack"))
-  expect_true(".pred_Adelie.1_tuned_1_1" %in% colnames(data_st))
+  expect_true(".pred_Adelie.1_tunedpre0_mod2_post0" %in% colnames(data_st))
 
   # glmnet will likely present warnings
   suppressMessages(
