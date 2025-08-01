@@ -363,6 +363,7 @@ test_that("resampling survival models with dynamic metric", {
 
 test_that("resampling survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
   # standard setup start -------------------------------------------------------
 

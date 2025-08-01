@@ -7,6 +7,7 @@ set.seed(7898)
 data_folds <- vfold_cv(two_class_dat, repeats = 3)
 
 test_that("tuning for mars() -- submodels *and* no submodels", {
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
   expect_error(
     mars_spec <-
       mars(num_terms = tune(), prod_degree = tune(), prune_method = tune()) %>%
@@ -60,7 +61,7 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
   )
 
   expect_error(mars_metrics <- collect_metrics(rs), NA)
-  expect_equal(mars_metrics$.config, paste0("Preprocessor1_Model", 1:7))
+  expect_equal(mars_metrics$.config, paste0("pre0_mod", 1:7, "_post0"))
   expect_equal(unique(mars_metrics$.metric), "roc_auc")
   expect_true(all(names(params_grid) %in% names(mars_metrics)))
 

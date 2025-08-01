@@ -5,6 +5,7 @@ skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
 test_that("Bayesian tuning survival models with static metric", {
   skip_if_not_installed("prodlim")
@@ -67,7 +68,7 @@ test_that("Bayesian tuning survival models with static metric", {
   expect_false(".eval_time" %in% names(bayes_static_res$.metrics[[1]]))
   expect_equal(
     names(bayes_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+    c(".pred_time", ".row", "event_time", "tree_depth", ".config")
   )
 
   # test autoplot --------------------------------------------------------------
@@ -125,8 +126,8 @@ test_that("Bayesian tuning survival models with static metric", {
     .pred_time = numeric(0),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -185,25 +186,25 @@ test_that("Bayesian tuning survival models with integrated metric", {
       control = gctrl
     )
 
-    set.seed(2193)
-    bayes_integrated_res <-
-      mod_spec %>%
-      tune_bayes(
-        event_time ~ X1 + X2,
-        resamples = sim_rs,
-        iter = 2,
-        metrics = sint_mtrc,
-        eval_time = time_points,
-        control = bctrl,
-        initial = init_grid_integrated_res
-      )
+  set.seed(2193)
+  bayes_integrated_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = sint_mtrc,
+      eval_time = time_points,
+      control = bctrl,
+      initial = init_grid_integrated_res
+    )
 
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(bayes_integrated_res$.metrics[[1]]))
   expect_equal(
     names(bayes_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "event_time", "tree_depth", ".config")
   )
   expect_true(is.list(bayes_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -269,8 +270,8 @@ test_that("Bayesian tuning survival models with integrated metric", {
     .pred = list(),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -362,7 +363,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
   expect_true(".eval_time" %in% names(bayes_dynamic_res$.metrics[[1]]))
   expect_equal(
     names(bayes_dynamic_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+    c(".pred", ".row", "event_time", "tree_depth", ".config")
   )
   expect_true(is.list(bayes_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -432,8 +433,8 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     .pred = list(),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -464,6 +465,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 test_that("Bayesian tuning survival models with mixture of metric types", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
   # standard setup start -------------------------------------------------------
 
@@ -527,7 +529,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
   expect_equal(
     names(bayes_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+    c(".pred", ".row", ".pred_time", "event_time", "tree_depth", ".config")
   )
   expect_true(is.list(bayes_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -604,8 +606,8 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     .pred_time = numeric(0),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
