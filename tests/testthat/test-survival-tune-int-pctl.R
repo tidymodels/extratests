@@ -190,14 +190,14 @@ test_that("percentile internals for survival models with dynamic metrics", {
 
   exp_ptype <-
     tibble::tibble(
+      cost_complexity = numeric(0),
       .metric = character(0),
       .estimator = character(0),
-      .eval_time = numeric(0),
       .lower = numeric(0),
       .estimate = numeric(0),
       .upper = numeric(0),
       .config = character(0),
-      cost_complexity = numeric(0)
+      .eval_time = numeric(0)
     )
 
   expect_equal(dyn_int[0,], exp_ptype)
@@ -262,6 +262,7 @@ test_that("percentile internals for survival models mixture of metric types", {
       .estimate = numeric(0),
       .upper = numeric(0),
       .config = character(0),
+      .eval_time = numeric(0),
     )
 
   expect_equal(mixed_int[0,], exp_ptype)
@@ -325,11 +326,11 @@ test_that("percentile internals for subset of eval times", {
     tibble::tibble(
       .metric = character(0),
       .estimator = character(0),
-      .eval_time = numeric(0),
       .lower = numeric(0),
       .estimate = numeric(0),
       .upper = numeric(0),
       .config = character(0),
+      .eval_time = numeric(0)
     )
 
   expect_equal(mixed_int[0,], exp_ptype)
