@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+
 # load libraries ----------------------------------------------------------
 library(stacks)
 library(tune)
