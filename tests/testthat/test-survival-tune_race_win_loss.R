@@ -58,9 +58,10 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   expect_false(".eval_time" %in% names(wl_static_res$.metrics[[1]]))
 
-  expect_equal(
-    names(wl_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "cost_complexity", "event_time", ".config")
+  expect_named(
+    wl_static_res$.predictions[[1]],
+    c(".pred_time", ".row", "cost_complexity", "event_time", ".config"),
+    ignore.order = TRUE
   )
 
   # test race plot -------------------------------------------------------------
@@ -177,11 +178,12 @@ test_that("race tuning (win_loss) survival models with static metric", {
     sum()
 
   unsum_pred <- collect_predictions(wl_static_res)
-  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(unsum_pred[0, names(static_ptype)], static_ptype)
   expect_equal(nrow(unsum_pred), static_oob * nrow(wl_finished))
 
   sum_pred <- collect_predictions(wl_static_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
+  no_id <- static_ptype[, names(static_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
   # test metric collection pivoting --------------------------------------------
@@ -254,16 +256,18 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   expect_false(".eval_time" %in% names(wl_integrated_res$.metrics[[1]]))
 
-  expect_equal(
-    names(wl_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "cost_complexity", "event_time", ".config")
+  expect_named(
+    wl_integrated_res$.predictions[[1]],
+    c(".pred", ".row", "cost_complexity", "event_time", ".config"),
+    ignore.order = TRUE
   )
 
   expect_true(is.list(wl_integrated_res$.predictions[[1]]$.pred))
 
-  expect_equal(
-    names(wl_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    wl_integrated_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 
   expect_equal(
@@ -392,7 +396,7 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
     sum()
 
   unsum_pred <- collect_predictions(wl_integrated_res)
-  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(unsum_pred[0, names(integrated_ptype)], integrated_ptype)
   expect_equal(nrow(unsum_pred), integrated_oob * nrow(wl_finished))
 
   expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
@@ -400,7 +404,8 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
 
   sum_pred <- collect_predictions(wl_integrated_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
@@ -473,16 +478,18 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   expect_true(".eval_time" %in% names(wl_dyn_res$.metrics[[1]]))
 
-  expect_equal(
-    names(wl_dyn_res$.predictions[[1]]),
-    c(".pred", ".row", "cost_complexity", "event_time", ".config")
+  expect_named(
+    wl_dyn_res$.predictions[[1]],
+    c(".pred", ".row", "cost_complexity", "event_time", ".config"),
+    ignore.order = TRUE
   )
 
   expect_true(is.list(wl_dyn_res$.predictions[[1]]$.pred))
 
-  expect_equal(
-    names(wl_dyn_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    wl_dyn_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 
   expect_equal(
@@ -616,15 +623,15 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     sum()
 
   unsum_pred <- collect_predictions(wl_dyn_res)
-  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_equal(unsum_pred[0, names(dynamic_ptype)], dynamic_ptype)
   expect_equal(nrow(unsum_pred), dyn_oob * nrow(wl_finished))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_equal(unsum_pred$.pred[[1]][0, names(dynamic_list_ptype)], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
-
   sum_pred <- collect_predictions(wl_dyn_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  no_id <- dynamic_ptype[, names(dynamic_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
   expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
@@ -700,16 +707,18 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   expect_true(".eval_time" %in% names(wl_mixed_res$.metrics[[1]]))
 
-  expect_equal(
-    names(wl_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config")
+  expect_named(
+    wl_mixed_res$.predictions[[1]],
+    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config"),
+    ignore.order = TRUE
   )
 
   expect_true(is.list(wl_mixed_res$.predictions[[1]]$.pred))
 
-  expect_equal(
-    names(wl_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    wl_mixed_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 
   expect_equal(
@@ -921,14 +930,15 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     sum()
 
   unsum_pred <- collect_predictions(wl_mixed_res)
-  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_equal(unsum_pred[0, names(mixed_ptype)], mixed_ptype)
   expect_equal(nrow(unsum_pred), mixed_oob * nrow(wl_finished))
 
   expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(wl_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  no_id <- mixed_ptype[, names(mixed_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
   expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
