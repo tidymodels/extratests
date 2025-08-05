@@ -125,7 +125,7 @@ test_that("percentile internals for survival models with integrated metric", {
       penalty = numeric(0)
     )
 
-  expect_equal(integrated_int[0,], exp_ptype)
+  expect_equal(integrated_int[0, names(exp_ptype)], exp_ptype)
   expect_true(nrow(integrated_int) == nrow(grid))
   expect_equal(sort(integrated_int$penalty), grid$penalty)
   expect_true(all(integrated_int$.metric == "brier_survival_integrated"))
@@ -261,11 +261,10 @@ test_that("percentile internals for survival models mixture of metric types", {
       .lower = numeric(0),
       .estimate = numeric(0),
       .upper = numeric(0),
-      .config = character(0),
-      .eval_time = numeric(0),
+      .config = character(0)
     )
 
-  expect_equal(mixed_int[0,], exp_ptype)
+  expect_equal(mixed_int[0, names(exp_ptype)], exp_ptype)
   expect_true(nrow(mixed_int) == (length(time_points) + 2))
   expect_true(sum(mixed_int$.metric == "brier_survival") == length(time_points))
   expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
