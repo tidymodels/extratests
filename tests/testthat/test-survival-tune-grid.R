@@ -51,9 +51,10 @@ test_that("grid tuning survival models with static metric", {
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(grid_static_res$.metrics[[1]]))
-  expect_equal(
-    names(grid_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "penalty", "event_time", ".config")
+  expect_named(
+    grid_static_res$.predictions[[1]],
+    c(".pred_time", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
   )
 
   # test autoplot --------------------------------------------------------------
@@ -106,11 +107,12 @@ test_that("grid tuning survival models with static metric", {
   )
 
   unsum_pred <- collect_predictions(grid_static_res)
-  expect_equal(unsum_pred[0,], static_ptype)
+  expect_equal(unsum_pred[0, names(static_ptype)], static_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   sum_pred <- collect_predictions(grid_static_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
+  no_id <- static_ptype[, names(static_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   # test metric collection pivoting --------------------------------------------
@@ -173,9 +175,10 @@ test_that("grid tuning survival models with integrated metric", {
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(grid_integrated_res$.metrics[[1]]))
-  expect_equal(
-    names(grid_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "penalty", "event_time", ".config")
+  expect_named(
+    grid_integrated_res$.predictions[[1]],
+    c(".pred", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
   )
   expect_true(is.list(grid_integrated_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -244,14 +247,15 @@ test_that("grid tuning survival models with integrated metric", {
     )
 
   unsum_pred <- collect_predictions(grid_integrated_res)
-  expect_equal(unsum_pred[0,], integrated_ptype)
+  expect_equal(unsum_pred[0, names(integrated_ptype)], integrated_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_equal(unsum_pred$.pred[[1]][0, names(integrated_list_ptype)], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_integrated_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
+  no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
+  expect_equal(sum_pred[0, names(no_id)], no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
@@ -317,9 +321,10 @@ test_that("grid tuning survival models with dynamic metric", {
   # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(grid_dynamic_res$.metrics[[1]]))
-  expect_equal(
-    names(grid_dynamic_res$.predictions[[1]]),
-    c(".pred", ".row", "penalty", "event_time", ".config")
+  expect_named(
+    grid_dynamic_res$.predictions[[1]],
+    c(".pred", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
   )
   expect_true(is.list(grid_dynamic_res$.predictions[[1]]$.pred))
   expect_equal(
@@ -471,9 +476,10 @@ test_that("grid tuning survival models mixture of metric types", {
   # test structure of results --------------------------------------------------
 
   expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
-  expect_equal(
-    names(grid_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config")
+  expect_named(
+    grid_mixed_res$.predictions[[1]],
+    c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config"),
+    ignore.order = TRUE
   )
   expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
   expect_equal(
