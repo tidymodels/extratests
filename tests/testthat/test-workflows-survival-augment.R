@@ -43,7 +43,7 @@ test_that("augment survival workflows with eval_time", {
   )
   expect_true(is.numeric(res$.pred_time))
   expect_true(is.list(res$.pred))
-  expect_equal(res$.pred[[1]][0,], exp_pred_col)
+  expect_ptype(res$.pred[[1]], exp_pred_col)
   expect_equal(nrow(res$.pred[[2]]), length(times))
   expect_equal(res$.pred[[3]]$.eval_time, times)
 
@@ -56,7 +56,7 @@ test_that("augment survival workflows with eval_time", {
   )
   expect_true(is.numeric(res_1_row$.pred_time))
   expect_true(is.list(res_1_row$.pred))
-  expect_equal(res_1_row$.pred[[1]][0,], exp_pred_col)
+  expect_ptype(res_1_row$.pred[[1]], exp_pred_col)
   expect_equal(nrow(res_1_row$.pred[[1]]), 1)
   expect_equal(res_1_row$.pred[[1]]$.eval_time, times[1])
 

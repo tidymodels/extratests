@@ -110,7 +110,7 @@ test_that("sim annealing tuning survival models with static metric", {
   )
 
   expect_true(nrow(metric_sum) == 5)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
   metric_all <- collect_metrics(sa_static_res, summarize = FALSE)
@@ -125,7 +125,7 @@ test_that("sim annealing tuning survival models with static metric", {
   )
 
   expect_true(nrow(metric_all) == 50)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
 
   # test prediction collection -------------------------------------------------
@@ -141,12 +141,12 @@ test_that("sim annealing tuning survival models with static metric", {
   )
 
   unsum_pred <- collect_predictions(sa_static_res)
-  expect_equal(unsum_pred[0, names(static_ptype)], static_ptype)
+  expect_ptype(unsum_pred, static_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   sum_pred <- collect_predictions(sa_static_res, summarize = TRUE)
   no_id <- static_ptype[, names(static_ptype) != "id"]
-  expect_equal(sum_pred[0, names(no_id)], no_id)
+  expect_ptype(sum_pred, no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
 })
@@ -224,9 +224,10 @@ test_that("sim annealing tuning survival models with integrated metric", {
     ignore.order = TRUE
   )
   expect_true(is.list(sa_integrated_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(sa_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    sa_integrated_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
   expect_equal(
     sa_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -263,7 +264,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
   )
 
   expect_true(nrow(metric_sum) == 5)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
   metric_all <- collect_metrics(sa_integrated_res, summarize = FALSE)
@@ -278,7 +279,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
   )
 
   expect_true(nrow(metric_all) == 50)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
 
   # test prediction collection -------------------------------------------------
@@ -301,21 +302,22 @@ test_that("sim annealing tuning survival models with integrated metric", {
     )
 
   unsum_pred <- collect_predictions(sa_integrated_res)
-  expect_equal(unsum_pred[0, names(integrated_ptype)], integrated_ptype)
+  expect_ptype(unsum_pred, integrated_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(sa_integrated_res, summarize = TRUE)
   no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
-  expect_equal(sum_pred[0, names(no_id)], no_id)
+  expect_ptype(sum_pred, no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
+
 
 test_that("sim annealing tuning survival models with dynamic metric", {
   skip_if_not_installed("mboost")
@@ -435,7 +437,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   )
 
   expect_true(nrow(metric_sum) == (nrow(grid) + 2) * length(time_points))
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
   metric_all <- collect_metrics(sa_dynamic_res, summarize = FALSE)
@@ -451,7 +453,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
   )
 
   expect_true(nrow(metric_all) == ((nrow(grid) + 2) * length(time_points)) * nrow(sim_rs))
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
 
   # test prediction collection -------------------------------------------------
@@ -474,17 +476,17 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     )
 
   unsum_pred <- collect_predictions(sa_dynamic_res)
-  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_ptype(unsum_pred, dynamic_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(sa_dynamic_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
 })
@@ -564,9 +566,10 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     ignore.order = TRUE
   )
   expect_true(is.list(sa_mixed_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(sa_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    sa_mixed_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
   expect_equal(
     sa_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
@@ -611,26 +614,26 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
 
   grid_size <- (nrow(grid) + 2)
   expect_true(nrow(metric_sum) == (grid_size * length(time_points)) + grid_size * 2)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 10L)
   expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(sa_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
-      id = character(0),
-      trees = numeric(0),
-      .metric = character(0),
-      .estimator = character(0),
-      .eval_time = numeric(0),
-      .estimate = numeric(0),
-      .config = character(0),
-      .iter = integer(0)
-    )
+    id = character(0),
+    trees = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .eval_time = numeric(0),
+    .estimate = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
 
   expect_true(nrow(metric_all) ==
                 ((nrow(grid) + 2) * length(time_points) + (nrow(grid) + 2) * 2) *
                 nrow(sim_rs))
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
   expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
@@ -655,17 +658,17 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     )
 
   unsum_pred <- collect_predictions(sa_mixed_res)
-  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_ptype(unsum_pred, mixed_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(sa_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
