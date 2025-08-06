@@ -440,12 +440,12 @@ test_that("autoplot-ting survival models with dynamic metric", {
     rlang::expr_text(dyn_mult_grid$mapping$y),
     "~mean"
   )
-  expect_equal(
-    names(dyn_mult_grid$facet$params$rows),
+  expect_named(
+    dyn_mult_grid$facet$params$rows,
     ".metric"
   )
-  expect_equal(
-    names(dyn_mult_grid$facet$params$cols),
+  expect_named(
+    dyn_mult_grid$facet$params$cols,
     "name"
   )
   expect_snapshot(ggplot2::get_labs(dyn_mult_grid))
@@ -510,12 +510,12 @@ test_that("autoplot-ting survival models with dynamic metric", {
     rlang::expr_text(dyn_mult_marginal$mapping$y),
     "~mean"
   )
-  expect_equal(
-    names(dyn_mult_marginal$facet$params$rows),
+  expect_named(
+    dyn_mult_marginal$facet$params$rows,
     ".metric"
   )
-  expect_equal(
-    names(dyn_mult_marginal$facet$params$cols),
+  expect_named(
+    dyn_mult_marginal$facet$params$cols,
     "name"
   )
   expect_snapshot(ggplot2::get_labs(dyn_mult_marginal))
