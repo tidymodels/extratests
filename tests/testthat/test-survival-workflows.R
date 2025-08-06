@@ -113,12 +113,12 @@ test_that("can `predict()` a censored workflow with a formula", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
   preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
   expect_true(
     all(purrr::map_lgl(
@@ -149,12 +149,12 @@ test_that("can `predict()` a censored workflow with a model formula", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
   preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
   expect_true(
     all(purrr::map_lgl(
@@ -183,12 +183,12 @@ test_that("can `predict()` a censored workflow with variables", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
   preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
   expect_true(
     all(purrr::map_lgl(
@@ -219,12 +219,12 @@ test_that("can `predict()` a censored workflow with a recipe", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
   preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
   expect_true(
     all(purrr::map_lgl(

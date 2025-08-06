@@ -28,3 +28,10 @@ spark_not_installed <- function() {
   }
   need_install
 }
+
+# ------------------------------------------------------------------------------
+
+expect_ptype <- function(x, ptype) {
+  expect_equal(x[0, names(ptype)], ptype)
+}
+

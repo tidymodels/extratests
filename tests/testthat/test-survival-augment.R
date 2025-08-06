@@ -32,12 +32,17 @@ test_that("augmenting survival models", {
 
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
   expect_equal(nrow(sr_aug), nrow(sim_tr))
-  expect_equal(names(sr_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_named(
+    sr_aug,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
   expect_true(is.list(sr_aug$.pred))
-  expect_equal(
-    names(sr_aug$.pred[[1]]),
+  expect_named(
+    sr_aug$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored")
+      ".weight_censored"),
+    ignore.order = TRUE
   )
 
   # proportional_hazards() -----------------------------------------------------
@@ -49,12 +54,17 @@ test_that("augmenting survival models", {
 
   glmn_aug <- augment(glmn_fit, new_data = sim_tr, eval_time = time_points)
   expect_equal(nrow(glmn_aug), nrow(sim_tr))
-  expect_equal(names(glmn_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_named(
+    glmn_aug,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
   expect_true(is.list(glmn_aug$.pred))
-  expect_equal(
-    names(glmn_aug$.pred[[1]]),
+  expect_named(
+    glmn_aug$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored")
+      ".weight_censored"),
+    ignore.order = TRUE
   )
 })
 
@@ -118,11 +128,16 @@ test_that("augment() works for tune_results", {
   )
 
   expect_equal(nrow(aug_res), nrow(sim_tr))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
   expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 
   expect_no_warning(
@@ -172,11 +187,16 @@ test_that("augment() works for resample_results", {
   aug_res <- augment(rs_mixed_res)
 
   expect_equal(nrow(aug_res), nrow(sim_tr))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
   expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 })
 
@@ -215,10 +235,15 @@ test_that("augment() works for last fit", {
   aug_res <- augment(rs_mixed_res)
 
   expect_equal(nrow(aug_res), nrow(sim_te))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
   expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 })

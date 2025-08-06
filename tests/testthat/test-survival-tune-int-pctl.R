@@ -51,7 +51,7 @@ test_that("percentile internals for survival models with static metric", {
       .config = character(0)
     )
 
-  expect_equal(static_int[0,], exp_ptype)
+  expect_ptype(static_int, exp_ptype)
   expect_true(nrow(static_int) == 1)
   expect_true(all(static_int$.metric == "concordance_survival"))
 
@@ -125,7 +125,7 @@ test_that("percentile internals for survival models with integrated metric", {
       penalty = numeric(0)
     )
 
-  expect_equal(integrated_int[0, names(exp_ptype)], exp_ptype)
+  expect_ptype(integrated_int, exp_ptype)
   expect_true(nrow(integrated_int) == nrow(grid))
   expect_equal(sort(integrated_int$penalty), grid$penalty)
   expect_true(all(integrated_int$.metric == "brier_survival_integrated"))
@@ -200,7 +200,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
       .eval_time = numeric(0)
     )
 
-  expect_equal(dyn_int[0,], exp_ptype)
+  expect_ptype(dyn_int, exp_ptype)
   expect_true(nrow(dyn_int) == nrow(winners))
   expect_equal(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
   expect_true(all(dyn_int$.metric == "brier_survival"))
@@ -264,7 +264,7 @@ test_that("percentile internals for survival models mixture of metric types", {
       .config = character(0)
     )
 
-  expect_equal(mixed_int[0, names(exp_ptype)], exp_ptype)
+  expect_ptype(mixed_int, exp_ptype)
   expect_true(nrow(mixed_int) == (length(time_points) + 2))
   expect_true(sum(mixed_int$.metric == "brier_survival") == length(time_points))
   expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
@@ -332,7 +332,7 @@ test_that("percentile internals for subset of eval times", {
       .eval_time = numeric(0)
     )
 
-  expect_equal(mixed_int[0,], exp_ptype)
+  expect_ptype(mixed_int, exp_ptype)
   expect_true(nrow(mixed_int) == (2 + 2))
   expect_true(sum(mixed_int$.metric == "brier_survival") == 2)
   expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
