@@ -1,5 +1,4 @@
 test_that("last_fit() is reproducible", {
-  skip_if_not_installed("tune", minimum_version = "1.3.0.9001")
   skip_if_not_installed("ranger")
 
   # ------------------------------------------------------------------------------
@@ -9,7 +8,6 @@ test_that("last_fit() is reproducible", {
   split <- initial_split(dat)
   tr_dat <- training(split)
   te_dat <- testing(split)
-  rs <- vfold_cv(tr_dat)
 
   rf_spec <- rand_forest(mode = "regression", trees = 20)
   rf_wflow <- workflow(outcome ~ ., rf_spec)
@@ -29,11 +27,8 @@ test_that("last_fit() is reproducible", {
   auto_res <- last_fit(rf_wflow, split)
   auto_pred <-
     auto_res |>
-    collect_predictions() |>
-    select(outcome, auto = .pred)
+    collect_predictions()
 
-  # tune version 1.3.0:
-  both_pred <- full_join(manual_pred, auto_pred, by = "outcome")
-  expect_equal(both_pred$auto, both_pred$manual)
+  expect_identical(manual_pred$.pred, auto_pred$.pred)
 
 })
