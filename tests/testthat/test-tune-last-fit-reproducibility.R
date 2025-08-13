@@ -21,8 +21,7 @@ test_that("last_fit() is reproducible", {
   set.seed(2)
   manual_fit <- fit(rf_wflow, tr_dat)
   manual_pred <-
-    augment(manual_fit, new_data = te_dat) |>
-    select(outcome, manual = .pred)
+    predict(manual_fit, new_data = te_dat)
 
   # auto:
 
