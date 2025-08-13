@@ -78,7 +78,7 @@ test_that("grid tuning survival models with static metric", {
   )
 
   expect_true(nrow(metric_sum) == 3)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
   metric_all <- collect_metrics(grid_static_res, summarize = FALSE)
@@ -92,7 +92,7 @@ test_that("grid tuning survival models with static metric", {
   )
 
   expect_true(nrow(metric_all) == 30)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
 
   # test prediction collection -------------------------------------------------
@@ -107,12 +107,12 @@ test_that("grid tuning survival models with static metric", {
   )
 
   unsum_pred <- collect_predictions(grid_static_res)
-  expect_equal(unsum_pred[0, names(static_ptype)], static_ptype)
+  expect_ptype(unsum_pred, static_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   sum_pred <- collect_predictions(grid_static_res, summarize = TRUE)
   no_id <- static_ptype[, names(static_ptype) != "id"]
-  expect_equal(sum_pred[0, names(no_id)], no_id)
+  expect_ptype(sum_pred, no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   # test metric collection pivoting --------------------------------------------
@@ -211,7 +211,7 @@ test_that("grid tuning survival models with integrated metric", {
   )
 
   expect_true(nrow(metric_sum) == 3)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
   metric_all <- collect_metrics(grid_integrated_res, summarize = FALSE)
@@ -225,7 +225,7 @@ test_that("grid tuning survival models with integrated metric", {
   )
 
   expect_true(nrow(metric_all) == 30)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
 
   # test prediction collection -------------------------------------------------
@@ -247,18 +247,18 @@ test_that("grid tuning survival models with integrated metric", {
     )
 
   unsum_pred <- collect_predictions(grid_integrated_res)
-  expect_equal(unsum_pred[0, names(integrated_ptype)], integrated_ptype)
+  expect_ptype(unsum_pred, integrated_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0, names(integrated_list_ptype)], integrated_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_integrated_res, summarize = TRUE)
   no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
-  expect_equal(sum_pred[0, names(no_id)], no_id)
+  expect_ptype(sum_pred, no_id)
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test metric collection pivoting --------------------------------------------
@@ -365,7 +365,7 @@ test_that("grid tuning survival models with dynamic metric", {
   )
 
   expect_true(nrow(metric_sum) == 12)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
   metric_all <- collect_metrics(grid_dynamic_res, summarize = FALSE)
@@ -380,7 +380,7 @@ test_that("grid tuning survival models with dynamic metric", {
   )
 
   expect_true(nrow(metric_all) == 120)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
 
   # test prediction collection -------------------------------------------------
@@ -402,17 +402,17 @@ test_that("grid tuning survival models with dynamic metric", {
     )
 
   unsum_pred <- collect_predictions(grid_dynamic_res)
-  expect_equal(unsum_pred[0,], dynamic_ptype)
+  expect_ptype(unsum_pred, dynamic_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_dynamic_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test metric collection pivoting --------------------------------------------
@@ -519,7 +519,7 @@ test_that("grid tuning survival models mixture of metric types", {
   )
 
   expect_true(nrow(metric_sum) == 18)
-  expect_equal(metric_sum[0,], exp_metric_sum)
+  expect_ptype(metric_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 6)
   expect_equal(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L))
 
@@ -535,7 +535,7 @@ test_that("grid tuning survival models mixture of metric types", {
   )
 
   expect_true(nrow(metric_all) == 180)
-  expect_equal(metric_all[0,], exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
   expect_true(sum(is.na(metric_all$.eval_time)) == 60)
   expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L))
 
@@ -559,17 +559,17 @@ test_that("grid tuning survival models mixture of metric types", {
     )
 
   unsum_pred <- collect_predictions(grid_mixed_res)
-  expect_equal(unsum_pred[0,], mixed_ptype)
+  expect_ptype(unsum_pred, mixed_ptype)
   expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_equal(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
-  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
+  expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------

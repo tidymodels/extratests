@@ -133,7 +133,7 @@ test_that("resampling survival models with static metric", {
       std_err = numeric(0)
     )
 
-  expect_equal(wflow_set_mtrcs[0,], exp_metric_sum)
+  expect_ptype(wflow_set_mtrcs, exp_metric_sum)
 
   # test prediction collection -------------------------------------------------
 
@@ -151,7 +151,7 @@ test_that("resampling survival models with static metric", {
     event_time = survival::Surv(0, 1, type = "right")[FALSE]
   )
 
-  expect_equal(wflow_set_preds[0,], static_ptype)
+  expect_ptype(wflow_set_preds, static_ptype)
 })
 
 test_that("resampling survival models with integrated metric", {
@@ -248,7 +248,7 @@ test_that("resampling survival models with integrated metric", {
       std_err = numeric(0)
     )
 
-  expect_equal(wflow_set_mtrcs[0,], exp_metric_sum)
+  expect_ptype(wflow_set_mtrcs, exp_metric_sum)
 
   # test prediction collection -------------------------------------------------
 
@@ -266,7 +266,7 @@ test_that("resampling survival models with integrated metric", {
     event_time = survival::Surv(0, 1, type = "right")[FALSE]
   )
 
-  expect_equal(wflow_set_preds[0,], static_ptype)
+  expect_ptype(wflow_set_preds, static_ptype)
 })
 
 test_that("resampling survival models with dynamic metric", {
@@ -364,7 +364,7 @@ test_that("resampling survival models with dynamic metric", {
       std_err = numeric(0)
     )
 
-  expect_equal(wflow_set_mtrcs[0,], exp_metric_sum)
+  expect_ptype(wflow_set_mtrcs, exp_metric_sum)
 
   # test prediction collection -------------------------------------------------
 
@@ -382,7 +382,7 @@ test_that("resampling survival models with dynamic metric", {
     event_time = survival::Surv(0, 1, type = "right")[FALSE]
   )
 
-  expect_equal(wflow_set_preds[0,], static_ptype)
+  expect_ptype(wflow_set_preds, static_ptype)
 })
 
 test_that("resampling survival models with mixture of metric types", {
@@ -479,7 +479,7 @@ test_that("resampling survival models with mixture of metric types", {
       std_err = numeric(0)
     )
 
-  expect_equal(wflow_set_mtrcs[0,], exp_metric_sum)
+  expect_ptype(wflow_set_mtrcs, exp_metric_sum)
 
   # test prediction collection -------------------------------------------------
 
@@ -498,5 +498,5 @@ test_that("resampling survival models with mixture of metric types", {
     event_time = survival::Surv(0, 1, type = "right")[FALSE]
   )
 
-  expect_equal(wflow_set_preds[0,], static_ptype)
+  expect_ptype(wflow_set_preds, static_ptype)
 })
