@@ -147,8 +147,8 @@ test_that("resampling survival models with static metric", {
     preproc = character(0),
     model = character(0),
     .pred_time = numeric(0),
-    .row = integer(0),
-    event_time = survival::Surv(0, 1, type = "right")[FALSE]
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .row = integer(0)
   )
 
   expect_equal(wflow_set_preds[0,], static_ptype)
@@ -262,8 +262,8 @@ test_that("resampling survival models with integrated metric", {
     preproc = character(0),
     model = character(0),
     .pred = list(),
-    .row = integer(0),
-    event_time = survival::Surv(0, 1, type = "right")[FALSE]
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .row = integer(0)
   )
 
   expect_equal(wflow_set_preds[0,], static_ptype)
@@ -378,8 +378,8 @@ test_that("resampling survival models with dynamic metric", {
     preproc = character(0),
     model = character(0),
     .pred = list(),
-    .row = integer(0),
-    event_time = survival::Surv(0, 1, type = "right")[FALSE]
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .row = integer(0)
   )
 
   expect_equal(wflow_set_preds[0,], static_ptype)
@@ -492,10 +492,10 @@ test_that("resampling survival models with mixture of metric types", {
     .config = character(0),
     preproc = character(0),
     model = character(0),
-    .pred = list(),
     .pred_time = numeric(0),
-    .row = integer(0),
-    event_time = survival::Surv(0, 1, type = "right")[FALSE]
+    .pred = list(),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .row = integer(0)
   )
 
   expect_equal(wflow_set_preds[0,], static_ptype)
