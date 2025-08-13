@@ -14,7 +14,6 @@
     Output
       unique notes:
       --------------------------------------------------------------------------------
-      Error:
       ! When working with generalized additive models, please supply the model specification to `workflows::add_model()` along with a `formula` argument.
       i See `?parsnip::model_formula()` to learn more.
 
@@ -25,7 +24,6 @@
     Output
       unique notes:
       --------------------------------------------------------------------------------
-      Error:
       ! When working with generalized additive models, please supply the model specification to `workflows::add_model()` along with a `formula` argument.
       i See `?parsnip::model_formula()` to learn more.
 

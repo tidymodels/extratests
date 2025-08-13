@@ -1,3 +1,58 @@
+# race tuning (win_loss) survival models with static metric
+
+    Code
+      ggplot2::get_labs(stc_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(stc_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
 # race tuning (win_loss) survival models with integrated metric
 
     Code
@@ -6,6 +61,61 @@
     Condition
       Warning in `show_best()`:
       `eval_time` is only used for dynamic survival metrics.
+
+---
+
+    Code
+      ggplot2::get_labs(int_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival_integrated"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(int_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "brier_survival_integrated"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
 
 # race tuning (win_loss) survival models with dynamic metrics
 
@@ -17,6 +127,61 @@
       Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
+---
+
+    Code
+      ggplot2::get_labs(dyn_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(dyn_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "brier_survival @10"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
 # race tuning (win_loss) survival models with mixture of metric types
 
     Code
@@ -27,6 +192,117 @@
     Condition
       Warning in `tune_race_win_loss()`:
       4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
+
+---
+
+    Code
+      ggplot2::get_labs(mix_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] ""
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_multi_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] ""
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_alt_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
 
 ---
 

@@ -16,14 +16,15 @@ test_that('linear_reg - stan_glmer case weights', {
 
   dat <- make_msa_wts()
 
-  expect_error({
-    set.seed(1)
-    wt_fit <-
-      linear_reg() %>%
-      set_engine("stan_glmer") %>%
-      fit(value ~ (1|id), data = msa_data, case_weights = dat$wts)
-  },
-  regexp = NA)
+  suppressWarnings({
+    expect_warning({
+      set.seed(1)
+      wt_fit <-
+        linear_reg() %>%
+        set_engine("stan_glmer") %>%
+        fit(value ~ (1|id), data = msa_data, case_weights = dat$wts)
+    })
+  })
 
   set.seed(1)
   unwt_fit <-
@@ -78,13 +79,14 @@ test_that('logistic_reg - stan_glmer case weights', {
   two_class_subset <- two_class_dat[wts != 0, ]
   wts <- importance_weights(wts)
 
-  expect_error({
-    wt_fit <-
-      logistic_reg() %>%
-      set_engine("stan_glmer", seed = 1) %>%
-      fit(Class ~ A + B + (1|id), data = two_class_dat, case_weights = wts)
-  },
-  regexp = NA)
+  suppressWarnings({
+    expect_warning({
+      wt_fit <-
+        logistic_reg() %>%
+        set_engine("stan_glmer", seed = 1) %>%
+        fit(Class ~ A + B + (1|id), data = two_class_dat, case_weights = wts)
+    })
+  })
 
   unwt_fit <-
     logistic_reg() %>%

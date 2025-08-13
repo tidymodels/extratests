@@ -30,7 +30,12 @@ redefer_initialize_catalog <- function(test_env) {
 }
 
 test_that("interactive logger works (finetune integration, error)", {
-  skip_if(tune:::allow_parallelism(FALSE), "Will not catalog: parallelism is enabled")
+  skip_if_not_installed("tune", "1.3.0.9006")
+  skip_if(
+    tune:::choose_framework(workflow(), control_grid(allow_par = FALSE)) !=
+      "sequential",
+    "Will not catalog: parallelism is enabled"
+  )
   local_mocked_bindings(
     is_testing = function() {FALSE},
     initialize_catalog = redefer_initialize_catalog(rlang::current_env()),
