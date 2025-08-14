@@ -205,7 +205,7 @@ test_that("stacking with finetune works (anova)", {
   expect_true(inherits(preds_anova, "tbl_df"))
 
   skip_if_not_installed("stacks", "1.1.1.9001")
-  
+
   retain_configs <-
     tune::collect_metrics(wf_set_anova, summarize = FALSE) %>%
     dplyr::group_by(wflow_id, .config) %>%
@@ -215,13 +215,12 @@ test_that("stacking with finetune works (anova)", {
     dplyr::select(wflow_id, .config) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
-      .config = gsub("Preprocessor|Model", "", .config),
+      .config = gsub("Preprocessor|Model|pre|mod|post", "", .config),
       col_name = paste(wflow_id, .config, sep = "_")
     ) %>%
     pull(col_name)
 
   expect_true(all(colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs))
-
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
