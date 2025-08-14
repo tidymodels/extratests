@@ -16,6 +16,7 @@ test_that('error without model formula (workflow, no tune)', {
 
 test_that('error without model formula (workflow, with tune)', {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9006")
 
   library(parsnip)
   library(workflows)
@@ -36,6 +37,7 @@ test_that('error without model formula (workflow, with tune)', {
 
 test_that('error without model formula (no workflow, with tune)', {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9001")
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9006")
 
   library(parsnip)
   library(tune)
