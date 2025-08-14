@@ -566,7 +566,7 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
@@ -596,8 +596,10 @@ test_that("grid tuning survival models mixture of metric types", {
     penalty = numeric(0),
     .config = character(0),
     .eval_time = numeric(0),
-    brier_survival = numeric(0)
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
 })
