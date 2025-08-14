@@ -71,7 +71,8 @@ Suggests:
     workflows,
     workflowsets,
     xgboost,
-    yardstick
+    yardstick,
+    ggplot2
 Remotes:
     mixOmicsTeam/mixOmics,
     r-lib/pillar
