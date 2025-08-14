@@ -145,7 +145,8 @@
 ---
 
     Code
-      show_best(race_dyn_res, metric = "concordance_survival")
+      mutate(show_best(race_dyn_res, metric = "concordance_survival"), mean = round(
+        mean, 2), std_err = round(std_err, 2))
     Condition
       Warning:
       Metric "brier_survival" was used to evaluate model candidates in the race but "concordance_survival" has been chosen to rank the candidates. These results may not agree with the race.
@@ -153,11 +154,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0000192 concordance~ standard           NA 0.279    10  0.0147 pre0_m~
-      2       0.0000107 concordance~ standard           NA 0.278    10  0.0147 pre0_m~
-      3       0.0000384 concordance~ standard           NA 0.277    10  0.0156 pre0_m~
-      4       0.000118  concordance~ standard           NA 0.270    10  0.0141 pre0_m~
-      5       0.000327  concordance~ standard           NA 0.260    10  0.0142 pre0_m~
+      1       0.0000192 concordance~ standard           NA  0.28    10    0.01 pre0_m~
+      2       0.0000107 concordance~ standard           NA  0.28    10    0.01 pre0_m~
+      3       0.0000384 concordance~ standard           NA  0.28    10    0.02 pre0_m~
+      4       0.000118  concordance~ standard           NA  0.27    10    0.01 pre0_m~
+      5       0.000327  concordance~ standard           NA  0.26    10    0.01 pre0_m~
 
 ---
 

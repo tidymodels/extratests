@@ -253,7 +253,8 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     show_best(race_dyn_res)
   )
   expect_snapshot(
-    show_best(race_dyn_res, metric = "concordance_survival")
+    show_best(race_dyn_res, metric = "concordance_survival") |> 
+      mutate(mean = round(mean, 2), std_err = round(std_err, 2)) # to avoid rounding differences
   )
   expect_snapshot(
     show_best(race_dyn_res, metric = "brier_survival", eval_time = 1),
