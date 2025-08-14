@@ -190,7 +190,7 @@ test_that("stacking with finetune works (anova)", {
     dplyr::rowwise() %>%
     dplyr::mutate(
       .config = gsub("Preprocessor|Model", "", .config),
-      col_name = paste(wflow_id, .config, sep = "_")
+      col_name = paste(wflow_id, .config, sep = "")
     ) %>%
     pull(col_name)
 

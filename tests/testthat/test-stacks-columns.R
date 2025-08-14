@@ -16,6 +16,7 @@ library(dplyr)
 test_that("stacks can accommodate outcome levels that are not valid colnames", {
   # skip on pre-0.2.4
   skip_if(utils::packageVersion("stacks") < "0.2.3.9001")
+  skip_if_not_installed("tune", "1.3.0.9006")
 
   data("penguins")
 
@@ -40,7 +41,7 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
   )
 
   expect_true(inherits(data_st, "data_stack"))
-  expect_true(".pred_Adelie.1_tuned_1_1" %in% colnames(data_st))
+  expect_true(".pred_Adelie.1_tunedpre0_mod2_post0" %in% colnames(data_st))
 
   # glmnet will likely present warnings
   suppressMessages(
