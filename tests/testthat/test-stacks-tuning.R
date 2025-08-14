@@ -170,7 +170,7 @@ test_that("stacking with finetune works (anova)", {
       # use higher grid value to ensure that some models are not resampled fully
       grid = 10
     )
-
+  
   data_st_anova <-
     stacks() %>%
     add_candidates(wf_set_anova)
@@ -179,22 +179,6 @@ test_that("stacking with finetune works (anova)", {
 
   # ensure that only candidates with complete resamples were kept
   raw_preds <- tune::collect_predictions(wf_set_anova, summarize = TRUE)
-
-  retain_configs <-
-    tune::collect_metrics(wf_set_anova, summarize = FALSE) %>%
-    dplyr::group_by(wflow_id, .config) %>%
-    dplyr::count() %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(n == n_res) %>%
-    dplyr::select(wflow_id, .config) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(
-      .config = gsub("Preprocessor|Model", "", .config),
-      col_name = paste(wflow_id, .config, sep = "")
-    ) %>%
-    pull(col_name)
-
-  expect_true(all(colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs))
 
   model_st_anova <-
     data_st_anova %>%
@@ -219,6 +203,25 @@ test_that("stacking with finetune works (anova)", {
     predict(model_st_anova, ames_test)
 
   expect_true(inherits(preds_anova, "tbl_df"))
+
+  skip_if_not_installed("stacks", "1.1.1.9001")
+  
+  retain_configs <-
+    tune::collect_metrics(wf_set_anova, summarize = FALSE) %>%
+    dplyr::group_by(wflow_id, .config) %>%
+    dplyr::count() %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(n == n_res) %>%
+    dplyr::select(wflow_id, .config) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      .config = gsub("Preprocessor|Model", "", .config),
+      col_name = paste(wflow_id, .config, sep = "_")
+    ) %>%
+    pull(col_name)
+
+  expect_true(all(colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs))
+
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
