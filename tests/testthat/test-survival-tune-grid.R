@@ -596,8 +596,10 @@ test_that("grid tuning survival models mixture of metric types", {
     penalty = numeric(0),
     .config = character(0),
     .eval_time = numeric(0),
-    brier_survival = numeric(0)
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_ptype(metric_all, exp_metric_all)
 })
