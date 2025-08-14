@@ -2,17 +2,11 @@
 
     Code
       expect_snapshot_plot(print(autoplot(grid_dynamic_res)), "dyn-grid")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
 
 # grid tuning survival models mixture of metric types
 
     Code
       expect_snapshot_plot(print(autoplot(grid_mixed_res)), "mix-grid-0-times")
-    Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
 
 ---
 
@@ -25,9 +19,9 @@
       # A tibble: 3 x 8
         penalty .metric        .estimator .eval_time  mean     n std_err .config      
           <dbl> <chr>          <chr>           <dbl> <dbl> <int>   <dbl> <chr>        
-      1  0.0001 brier_survival standard           10 0.154    10  0.0210 Preprocessor~
-      2  0.01   brier_survival standard           10 0.154    10  0.0210 Preprocessor~
-      3  0.1    brier_survival standard           10 0.159    10  0.0209 Preprocessor~
+      1  0.0001 brier_survival standard           10 0.154    10  0.0210 pre0_mod1_po~
+      2  0.01   brier_survival standard           10 0.154    10  0.0210 pre0_mod2_po~
+      3  0.1    brier_survival standard           10 0.159    10  0.0209 pre0_mod3_po~
 
 ---
 
@@ -37,9 +31,9 @@
       # A tibble: 3 x 8
         penalty .metric        .estimator .eval_time   mean     n std_err .config     
           <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>       
-      1  0.1    brier_survival standard            1 0.0208    10 0.00503 Preprocesso~
-      2  0.01   brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
-      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
+      1  0.1    brier_survival standard            1 0.0208    10 0.00503 pre0_mod3_p~
+      2  0.01   brier_survival standard            1 0.0208    10 0.00498 pre0_mod2_p~
+      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 pre0_mod1_p~
 
 ---
 
@@ -60,9 +54,9 @@
       # A tibble: 3 x 8
         penalty .metric        .estimator .eval_time   mean     n std_err .config     
           <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>       
-      1  0.1    brier_survival standard            1 0.0208    10 0.00503 Preprocesso~
-      2  0.01   brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
-      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 Preprocesso~
+      1  0.1    brier_survival standard            1 0.0208    10 0.00503 pre0_mod3_p~
+      2  0.01   brier_survival standard            1 0.0208    10 0.00498 pre0_mod2_p~
+      3  0.0001 brier_survival standard            1 0.0208    10 0.00498 pre0_mod1_p~
 
 ---
 
@@ -72,7 +66,7 @@
       # A tibble: 3 x 8
         penalty .metric              .estimator .eval_time  mean     n std_err .config
           <dbl> <chr>                <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1  0.0001 brier_survival_inte~ standard           NA 0.113    10 0.00941 Prepro~
-      2  0.01   brier_survival_inte~ standard           NA 0.113    10 0.00941 Prepro~
-      3  0.1    brier_survival_inte~ standard           NA 0.116    10 0.00934 Prepro~
+      1  0.0001 brier_survival_inte~ standard           NA 0.113    10 0.00941 pre0_m~
+      2  0.01   brier_survival_inte~ standard           NA 0.113    10 0.00941 pre0_m~
+      3  0.1    brier_survival_inte~ standard           NA 0.116    10 0.00934 pre0_m~
 
