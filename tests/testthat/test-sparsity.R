@@ -623,7 +623,7 @@ test_that("id: 14, recipe sparsity: no, sparsity: high, model support: yes, arg:
 
 test_that("id: 15, recipe sparsity: no, sparsity: high, model support: yes, arg: yes", {
   expect_true(TRUE)
-  # Invalid combination since we can't set `sparse = "yes"` if there isn't a 
+  # Invalid combination since we can't set `sparse = "yes"` if there isn't a
   # step That has a `sparse`` argument.
   # Keeping for completeness and in case we add an overwrite help function.
 })
@@ -675,7 +675,7 @@ test_that("id: 17, recipe sparsity: no, sparsity: high, model support: no, arg: 
 
 test_that("id: 18, recipe sparsity: no, sparsity: high, model support: no, arg: yes", {
   expect_true(TRUE)
-  # Invalid combination since we can't set `sparse = "yes"` if there isn't a 
+  # Invalid combination since we can't set `sparse = "yes"` if there isn't a
   # step That has a `sparse`` argument.
   # Keeping for completeness and in case we add an overwrite help function.
 })
@@ -732,7 +732,7 @@ test_that("id: 20, recipe sparsity: no, sparsity: low, model support: yes, arg: 
 
 test_that("id: 21, recipe sparsity: no, sparsity: low, model support: yes, arg: yes", {
   expect_true(TRUE)
-  # Invalid combination since we can't set `sparse = "yes"` if there isn't a 
+  # Invalid combination since we can't set `sparse = "yes"` if there isn't a
   # step That has a `sparse`` argument.
   # Keeping for completeness and in case we add an overwrite help function.
 })
@@ -789,7 +789,7 @@ test_that("id: 23, recipe sparsity: no, sparsity: low, model support: no, arg: n
 
 test_that("id: 24, recipe sparsity: no, sparsity: low, model support: no, arg: yes", {
   expect_true(TRUE)
-  # Invalid combination since we can't set `sparse = "yes"` if there isn't a 
+  # Invalid combination since we can't set `sparse = "yes"` if there isn't a
   # step That has a `sparse`` argument.
   # Keeping for completeness and in case we add an overwrite help function.
 })

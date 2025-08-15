@@ -65,6 +65,3 @@ test_that('workflows', {
     regex = NA
   )
 })
-
-
-

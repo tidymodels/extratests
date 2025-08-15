@@ -21,7 +21,11 @@ test_that(".check_cens_type()", {
     parsnip:::.check_cens_type(left_c, type = "right", fail = TRUE)
   })
   expect_snapshot(error = TRUE, {
-    parsnip:::.check_cens_type(left_c, type = c("right", "interval"), fail = TRUE)
+    parsnip:::.check_cens_type(
+      left_c,
+      type = c("right", "interval"),
+      fail = TRUE
+    )
   })
 })
 
@@ -158,8 +162,18 @@ test_that(".extract_surv_status() does not transform status for interval censori
   events_interval_full <- c(1, 0:3)
   events_interval_12 <- c(1, 2, 1, 2, 1)
 
-  intv_c <- survival::Surv(times, times2, events_interval_full, type = "interval")
-  intv_c_12 <- survival::Surv(times, times2, events_interval_12, type = "interval")
+  intv_c <- survival::Surv(
+    times,
+    times2,
+    events_interval_full,
+    type = "interval"
+  )
+  intv_c_12 <- survival::Surv(
+    times,
+    times2,
+    events_interval_12,
+    type = "interval"
+  )
 
   expect_equal(
     parsnip:::.extract_surv_time(intv_c),

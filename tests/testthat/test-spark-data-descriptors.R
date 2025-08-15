@@ -10,15 +10,21 @@ hpc <- hpc_data[1:150, c(2:5, 8)] %>% as.data.frame()
 # ------------------------------------------------------------------------------
 
 template <- function(col, pred, ob, lev, fact, dat, x, y) {
-  lst <- list(.cols = col, .preds = pred, .obs = ob,
-              .lvls = lev, .facts = fact, .dat = dat,
-              .x = x, .y = y)
+  lst <- list(
+    .cols = col,
+    .preds = pred,
+    .obs = ob,
+    .lvls = lev,
+    .facts = fact,
+    .dat = dat,
+    .x = x,
+    .y = y
+  )
 
   Filter(Negate(is.null), lst)
 }
 
 eval_descrs <- function(descrs, not = NULL) {
-
   if (!is.null(not)) {
     for (descr in not) {
       descrs[[descr]] <- NULL
@@ -32,10 +38,7 @@ class_tab <- table(hpc$class, dnn = NULL)
 
 # ------------------------------------------------------------------------------
 
-
-
 test_that("spark descriptor", {
-
   skip_if_not_installed("sparklyr")
 
   suppressPackageStartupMessages(library(sparklyr))
@@ -45,8 +48,8 @@ test_that("spark descriptor", {
 
   skip_if(inherits(sc, "try-error"))
 
-  npk_descr  <- copy_to(sc,  npk[, 1:4],  "npk_descr", overwrite = TRUE)
-  hpc_descr <- copy_to(sc,        hpc, "hpc_descr", overwrite = TRUE)
+  npk_descr <- copy_to(sc, npk[, 1:4], "npk_descr", overwrite = TRUE)
+  hpc_descr <- copy_to(sc, hpc, "hpc_descr", overwrite = TRUE)
 
   # spark does not allow .x, .y, .dat; spark handles factors differently
   template2 <- purrr::partial(template, x = NULL, y = NULL, dat = NULL)
@@ -63,7 +66,10 @@ test_that("spark descriptor", {
   )
   expect_equal(
     template2(1, 1, 150, NA, 0),
-    eval_descrs2(parsnip:::get_descr_form(compounds ~ input_fields, data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(
+      compounds ~ input_fields,
+      data = hpc_descr
+    ))
   )
   expect_equal(
     template2(4, 4, 150, class_tab2, 0),
@@ -72,7 +78,10 @@ test_that("spark descriptor", {
   )
   expect_equal(
     template2(1, 1, 150, class_tab2, 0),
-    eval_descrs2(parsnip:::get_descr_form(class ~ input_fields, data = hpc_descr))
+    eval_descrs2(parsnip:::get_descr_form(
+      class ~ input_fields,
+      data = hpc_descr
+    ))
   )
   expect_equal(
     template2(7, 3, 24, rev(table(npk$K, dnn = NULL)), 3),

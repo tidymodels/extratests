@@ -35,7 +35,7 @@ test_that("fit best with static metric", {
 
   # standard setup end -------------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   grid_static_res <-
@@ -99,7 +99,6 @@ test_that("grid tuning survival models with integrated metric", {
   expect_silent(integrated_res <- fit_best(grid_integrated_res))
   expect_s3_class(integrated_res, "workflow")
   expect_true(is_trained_workflow(integrated_res))
-
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -131,7 +130,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # standard setup end -------------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   grid_dynamic_res <-
@@ -149,7 +148,6 @@ test_that("grid tuning survival models with dynamic metric", {
   dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
   expect_s3_class(dynamic_res, "workflow")
   expect_true(is_trained_workflow(dynamic_res))
-
 })
 
 test_that("grid tuning survival models mixture of metric types", {
@@ -181,7 +179,11 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # standard setup end -------------------------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-

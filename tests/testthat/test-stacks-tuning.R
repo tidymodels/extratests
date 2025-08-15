@@ -20,7 +20,7 @@ ames_split <- rsample::initial_split(ames_narrow)
 
 ames_train <- rsample::training(ames_split)
 
-ames_test  <- rsample::testing(ames_split)
+ames_test <- rsample::testing(ames_split)
 
 n_res <- 5
 
@@ -162,7 +162,10 @@ test_that("stacking with finetune works (anova)", {
 
   wf_set_anova <-
     workflow_map(
-      wf_set  %>% option_add(control = control_race(save_pred = TRUE, save_workflow = TRUE)),
+      wf_set %>%
+        option_add(
+          control = control_race(save_pred = TRUE, save_workflow = TRUE)
+        ),
       fn = "tune_race_anova",
       seed = 1,
       resamples = folds,
@@ -170,7 +173,7 @@ test_that("stacking with finetune works (anova)", {
       # use higher grid value to ensure that some models are not resampled fully
       grid = 10
     )
-  
+
   data_st_anova <-
     stacks() %>%
     add_candidates(wf_set_anova)
@@ -220,7 +223,9 @@ test_that("stacking with finetune works (anova)", {
     ) %>%
     pull(col_name)
 
-  expect_true(all(colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs))
+  expect_true(all(
+    colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs
+  ))
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
@@ -229,7 +234,7 @@ test_that("stacking with finetune works (sim_anneal)", {
 
   wf_set_sim_anneal <-
     workflow_map(
-      wf_set  %>%
+      wf_set %>%
         option_add(
           control = control_sim_anneal(
             save_pred = TRUE,
@@ -277,7 +282,9 @@ test_that("stacking with finetune works (sim_anneal)", {
     ungroup()
 
   expect_true(nrow(betas_sim_anneal) == length(model_st_sim_anneal$member_fits))
-  expect_true(all(betas_sim_anneal$terms %in% names(model_st_sim_anneal$member_fits)))
+  expect_true(all(
+    betas_sim_anneal$terms %in% names(model_st_sim_anneal$member_fits)
+  ))
 
   preds_sim_anneal <-
     predict(model_st_sim_anneal, ames_test)
@@ -290,7 +297,10 @@ test_that("stacking with finetune works (win_loss)", {
 
   wf_set_win_loss <-
     workflow_map(
-      wf_set  %>% option_add(control = control_race(save_pred = TRUE, save_workflow = TRUE)),
+      wf_set %>%
+        option_add(
+          control = control_race(save_pred = TRUE, save_workflow = TRUE)
+        ),
       fn = "tune_race_win_loss",
       seed = 1,
       resamples = folds,
@@ -307,7 +317,7 @@ test_that("stacking with finetune works (win_loss)", {
 
   expect_true(all(
     colnames(data_st_win_loss)[2:length(data_st_win_loss)] %in%
-    purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
+      purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
   ))
 
   model_st_win_loss <-
@@ -327,7 +337,9 @@ test_that("stacking with finetune works (win_loss)", {
     ungroup()
 
   expect_true(nrow(betas_win_loss) == length(model_st_win_loss$member_fits))
-  expect_true(all(betas_win_loss$terms %in% names(model_st_win_loss$member_fits)))
+  expect_true(all(
+    betas_win_loss$terms %in% names(model_st_win_loss$member_fits)
+  ))
 
   preds_win_loss <-
     predict(model_st_win_loss, ames_test)

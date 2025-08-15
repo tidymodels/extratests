@@ -1,7 +1,7 @@
 test_that("augment survival workflows with eval_time", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("glmnet")
-  skip_if_not_installed("parsnip",   minimum_version = "1.1.0.9002")
+  skip_if_not_installed("parsnip", minimum_version = "1.1.0.9002")
   skip_if_not_installed("workflows", minimum_version = "1.1.3.9000")
 
   library(tidymodels)
@@ -32,7 +32,8 @@ test_that("augment survival workflows with eval_time", {
       .weight_censored = numeric(0)
     ),
     row.names = integer(0),
-    class = c("tbl_df", "tbl", "data.frame"))
+    class = c("tbl_df", "tbl", "data.frame")
+  )
 
   times <- c(2.0, 1.0)
   res <- augment(wflow_fit, new_data = head(sim_dat), eval_time = times)
@@ -48,7 +49,11 @@ test_that("augment survival workflows with eval_time", {
   expect_equal(res$.pred[[3]]$.eval_time, times)
 
   # Predicting a single row and eval time
-  res_1_row <- augment(wflow_fit, new_data = head(sim_dat, 1), eval_time = times[1])
+  res_1_row <- augment(
+    wflow_fit,
+    new_data = head(sim_dat, 1),
+    eval_time = times[1]
+  )
   expect_true(nrow(res_1_row) == 1)
   expect_equal(
     names(res_1_row),
@@ -65,7 +70,9 @@ test_that("augment survival workflows with eval_time", {
   skip("until workflows/#209 is fixed")
   expect_snapshot(
     workflow() %>%
-      add_model(proportional_hazards(penalty = 0.001) %>% set_engine("glmnet")) %>%
+      add_model(
+        proportional_hazards(penalty = 0.001) %>% set_engine("glmnet")
+      ) %>%
       add_formula(event_time ~ .) %>%
       fit(data = sim_dat) %>%
       augment(new_data = sim_dat),

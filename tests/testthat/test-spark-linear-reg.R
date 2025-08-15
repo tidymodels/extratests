@@ -13,7 +13,6 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('spark execution', {
-
   skip_if_not_installed("sparklyr")
 
   suppressPackageStartupMessages(library(sparklyr))
@@ -22,8 +21,8 @@ test_that('spark execution', {
 
   skip_if(inherits(sc, "try-error"))
 
-  hpc_linreg_tr <- copy_to(sc, hpc[-(1:4),   ], "hpc_linreg_tr", overwrite = TRUE)
-  hpc_linreg_te <- copy_to(sc, hpc[  1:4 , -1], "hpc_linreg_te", overwrite = TRUE)
+  hpc_linreg_tr <- copy_to(sc, hpc[-(1:4), ], "hpc_linreg_tr", overwrite = TRUE)
+  hpc_linreg_te <- copy_to(sc, hpc[1:4, -1], "hpc_linreg_te", overwrite = TRUE)
 
   expect_error(
     spark_fit <-
@@ -49,12 +48,11 @@ test_that('spark execution', {
     regexp = NA
   )
 
-  lm_fit <- lm(compounds ~ ., data = hpc[-(1:4),   ])
-  lm_pred <- unname(predict(lm_fit, hpc[  1:4 , -1]))
+  lm_fit <- lm(compounds ~ ., data = hpc[-(1:4), ])
+  lm_pred <- unname(predict(lm_fit, hpc[1:4, -1]))
 
   expect_equal(as.data.frame(spark_pred)$pred, lm_pred)
   expect_equal(as.data.frame(spark_pred_num)$pred, lm_pred)
 
   spark_disconnect_all()
 })
-

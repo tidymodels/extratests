@@ -21,7 +21,10 @@ test_that("can tune with spatialsample object", {
   expect_error(
     rs <- workflow() %>%
       add_model(tree_spec) %>%
-      add_formula(mean_heat_index ~ change_canopy_percentage + canopy_percentage_2019 + land_area) %>%
+      add_formula(
+        mean_heat_index ~
+          change_canopy_percentage + canopy_percentage_2019 + land_area
+      ) %>%
       tune_grid(resamples = folds, grid = 5, metrics = metric_set(rmse)),
     NA
   )
@@ -29,7 +32,6 @@ test_that("can tune with spatialsample object", {
   expect_error(tree_metrics <- collect_metrics(rs), NA)
   expect_equal(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
   expect_equal(unique(tree_metrics$.metric), "rmse")
-
 })
 
 test_that("can tune with sf-based spatialsample object", {
@@ -41,7 +43,10 @@ test_that("can tune with sf-based spatialsample object", {
   expect_error(
     rs <- workflow() %>%
       add_model(tree_spec) %>%
-      add_formula(mean_heat_index ~ change_canopy_percentage + canopy_percentage_2019 + land_area) %>%
+      add_formula(
+        mean_heat_index ~
+          change_canopy_percentage + canopy_percentage_2019 + land_area
+      ) %>%
       tune_grid(resamples = block, grid = 5, metrics = metric_set(rmse)),
     NA
   )
@@ -67,5 +72,4 @@ test_that("can tune with sf-based spatialsample object", {
       nrow(analysis(rs_first_split)) <
       nrow(boston_canopy)
   )
-
 })
