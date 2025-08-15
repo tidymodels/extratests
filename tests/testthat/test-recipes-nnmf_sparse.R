@@ -116,18 +116,9 @@ test_that('tidy method', {
   expect_equal(
     tidy(rec, 1),
     tibble::tribble(
-      ~terms,
-      ~value,
-      ~component,
-      ~id,
-      "disp",
-      NA_real_,
-      NA_character_,
-      "test",
-      "wt",
-      NA_real_,
-      NA_character_,
-      "test"
+      ~terms, ~value,   ~component,    ~id,
+      "disp", NA_real_, NA_character_, "test",
+      "wt",   NA_real_, NA_character_, "test"
     )
   )
 
