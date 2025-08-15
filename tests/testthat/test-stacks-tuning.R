@@ -44,7 +44,7 @@ spec_lr <-
   set_mode("regression")
 
 spec_bt <-
-  boost_tree(mtry = tune(), min_n = tune()) %>%
+  boost_tree(learn_rate = tune(), min_n = tune()) %>%
   set_engine("xgboost") %>%
   set_mode("regression")
 
