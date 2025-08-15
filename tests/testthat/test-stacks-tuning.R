@@ -48,11 +48,6 @@ spec_bt <-
   set_engine("xgboost") %>%
   set_mode("regression")
 
-spec_dt <-
-  decision_tree(cost_complexity = tune(), tree_depth = tune()) %>%
-  set_engine("rpart") %>%
-  set_mode("regression")
-
 spec_svm <-
   svm_linear(cost = tune(), margin = tune()) %>%
   set_engine("LiblineaR") %>%
@@ -61,7 +56,7 @@ spec_svm <-
 wf_set <-
   workflow_set(
     preproc = list(rec = base_rec),
-    models = list(lr = spec_lr, bt = spec_bt, dt = spec_dt, svm = spec_svm),
+    models = list(lr = spec_lr, bt = spec_bt, svm = spec_svm),
     cross = TRUE
   )
 
