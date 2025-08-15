@@ -33,7 +33,7 @@ test_that("resampling survival models with static metric", {
 
   # resampling models with static metrics --------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   rs_static_res <-
@@ -118,7 +118,6 @@ test_that("resampling survival models with static metric", {
   sum_pred <- collect_predictions(rs_static_res, summarize = TRUE)
   expect_ptype(sum_pred, static_ptype[, names(static_ptype) != "id"])
   expect_equal(nrow(sum_pred), nrow(sim_tr))
-
 })
 
 test_that("resampling survival models with integrated metric", {
@@ -241,7 +240,6 @@ test_that("resampling survival models with integrated metric", {
 
   expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })
 
 test_that("resampling survival models with dynamic metric", {
@@ -270,7 +268,7 @@ test_that("resampling survival models with dynamic metric", {
 
   # resampling models with dynamic metrics -------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   rs_dynamic_res <-
@@ -367,7 +365,6 @@ test_that("resampling survival models with dynamic metric", {
 
   expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })
 
 test_that("resampling survival models mixture of metric types", {
@@ -397,7 +394,11 @@ test_that("resampling survival models mixture of metric types", {
 
   # resampling models with a mixture of metrics --------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -446,7 +447,10 @@ test_that("resampling survival models mixture of metric types", {
   expect_true(nrow(metric_sum) == length(time_points) + 2)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 2)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(length(time_points), 1L, 1L))
+  expect_equal(
+    as.vector(table(metric_sum$.metric)),
+    c(length(time_points), 1L, 1L)
+  )
 
   metric_all <- collect_metrics(rs_mixed_res, summarize = FALSE)
   exp_metric_all <-
@@ -461,8 +465,11 @@ test_that("resampling survival models mixture of metric types", {
 
   expect_true(nrow(metric_all) == (length(time_points) + 2) * nrow(sim_rs))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 2* nrow(sim_rs))
-  expect_equal(as.vector(table(metric_all$.metric)), c(length(time_points), 1L, 1L) * nrow(sim_rs))
+  expect_true(sum(is.na(metric_all$.eval_time)) == 2 * nrow(sim_rs))
+  expect_equal(
+    as.vector(table(metric_all$.metric)),
+    c(length(time_points), 1L, 1L) * nrow(sim_rs)
+  )
 
   # test prediction collection -------------------------------------------------
 
@@ -499,7 +506,11 @@ test_that("resampling survival models mixture of metric types", {
   # test show_best() -----------------------------------------------------------
 
   expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(rs_mixed_res, metric = "brier_survival", eval_time = 1))
+  expect_snapshot(show_best(
+    rs_mixed_res,
+    metric = "brier_survival",
+    eval_time = 1
+  ))
   expect_snapshot(
     show_best(rs_mixed_res, metric = "brier_survival", eval_time = c(1.001)),
     error = TRUE

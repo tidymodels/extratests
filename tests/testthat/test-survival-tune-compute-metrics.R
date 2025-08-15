@@ -10,7 +10,11 @@ test_that("compute_metrics works with survival models", {
   lung_surv <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  metrics <- metric_set(concordance_survival, brier_survival_integrated, brier_survival)
+  metrics <- metric_set(
+    concordance_survival,
+    brier_survival_integrated,
+    brier_survival
+  )
 
   times <- c(2, 50, 100)
 
@@ -40,8 +44,12 @@ test_that("compute_metrics works with survival models", {
 
   # ------------------------------------------------------------------------------
 
-  stc_only <- compute_metrics(tune_res, metric_set(concordance_survival), summarize = TRUE)
-  stc_original <- collect_metrics(tune_res) %>% filter(.metric == "concordance_survival")
+  stc_only <- compute_metrics(
+    tune_res,
+    metric_set(concordance_survival),
+    summarize = TRUE
+  )
+  stc_original <- collect_metrics(tune_res) %>%
+    filter(.metric == "concordance_survival")
   expect_equal(stc_only, stc_original %>% select(-.eval_time))
-
 })

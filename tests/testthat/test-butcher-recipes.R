@@ -4,12 +4,14 @@ suppressPackageStartupMessages(library(Matrix)) # Waiting for fix in RcppML
 
 # Data sets used for testing
 data(biomass)
-biomass_tr <- biomass[biomass$dataset == "Training",]
-biomass_te <- biomass[biomass$dataset == "Testing",]
+biomass_tr <- biomass[biomass$dataset == "Training", ]
+biomass_te <- biomass[biomass$dataset == "Testing", ]
 
 terms_empty_env <- function(axed, step_number) {
-  expect_identical(attr(axed$steps[[step_number]]$terms[[1]], ".Environment"),
-                   rlang::base_env())
+  expect_identical(
+    attr(axed$steps[[step_number]]$terms[[1]], ".Environment"),
+    rlang::base_env()
+  )
 }
 
 test_that("recipe + step_nnmf_sparse + axe_env() works", {

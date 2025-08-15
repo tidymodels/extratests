@@ -64,8 +64,17 @@ test_that('model with main and engine parameters', {
   expect_true(all(c5_info$component == "boost_tree"))
   expect_true(all(c5_info$component_id[1:3] == "main"))
   expect_true(all(c5_info$component_id[-(1:3)] == "engine"))
-  nms <- c("trees", "min_n", "sample_size", "rules", "CF", "noGlobalPruning",
-           "winnow", "fuzzyThreshold", "bands")
+  nms <- c(
+    "trees",
+    "min_n",
+    "sample_size",
+    "rules",
+    "CF",
+    "noGlobalPruning",
+    "winnow",
+    "fuzzyThreshold",
+    "bands"
+  )
   expect_equal(c5_info$name, nms)
   expect_true(all(purrr::map_lgl(c5_info$call_info[1:3], ~ .x$pkg == "dials")))
   expect_equal(

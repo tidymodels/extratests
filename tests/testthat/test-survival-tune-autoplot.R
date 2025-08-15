@@ -40,11 +40,15 @@ test_that("autoplot-ting survival models with static metric", {
   grid <- tibble(trees = c(1, 5, 20))
 
   gctrl <- control_grid(save_pred = TRUE)
-  sctrl <- control_sim_anneal(save_pred = TRUE, verbose_iter = FALSE, verbose = FALSE)
+  sctrl <- control_sim_anneal(
+    save_pred = TRUE,
+    verbose_iter = FALSE,
+    verbose = FALSE
+  )
 
   # Simulated annealing with static metrics ------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   stc_grid_static_res <-
@@ -139,13 +143,10 @@ test_that("autoplot-ting survival models with static metric", {
     "~value"
   )
   expect_snapshot(ggplot2::get_labs(stc_param))
-
-
 })
 
 
 test_that("autoplot-ting survival models with integrated metric", {
-
   skip_if_not_installed("glmnet")
   skip_if_not_installed("prodlim")
 
@@ -165,7 +166,11 @@ test_that("autoplot-ting survival models with integrated metric", {
   time_points <- c(10, 1, 5, 15)
 
   mod_spec <-
-    proportional_hazards(penalty = tune(), mixture = tune(), engine = "glmnet") %>%
+    proportional_hazards(
+      penalty = tune(),
+      mixture = tune(),
+      engine = "glmnet"
+    ) %>%
     set_mode("censored regression")
 
   grid <-
@@ -207,7 +212,7 @@ test_that("autoplot-ting survival models with integrated metric", {
 
   exp_data_ptype <-
     tibble::tibble(
-     `Proportion of Lasso Penalty` = character(0),
+      `Proportion of Lasso Penalty` = character(0),
       mean = numeric(0),
       `# resamples` = integer(0),
       .metric = character(0),
@@ -313,12 +318,9 @@ test_that("autoplot-ting survival models with integrated metric", {
     "~name"
   )
   expect_snapshot(ggplot2::get_labs(int_param))
-
-
 })
 
 test_that("autoplot-ting survival models with dynamic metric", {
-
   skip_if_not_installed("rpart")
   skip_if_not_installed("prodlim")
 
@@ -347,7 +349,7 @@ test_that("autoplot-ting survival models with dynamic metric", {
 
   # Bayes with dynamic metric --------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   grid_dynamic_res <-
@@ -552,7 +554,11 @@ test_that("autoplot-ting survival models with dynamic metric", {
   # ------------------------------------------------------------------------------
 
   # multiple times
-  dyn_mult_perf <- autoplot(bayes_dynamic_res, type = "performance", eval_time = c(1, 5))
+  dyn_mult_perf <- autoplot(
+    bayes_dynamic_res,
+    type = "performance",
+    eval_time = c(1, 5)
+  )
 
   exp_data_ptype <-
     tibble::tibble(
@@ -616,7 +622,11 @@ test_that("autoplot-ting survival models with dynamic metric", {
   # ------------------------------------------------------------------------------
 
   expect_snapshot(
-    dyn_mult_param <- autoplot(bayes_dynamic_res, type = "parameters", eval_time = c(10, 15))
+    dyn_mult_param <- autoplot(
+      bayes_dynamic_res,
+      type = "parameters",
+      eval_time = c(10, 15)
+    )
   )
   exp_data_ptype <-
     tibble::tibble(
@@ -639,11 +649,9 @@ test_that("autoplot-ting survival models with dynamic metric", {
     "~name"
   )
   expect_snapshot(ggplot2::get_labs(dyn_mult_param))
-
 })
 
 test_that("autoplot-ting survival models with different metric types", {
-
   skip_if_not_installed("rpart")
   skip_if_not_installed("prodlim")
 
@@ -695,7 +703,11 @@ test_that("autoplot-ting survival models with different metric types", {
 
   # Bayes with a mixture of all three types ------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-
@@ -794,8 +806,12 @@ test_that("autoplot-ting survival models with different metric types", {
   )
   expect_equal(
     sort(unique(mix_mult_grid$data$.metric)),
-    c("brier_survival @ 1", "brier_survival @10", "brier_survival_integrated",
-      "concordance_survival")
+    c(
+      "brier_survival @ 1",
+      "brier_survival @10",
+      "brier_survival_integrated",
+      "concordance_survival"
+    )
   )
   expect_snapshot(ggplot2::get_labs(mix_mult_grid))
 
@@ -822,8 +838,7 @@ test_that("autoplot-ting survival models with different metric types", {
   )
   expect_equal(
     sort(unique(mix_marginal$data$.metric)),
-    c("brier_survival @10", "brier_survival_integrated",
-      "concordance_survival")
+    c("brier_survival @10", "brier_survival_integrated", "concordance_survival")
   )
   expect_snapshot(ggplot2::get_labs(mix_marginal))
 
@@ -851,8 +866,12 @@ test_that("autoplot-ting survival models with different metric types", {
   )
   expect_equal(
     sort(unique(mix_mult_marginal$data$.metric)),
-    c("brier_survival @ 1", "brier_survival @ 5", "brier_survival_integrated",
-      "concordance_survival")
+    c(
+      "brier_survival @ 1",
+      "brier_survival @ 5",
+      "brier_survival_integrated",
+      "concordance_survival"
+    )
   )
   expect_snapshot(ggplot2::get_labs(mix_mult_marginal))
 
@@ -895,8 +914,11 @@ test_that("autoplot-ting survival models with different metric types", {
   # ------------------------------------------------------------------------------
 
   # multiple times
-  mix_mult_perf <- autoplot(bayes_mixed_res, type = "performance", eval_time = c(1, 5))
-
+  mix_mult_perf <- autoplot(
+    bayes_mixed_res,
+    type = "performance",
+    eval_time = c(1, 5)
+  )
 
   exp_data_ptype <-
     tibble::tibble(
@@ -918,9 +940,12 @@ test_that("autoplot-ting survival models with different metric types", {
   )
   expect_equal(
     sort(unique(mix_mult_perf$data$.metric)),
-    c("brier_survival @ 1", "brier_survival @ 5",
+    c(
+      "brier_survival @ 1",
+      "brier_survival @ 5",
       "brier_survival_integrated",
-      "concordance_survival")
+      "concordance_survival"
+    )
   )
   expect_equal(
     rlang::expr_text(mix_mult_perf$mapping$x),
@@ -955,9 +980,12 @@ test_that("autoplot-ting survival models with different metric types", {
   expect_snapshot(ggplot2::get_labs(mix_param))
 
   expect_snapshot(
-    mix_mult_param <- autoplot(bayes_mixed_res, type = "parameters", eval_time = c(10, 15))
+    mix_mult_param <- autoplot(
+      bayes_mixed_res,
+      type = "parameters",
+      eval_time = c(10, 15)
+    )
   )
-
 })
 
 test_that("autoplot() warning for unneeded evaluation times", {
@@ -980,10 +1008,10 @@ test_that("autoplot() warning for unneeded evaluation times", {
     p1 <- autoplot(tune_res, eval_time = 10, metric = "concordance_survival")
   )
   expect_snapshot(
-    p2 <- autoplot(tune_res, eval_time = 10, metric = "brier_survival_integrated")
+    p2 <- autoplot(
+      tune_res,
+      eval_time = 10,
+      metric = "brier_survival_integrated"
+    )
   )
-
 })
-
-
-

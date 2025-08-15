@@ -35,7 +35,7 @@ test_that("fit_resamples save eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   tree_res <-
@@ -52,9 +52,7 @@ test_that("fit_resamples save eval_time", {
   expect_true("eval_time" %in% names(attributes(tree_res)))
   expect_equal(attributes(tree_res)$eval_time, time_points)
   expect_equal(.get_tune_eval_times(tree_res), time_points)
-
 })
-
 
 
 test_that("tune*_() saves eval_time", {
@@ -85,7 +83,7 @@ test_that("tune*_() saves eval_time", {
 
   grid <- tibble(cost_complexity = 10^c(-10, -2, -1))
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   ## ------------------------------------------------------------------------------
 
@@ -183,7 +181,6 @@ test_that("tune*_() saves eval_time", {
   expect_true("eval_time" %in% names(attributes(wl_res)))
   expect_equal(attributes(wl_res)$eval_time, time_points)
   expect_equal(.get_tune_eval_times(wl_res), time_points)
-
 })
 
 
@@ -216,7 +213,7 @@ test_that("last_fit saves eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   tree_res <-
@@ -233,6 +230,4 @@ test_that("last_fit saves eval_time", {
   expect_true("eval_time" %in% names(attributes(tree_res)))
   expect_equal(attributes(tree_res)$eval_time, time_points)
   expect_equal(.get_tune_eval_times(tree_res), time_points)
-
 })
-

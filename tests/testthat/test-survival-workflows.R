@@ -48,7 +48,8 @@ test_that("can `fit()` a censored workflow with a model formula", {
     wf_fit$fit$fit$fit$coefficients,
     survival::coxph(
       formula = surv ~ . - sex + strata(sex),
-      data = lung)$coefficients
+      data = lung
+    )$coefficients
   )
 })
 
@@ -60,7 +61,11 @@ test_that("can `fit()` a censored workflow with variables", {
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
-  workflow <- add_variables(workflow, outcomes = surv, predictors = everything())
+  workflow <- add_variables(
+    workflow,
+    outcomes = surv,
+    predictors = everything()
+  )
   workflow <- add_model(workflow, mod)
 
   wf_fit <- fit(workflow, lung)
@@ -116,14 +121,19 @@ test_that("can `predict()` a censored workflow with a formula", {
   expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
   expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
   expect_true(
     all(purrr::map_lgl(
       preds$.pred,
-       ~ identical(names(.x), c(".eval_time", ".pred_survival"))
+      ~ identical(names(.x), c(".eval_time", ".pred_survival"))
     ))
   )
 
@@ -152,7 +162,12 @@ test_that("can `predict()` a censored workflow with a model formula", {
   expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
   expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
@@ -176,7 +191,11 @@ test_that("can `predict()` a censored workflow with variables", {
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
-  workflow <- add_variables(workflow, outcomes = surv, predictors = everything())
+  workflow <- add_variables(
+    workflow,
+    outcomes = surv,
+    predictors = everything()
+  )
   workflow <- add_model(workflow, mod)
 
   wf_fit <- fit(workflow, lung)
@@ -186,7 +205,12 @@ test_that("can `predict()` a censored workflow with variables", {
   expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
   expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
@@ -222,7 +246,12 @@ test_that("can `predict()` a censored workflow with a recipe", {
   expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
   expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")

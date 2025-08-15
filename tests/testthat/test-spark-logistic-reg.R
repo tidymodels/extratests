@@ -13,7 +13,6 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('spark execution', {
-
   skip_if_not_installed("sparklyr")
 
   suppressPackageStartupMessages(library(sparklyr))
@@ -22,8 +21,18 @@ test_that('spark execution', {
 
   skip_if(inherits(sc, "try-error"))
 
-  churn_logit_tr <- copy_to(sc, wa_churn[ 5:100,   ], "churn_logit_tr", overwrite = TRUE)
-  churn_logit_te <- copy_to(sc, wa_churn[   1:4, -1], "churn_logit_te", overwrite = TRUE)
+  churn_logit_tr <- copy_to(
+    sc,
+    wa_churn[5:100, ],
+    "churn_logit_tr",
+    overwrite = TRUE
+  )
+  churn_logit_te <- copy_to(
+    sc,
+    wa_churn[1:4, -1],
+    "churn_logit_te",
+    overwrite = TRUE
+  )
 
   # ----------------------------------------------------------------------------
 
@@ -73,7 +82,11 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_prob_classprob <- predict(spark_class_fit, churn_logit_te, type = "prob"),
+    spark_class_prob_classprob <- predict(
+      spark_class_fit,
+      churn_logit_te,
+      type = "prob"
+    ),
     regexp = NA
   )
 
@@ -87,5 +100,3 @@ test_that('spark execution', {
 
   spark_disconnect_all()
 })
-
-

@@ -37,7 +37,6 @@ test_that('parsnip models with xy interface', {
     predict(parsnip_xy_fit, scat[, -1]),
     regex = NA
   )
-
 })
 
 ## -----------------------------------------------------------------------------
@@ -66,6 +65,3 @@ test_that('workflows', {
     regex = NA
   )
 })
-
-
-

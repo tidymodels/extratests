@@ -26,7 +26,7 @@ test_that("last fit for survival models with static metric", {
 
   # last fit for models with static metrics ------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   rs_static_res <-
@@ -187,7 +187,6 @@ test_that("last fit for survival models with integrated metric", {
 
   expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })
 
 test_that("last fit for survival models with dynamic metric", {
@@ -210,7 +209,7 @@ test_that("last fit for survival models with dynamic metric", {
 
   # last fit for models with dynamic metrics -----------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   rs_dynamic_res <-
@@ -292,7 +291,6 @@ test_that("last fit for survival models with dynamic metric", {
 
   expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })
 
 test_that("last fit for survival models with mixture of metrics", {
@@ -315,7 +313,11 @@ test_that("last fit for survival models with mixture of metrics", {
 
   # last fit for models with a mixture of metrics ------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -366,7 +368,10 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_true(nrow(metric_sum) == length(time_points) + 2)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_sum$.eval_time)) == 2)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(length(time_points), 1L, 1L))
+  expect_equal(
+    as.vector(table(metric_sum$.metric)),
+    c(length(time_points), 1L, 1L)
+  )
 
   # test prediction collection -------------------------------------------------
   mixed_ptype <- tibble::tibble(
@@ -398,5 +403,4 @@ test_that("last fit for survival models with mixture of metrics", {
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })

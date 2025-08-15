@@ -37,7 +37,3 @@ test_that('Bayes search', {
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(mars_search)))
   expect_equal(nrow(collect_metrics(mars_search)), num_mtrc * 5)
 })
-
-
-
-

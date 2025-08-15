@@ -57,7 +57,11 @@ test_that("predict with reverse Kaplan-Meier curves", {
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   pred_times <- (7:10) * 100
-  exp_pred <- predict(mod_fit$censor_probs$fit, times = pred_times, type = "surv")
+  exp_pred <- predict(
+    mod_fit$censor_probs$fit,
+    times = pred_times,
+    type = "surv"
+  )
   pred_df <- predict(mod_fit$censor_probs, time = pred_times)
 
   expect_s3_class(pred_df, "tbl_df")
@@ -65,8 +69,7 @@ test_that("predict with reverse Kaplan-Meier curves", {
   expect_equal(nrow(pred_df), length(pred_times))
   expect_equal(pred_df[[1]], exp_pred)
 
-  pred_vec <- predict(mod_fit$censor_probs, time = pred_times,
-                      as_vector = TRUE)
+  pred_vec <- predict(mod_fit$censor_probs, time = pred_times, as_vector = TRUE)
   expect_type(pred_vec, "double")
   expect_equal(pred_vec, exp_pred)
 })
@@ -92,9 +95,11 @@ test_that("predict() can handle NA times", {
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   pred_times <- (7:10) * 100
-  pred_miss <- predict(mod_fit$censor_probs,
-                       time = c(NA_real_, pred_times),
-                       as_vector = TRUE)
+  pred_miss <- predict(
+    mod_fit$censor_probs,
+    time = c(NA_real_, pred_times),
+    as_vector = TRUE
+  )
   expect_equal(length(pred_miss), length(pred_times) + 1)
   expect_equal(sum(is.na(pred_miss)), 1L)
   expect_equal(which(is.na(pred_miss)), 1)
@@ -106,10 +111,17 @@ test_that("predict() avoids zero probabilities", {
     fit(Surv(time, status) ~ age + sex, data = lung)
 
   time_with_prob_0 <- max(lung$time)
-  exp_pred <- predict(mod_fit$censor_probs$fit, times = time_with_prob_0, type = "surv")
+  exp_pred <- predict(
+    mod_fit$censor_probs$fit,
+    times = time_with_prob_0,
+    type = "surv"
+  )
 
-  pred <- predict(mod_fit$censor_probs, time = time_with_prob_0,
-                      as_vector = TRUE)
+  pred <- predict(
+    mod_fit$censor_probs,
+    time = time_with_prob_0,
+    as_vector = TRUE
+  )
   expect_gt(pred, 0)
   expect_gt(pred, exp_pred)
 })

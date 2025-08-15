@@ -27,7 +27,7 @@ test_that("percentile internals for survival models with static metric", {
 
   # last fit for models with static metrics ------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   rs_static_res <-
@@ -129,9 +129,7 @@ test_that("percentile internals for survival models with integrated metric", {
   expect_true(nrow(integrated_int) == nrow(grid))
   expect_equal(sort(integrated_int$penalty), grid$penalty)
   expect_true(all(integrated_int$.metric == "brier_survival_integrated"))
-
 })
-
 
 
 test_that("percentile internals for survival models with dynamic metrics", {
@@ -166,10 +164,9 @@ test_that("percentile internals for survival models with dynamic metrics", {
   gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
 
-
   # Racing with dynamic metrics ------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   aov_dyn_res <-
@@ -237,7 +234,11 @@ test_that("percentile internals for survival models mixture of metric types", {
 
   # resampling models with a mixture of metrics --------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -269,10 +270,15 @@ test_that("percentile internals for survival models mixture of metric types", {
   expect_true(sum(mixed_int$.metric == "brier_survival") == length(time_points))
   expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
   expect_true(sum(mixed_int$.metric == "concordance_survival") == 1)
-  expect_true(all(!is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])))
-  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival_integrated"])))
-  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "concordance_survival"])))
-
+  expect_true(all(
+    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  ))
+  expect_true(all(is.na(mixed_int$.eval_time[
+    mixed_int$.metric == "brier_survival_integrated"
+  ])))
+  expect_true(all(is.na(mixed_int$.eval_time[
+    mixed_int$.metric == "concordance_survival"
+  ])))
 })
 
 test_that("percentile internals for subset of eval times", {
@@ -305,7 +311,11 @@ test_that("percentile internals for subset of eval times", {
 
   # resampling models with a mixture of metrics --------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -337,7 +347,13 @@ test_that("percentile internals for subset of eval times", {
   expect_true(sum(mixed_int$.metric == "brier_survival") == 2)
   expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
   expect_true(sum(mixed_int$.metric == "concordance_survival") == 1)
-  expect_true(all(!is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])))
-  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival_integrated"])))
-  expect_true(all(is.na(mixed_int$.eval_time[mixed_int$.metric == "concordance_survival"])))
+  expect_true(all(
+    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  ))
+  expect_true(all(is.na(mixed_int$.eval_time[
+    mixed_int$.metric == "brier_survival_integrated"
+  ])))
+  expect_true(all(is.na(mixed_int$.eval_time[
+    mixed_int$.metric == "concordance_survival"
+  ])))
 })

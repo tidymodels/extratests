@@ -1,4 +1,3 @@
-
 test_that('linear regression', {
   skip_if_not_installed("glmnet")
   suppressPackageStartupMessages(library(glmnet))
@@ -10,8 +9,8 @@ test_that('linear regression', {
 
   ps_coefs <- tidy(ps_mod)
   gn_coefs <- as.matrix(coef(ps_mod$fit, s = .1))
-  for(i in ps_coefs$term) {
-    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i,1])
+  for (i in ps_coefs$term) {
+    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
   }
 })
 
@@ -27,8 +26,8 @@ test_that('logistic regression', {
 
   ps_coefs <- tidy(ps_mod)
   gn_coefs <- as.matrix(coef(ps_mod$fit, s = .1))
-  for(i in ps_coefs$term) {
-    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i,1])
+  for (i in ps_coefs$term) {
+    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
   }
 })
 
@@ -45,12 +44,12 @@ test_that('multinomial regression', {
   ps_coefs <- tidy(ps_mod)
   gn_coefs <- coef(ps_mod$fit, s = .01)
   gn_coefs <- purrr::map(gn_coefs, as.matrix)
-  for(i in unique(ps_coefs$term)) {
-    for(j in unique(ps_coefs$class)) {
+  for (i in unique(ps_coefs$term)) {
+    for (j in unique(ps_coefs$class)) {
       expect_equal(
         ps_coefs$estimate[ps_coefs$term == i & ps_coefs$class == j],
-        gn_coefs[[j]][i,1]
-        )
+        gn_coefs[[j]][i, 1]
+      )
     }
   }
 })
@@ -76,6 +75,4 @@ test_that('check proper penalty range', {
 
   res <- try(tidy(glmnet_fit, penalty = 5.5620), silent = TRUE)
   expect_s3_class(res, c("tbl_df", "tbl", "data.frame"))
-
 })
-

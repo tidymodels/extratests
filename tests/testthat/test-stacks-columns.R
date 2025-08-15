@@ -25,14 +25,18 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
     mutate(species = paste0(species, "-1"))
 
   # tune a glmnet model w 3 penalties
-  tuned <- recipe(species ~ bill_length_mm + bill_depth_mm +
-                    flipper_length_mm, data = dat) %>%
+  tuned <- recipe(
+    species ~ bill_length_mm + bill_depth_mm + flipper_length_mm,
+    data = dat
+  ) %>%
     step_impute_mean(all_numeric_predictors()) %>%
     workflow(multinom_reg(engine = "glmnet", penalty = tune())) %>%
-    tune_grid(dat %>% vfold_cv(3),
-              metrics = metric_set(mn_log_loss),
-              grid = crossing(penalty = c(.0001, .001, .01)),
-              control = control_stack_grid())
+    tune_grid(
+      dat %>% vfold_cv(3),
+      metrics = metric_set(mn_log_loss),
+      grid = crossing(penalty = c(.0001, .001, .01)),
+      control = control_stack_grid()
+    )
 
   # stack em!
   expect_silent(
@@ -46,7 +50,7 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
   # glmnet will likely present warnings
   suppressMessages(
     blended <- data_st %>%
-    blend_predictions()
+      blend_predictions()
   )
 
   # ...though model fitting should work as expected

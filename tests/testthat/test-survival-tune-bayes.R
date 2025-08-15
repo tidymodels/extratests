@@ -38,7 +38,7 @@ test_that("Bayesian tuning survival models with static metric", {
 
   # Bayes with static metrics --------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   init_grid_static_res <-
@@ -135,12 +135,17 @@ test_that("Bayesian tuning survival models with static metric", {
 
   unsum_pred <- collect_predictions(bayes_static_res)
   expect_ptype(unsum_pred, static_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   sum_pred <- collect_predictions(bayes_static_res, summarize = TRUE)
   expect_ptype(sum_pred, static_ptype[, names(static_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
-
+  expect_equal(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 })
 
 test_that("Bayesian tuning survival models with integrated metric", {
@@ -288,14 +293,20 @@ test_that("Bayesian tuning survival models with integrated metric", {
 
   unsum_pred <- collect_predictions(bayes_integrated_res)
   expect_ptype(unsum_pred, integrated_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_integrated_res, summarize = TRUE)
   expect_ptype(sum_pred, integrated_ptype[, names(integrated_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
@@ -332,7 +343,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   # Bayes with dynamic metric --------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   init_grid_dynamic_res <-
@@ -453,18 +464,23 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   unsum_pred <- collect_predictions(bayes_dynamic_res)
   expect_ptype(unsum_pred, dynamic_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_dynamic_res, summarize = TRUE)
   expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
 })
 
 test_that("Bayesian tuning survival models with mixture of metric types", {
@@ -499,7 +515,11 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   # Bayes with a mixture of all three types ------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   init_grid_mixed_res <-
@@ -527,7 +547,6 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
         control = bctrl
       )
   })
-
 
   # test structure of results --------------------------------------------------
 
@@ -628,14 +647,20 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   unsum_pred <- collect_predictions(bayes_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_mixed_res, summarize = TRUE)
   expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_equal(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
@@ -643,7 +668,11 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   # test show_best() -----------------------------------------------------------
 
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
+  expect_snapshot(show_best(
+    bayes_mixed_res,
+    metric = "brier_survival",
+    eval_time = 1
+  ))
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
@@ -655,5 +684,4 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival_integrated")
   )
-
 })

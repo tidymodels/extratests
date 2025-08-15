@@ -1,10 +1,10 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip",   "1.0.1")
-skip_if_not_installed("hardhat",   minimum_version = "1.2.0")
+skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("hardhat", minimum_version = "1.2.0")
 skip_if_not_installed("yardstick", minimum_version = "1.0.0")
 skip_if_not_installed("workflows", minimum_version = "1.0.0")
-skip_if_not_installed("recipes",   minimum_version =  "1.0.0")
-skip_if_not_installed("sparklyr",  minimum_version = "1.9.1.9000")
+skip_if_not_installed("recipes", minimum_version = "1.0.0")
+skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
 
 # load all extension packages to register the engines
 library(parsnip)
@@ -15,16 +15,18 @@ suppressPackageStartupMessages(library(sparklyr))
 test_that('boost_tree - xgboost case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    sink(file = tempfile())
-    set.seed(1)
-    wt_fit <-
-      boost_tree() %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-    sink()
-  },
-  regexp = NA)
+  expect_error(
+    {
+      sink(file = tempfile())
+      set.seed(1)
+      wt_fit <-
+        boost_tree() %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+      sink()
+    },
+    regexp = NA
+  )
 
   sink(file = tempfile())
   set.seed(1)
@@ -39,19 +41,20 @@ test_that('boost_tree - xgboost case weights', {
 })
 
 test_that('boost_tree - C50 case weights', {
-
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
 
-  expect_error({
-    wt_fit <-
-      boost_tree(trees = 5)%>%
-      set_engine("C5.0") %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        boost_tree(trees = 5) %>%
+        set_engine("C5.0") %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     boost_tree(trees = 5) %>%
@@ -61,7 +64,6 @@ test_that('boost_tree - C50 case weights', {
 
   expect_true(wt_fit$fit$caseWeights)
   expect_unequal(unwt_fit$fit$tree, wt_fit$fit$tree)
-
 })
 
 
@@ -70,13 +72,15 @@ test_that('boost_tree - C50 case weights', {
 test_that('decision_tree - rpart case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      decision_tree() %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        decision_tree() %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     decision_tree() %>%
@@ -84,23 +88,27 @@ test_that('decision_tree - rpart case weights', {
     fit(Class ~ ., data = two_class_dat)
 
   expect_snapshot(print(wt_fit$fit$call))
-  expect_unequal(unwt_fit$fit$variable.importance, wt_fit$fit$variable.importance)
+  expect_unequal(
+    unwt_fit$fit$variable.importance,
+    wt_fit$fit$variable.importance
+  )
 })
 
 test_that('decision_tree - C50 case weights', {
-
   data("two_class_dat", package = "modeldata")
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
 
-  expect_error({
-    wt_fit <-
-      decision_tree() %>%
-      set_engine("C5.0") %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        decision_tree() %>%
+        set_engine("C5.0") %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     decision_tree() %>%
@@ -118,12 +126,14 @@ test_that('decision_tree - C50 case weights', {
 test_that('linear_reg - lm case weights', {
   dat <- make_mtcars_wts()
 
-  expect_error({
-    wt_fit <-
-      linear_reg() %>%
-      fit(mpg ~ ., data = mtcars, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        linear_reg() %>%
+        fit(mpg ~ ., data = mtcars, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     linear_reg() %>%
@@ -135,13 +145,15 @@ test_that('linear_reg - lm case weights', {
 test_that('linear_reg - glm case weights', {
   dat <- make_mtcars_wts()
 
-  expect_error({
-    wt_fit <-
-      linear_reg() %>%
-      set_engine("glm") %>%
-      fit(mpg ~ ., data = mtcars, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        linear_reg() %>%
+        set_engine("glm") %>%
+        fit(mpg ~ ., data = mtcars, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     linear_reg() %>%
@@ -154,13 +166,15 @@ test_that('linear_reg - glm case weights', {
 test_that('linear_reg - glmnet case weights', {
   dat <- make_ames_wts()
 
-  expect_error({
-    wt_fit <-
-      linear_reg(penalty = 0.001) %>%
-      set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-      fit(Sale_Price ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        linear_reg(penalty = 0.001) %>%
+        set_engine("glmnet", path_values = 10^(-4:-1)) %>%
+        fit(Sale_Price ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     linear_reg(penalty = 0.001) %>%
@@ -193,17 +207,19 @@ test_that('linear_reg - spark case weights', {
     overwrite = TRUE
   )
 
-  expect_error({
-    wt_fit <-
-      linear_reg() %>%
-      set_engine("spark") %>%
-      fit(
-        mpg ~ . - wts,
-        data = mtcars_wts,
-        case_weights = "wts"
-      )
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        linear_reg() %>%
+        set_engine("spark") %>%
+        fit(
+          mpg ~ . - wts,
+          data = mtcars_wts,
+          case_weights = "wts"
+        )
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     linear_reg() %>%
@@ -221,12 +237,14 @@ test_that('linear_reg - spark case weights', {
 test_that('logistic_reg - glm case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      logistic_reg() %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        logistic_reg() %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     logistic_reg() %>%
@@ -238,13 +256,15 @@ test_that('logistic_reg - glm case weights', {
 test_that('logistic_reg - glmnet case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      logistic_reg(penalty = 0.001) %>%
-      set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        logistic_reg(penalty = 0.001) %>%
+        set_engine("glmnet", path_values = 10^(-4:-1)) %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     logistic_reg(penalty = 0.001) %>%
@@ -257,13 +277,15 @@ test_that('logistic_reg - glmnet case weights', {
 test_that('logistic_reg - stan case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      logistic_reg() %>%
-      set_engine("stan", seed = 1) %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        logistic_reg() %>%
+        set_engine("stan", seed = 1) %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     logistic_reg() %>%
@@ -297,17 +319,19 @@ test_that('logistic_reg - spark case weights', {
     overwrite = TRUE
   )
 
-  expect_error({
-    wt_fit <-
-      logistic_reg() %>%
-      set_engine("spark") %>%
-      fit(
-        Class ~ . - wts,
-        data = two_class_dat_wts,
-        case_weights = "wts"
-      )
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        logistic_reg() %>%
+        set_engine("spark") %>%
+        fit(
+          Class ~ . - wts,
+          data = two_class_dat_wts,
+          case_weights = "wts"
+        )
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     logistic_reg() %>%
@@ -327,13 +351,15 @@ test_that('mars - earth case weights', {
 
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      mars() %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        mars() %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     mars() %>%
@@ -341,8 +367,7 @@ test_that('mars - earth case weights', {
     fit(Class ~ ., data = two_class_dat)
 
   expect_snapshot(print(wt_fit$fit$call))
-  expect_unequal(unwt_fit$fit$fitted.values[,1], wt_fit$fit$fitted.values[,1])
-
+  expect_unequal(unwt_fit$fit$fitted.values[, 1], wt_fit$fit$fitted.values[, 1])
 })
 
 
@@ -352,7 +377,7 @@ test_that('mlp - nnet case weights', {
   dat <- make_two_class_wts()
 
   expect_snapshot_error(
-      mlp() %>%
+    mlp() %>%
       set_mode("classification") %>%
       fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
   )
@@ -364,13 +389,15 @@ test_that('mlp - nnet case weights', {
 test_that('multinom_reg - glmnet case weights', {
   dat <- make_penguin_wts()
 
-  expect_error({
-    wt_fit <-
-      multinom_reg(penalty = 0.001) %>%
-      set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-      fit(island ~ ., data = penguins, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        multinom_reg(penalty = 0.001) %>%
+        set_engine("glmnet", path_values = 10^(-4:-1)) %>%
+        fit(island ~ ., data = penguins, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     multinom_reg(penalty = 0.001) %>%
@@ -391,7 +418,7 @@ test_that('multinom_reg - spark case weights', {
 
   penguin_wts <- copy_to(
     sc,
-    penguins[complete.cases(penguins),] %>% mutate(wts = as.double(dat$wts)),
+    penguins[complete.cases(penguins), ] %>% mutate(wts = as.double(dat$wts)),
     "penguin_wts",
     overwrite = TRUE
   )
@@ -403,17 +430,19 @@ test_that('multinom_reg - spark case weights', {
     overwrite = TRUE
   )
 
-  expect_error({
-    wt_fit <-
-      multinom_reg() %>%
-      set_engine("spark") %>%
-      fit(
-        island ~ . - wts,
-        data = penguin_wts,
-        case_weights = "wts"
-      )
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        multinom_reg() %>%
+        set_engine("spark") %>%
+        fit(
+          island ~ . - wts,
+          data = penguin_wts,
+          case_weights = "wts"
+        )
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     multinom_reg() %>%
@@ -431,14 +460,16 @@ test_that('multinom_reg - spark case weights', {
 test_that('rand_forest - ranger case weights', {
   dat <- make_two_class_wts()
 
-  expect_error({
-    set.seed(1)
-    wt_fit <-
-      rand_forest() %>%
-      set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      set.seed(1)
+      wt_fit <-
+        rand_forest() %>%
+        set_mode("classification") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   set.seed(1)
   unwt_fit <-
