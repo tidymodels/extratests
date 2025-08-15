@@ -13,7 +13,7 @@ terms_empty_env <- function(axed, step_number) {
 }
 
 test_that("recipe + step_nnmf_sparse + axe_env() works", {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
     step_nnmf_sparse(all_numeric_predictors(), num_comp = 2, seed = 473)
   x <- axe_env(rec)
@@ -21,7 +21,7 @@ test_that("recipe + step_nnmf_sparse + axe_env() works", {
 })
 
 test_that("recipe + step_nnmf_sparse + bake() works", {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
   rec <- recipe(HHV ~ ., data = biomass_tr) %>%
     step_nnmf_sparse(all_numeric_predictors(), num_comp = 2, seed = 473) %>%
     prep()
