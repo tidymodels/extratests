@@ -1,4 +1,3 @@
-
 make_churn_cens_objects <- function(x) {
   suppressPackageStartupMessages(require("tidymodels"))
   suppressPackageStartupMessages(require("censored"))
@@ -26,8 +25,12 @@ make_churn_cens_objects <- function(x) {
     step_dummy(area_code) %>%
     step_normalize(all_predictors())
 
-  list(split = churn_split, train = churn_tr, test = churn_te,
-       rs = churn_rs, times = eval_times, rec = churn_rec)
-
+  list(
+    split = churn_split,
+    train = churn_tr,
+    test = churn_te,
+    rs = churn_rs,
+    times = eval_times,
+    rec = churn_rec
+  )
 }
-

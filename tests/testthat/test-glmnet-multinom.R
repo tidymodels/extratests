@@ -1,7 +1,11 @@
 library(testthat)
 library(parsnip)
 
-R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+R_version_too_small_for_glmnet <- utils::compareVersion(
+  '3.6.0',
+  as.character(getRversion())
+) >
+  0
 skip_if(R_version_too_small_for_glmnet)
 
 test_that("glmnet execution and model object", {
@@ -9,16 +13,21 @@ test_that("glmnet execution and model object", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
   expect_error(
-    f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-                 data = hpc_data),
+    f_fit <- fit(
+      mr_spec,
+      class ~ protocol + log(compounds) + input_fields,
+      data = hpc_data
+    ),
     NA
   )
   expect_error(
@@ -32,7 +41,6 @@ test_that("glmnet execution and model object", {
 })
 
 test_that("glmnet prediction: column order of `new_data` irrelevant", {
-
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
@@ -56,16 +64,21 @@ test_that("glmnet prediction: type class", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
   exp_pred <- predict(exp_fit, hpc_x, s = 0.1, type = "class")
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    mr_spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
   f_pred <- predict(f_fit, hpc_data, type = "class")
@@ -93,16 +106,21 @@ test_that("glmnet prediction: type prob", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
   exp_pred <- predict(exp_fit, hpc_x, s = 0.1, type = "response")
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    mr_spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
@@ -110,7 +128,7 @@ test_that("glmnet prediction: type prob", {
   expect_equal(f_pred, xy_pred)
   expect_equal(
     as.matrix(f_pred) %>% unname(),
-    exp_pred[, , 1] %>% unname()
+    exp_pred[,, 1] %>% unname()
   )
 
   # check format
@@ -130,16 +148,21 @@ test_that("glmnet prediction: type raw", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "multinomial")
   exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    mr_spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
   f_pred <- predict(f_fit, hpc_data, type = "raw")
@@ -176,7 +199,7 @@ test_that("formula interface can deal with missing values", {
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
   expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(all(is.na(f_pred[1,])))
+  expect_true(all(is.na(f_pred[1, ])))
 })
 
 test_that("glmnet multi_predict(): type class", {
@@ -184,8 +207,10 @@ test_that("glmnet multi_predict(): type class", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   penalty_values <- c(0.01, 0.1)
@@ -194,17 +219,28 @@ test_that("glmnet multi_predict(): type class", {
   exp_pred <- predict(exp_fit, hpc_x, s = penalty_values, type = "class")
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    mr_spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
   expect_true(has_multi_predict(xy_fit))
   expect_equal(multi_predict_args(xy_fit), "penalty")
 
-  f_pred <- multi_predict(f_fit, hpc_data, penalty = penalty_values,
-                          type = "class")
-  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values,
-                           type = "class")
+  f_pred <- multi_predict(
+    f_fit,
+    hpc_data,
+    penalty = penalty_values,
+    type = "class"
+  )
+  xy_pred <- multi_predict(
+    xy_fit,
+    hpc_x,
+    penalty = penalty_values,
+    type = "class"
+  )
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -215,36 +251,47 @@ test_that("glmnet multi_predict(): type class", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::pull(.pred_class)
-  expect_equal(as.character(f_pred_001), unname(exp_pred[,1]))
-  expect_equal(as.character(f_pred_01), unname(exp_pred[,2]))
+  expect_equal(as.character(f_pred_001), unname(exp_pred[, 1]))
+  expect_equal(as.character(f_pred_01), unname(exp_pred[, 2]))
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc_data))
   expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(dim(.x) == c(2, 2))))
+    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
   )
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
     expect_true(
-      all(purrr::map_lgl(f_pred$.pred,
-                         ~ all(names(.x) == c(".pred_class", "penalty"))))
+      all(purrr::map_lgl(
+        f_pred$.pred,
+        ~ all(names(.x) == c(".pred_class", "penalty"))
+      ))
     )
   } else {
     expect_true(
-      all(purrr::map_lgl(f_pred$.pred,
-                         ~ all(names(.x) == c("penalty", ".pred_class"))))
+      all(purrr::map_lgl(
+        f_pred$.pred,
+        ~ all(names(.x) == c("penalty", ".pred_class"))
+      ))
     )
   }
 
   # single prediction
-  f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
-                            type = "class")
-  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE],
-                             penalty = penalty_values, type = "class")
+  f_pred_1 <- multi_predict(
+    f_fit,
+    hpc_data[1, ],
+    penalty = penalty_values,
+    type = "class"
+  )
+  xy_pred_1 <- multi_predict(
+    xy_fit,
+    hpc_x[1, , drop = FALSE],
+    penalty = penalty_values,
+    type = "class"
+  )
   expect_equal(f_pred_1, xy_pred_1)
   expect_equal(nrow(f_pred_1), 1)
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
@@ -255,8 +302,10 @@ test_that("glmnet multi_predict(): type prob", {
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
-  hpc_x <- model.matrix(~ protocol + log(compounds) + input_fields,
-                        data = hpc_data)[, -1]
+  hpc_x <- model.matrix(
+    ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )[, -1]
   hpc_y <- hpc_data$class
 
   penalty_values <- c(0.01, 0.1)
@@ -265,14 +314,25 @@ test_that("glmnet multi_predict(): type prob", {
   exp_pred <- predict(exp_fit, hpc_x, s = penalty_values, type = "response")
 
   mr_spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(mr_spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    mr_spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
-  f_pred <- multi_predict(f_fit, hpc_data, penalty = penalty_values,
-                          type = "prob")
-  xy_pred <- multi_predict(xy_fit, hpc_x, penalty = penalty_values,
-                           type = "prob")
+  f_pred <- multi_predict(
+    f_fit,
+    hpc_data,
+    penalty = penalty_values,
+    type = "prob"
+  )
+  xy_pred <- multi_predict(
+    xy_fit,
+    hpc_x,
+    penalty = penalty_values,
+    type = "prob"
+  )
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -285,11 +345,11 @@ test_that("glmnet multi_predict(): type prob", {
     dplyr::select(-penalty)
   expect_equal(
     as.matrix(f_pred_001) %>% unname(),
-    exp_pred[, , 1] %>% unname()
+    exp_pred[,, 1] %>% unname()
   )
   expect_equal(
     as.matrix(f_pred_01) %>% unname(),
-    exp_pred[, , 2] %>% unname()
+    exp_pred[,, 2] %>% unname()
   )
 
   # check format
@@ -297,28 +357,43 @@ test_that("glmnet multi_predict(): type prob", {
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc_data))
   expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(dim(.x) == c(2, 5))))
+    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 5))))
   )
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
     expect_true(
-      all(purrr::map_lgl(f_pred$.pred,
-                         ~ all(names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))))
+      all(purrr::map_lgl(
+        f_pred$.pred,
+        ~ all(
+          names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty")
+        )
+      ))
     )
   } else {
     expect_true(
-      all(purrr::map_lgl(f_pred$.pred,
-                         ~ all(names(.x) == c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L"))))
+      all(purrr::map_lgl(
+        f_pred$.pred,
+        ~ all(
+          names(.x) == c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L")
+        )
+      ))
     )
   }
 
   # single prediction
-  f_pred_1 <- multi_predict(f_fit, hpc_data[1, ], penalty = penalty_values,
-                            type = "prob")
-  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE],
-                             penalty = penalty_values, type = "prob")
+  f_pred_1 <- multi_predict(
+    f_fit,
+    hpc_data[1, ],
+    penalty = penalty_values,
+    type = "prob"
+  )
+  xy_pred_1 <- multi_predict(
+    xy_fit,
+    hpc_x[1, , drop = FALSE],
+    penalty = penalty_values,
+    type = "prob"
+  )
   expect_equal(f_pred_1, xy_pred_1)
   expect_equal(nrow(f_pred_1), 1)
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
@@ -330,20 +405,22 @@ test_that("glmnet multi_predict(): type NULL", {
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
 
   spec <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet")
-  f_fit <- fit(spec, class ~ protocol + log(compounds) + input_fields,
-               data = hpc_data)
+  f_fit <- fit(
+    spec,
+    class ~ protocol + log(compounds) + input_fields,
+    data = hpc_data
+  )
 
-  pred <- predict(f_fit, hpc_data[1:5,])
-  pred_class <- predict(f_fit, hpc_data[1:5,], type = "class")
+  pred <- predict(f_fit, hpc_data[1:5, ])
+  pred_class <- predict(f_fit, hpc_data[1:5, ], type = "class")
   expect_identical(pred, pred_class)
 
-  mpred <- multi_predict(f_fit, hpc_data[1:5,])
-  mpred_class <- multi_predict(f_fit, hpc_data[1:5,], type = "class")
+  mpred <- multi_predict(f_fit, hpc_data[1:5, ])
+  mpred_class <- multi_predict(f_fit, hpc_data[1:5, ], type = "class")
   expect_identical(mpred, mpred_class)
 })
 
 test_that("multi_predict() with default or single penalty value", {
-
   skip_if_not_installed("glmnet")
 
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
@@ -358,11 +435,21 @@ test_that("multi_predict() with default or single penalty value", {
 
   # Can deal with single penalty value
   expect_error(
-    multi_predict(xy_fit, new_data = hpc[rows, 1:4], penalty = 0.1, type = "class"),
+    multi_predict(
+      xy_fit,
+      new_data = hpc[rows, 1:4],
+      penalty = 0.1,
+      type = "class"
+    ),
     NA
   )
   expect_error(
-    multi_predict(xy_fit, new_data = hpc[rows, 1:4], penalty = 0.1, type = "prob"),
+    multi_predict(
+      xy_fit,
+      new_data = hpc[rows, 1:4],
+      penalty = 0.1,
+      type = "prob"
+    ),
     NA
   )
   # Can predict with default penalty. See #108
@@ -380,7 +467,6 @@ test_that("multi_predict() with default or single penalty value", {
   expect_snapshot(error = TRUE, {
     multi_predict(xy_fit, newdata = hpc[rows, 1:4], penalty = c(0.1, 0.5))
   })
-
 })
 
 test_that("class predictions are factors with all levels", {
@@ -389,10 +475,12 @@ test_that("class predictions are factors with all levels", {
   data("hpc_data", package = "modeldata", envir = rlang::current_env())
   hpc <- hpc_data[, c(2:5, 8)]
 
-  basic <- multinom_reg(penalty = 0.1) %>% set_engine("glmnet") %>% fit(class ~ ., data = hpc)
+  basic <- multinom_reg(penalty = 0.1) %>%
+    set_engine("glmnet") %>%
+    fit(class ~ ., data = hpc)
   nd <- hpc[hpc$class == "VF", ]
   yhat <- predict(basic, new_data = nd, penalty = .1)
-  yhat_multi <- multi_predict(basic, new_data =  nd, penalty = .1)$.pred
+  yhat_multi <- multi_predict(basic, new_data = nd, penalty = .1)$.pred
   expect_s3_class(yhat_multi[[1]]$.pred_class, "factor")
   expect_equal(levels(yhat_multi[[1]]$.pred_class), levels(hpc$class))
 })

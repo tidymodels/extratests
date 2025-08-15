@@ -1,7 +1,6 @@
 library(tidymodels)
 
 test_that('tune recipe and model, which has_unknowns', {
-
   # This test needs a tuning parameter object with default 'unknown' parameter
   # values (e.g., mtry).
 
@@ -21,8 +20,7 @@ test_that('tune recipe and model, which has_unknowns', {
   set.seed(4400)
   wflow <- workflow() %>% add_recipe(rec_tune_1) %>% add_model(rf_mod)
   pset <- extract_parameter_set_dials(wflow) %>%
-    update(num_comp = num_comp(c(3, 5)),
-           mtry = mtry(c(1, 3)))
+    update(num_comp = num_comp(c(3, 5)), mtry = mtry(c(1, 3)))
   expect_true(
     any(
       vapply(
@@ -33,8 +31,13 @@ test_that('tune recipe and model, which has_unknowns', {
     )
   )
   folds <- vfold_cv(mtcars)
-  res <- tune_bayes(wflow, resamples = folds, param_info = pset,
-                    initial = iter1, iter = iter2) %>%
+  res <- tune_bayes(
+    wflow,
+    resamples = folds,
+    param_info = pset,
+    initial = iter1,
+    iter = iter2
+  ) %>%
     suppressMessages()
   expect_equal(unique(res$id), folds$id)
   expect_equal(

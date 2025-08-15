@@ -10,8 +10,12 @@ test_that('Correct values', {
 
   dat <- Matrix::Matrix(t(as.matrix(iris[, -5])), sparse = TRUE)
   res <- RcppML::nmf(
-    A = dat, k = 2, L1 = c(0.001, 0.001), verbose = FALSE,
-    seed = 2432, nonneg = TRUE
+    A = dat,
+    k = 2,
+    L1 = c(0.001, 0.001),
+    verbose = FALSE,
+    seed = 2432,
+    nonneg = TRUE
   )
   exp_w <- res$w
   exp_pred <- as.matrix(iris[1:10, -5]) %*% res$w
@@ -19,14 +23,13 @@ test_that('Correct values', {
   expect_snapshot(print(rec))
   expect_snapshot(rec <- prep(rec, training = iris, verbose = TRUE))
 
-  rec_res <- juice(rec, all_predictors(), composition = "matrix")[1:10,]
+  rec_res <- juice(rec, all_predictors(), composition = "matrix")[1:10, ]
 
   expect_equal(unname(rec$steps[[1]]$res$w), exp_w)
   expect_equal(unname(exp_pred), unname(rec_res))
 })
 
 test_that('No NNF', {
-
   skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
 
   rec <- recipe(Species ~ ., data = iris) %>%
@@ -45,7 +48,7 @@ test_that('No NNF', {
 test_that('tunable', {
   skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
   rec <-
-    recipe(~ ., data = iris) %>%
+    recipe(~., data = iris) %>%
     step_nnmf_sparse(all_predictors())
   rec_param <- tunable(rec$steps[[1]])
   expect_equal(rec_param$name, c("num_comp", "penalty"))
@@ -66,12 +69,18 @@ test_that('keep_original_cols works', {
 
   nnmf_trained <- prep(rec, training = iris, verbose = FALSE)
 
-  nnmf_pred <- bake(nnmf_trained, new_data = iris[1:10,], all_predictors())
+  nnmf_pred <- bake(nnmf_trained, new_data = iris[1:10, ], all_predictors())
 
   expect_equal(
     colnames(nnmf_pred),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width",
-      "NNMF1", "NNMF2")
+    c(
+      "Sepal.Length",
+      "Sepal.Width",
+      "Petal.Length",
+      "Petal.Width",
+      "NNMF1",
+      "NNMF2"
+    )
   )
 })
 
@@ -99,18 +108,26 @@ test_that('tidy method', {
   skip_if(utils::packageVersion("recipes") < "1.0.6.9000")
 
   set.seed(1)
-  rec <- recipe(~ ., data = mtcars) %>%
+  rec <- recipe(~., data = mtcars) %>%
     step_nnmf_sparse(disp, wt, id = "test", seed = 1)
   rec_prep <- prep(rec)
   wts <- rec_prep$steps[[1]]$res$w
 
-
   expect_equal(
     tidy(rec, 1),
     tibble::tribble(
-      ~terms, ~value, ~component,    ~id,
-      "disp",   NA_real_,          NA_character_, "test",
-      "wt",     NA_real_,          NA_character_, "test"
+      ~terms,
+      ~value,
+      ~component,
+      ~id,
+      "disp",
+      NA_real_,
+      NA_character_,
+      "test",
+      "wt",
+      NA_real_,
+      NA_character_,
+      "test"
     )
   )
 
@@ -118,7 +135,7 @@ test_that('tidy method', {
     tidy(rec_prep, 1),
     tibble::tibble(
       terms = setNames(rep(c("disp", "wt"), 2), rep(c("disp", "wt"), 2)),
-      value = unname(c(wts[,1], wts[,2])),
+      value = unname(c(wts[, 1], wts[, 2])),
       component = rep(c("NNMF1", "NNMF2"), each = 2),
       id = "test"
     )

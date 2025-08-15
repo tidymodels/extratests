@@ -41,5 +41,4 @@ test_that('workflows required_pkgs methods', {
 
   form_pkgs <- required_pkgs(test_form_wflow, FALSE)
   expect_equal(form_pkgs, "glmnet")
-
 })

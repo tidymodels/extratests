@@ -1,9 +1,9 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip",   "1.0.1")
-skip_if_not_installed("hardhat",   "1.2.0")
+skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("hardhat", "1.2.0")
 skip_if_not_installed("yardstick", "1.0.0")
 skip_if_not_installed("workflows", "1.0.0")
-skip_if_not_installed("recipes",   "1.0.0")
+skip_if_not_installed("recipes", "1.0.0")
 
 library(poissonreg)
 
@@ -14,12 +14,14 @@ test_that('poisson_reg - glm case weights', {
 
   dat <- make_biochem_wts()
 
-  expect_error({
-    wt_fit <-
-      poisson_reg() %>%
-      fit(art ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        poisson_reg() %>%
+        fit(art ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     poisson_reg() %>%
@@ -33,13 +35,15 @@ test_that('poisson_reg - hurdle case weights', {
 
   dat <- make_biochem_wts()
 
-  expect_error({
-    wt_fit <-
-      poisson_reg() %>%
-      set_engine("hurdle") %>%
-      fit(art ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        poisson_reg() %>%
+        set_engine("hurdle") %>%
+        fit(art ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     poisson_reg() %>%
@@ -54,13 +58,15 @@ test_that('poisson_reg - zeroinfl case weights', {
 
   dat <- make_biochem_wts()
 
-  expect_error({
-    wt_fit <-
-      poisson_reg() %>%
-      set_engine("zeroinfl") %>%
-      fit(art ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        poisson_reg() %>%
+        set_engine("zeroinfl") %>%
+        fit(art ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   sub_fit <-
     poisson_reg() %>%
@@ -75,13 +81,15 @@ test_that('poisson_reg - glmnet case weights', {
 
   dat <- make_biochem_wts()
 
-  expect_error({
-    wt_fit <-
-      poisson_reg(penalty = 0.001) %>%
-      set_engine("glmnet", path_values = 10^(-4:-1)) %>%
-      fit(art ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        poisson_reg(penalty = 0.001) %>%
+        set_engine("glmnet", path_values = 10^(-4:-1)) %>%
+        fit(art ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     poisson_reg(penalty = 0.001) %>%
@@ -98,13 +106,15 @@ test_that('poisson_reg - stan case weights', {
 
   dat <- make_biochem_wts()
 
-  expect_error({
-    wt_fit <-
-      poisson_reg() %>%
-      set_engine("stan", seed = 1, refresh = 0) %>%
-      fit(art ~ ., data = dat$full, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        poisson_reg() %>%
+        set_engine("stan", seed = 1, refresh = 0) %>%
+        fit(art ~ ., data = dat$full, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     poisson_reg() %>%

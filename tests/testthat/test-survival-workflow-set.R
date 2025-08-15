@@ -49,7 +49,7 @@ test_that("resampling survival models with static metric", {
 
   # resampling models with static metrics --------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
   ctrl <- control_resamples(save_pred = TRUE)
 
   expect_silent(
@@ -195,7 +195,7 @@ test_that("resampling survival models with integrated metric", {
 
   # resampling models with integrated metrics ----------------------------------
 
-  int_mtrc  <- metric_set(brier_survival_integrated)
+  int_mtrc <- metric_set(brier_survival_integrated)
   ctrl <- control_resamples(save_pred = TRUE)
 
   expect_silent(
@@ -310,7 +310,7 @@ test_that("resampling survival models with dynamic metric", {
 
   # resampling models with dynamic metrics ----------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
   ctrl <- control_resamples(save_pred = TRUE)
 
   expect_silent(
@@ -426,7 +426,11 @@ test_that("resampling survival models with mixture of metric types", {
 
   # resampling models with dynamic metrics ----------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
   ctrl <- control_resamples(save_pred = TRUE)
 
   expect_silent(

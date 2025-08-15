@@ -38,7 +38,7 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   # Racing with static metrics -------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   wl_static_res <-
@@ -52,7 +52,9 @@ test_that("race tuning (win_loss) survival models with static metric", {
     )
 
   num_final_wl <-
-    unique(show_best(wl_static_res, metric = "concordance_survival")$cost_complexity)
+    unique(
+      show_best(wl_static_res, metric = "concordance_survival")$cost_complexity
+    )
 
   # test structure of results --------------------------------------------------
 
@@ -198,7 +200,6 @@ test_that("race tuning (win_loss) survival models with static metric", {
   )
 
   expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
-
 })
 
 test_that("race tuning (win_loss) survival models with integrated metric", {
@@ -248,7 +249,11 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   expect_snapshot({
     num_final_wl <-
-      show_best(wl_integrated_res, metric = "brier_survival_integrated", eval_time = 5) %>%
+      show_best(
+        wl_integrated_res,
+        metric = "brier_survival_integrated",
+        eval_time = 5
+      ) %>%
       pluck("cost_complexity") %>%
       unique()
   })
@@ -402,7 +407,6 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
   expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
-
   sum_pred <- collect_predictions(wl_integrated_res, summarize = TRUE)
   no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
@@ -455,7 +459,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   # Racing with dynamic metrics ------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   expect_snapshot({
     set.seed(2193)
@@ -472,7 +476,13 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
   })
 
   num_final_wl <-
-    unique(show_best(wl_dyn_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
+    unique(
+      show_best(
+        wl_dyn_res,
+        metric = "brier_survival",
+        eval_time = 5
+      )$cost_complexity
+    )
 
   # test structure of results --------------------------------------------------
 
@@ -554,7 +564,6 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
   )
   expect_snapshot(ggplot2::get_labs(dyn_autoplot))
 
-
   # test metric collection -----------------------------------------------------
 
   exp_metric_sum <- tibble(
@@ -594,7 +603,10 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
   ###
 
   metric_wl_all <- collect_metrics(wl_dyn_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs) * length(time_points))
+  expect_true(
+    nrow(metric_wl_all) ==
+      nrow(wl_finished) * nrow(sim_rs) * length(time_points)
+  )
   expect_ptype(metric_wl_all, exp_metric_all)
   expect_true(all(metric_wl_all$.metric == "brier_survival"))
 
@@ -675,7 +687,9 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid_winner <- tibble(cost_complexity = 10^c(-10, seq(-1.1, -1, length.out = 5)))
+  grid_winner <- tibble(
+    cost_complexity = 10^c(-10, seq(-1.1, -1, length.out = 5))
+  )
   grid_ties <- tibble(cost_complexity = 10^c(seq(-10.1, -10.0, length.out = 5)))
 
   gctrl <- control_grid(save_pred = TRUE)
@@ -683,7 +697,11 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # Racing with mixed metrics --------------------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   expect_snapshot({
     set.seed(2193)
@@ -699,7 +717,13 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
       )
   })
 
-  num_final_wl  <- unique(show_best(wl_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
+  num_final_wl <- unique(
+    show_best(
+      wl_mixed_res,
+      metric = "brier_survival",
+      eval_time = 5
+    )$cost_complexity
+  )
 
   expect_equal(length(num_final_wl), nrow(grid_ties))
 
@@ -709,7 +733,14 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   expect_named(
     wl_mixed_res$.predictions[[1]],
-    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config"),
+    c(
+      ".pred",
+      ".row",
+      "cost_complexity",
+      ".pred_time",
+      "event_time",
+      ".config"
+    ),
     ignore.order = TRUE
   )
 
@@ -788,9 +819,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
   )
   expect_equal(
     sort(unique(mix_autoplot$data$.metric)),
-    c("brier_survival @10",
-      "brier_survival_integrated",
-      "concordance_survival")
+    c("brier_survival @10", "brier_survival_integrated", "concordance_survival")
   )
 
   expect_snapshot(ggplot2::get_labs(mix_autoplot))
@@ -825,9 +854,12 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
   )
   expect_equal(
     sort(unique(mix_multi_autoplot$data$.metric)),
-    c("brier_survival @ 1","brier_survival @10",
+    c(
+      "brier_survival @ 1",
+      "brier_survival @10",
       "brier_survival_integrated",
-      "concordance_survival")
+      "concordance_survival"
+    )
   )
 
   expect_snapshot(ggplot2::get_labs(mix_multi_autoplot))
@@ -894,15 +926,23 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
   expect_equal(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
-  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+  expect_equal(
+    as.vector(table(metric_wl_sum$.metric)),
+    c(4L, 1L, 1L) * nrow(wl_finished)
+  )
 
   ###
 
   metric_wl_all <- collect_metrics(wl_mixed_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == num_metrics * nrow(wl_finished) * nrow(sim_rs))
+  expect_true(
+    nrow(metric_wl_all) == num_metrics * nrow(wl_finished) * nrow(sim_rs)
+  )
   expect_ptype(metric_wl_all, exp_metric_all)
   expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
-  expect_equal(as.vector(table(metric_wl_sum$.metric)), c(4L, 1L, 1L) * nrow(wl_finished))
+  expect_equal(
+    as.vector(table(metric_wl_sum$.metric)),
+    c(4L, 1L, 1L) * nrow(wl_finished)
+  )
 
   # test prediction collection -------------------------------------------------
 
@@ -964,7 +1004,11 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
       select(-.estimator, -.config)
   )
   expect_snapshot(
-    res <- show_best(wl_mixed_res, metric = "unused_metric", eval_time = c(1, 3)) %>%
+    res <- show_best(
+      wl_mixed_res,
+      metric = "unused_metric",
+      eval_time = c(1, 3)
+    ) %>%
       select(-.estimator, -.config),
     error = TRUE
   )

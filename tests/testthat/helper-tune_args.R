@@ -1,5 +1,8 @@
 check_tune_args_tibble <- function(x) {
-  expect_equal(names(x), c("name", "tunable", "id", "source", "component", "component_id"))
+  expect_equal(
+    names(x),
+    c("name", "tunable", "id", "source", "component", "component_id")
+  )
   expect_equal(class(x$name), "character")
   expect_equal(class(x$tunable), "logical")
   expect_equal(class(x$id), "character")

@@ -72,6 +72,3 @@ test_that('boosted tree Bayesian search', {
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(boost_search)))
   expect_equal(nrow(collect_metrics(boost_search)), num_mtrc * 5)
 })
-
-
-

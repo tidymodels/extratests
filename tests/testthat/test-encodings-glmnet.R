@@ -24,7 +24,6 @@ test_that('parsnip models with formula interface', {
     predict(parsnip_form_fit, ames %>% select(Year_Built, Alley)),
     regex = NA
   )
-
 })
 
 test_that('parsnip models with xy interface', {
@@ -74,6 +73,3 @@ test_that('workflows', {
     regex = NA
   )
 })
-
-
-

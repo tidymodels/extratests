@@ -17,8 +17,13 @@ wf <-
   add_model(parsnip_mod)
 
 rec <-
-  recipe(churn ~ number_vmail_messages + number_customer_service_calls + international_plan,
-         data = mlc_churn)
+  recipe(
+    churn ~
+      number_vmail_messages +
+        number_customer_service_calls +
+        international_plan,
+    data = mlc_churn
+  )
 
 sparse_bp <- default_recipe_blueprint(composition = "dgCMatrix")
 matrix_bp <- default_recipe_blueprint(composition = "matrix")
@@ -34,7 +39,6 @@ test_that('sparse composition errors', {
 })
 
 test_that('sparse composition works', {
-
   rec <- rec %>% step_dummy(international_plan)
 
   expect_error(
@@ -45,7 +49,6 @@ test_that('sparse composition works', {
 
   forged <- forge(mlc_churn, blueprint = processed$blueprint)$predictors
   expect_s4_class(forged, "dgCMatrix")
-
 
   expect_error(
     wf_pre <-
@@ -67,11 +70,9 @@ test_that('sparse composition works', {
       fit_resamples(mlc_folds),
     NA
   )
-
 })
 
 test_that('matrix composition works', {
-
   rec <- rec %>% step_dummy(international_plan)
 
   expect_error(
@@ -86,7 +87,6 @@ test_that('matrix composition works', {
   expect_true(is.numeric(forged))
   expect_equal(dim(forged), c(5000, 3))
 
-
   expect_error(
     wf_pre <-
       wf %>%
@@ -96,7 +96,6 @@ test_that('matrix composition works', {
   )
   expect_true(is.numeric(wf_pre$pre$mold$predictors))
   expect_equal(dim(wf_pre$pre$mold$predictors), c(5000, 3))
-
 
   expect_error(
     .fit_model(wf_pre, control = control_workflow()),
@@ -109,7 +108,4 @@ test_that('matrix composition works', {
       fit_resamples(mlc_folds),
     NA
   )
-
 })
-
-

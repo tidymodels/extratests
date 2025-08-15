@@ -36,7 +36,7 @@ test_that("select_*() with static metric", {
 
   ## Grid search with static metrics --------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   grid_static_res <-
@@ -69,11 +69,19 @@ test_that("select_*() with static metric", {
   )
 
   expect_snapshot(
-    select_by_one_std_err(grid_static_res, metric = "concordance_survival", penalty)
+    select_by_one_std_err(
+      grid_static_res,
+      metric = "concordance_survival",
+      penalty
+    )
   )
 
   expect_snapshot(
-    select_by_pct_loss(grid_static_res, metric = "concordance_survival", penalty)
+    select_by_pct_loss(
+      grid_static_res,
+      metric = "concordance_survival",
+      penalty
+    )
   )
 })
 
@@ -131,17 +139,28 @@ test_that("grid tuning survival models with integrated metric", {
   )
 
   expect_snapshot(
-    select_best(grid_integrated_res, metric = "brier_survival_integrated", eval_time = 0)
+    select_best(
+      grid_integrated_res,
+      metric = "brier_survival_integrated",
+      eval_time = 0
+    )
   )
 
   expect_snapshot(
-    select_by_one_std_err(grid_integrated_res, metric = "brier_survival_integrated", penalty)
+    select_by_one_std_err(
+      grid_integrated_res,
+      metric = "brier_survival_integrated",
+      penalty
+    )
   )
 
   expect_snapshot(
-    select_by_pct_loss(grid_integrated_res, metric = "brier_survival_integrated", penalty)
+    select_by_pct_loss(
+      grid_integrated_res,
+      metric = "brier_survival_integrated",
+      penalty
+    )
   )
-
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -173,7 +192,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # Grid search with dynamic metrics -------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   grid_dynamic_res <-
@@ -198,7 +217,11 @@ test_that("grid tuning survival models with dynamic metric", {
   )
 
   expect_snapshot(
-    select_best(grid_dynamic_res, metric = "brier_survival", eval_time = c(5, 10))
+    select_best(
+      grid_dynamic_res,
+      metric = "brier_survival",
+      eval_time = c(5, 10)
+    )
   )
 
   expect_snapshot(
@@ -212,13 +235,22 @@ test_that("grid tuning survival models with dynamic metric", {
   )
 
   expect_snapshot(
-    select_by_one_std_err(grid_dynamic_res, metric = "brier_survival", penalty, eval_time = 10)
+    select_by_one_std_err(
+      grid_dynamic_res,
+      metric = "brier_survival",
+      penalty,
+      eval_time = 10
+    )
   )
 
   expect_snapshot(
-    select_by_pct_loss(grid_dynamic_res, metric = "brier_survival", penalty, eval_time = 10)
+    select_by_pct_loss(
+      grid_dynamic_res,
+      metric = "brier_survival",
+      penalty,
+      eval_time = 10
+    )
   )
-
 })
 
 test_that("grid tuning survival models mixture of metric types", {
@@ -250,7 +282,11 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # Grid search with a mixture of metrics --------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-
@@ -275,7 +311,11 @@ test_that("grid tuning survival models mixture of metric types", {
   )
 
   expect_snapshot(
-    select_best(grid_mixed_res, metric = "brier_survival_integrated", eval_time = 0)
+    select_best(
+      grid_mixed_res,
+      metric = "brier_survival_integrated",
+      eval_time = 0
+    )
   )
 
   expect_snapshot(
@@ -284,11 +324,20 @@ test_that("grid tuning survival models mixture of metric types", {
   )
 
   expect_snapshot(
-    select_by_one_std_err(grid_mixed_res, metric = "brier_survival", penalty, eval_time = 10)
+    select_by_one_std_err(
+      grid_mixed_res,
+      metric = "brier_survival",
+      penalty,
+      eval_time = 10
+    )
   )
 
   expect_snapshot(
-    select_by_pct_loss(grid_mixed_res, metric = "brier_survival", penalty, eval_time = 10)
+    select_by_pct_loss(
+      grid_mixed_res,
+      metric = "brier_survival",
+      penalty,
+      eval_time = 10
+    )
   )
-
 })

@@ -1,7 +1,11 @@
 library(testthat)
 library(parsnip)
 
-R_version_too_small_for_glmnet <- utils::compareVersion('3.6.0', as.character(getRversion())) > 0
+R_version_too_small_for_glmnet <- utils::compareVersion(
+  '3.6.0',
+  as.character(getRversion())
+) >
+  0
 skip_if(R_version_too_small_for_glmnet)
 
 test_that('glmnet execution error', {
@@ -32,8 +36,13 @@ test_that("glmnet model object", {
   hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
   hpc_y <- hpc$input_fields
 
-  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = hpc_x,
+    y = hpc_y,
+    family = "gaussian",
+    alpha = 0.3,
+    nlambda = 15
+  )
 
   lm_spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
@@ -56,8 +65,13 @@ test_that("glmnet prediction: type numeric", {
   hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
   hpc_y <- hpc$input_fields
 
-  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = hpc_x,
+    y = hpc_y,
+    family = "gaussian",
+    alpha = 0.3,
+    nlambda = 15
+  )
   exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
 
   lm_spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
@@ -107,11 +121,16 @@ test_that("glmnet prediction: type raw", {
   hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
   hpc_y <- hpc$input_fields
 
-  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = hpc_x,
+    y = hpc_y,
+    family = "gaussian",
+    alpha = 0.3,
+    nlambda = 15
+  )
   exp_pred <- predict(exp_fit, hpc_x, s = 0.1)
 
-  lm_spec <-  linear_reg(penalty = 0.1, mixture = 0.3) %>%
+  lm_spec <- linear_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
   f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
   xy_fit <- fit_xy(lm_spec, x = hpc_x, y = hpc_y)
@@ -152,7 +171,12 @@ test_that("glmnet multi_predict(): type numeric", {
 
   penalty_values <- c(0.01, 0.1)
 
-  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian", alpha = 0.3)
+  exp_fit <- glmnet::glmnet(
+    x = hpc_x,
+    y = hpc_y,
+    family = "gaussian",
+    alpha = 0.3
+  )
   exp_pred <- predict(exp_fit, hpc_x, s = penalty_values)
 
   lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>% set_engine("glmnet")
@@ -162,9 +186,18 @@ test_that("glmnet multi_predict(): type numeric", {
   expect_true(has_multi_predict(xy_fit))
   expect_equal(multi_predict_args(xy_fit), "penalty")
 
-  f_pred <- multi_predict(f_fit, hpc, type = "numeric", penalty = penalty_values)
-  xy_pred <- multi_predict(xy_fit, hpc_x, type = "numeric",
-                           penalty = penalty_values)
+  f_pred <- multi_predict(
+    f_fit,
+    hpc,
+    type = "numeric",
+    penalty = penalty_values
+  )
+  xy_pred <- multi_predict(
+    xy_fit,
+    hpc_x,
+    type = "numeric",
+    penalty = penalty_values
+  )
   expect_equal(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
@@ -175,27 +208,33 @@ test_that("glmnet multi_predict(): type numeric", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::pull(.pred)
-  expect_equal(f_pred_001, unname(exp_pred[,1]))
-  expect_equal(f_pred_01, unname(exp_pred[,2]))
+  expect_equal(f_pred_001, unname(exp_pred[, 1]))
+  expect_equal(f_pred_01, unname(exp_pred[, 2]))
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc))
   expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(dim(.x) == c(2, 2))))
+    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
   )
   expect_true(
-    all(purrr::map_lgl(f_pred$.pred,
-                       ~ all(names(.x) == c("penalty", ".pred"))))
+    all(purrr::map_lgl(f_pred$.pred, ~ all(names(.x) == c("penalty", ".pred"))))
   )
 
   # single prediction
-  f_pred_1 <- multi_predict(f_fit, hpc[1, ], type = "numeric",
-                            penalty = penalty_values)
-  xy_pred_1 <- multi_predict(xy_fit, hpc_x[1, , drop = FALSE], type = "numeric",
-                             penalty = penalty_values)
+  f_pred_1 <- multi_predict(
+    f_fit,
+    hpc[1, ],
+    type = "numeric",
+    penalty = penalty_values
+  )
+  xy_pred_1 <- multi_predict(
+    xy_fit,
+    hpc_x[1, , drop = FALSE],
+    type = "numeric",
+    penalty = penalty_values
+  )
   expect_equal(f_pred_1, xy_pred_1)
   expect_equal(nrow(f_pred_1), 1)
   expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
@@ -212,12 +251,12 @@ test_that("glmnet multi_predict(): type NULL", {
     set_engine("glmnet", nlambda = 15)
   f_fit <- fit(spec, input_fields ~ log(compounds) + class, data = hpc)
 
-  pred <- predict(f_fit, hpc[1:5,])
-  pred_numeric <- predict(f_fit, hpc[1:5,], type = "numeric")
+  pred <- predict(f_fit, hpc[1:5, ])
+  pred_numeric <- predict(f_fit, hpc[1:5, ], type = "numeric")
   expect_identical(pred, pred_numeric)
 
-  mpred <- multi_predict(f_fit, hpc[1:5,])
-  mpred_numeric <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
+  mpred <- multi_predict(f_fit, hpc[1:5, ])
+  mpred_numeric <- multi_predict(f_fit, hpc[1:5, ], type = "numeric")
   expect_identical(mpred, mpred_numeric)
 })
 
@@ -228,7 +267,12 @@ test_that('multi_predict() with default or single penalty value', {
   hpc_x <- model.matrix(~ log(compounds) + class, data = hpc)[, -1]
   hpc_y <- hpc$input_fields
 
-  exp_fit <- glmnet::glmnet(x = hpc_x, y = hpc_y, family = "gaussian", alpha = 0.3)
+  exp_fit <- glmnet::glmnet(
+    x = hpc_x,
+    y = hpc_y,
+    family = "gaussian",
+    alpha = 0.3
+  )
 
   lm_spec <- linear_reg(penalty = 0.123, mixture = 0.3) %>% set_engine("glmnet")
   f_fit <- fit(lm_spec, input_fields ~ log(compounds) + class, data = hpc)
@@ -246,7 +290,7 @@ test_that('multi_predict() with default or single penalty value', {
   f_pred_01 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
     dplyr::pull(.pred)
-  expect_equal(f_pred_01, unname(exp_pred[,1]))
+  expect_equal(f_pred_01, unname(exp_pred[, 1]))
 
   # Can predict using default penalty. See #108
   expect_no_error(
@@ -260,7 +304,7 @@ test_that('multi_predict() with default or single penalty value', {
   f_pred_0123 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
     dplyr::pull(.pred)
-  expect_equal(f_pred_0123, unname(exp_pred[,1]))
+  expect_equal(f_pred_0123, unname(exp_pred[, 1]))
 })
 
 test_that('error traps', {
@@ -301,15 +345,19 @@ test_that("base-R families: type numeric", {
   expect_true(has_multi_predict(f_fit))
   expect_equal(multi_predict_args(f_fit), "penalty")
 
-  pred <- predict(f_fit, hpc[1:5,], type = "numeric")
-  pred_005 <- predict(f_fit, hpc[1:5,], type = "numeric", penalty = 0.05)
-  mpred <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
-  mpred_005 <- multi_predict(f_fit, hpc[1:5,], type = "numeric", penalty = 0.05)
+  pred <- predict(f_fit, hpc[1:5, ], type = "numeric")
+  pred_005 <- predict(f_fit, hpc[1:5, ], type = "numeric", penalty = 0.05)
+  mpred <- multi_predict(f_fit, hpc[1:5, ], type = "numeric")
+  mpred_005 <- multi_predict(
+    f_fit,
+    hpc[1:5, ],
+    type = "numeric",
+    penalty = 0.05
+  )
 
   expect_identical(names(pred), ".pred")
   expect_true(
-    all(purrr::map_lgl(mpred$.pred,
-                       ~ all(names(.x) == c("penalty", ".pred"))))
+    all(purrr::map_lgl(mpred$.pred, ~ all(names(.x) == c("penalty", ".pred"))))
   )
   expect_identical(
     pred$.pred,
@@ -320,11 +368,15 @@ test_that("base-R families: type numeric", {
     mpred_005 %>% tidyr::unnest(cols = .pred) %>% pull(.pred)
   )
 
-  mpred <- multi_predict(f_fit, hpc[1:5,], type = "numeric", penalty = c(0.05, 0.1))
+  mpred <- multi_predict(
+    f_fit,
+    hpc[1:5, ],
+    type = "numeric",
+    penalty = c(0.05, 0.1)
+  )
 
   expect_true(
-    all(purrr::map_lgl(mpred$.pred,
-                       ~ all(dim(.x) == c(2, 2))))
+    all(purrr::map_lgl(mpred$.pred, ~ all(dim(.x) == c(2, 2))))
   )
 })
 
@@ -340,11 +392,11 @@ test_that("base-R families: type NULL", {
     set_engine("glmnet", nlambda = 15, family = stats::quasi())
   f_fit <- fit(spec, input_fields ~ log(compounds) + class, data = hpc)
 
-  pred <- predict(f_fit, hpc[1:5,])
-  pred_numeric <- predict(f_fit, hpc[1:5,], type = "numeric")
+  pred <- predict(f_fit, hpc[1:5, ])
+  pred_numeric <- predict(f_fit, hpc[1:5, ], type = "numeric")
   expect_identical(pred, pred_numeric)
 
-  mpred <- multi_predict(f_fit, hpc[1:5,])
-  mpred_numeric <- multi_predict(f_fit, hpc[1:5,], type = "numeric")
+  mpred <- multi_predict(f_fit, hpc[1:5, ])
+  mpred_numeric <- multi_predict(f_fit, hpc[1:5, ], type = "numeric")
   expect_identical(mpred, mpred_numeric)
 })

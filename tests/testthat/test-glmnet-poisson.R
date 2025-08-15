@@ -3,11 +3,16 @@ library(poissonreg)
 test_that("glmnet model object", {
   skip_if_not_installed("glmnet")
   data(seniors, package = "poissonreg", envir = rlang::current_env())
-  seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
+  seniors_x <- model.matrix(~., data = seniors[, -4])[, -1]
   seniors_y <- seniors$count
 
-  exp_fit <- glmnet::glmnet(x = seniors_x, y = seniors_y, family = "poisson",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = seniors_x,
+    y = seniors_y,
+    family = "poisson",
+    alpha = 0.3,
+    nlambda = 15
+  )
 
   spec <- poisson_reg(penalty = 0.1, mixture = 0.3) %>%
     set_engine("glmnet", nlambda = 15)
@@ -28,11 +33,16 @@ test_that("glmnet prediction: type numeric", {
   skip_if_not_installed("glmnet")
 
   data(seniors, package = "poissonreg", envir = rlang::current_env())
-  seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
+  seniors_x <- model.matrix(~., data = seniors[, -4])[, -1]
   seniors_y <- seniors$count
 
-  exp_fit <- glmnet::glmnet(x = seniors_x, y = seniors_y, family = "poisson",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = seniors_x,
+    y = seniors_y,
+    family = "poisson",
+    alpha = 0.3,
+    nlambda = 15
+  )
   exp_pred <- predict(exp_fit, seniors_x, s = 0.1, type = "response")
 
   spec <- poisson_reg(penalty = 0.1, mixture = 0.3) %>%
@@ -62,7 +72,7 @@ test_that('glmnet prediction: column order of `new_data` irrelevant', {
   skip_if_not_installed("glmnet")
 
   data(seniors, package = "poissonreg", envir = rlang::current_env())
-  seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
+  seniors_x <- model.matrix(~., data = seniors[, -4])[, -1]
   seniors_y <- seniors$count
 
   spec <- poisson_reg(penalty = 0.1, mixture = 0.3) %>%
@@ -79,11 +89,16 @@ test_that("glmnet prediction: type raw", {
   skip_if_not_installed("glmnet")
 
   data(seniors, package = "poissonreg", envir = rlang::current_env())
-  seniors_x <- model.matrix(~ ., data = seniors[, -4])[, -1]
+  seniors_x <- model.matrix(~., data = seniors[, -4])[, -1]
   seniors_y <- seniors$count
 
-  exp_fit <- glmnet::glmnet(x = seniors_x, y = seniors_y, family = "poisson",
-                            alpha = 0.3, nlambda = 15)
+  exp_fit <- glmnet::glmnet(
+    x = seniors_x,
+    y = seniors_y,
+    family = "poisson",
+    alpha = 0.3,
+    nlambda = 15
+  )
   exp_pred <- predict(exp_fit, seniors_x, s = 0.1)
 
   spec <- poisson_reg(penalty = 0.1, mixture = 0.3) %>%

@@ -13,7 +13,6 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('spark execution', {
-
   skip_if_not_installed("sparklyr")
 
   library(sparklyr)
@@ -23,8 +22,8 @@ test_that('spark execution', {
   skip_if(inherits(sc, "try-error"))
 
   hpc_rows <- c(1, 51, 101)
-  hpc_tr <- copy_to(sc, hpc[-hpc_rows,   ], "hpc_tr", overwrite = TRUE)
-  hpc_te <- copy_to(sc, hpc[ hpc_rows, -5], "hpc_te", overwrite = TRUE)
+  hpc_tr <- copy_to(sc, hpc[-hpc_rows, ], "hpc_tr", overwrite = TRUE)
+  hpc_te <- copy_to(sc, hpc[hpc_rows, -5], "hpc_te", overwrite = TRUE)
 
   # ----------------------------------------------------------------------------
 
@@ -62,7 +61,11 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_prob_classprob <- predict(spark_class_fit, hpc_te, type = "prob"),
+    spark_class_prob_classprob <- predict(
+      spark_class_fit,
+      hpc_te,
+      type = "prob"
+    ),
     regexp = NA
   )
 
@@ -79,4 +82,3 @@ test_that('spark execution', {
 
   spark_disconnect_all()
 })
-

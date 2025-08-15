@@ -9,7 +9,6 @@ skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("augmenting survival models", {
-
   # General setup --------------------------------------------------------------
 
   set.seed(1)
@@ -40,8 +39,13 @@ test_that("augmenting survival models", {
   expect_true(is.list(sr_aug$.pred))
   expect_named(
     sr_aug$.pred[[1]],
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored"),
+    c(
+      ".eval_time",
+      ".pred_survival",
+      ".weight_time",
+      ".pred_censored",
+      ".weight_censored"
+    ),
     ignore.order = TRUE
   )
 
@@ -62,8 +66,13 @@ test_that("augmenting survival models", {
   expect_true(is.list(glmn_aug$.pred))
   expect_named(
     glmn_aug$.pred[[1]],
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored"),
+    c(
+      ".eval_time",
+      ".pred_survival",
+      ".weight_time",
+      ".pred_censored",
+      ".weight_censored"
+    ),
     ignore.order = TRUE
   )
 })
@@ -109,7 +118,11 @@ test_that("augment() works for tune_results", {
 
   # Grid search with a mixture of metrics --------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-
@@ -171,7 +184,11 @@ test_that("augment() works for resample_results", {
 
   # resampling models with a mixture of metrics --------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -220,7 +237,11 @@ test_that("augment() works for last fit", {
 
   # last fit for models with a mixture of metrics ------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-

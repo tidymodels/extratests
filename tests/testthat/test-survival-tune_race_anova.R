@@ -1,4 +1,3 @@
-
 suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(censored))
 suppressPackageStartupMessages(library(finetune))
@@ -42,7 +41,7 @@ test_that("race tuning (anova) survival models with static metric", {
 
   # Racing with static metrics -------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   aov_static_res <-
@@ -56,7 +55,9 @@ test_that("race tuning (anova) survival models with static metric", {
     )
 
   num_final_aov <-
-    unique(show_best(aov_static_res, metric = "concordance_survival")$cost_complexity)
+    unique(
+      show_best(aov_static_res, metric = "concordance_survival")$cost_complexity
+    )
 
   # test structure of results --------------------------------------------------
 
@@ -251,7 +252,11 @@ test_that("race tuning (anova) survival models with integrated metric", {
 
   expect_snapshot({
     num_final_aov <-
-      show_best(aov_integrated_res, metric = "brier_survival_integrated", eval_time = 5) %>%
+      show_best(
+        aov_integrated_res,
+        metric = "brier_survival_integrated",
+        eval_time = 5
+      ) %>%
       pluck("cost_complexity") %>%
       unique()
   })
@@ -406,7 +411,6 @@ test_that("race tuning (anova) survival models with integrated metric", {
   expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
-
   sum_pred <- collect_predictions(aov_integrated_res, summarize = TRUE)
   no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
@@ -456,31 +460,37 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
-  rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
+  rctrl_verb <- control_race(
+    save_pred = TRUE,
+    verbose_elim = TRUE,
+    verbose = FALSE
+  )
 
   # Racing with dynamic metrics ------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   # use `capture.output()` instead of `expect_snapshot_test()`
   # https://github.com/tidymodels/extratests/pull/134#discussion_r1394534647
   # expect_snapshot_warning() is used so that we can test on the captured output
   expect_snapshot_warning({
     aov_dyn_output <-
-      capture.output({
-        set.seed(2193)
-        aov_dyn_res <-
-          mod_spec %>%
-          tune_race_anova(
-            event_time ~ X1 + X2,
-            resamples = sim_rs,
-            grid = grid,
-            metrics = dyn_mtrc,
-            eval_time = time_points,
-            control = rctrl_verb
-          )
-      },
-      type = "message")
+      capture.output(
+        {
+          set.seed(2193)
+          aov_dyn_res <-
+            mod_spec %>%
+            tune_race_anova(
+              event_time ~ X1 + X2,
+              resamples = sim_rs,
+              grid = grid,
+              metrics = dyn_mtrc,
+              eval_time = time_points,
+              control = rctrl_verb
+            )
+        },
+        type = "message"
+      )
   })
 
   num_final_aov <-
@@ -490,7 +500,10 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # TODO add a test for checking the evaluation time in this message:
   # https://github.com/tidymodels/finetune/issues/81
-  expect_true(any(grepl("Racing will minimize the brier_survival metric at time", aov_dyn_output)))
+  expect_true(any(grepl(
+    "Racing will minimize the brier_survival metric at time",
+    aov_dyn_output
+  )))
 
   # test structure of results --------------------------------------------------
 
@@ -611,7 +624,10 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
   ###
 
   metric_aov_all <- collect_metrics(aov_dyn_res, summarize = FALSE)
-  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs) * length(time_points))
+  expect_true(
+    nrow(metric_aov_all) ==
+      nrow(aov_finished) * nrow(sim_rs) * length(time_points)
+  )
   expect_ptype(metric_aov_all, exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "brier_survival"))
 
@@ -645,7 +661,6 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
   expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
-
 
   sum_pred <- collect_predictions(aov_dyn_res, summarize = TRUE)
   no_id <- dynamic_ptype[, names(dynamic_ptype) != "id"]
@@ -693,39 +708,60 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     decision_tree(cost_complexity = tune()) %>%
     set_mode("censored regression")
 
-  grid_winner <- tibble(cost_complexity = 10^c(-10, seq(-1.1, -1, length.out = 5)))
+  grid_winner <- tibble(
+    cost_complexity = 10^c(-10, seq(-1.1, -1, length.out = 5))
+  )
   grid_ties <- tibble(cost_complexity = 10^c(seq(-10.1, -10.0, length.out = 5)))
 
   gctrl <- control_grid(save_pred = TRUE)
   rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
-  rctrl_verb <- control_race(save_pred = TRUE, verbose_elim = TRUE, verbose = FALSE)
+  rctrl_verb <- control_race(
+    save_pred = TRUE,
+    verbose_elim = TRUE,
+    verbose = FALSE
+  )
 
   # Racing with mixed metrics --------------------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   # expect_snapshot_warning() is used so that we can test on the captured output
   expect_snapshot_warning({
     aov_mixed_output <-
-      capture.output({
-        set.seed(2193)
-        aov_mixed_res <-
-          mod_spec %>%
-          tune_race_anova(
-            event_time ~ X1 + X2,
-            resamples = sim_rs,
-            grid = grid_winner,
-            metrics = mix_mtrc,
-            eval_time = time_points,
-            control = rctrl_verb
-          )
-      },
-      type = "message")
+      capture.output(
+        {
+          set.seed(2193)
+          aov_mixed_res <-
+            mod_spec %>%
+            tune_race_anova(
+              event_time ~ X1 + X2,
+              resamples = sim_rs,
+              grid = grid_winner,
+              metrics = mix_mtrc,
+              eval_time = time_points,
+              control = rctrl_verb
+            )
+        },
+        type = "message"
+      )
   })
 
-  num_final_aov <- unique(show_best(aov_mixed_res, metric = "brier_survival", eval_time = 5)$cost_complexity)
+  num_final_aov <- unique(
+    show_best(
+      aov_mixed_res,
+      metric = "brier_survival",
+      eval_time = 5
+    )$cost_complexity
+  )
 
-  expect_true(any(grepl("Racing will minimize the brier_survival metric at time 10", aov_mixed_output)))
+  expect_true(any(grepl(
+    "Racing will minimize the brier_survival metric at time 10",
+    aov_mixed_output
+  )))
   expect_true(length(num_final_aov) < nrow(grid_winner))
 
   # test structure of results --------------------------------------------------
@@ -734,7 +770,14 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   expect_named(
     aov_mixed_res$.predictions[[1]],
-    c(".pred", ".row", "cost_complexity", ".pred_time", "event_time", ".config"),
+    c(
+      ".pred",
+      ".row",
+      "cost_complexity",
+      ".pred_time",
+      "event_time",
+      ".config"
+    ),
     ignore.order = TRUE
   )
 
@@ -813,13 +856,10 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   )
   expect_equal(
     sort(unique(mix_autoplot$data$.metric)),
-    c("brier_survival @10",
-      "brier_survival_integrated",
-      "concordance_survival")
+    c("brier_survival @10", "brier_survival_integrated", "concordance_survival")
   )
 
   expect_snapshot(ggplot2::get_labs(mix_autoplot))
-
 
   ###
 
@@ -851,9 +891,12 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   )
   expect_equal(
     sort(unique(mix_multi_autoplot$data$.metric)),
-    c("brier_survival @ 1","brier_survival @10",
+    c(
+      "brier_survival @ 1",
+      "brier_survival @10",
       "brier_survival_integrated",
-      "concordance_survival")
+      "concordance_survival"
+    )
   )
 
   expect_snapshot(ggplot2::get_labs(mix_multi_autoplot))
@@ -920,15 +963,23 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   expect_equal(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
   expect_ptype(metric_aov_sum, exp_metric_sum)
   expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
-  expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
+  expect_equal(
+    as.vector(table(metric_aov_sum$.metric)),
+    c(4L, 1L, 1L) * nrow(aov_finished)
+  )
 
   ###
 
   metric_aov_all <- collect_metrics(aov_mixed_res, summarize = FALSE)
-  expect_true(nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs))
+  expect_true(
+    nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs)
+  )
   expect_ptype(metric_aov_all, exp_metric_all)
   expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
-  expect_equal(as.vector(table(metric_aov_sum$.metric)), c(4L, 1L, 1L) * nrow(aov_finished))
+  expect_equal(
+    as.vector(table(metric_aov_sum$.metric)),
+    c(4L, 1L, 1L) * nrow(aov_finished)
+  )
 
   # test prediction collection -------------------------------------------------
 
@@ -975,11 +1026,11 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival") %>%
       select(-.estimator, -.config)
-    )
+  )
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1) %>%
       select(-.estimator, -.config)
-    )
+  )
   expect_snapshot(
     show_best(aov_mixed_res, metric = "brier_survival", eval_time = c(1.1)) %>%
       select(-.estimator, -.config),

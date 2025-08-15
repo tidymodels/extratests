@@ -13,20 +13,16 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('Reminder to check for CRAN sparklyr > 1.9.1.9000', {
-
   check_spark_version <- packageVersion("sparklyr") < "1.9.2"
   check_time <- Sys.Date() >= as.Date("2025-09-01")
 
   time_to_look_for_new_sparklyr_version <- check_spark_version & check_time
 
   expect_false(time_to_look_for_new_sparklyr_version)
-
 })
 
 
-
 test_that('spark execution', {
-
   skip_if_not_installed("sparklyr")
   suppressPackageStartupMessages(library(sparklyr))
 
@@ -34,8 +30,8 @@ test_that('spark execution', {
 
   skip_if(inherits(sc, "try-error"))
 
-  hpc_bt_tr <- copy_to(sc, hpc[-(1:4),   ], "hpc_bt_tr", overwrite = TRUE)
-  hpc_bt_te <- copy_to(sc, hpc[  1:4 , -1], "hpc_bt_te", overwrite = TRUE)
+  hpc_bt_tr <- copy_to(sc, hpc[-(1:4), ], "hpc_bt_tr", overwrite = TRUE)
+  hpc_bt_te <- copy_to(sc, hpc[1:4, -1], "hpc_bt_te", overwrite = TRUE)
 
   # ----------------------------------------------------------------------------
 
@@ -70,7 +66,10 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_reg_pred_num <- parsnip:::predict_numeric.model_fit(spark_reg_fit, hpc_bt_te),
+    spark_reg_pred_num <- parsnip:::predict_numeric.model_fit(
+      spark_reg_fit,
+      hpc_bt_te
+    ),
     regexp = NA
   )
 
@@ -80,7 +79,10 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_reg_num_dup <- parsnip:::predict_numeric.model_fit(spark_reg_fit_dup, hpc_bt_te),
+    spark_reg_num_dup <- parsnip:::predict_numeric.model_fit(
+      spark_reg_fit_dup,
+      hpc_bt_te
+    ),
     regexp = NA
   )
 
@@ -95,13 +97,12 @@ test_that('spark execution', {
     as.data.frame(spark_reg_num_dup)$pred
   )
 
-
   # ----------------------------------------------------------------------------
 
   # same for classification
 
-  churn_bt_tr <- copy_to(sc, wa_churn[ 5:100,   ], "churn_bt_tr", overwrite = TRUE)
-  churn_bt_te <- copy_to(sc, wa_churn[   1:4, -1], "churn_bt_te", overwrite = TRUE)
+  churn_bt_tr <- copy_to(sc, wa_churn[5:100, ], "churn_bt_tr", overwrite = TRUE)
+  churn_bt_te <- copy_to(sc, wa_churn[1:4, -1], "churn_bt_te", overwrite = TRUE)
 
   # ----------------------------------------------------------------------------
 
@@ -136,7 +137,10 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_pred_class <- parsnip:::predict_class.model_fit(spark_class_fit, churn_bt_te),
+    spark_class_pred_class <- parsnip:::predict_class.model_fit(
+      spark_class_fit,
+      churn_bt_te
+    ),
     regexp = NA
   )
 
@@ -146,7 +150,10 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_dup_class <- parsnip:::predict_class.model_fit(spark_class_fit_dup, churn_bt_te),
+    spark_class_dup_class <- parsnip:::predict_class.model_fit(
+      spark_class_fit_dup,
+      churn_bt_te
+    ),
     regexp = NA
   )
 
@@ -161,14 +168,16 @@ test_that('spark execution', {
     as.data.frame(spark_class_dup_class)$pred_class
   )
 
-
   expect_error(
     spark_class_prob <- predict(spark_class_fit, churn_bt_te, type = "prob"),
     regexp = NA
   )
 
   expect_error(
-    spark_class_prob_classprob <- parsnip:::predict_classprob.model_fit(spark_class_fit, churn_bt_te),
+    spark_class_prob_classprob <- parsnip:::predict_classprob.model_fit(
+      spark_class_fit,
+      churn_bt_te
+    ),
     regexp = NA
   )
 
@@ -178,7 +187,10 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_dup_classprob <- parsnip:::predict_classprob.model_fit(spark_class_fit_dup, churn_bt_te),
+    spark_class_dup_classprob <- parsnip:::predict_classprob.model_fit(
+      spark_class_fit_dup,
+      churn_bt_te
+    ),
     regexp = NA
   )
 
@@ -196,4 +208,3 @@ test_that('spark execution', {
 
   spark_disconnect_all()
 })
-

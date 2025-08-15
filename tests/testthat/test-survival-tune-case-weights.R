@@ -20,9 +20,15 @@ test_that("grid tuning survival models with importance case weights", {
     set_engine("glmnet", path_values = grid$penalty) %>%
     set_mode("censored regression")
 
-  gctrl <- control_grid(save_pred = TRUE, extract = function(x) coef(extract_fit_engine(x)))
+  gctrl <- control_grid(save_pred = TRUE, extract = function(x) {
+    coef(extract_fit_engine(x))
+  })
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -96,9 +102,7 @@ test_that("grid tuning survival models with importance case weights", {
       )
     )
   )
-
 })
-
 
 
 test_that("grid tuning survival models with frequency case weights", {
@@ -117,7 +121,11 @@ test_that("grid tuning survival models with frequency case weights", {
 
   rctrl <- control_resamples(extract = function(x) extract_fit_engine(x))
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -170,6 +178,4 @@ test_that("grid tuning survival models with frequency case weights", {
     coef(weights_none_tune_res$.extracts[[1]]$.extracts[[1]]),
     coef(weights_frq_tune_res$.extracts[[1]]$.extracts[[1]])
   )
-
-
 })
