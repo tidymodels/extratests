@@ -1,5 +1,5 @@
 test_that('messaging with unknown implementation (bag tree, tidymodels/parsnip#793)', {
-  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+  skip_if_not_installed("parsnip", "1.0.2")
 
   library(parsnip)
 
@@ -68,7 +68,7 @@ test_that('messaging with unknown implementation (bag tree, tidymodels/parsnip#7
 })
 
 test_that('messaging with unknown implementation (decision tree, tidymodels/parsnip#793)', {
-  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+  skip_if_not_installed("parsnip", "1.0.2")
 
   library(parsnip)
 
@@ -136,7 +136,7 @@ test_that('missing implementation checks prompt conservatively with old objects 
   # extension packages, as well as model specs generated before parsnip 1.0.2,
   # will not have this slot. ensure that these messages/errors aren't
   # erroneously introduced when that's the case
-  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+  skip_if_not_installed("parsnip", "1.0.2")
 
   library(parsnip)
 
@@ -159,7 +159,7 @@ test_that('missing implementation checks prompt conservatively with old objects 
 
 test_that('missing implementation checks prompt conservatively with old objects (decision_tree)', {
   # see comment in above chunk
-  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+  skip_if_not_installed("parsnip", "1.0.2")
 
   library(parsnip)
 
@@ -190,7 +190,7 @@ test_that('missing implementation checks prompt conservatively with old objects 
 
 test_that('missing implementation checks prompt conservatively with external objects (arima_boost)', {
   # see comment in above chunk
-  skip_if(utils::packageVersion("parsnip") < "1.0.2")
+  skip_if_not_installed("parsnip", "1.0.2")
 
   library(modeltime)
 
