@@ -14,6 +14,15 @@
     Code
       expect_snapshot_plot(print(autoplot(sa_dynamic_res)), "dyn-sa")
 
+---
+
+    Code
+      expect_snapshot_plot(print(autoplot(sa_dynamic_res, eval_time = 1, type = "parameters")),
+      "dyn-sa-param")
+    Condition
+      Warning:
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
+
 # sim annealing tuning survival models with mixture of metric types
 
     Code
@@ -29,6 +38,15 @@
 
     Code
       expect_snapshot_plot(print(autoplot(sa_mixed_res)), "mix-sa-0-times")
+
+---
+
+    Code
+      expect_snapshot_plot(print(autoplot(sa_mixed_res, eval_time = 1, type = "parameters")),
+      "mix-sa-param")
+    Condition
+      Warning:
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
 
 ---
 
