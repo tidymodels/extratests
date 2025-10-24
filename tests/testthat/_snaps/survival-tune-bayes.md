@@ -42,8 +42,8 @@
         tree_depth .metric     .estimator .eval_time  mean     n std_err .config .iter
              <dbl> <chr>       <chr>           <dbl> <dbl> <int>   <dbl> <chr>   <int>
       1         10 brier_surv~ standard           10 0.164    10  0.0198 pre0_m~     0
-      2         15 brier_surv~ standard           10 0.164    10  0.0198 Iter1       1
-      3          6 brier_surv~ standard           10 0.164    10  0.0198 Iter2       2
+      2          7 brier_surv~ standard           10 0.164    10  0.0198 iter1       1
+      3         13 brier_surv~ standard           10 0.164    10  0.0198 iter2       2
       4          2 brier_surv~ standard           10 0.179    10  0.0209 pre0_m~     0
       5          1 brier_surv~ standard           10 0.193    10  0.0201 pre0_m~     0
 
@@ -57,8 +57,8 @@
              <dbl> <chr>      <chr>           <dbl>  <dbl> <int>   <dbl> <chr>   <int>
       1          1 brier_sur~ standard            1 0.0209    10 0.00501 pre0_m~     0
       2         10 brier_sur~ standard            1 0.0210    10 0.00496 pre0_m~     0
-      3         15 brier_sur~ standard            1 0.0210    10 0.00496 Iter1       1
-      4          6 brier_sur~ standard            1 0.0210    10 0.00496 Iter2       2
+      3          7 brier_sur~ standard            1 0.0210    10 0.00496 iter1       1
+      4         13 brier_sur~ standard            1 0.0210    10 0.00496 iter2       2
       5          2 brier_sur~ standard            1 0.0210    10 0.00499 pre0_m~     0
 
 ---
@@ -82,8 +82,8 @@
              <dbl> <chr>      <chr>           <dbl>  <dbl> <int>   <dbl> <chr>   <int>
       1          1 brier_sur~ standard            1 0.0209    10 0.00501 pre0_m~     0
       2         10 brier_sur~ standard            1 0.0210    10 0.00496 pre0_m~     0
-      3         15 brier_sur~ standard            1 0.0210    10 0.00496 Iter1       1
-      4          6 brier_sur~ standard            1 0.0210    10 0.00496 Iter2       2
+      3          7 brier_sur~ standard            1 0.0210    10 0.00496 iter1       1
+      4         13 brier_sur~ standard            1 0.0210    10 0.00496 iter2       2
       5          2 brier_sur~ standard            1 0.0210    10 0.00499 pre0_m~     0
 
 ---
@@ -95,8 +95,8 @@
         tree_depth .metric     .estimator .eval_time  mean     n std_err .config .iter
              <dbl> <chr>       <chr>           <dbl> <dbl> <int>   <dbl> <chr>   <int>
       1         10 brier_surv~ standard           NA 0.125    10 0.00897 pre0_m~     0
-      2         15 brier_surv~ standard           NA 0.125    10 0.00897 Iter1       1
-      3          6 brier_surv~ standard           NA 0.125    10 0.00897 Iter2       2
+      2          7 brier_surv~ standard           NA 0.125    10 0.00897 iter1       1
+      3         13 brier_surv~ standard           NA 0.125    10 0.00897 iter2       2
       4          2 brier_surv~ standard           NA 0.137    10 0.00884 pre0_m~     0
       5          1 brier_surv~ standard           NA 0.143    10 0.00865 pre0_m~     0
 

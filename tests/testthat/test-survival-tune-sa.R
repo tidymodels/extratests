@@ -435,7 +435,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     )
   )
   expect_snapshot_plot(
-    print(autoplot(sa_dynamic_res, eval_time = 1, type = "parameters")),
+    print(autoplot(sa_dynamic_res, type = "parameters")),
     "dyn-sa-param"
   )
   expect_snapshot_plot(
@@ -626,7 +626,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     )
   )
   expect_snapshot_plot(
-    print(autoplot(sa_mixed_res, eval_time = 1, type = "parameters")),
+    print(autoplot(sa_mixed_res, type = "parameters")),
     "mix-sa-param"
   )
   expect_snapshot_plot(
