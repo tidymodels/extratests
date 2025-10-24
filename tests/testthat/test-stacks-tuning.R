@@ -125,10 +125,12 @@ test_that("stacking with Bayesian tuning works", {
     ) %>%
     suppressMessages()
 
-  data_st_bayes <-
-    stacks() %>%
-    add_candidates(wf_set_bayes) %>%
-    suppressMessages()
+  expect_snapshot_warning(
+    data_st_bayes <-
+      stacks() %>%
+      add_candidates(wf_set_bayes) %>%
+      suppressMessages()
+  )
 
   expect_true(inherits(data_st_bayes, "tbl_df"))
 
