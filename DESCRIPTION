@@ -75,8 +75,7 @@ Suggests:
     ggplot2
 Remotes:
     mixOmicsTeam/mixOmics,
-    r-lib/pillar,
-    tidymodels/parsnip#1299
+    r-lib/pillar
 biocViews: mixOmics
 Config/testthat/edition: 3
 Config/testthat/start-first: parsnip-extension-messaging

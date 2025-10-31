@@ -86,8 +86,16 @@ test_that('grf classification', {
       level = 0.95
     )
   )
+})
 
-  ###
+test_that('grf classification with case weights', {
+  skip_if_not_installed("parsnip", minimum_version = "1.3.3.9000")
+  skip_if_not_installed("grf")
+  skip_if_not_installed("modeldata")
+
+  scat_dat <- modeldata::scat
+  scat_tr <- scat_dat[1:94, ]
+  scat_te <- scat_dat[95:110, ]
 
   set.seed(281)
   scat_cw <-
@@ -189,8 +197,16 @@ test_that('grf regression', {
       level = 0.95
     )
   )
+})
 
-  ###
+test_that('grf regression with case weights', {
+  skip_if_not_installed("parsnip", minimum_version = "1.3.3.9000")
+  skip_if_not_installed("grf")
+  skip_if_not_installed("modeldata")
+
+  ames_dat <- modeldata::ames[1:100, ]
+  ames_tr <- ames_dat[1:90, ]
+  ames_te <- ames_dat[91:100, ]
 
   set.seed(281)
   ames_cw <-
