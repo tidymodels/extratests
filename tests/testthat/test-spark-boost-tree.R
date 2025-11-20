@@ -26,7 +26,7 @@ test_that('spark execution', {
   skip_if_not_installed("sparklyr")
   suppressPackageStartupMessages(library(sparklyr))
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -206,5 +206,4 @@ test_that('spark execution', {
     as.data.frame(spark_class_dup_classprob)
   )
 
-  spark_disconnect_all()
 })

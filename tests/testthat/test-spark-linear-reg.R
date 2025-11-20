@@ -17,7 +17,7 @@ test_that('spark execution', {
 
   suppressPackageStartupMessages(library(sparklyr))
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -53,6 +53,4 @@ test_that('spark execution', {
 
   expect_equal(as.data.frame(spark_pred)$pred, lm_pred)
   expect_equal(as.data.frame(spark_pred_num)$pred, lm_pred)
-
-  spark_disconnect_all()
 })

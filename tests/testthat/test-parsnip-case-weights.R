@@ -187,7 +187,7 @@ test_that('linear_reg - glmnet case weights', {
 test_that('linear_reg - spark case weights', {
   skip_if_not_installed("sparklyr")
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -228,7 +228,6 @@ test_that('linear_reg - spark case weights', {
 
   expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 
-  spark_disconnect_all()
 })
 
 
@@ -299,7 +298,7 @@ test_that('logistic_reg - stan case weights', {
 test_that('logistic_reg - spark case weights', {
   skip_if_not_installed("sparklyr")
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -340,7 +339,6 @@ test_that('logistic_reg - spark case weights', {
 
   expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 
-  spark_disconnect_all()
 })
 
 
@@ -410,7 +408,7 @@ test_that('multinom_reg - glmnet case weights', {
 test_that('multinom_reg - spark case weights', {
   skip_if_not_installed("sparklyr")
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -451,7 +449,6 @@ test_that('multinom_reg - spark case weights', {
 
   expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 
-  spark_disconnect_all()
 })
 
 

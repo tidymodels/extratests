@@ -44,7 +44,7 @@ test_that("spark descriptor", {
   suppressPackageStartupMessages(library(sparklyr))
   library(dplyr)
 
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
+  sc <- try(spark_test_connection(), silent = TRUE)
 
   skip_if(inherits(sc, "try-error"))
 
@@ -88,5 +88,4 @@ test_that("spark descriptor", {
     eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr)),
     ignore_attr = TRUE
   )
-  spark_disconnect_all()
 })

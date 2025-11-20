@@ -1,6 +1,10 @@
 library(modeldata)
 library(parsnip)
 
+# Test tracker variables
+.env_tests <- new.env()
+.env_tests$spark_connection <- NULL
+
 ## -----------------------------------------------------------------------------
 
 data("wa_churn")
@@ -26,6 +30,14 @@ spark_not_installed <- function() {
     need_install <- !isTRUE(need_install$result$installed)
   }
   need_install
+}
+
+spark_test_connection <- function() {
+  suppressPackageStartupMessages(library(sparklyr))
+  if(is.null(.env_tests$spark_connection )) {
+    .env_tests$spark_connection <- spark_connect("local")
+  }
+  .env_tests$spark_connection
 }
 
 # ------------------------------------------------------------------------------
