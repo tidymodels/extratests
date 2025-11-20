@@ -35,7 +35,8 @@ spark_not_installed <- function() {
 spark_test_connection <- function() {
   suppressPackageStartupMessages(library(sparklyr))
   if(is.null(.env_tests$spark_connection )) {
-    .env_tests$spark_connection <- spark_connect("local")
+    version <- Sys.getenv("SPARK_VERSION", unset = "3.5.7")
+    .env_tests$spark_connection <- spark_connect("local", version = version)
   }
   .env_tests$spark_connection
 }
