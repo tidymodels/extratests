@@ -26,13 +26,14 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: 'release'}
+          - {os: ubuntu-latest, r: 'release', spark: '4.0.1'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_COMPILE_AND_INSTALL_PACKAGES: 'always'
       R_KEEP_PKG_SOURCE: yes
+      SPARK_VERSION: ${{ matrix.config.spark }}
 
     steps:
       - uses: actions/checkout@v3
@@ -57,7 +58,7 @@ jobs:
 
       - name: Install Spark
         run: |
-          try(sparklyr::spark_install(version = "3.4.0", verbose = TRUE), silent = TRUE)
+          sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"))
         shell: Rscript {0}
 
       - name: Install devel versions
