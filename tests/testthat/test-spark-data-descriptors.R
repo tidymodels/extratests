@@ -1,6 +1,4 @@
-## Skip entire file is Spark is not installed
-skip_if(spark_not_installed())
-skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
+skip_if_no_spark()
 
 library(testthat)
 library(parsnip)
