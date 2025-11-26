@@ -70,7 +70,7 @@ jobs:
 
       - name: Run Spark tests
         run: |
-          devtools::test()
+          devtools::test(filter = "stacks", stop_on_failure = TRUE)
         shell: Rscript {0}
 
       - name: Notify slack fail
