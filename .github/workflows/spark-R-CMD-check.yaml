@@ -70,11 +70,11 @@ jobs:
 
       - name: Run Spark tests
         run: |
-          devtools::test(filter = "stacks", stop_on_failure = TRUE)
+          devtools::test(filter = "spark", stop_on_failure = TRUE)
         shell: Rscript {0}
 
       - name: Notify slack fail
-        if: failure() # && github.event_name == 'schedule'
+        if: failure() && github.event_name == 'schedule'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: voxmedia/github-action-slack-notify-build@v2
