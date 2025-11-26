@@ -6,9 +6,9 @@
 # usethis::use_github_action("check-standard") will install it.
 on:
   push:
-    branches: [main, master]
+    branches: main
   pull_request:
-    branches: [main, master]
+    branches: main
   schedule:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
@@ -66,7 +66,10 @@ jobs:
           try(pak::pkg_install("tidymodels/parsnip"))
         shell: Rscript {0}
 
-      - uses: r-lib/actions/check-r-package@v2
+      - name: Run Spark tests
+        run: |
+          devtools::test(filter = "spark")
+        shell: Rscript {0}
 
       - name: Notify slack fail
         if: failure() && github.event_name == 'schedule'
