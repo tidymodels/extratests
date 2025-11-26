@@ -53,7 +53,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: |
+            any::rcmdcheck
+            any::devtools
           needs: check
 
       - name: Install Spark
@@ -68,11 +70,11 @@ jobs:
 
       - name: Run Spark tests
         run: |
-          devtools::test(filter = "spark")
+          devtools::test()
         shell: Rscript {0}
 
       - name: Notify slack fail
-        if: failure() && github.event_name == 'schedule'
+        if: failure() # && github.event_name == 'schedule'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: voxmedia/github-action-slack-notify-build@v2
