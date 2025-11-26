@@ -1,10 +1,7 @@
+skip_if_no_spark()
+
 test_that("linear_reg - spark case weights", {
-  skip_if_not_installed("sparklyr")
-
-  sc <- try(spark_test_connection(), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
-
+  sc <- spark_test_connection()
   dat <- make_mtcars_wts()
 
   mtcars_wts <- copy_to(
@@ -44,11 +41,7 @@ test_that("linear_reg - spark case weights", {
 })
 
 test_that("logistic_reg - spark case weights", {
-  skip_if_not_installed("sparklyr")
-
-  sc <- try(spark_test_connection(), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
+  sc <- spark_test_connection()
 
   dat <- make_two_class_wts()
 
@@ -89,11 +82,7 @@ test_that("logistic_reg - spark case weights", {
 })
 
 test_that("multinom_reg - spark case weights", {
-  skip_if_not_installed("sparklyr")
-
-  sc <- try(spark_test_connection(), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
+  sc <- spark_test_connection()
 
   dat <- make_penguin_wts()
 
