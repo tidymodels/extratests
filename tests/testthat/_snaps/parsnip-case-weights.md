@@ -1,12 +1,12 @@
 # boost_tree - xgboost case weights
 
     Code
-      print(wt_fit$fit$call)
+      print(attr(wt_fit$fit, "call"))
     Output
       xgboost::xgb.train(params = list(eta = 0.3, max_depth = 6, gamma = 0, 
           colsample_bytree = 1, colsample_bynode = 1, min_child_weight = 1, 
-          subsample = 1), data = x$data, nrounds = 15, watchlist = x$watchlist, 
-          verbose = 0, nthread = 1, objective = "binary:logistic")
+          subsample = 1, nthread = 1, objective = "binary:logistic"), 
+          data = x$data, nrounds = 15, evals = x$watchlist, verbose = 0)
 
 # decision_tree - rpart case weights
 
