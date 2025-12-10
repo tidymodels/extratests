@@ -125,7 +125,7 @@ test_that("stacking with Bayesian tuning works", {
     ) %>%
     suppressMessages()
 
-  expect_snapshot_warning(
+  expect_snapshot(
     data_st_bayes <-
       stacks() %>%
       add_candidates(wf_set_bayes) %>%
