@@ -176,9 +176,11 @@ test_that("stacking with finetune works (anova)", {
       grid = 10
     )
 
-  data_st_anova <-
-    stacks() %>%
-    add_candidates(wf_set_anova)
+  suppressWarnings(
+    data_st_anova <-
+      stacks() %>%
+      add_candidates(wf_set_anova)
+  )
 
   expect_true(inherits(data_st_anova, "tbl_df"))
 
