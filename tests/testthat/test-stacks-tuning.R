@@ -112,7 +112,7 @@ test_that("stacking with grid search works", {
 })
 
 test_that("stacking with Bayesian tuning works", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", minimum_version = "1.1.2")
 
   wf_set_bayes <-
     workflow_map(
@@ -125,7 +125,7 @@ test_that("stacking with Bayesian tuning works", {
     ) %>%
     suppressMessages()
 
-  expect_snapshot_warning(
+  expect_snapshot(
     data_st_bayes <-
       stacks() %>%
       add_candidates(wf_set_bayes) %>%
@@ -176,9 +176,11 @@ test_that("stacking with finetune works (anova)", {
       grid = 10
     )
 
-  data_st_anova <-
-    stacks() %>%
-    add_candidates(wf_set_anova)
+  suppressWarnings(
+    data_st_anova <-
+      stacks() %>%
+      add_candidates(wf_set_anova)
+  )
 
   expect_true(inherits(data_st_anova, "tbl_df"))
 
