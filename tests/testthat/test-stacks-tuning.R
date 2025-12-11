@@ -112,7 +112,7 @@ test_that("stacking with grid search works", {
 })
 
 test_that("stacking with Bayesian tuning works", {
-  skip_if(utils::packageVersion("stacks") < "1.1.1.9001")
+  skip_if_not_installed("stacks", minimum_version = "1.1.2")
 
   wf_set_bayes <-
     workflow_map(

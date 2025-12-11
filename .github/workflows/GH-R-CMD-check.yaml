@@ -88,6 +88,7 @@ jobs:
             "tidymodels/modeldata",
             "tidymodels/rsample",
             "tidymodels/spatialsample",
+            tidymodels/tailor",
             "tidymodels/yardstick"
           )))
         shell: Rscript {0}
