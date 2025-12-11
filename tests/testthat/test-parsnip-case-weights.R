@@ -34,8 +34,11 @@ test_that('boost_tree - xgboost case weights', {
     fit(Class ~ ., data = two_class_dat)
   sink()
 
-  expect_snapshot(print(wt_fit$fit$call))
-  expect_unequal(unwt_fit$fit$evaluation_log, wt_fit$fit$evaluation_log)
+  expect_snapshot(print(attr(wt_fit$fit, "call")))
+  expect_unequal(
+    attr(unwt_fit$fit, "evaluation_log"),
+    attr(wt_fit$fit, "evaluation_log")
+  )
 })
 
 test_that('boost_tree - C50 case weights', {
