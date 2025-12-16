@@ -5,7 +5,7 @@ skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
-skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
+skip_if_not_installed("tune", minimum_version = "2.0.1.9000")
 
 test_that("Bayesian tuning survival models with static metric", {
   skip_if_not_installed("prodlim")

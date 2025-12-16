@@ -29,8 +29,8 @@
       1        7.81e- 5 brier_surv~ standard          100 0.0110    10 0.00316 pre0_m~
       2        1.03e-10 brier_surv~ standard          100 0.0114    10 0.00312 pre0_m~
       3        9.12e- 8 brier_surv~ standard          100 0.0114    10 0.00312 pre0_m~
-      4        3.56e- 6 brier_surv~ standard          100 0.0114    10 0.00312 Iter1  
-      5        2.24e- 9 brier_surv~ standard          100 0.0114    10 0.00312 Iter2  
+      4        3.85e- 6 brier_surv~ standard          100 0.0114    10 0.00312 iter2  
+      5        2.47e- 9 brier_surv~ standard          100 0.0114    10 0.00312 iter3  
       # i 1 more variable: .iter <int>
 
 ---

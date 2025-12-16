@@ -1,6 +1,4 @@
-## Skip entire file is Spark is not installed
-skip_if(spark_not_installed())
-skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
+skip_if_no_spark()
 
 library(testthat)
 library(parsnip)
@@ -39,14 +37,7 @@ class_tab <- table(hpc$class, dnn = NULL)
 # ------------------------------------------------------------------------------
 
 test_that("spark descriptor", {
-  skip_if_not_installed("sparklyr")
-
-  suppressPackageStartupMessages(library(sparklyr))
-  library(dplyr)
-
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
+  sc <- spark_test_connection()
 
   npk_descr <- copy_to(sc, npk[, 1:4], "npk_descr", overwrite = TRUE)
   hpc_descr <- copy_to(sc, hpc, "hpc_descr", overwrite = TRUE)
@@ -88,5 +79,4 @@ test_that("spark descriptor", {
     eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr)),
     ignore_attr = TRUE
   )
-  spark_disconnect_all()
 })

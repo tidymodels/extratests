@@ -1,6 +1,4 @@
-## Skip entire file is Spark is not installed
-skip_if(spark_not_installed())
-skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
+skip_if_no_spark()
 
 library(testthat)
 library(parsnip)
@@ -23,12 +21,7 @@ test_that('Reminder to check for CRAN sparklyr > 1.9.1.9000', {
 
 
 test_that('spark execution', {
-  skip_if_not_installed("sparklyr")
-  suppressPackageStartupMessages(library(sparklyr))
-
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
+  sc <- spark_test_connection()
 
   hpc_bt_tr <- copy_to(sc, hpc[-(1:4), ], "hpc_bt_tr", overwrite = TRUE)
   hpc_bt_te <- copy_to(sc, hpc[1:4, -1], "hpc_bt_te", overwrite = TRUE)
@@ -206,5 +199,4 @@ test_that('spark execution', {
     as.data.frame(spark_class_dup_classprob)
   )
 
-  spark_disconnect_all()
 })
