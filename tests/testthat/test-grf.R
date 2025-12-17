@@ -105,6 +105,14 @@ test_that('grf classification with case weights', {
     )
   not_missing <- complete.cases(scat_cw)
 
+  grf_spec <-
+    rand_forest() |>
+    set_engine("grf", seed = 1) |>
+    set_mode("classification")
+
+  set.seed(281)
+  grf_fit <- fit(grf_spec, Species ~ ., data = scat_tr)
+
   set.seed(281)
   grf_wt_fit <- fit(
     grf_spec,
@@ -215,6 +223,14 @@ test_that('grf regression with case weights', {
       wts = hardhat::importance_weights(runif(nrow(ames_tr)))
     )
 
+  grf_spec <-
+    rand_forest() |>
+    set_engine("grf", seed = 101010101) |>
+    set_mode("regression")
+
+  set.seed(281)
+  grf_fit <- fit(grf_spec, Sale_Price ~ ., data = ames_tr)
+
   set.seed(281)
   grf_wt_fit <- fit(
     grf_spec,
@@ -285,18 +301,10 @@ test_that('grf quantile regression', {
 
   grf_qtl <- predict(grf_fit, ames_te)
   expect_equal(nrow(grf_qtl), nrow(ames_te))
-  expect_equal(
-    grf_qtl[0, ],
-    structure(
-      list(
-        .pred_quantile = structure(
-          list(),
-          quantile_levels = c(0.25, 0.5, 0.75),
-          class = c("quantile_pred", "vctrs_vctr", "list")
-        )
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  expect_named(grf_qtl, ".pred_quantile")
+  expect_s3_class(grf_qtl$.pred_quantile, "quantile_pred")
+  expect_identical(
+    hardhat::extract_quantile_levels(grf_qtl$.pred_quantile),
+    (1:3) / 4
   )
 })

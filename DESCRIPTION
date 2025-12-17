@@ -29,6 +29,7 @@ Suggests:
     fastICA,
     finetune,
     flexsurv,
+    grf,
     glmnet,
     hardhat,
     kknn,
