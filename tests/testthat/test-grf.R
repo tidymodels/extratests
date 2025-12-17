@@ -105,6 +105,14 @@ test_that('grf classification with case weights', {
     )
   not_missing <- complete.cases(scat_cw)
 
+  grf_spec <-
+    rand_forest() |>
+    set_engine("grf", seed = 1) |>
+    set_mode("classification")
+
+  set.seed(281)
+  grf_fit <- fit(grf_spec, Species ~ ., data = scat_tr)
+
   set.seed(281)
   grf_wt_fit <- fit(
     grf_spec,
@@ -214,6 +222,14 @@ test_that('grf regression with case weights', {
     mutate(
       wts = hardhat::importance_weights(runif(nrow(ames_tr)))
     )
+
+  grf_spec <-
+    rand_forest() |>
+    set_engine("grf", seed = 101010101) |>
+    set_mode("regression")
+
+  set.seed(281)
+  grf_fit <- fit(grf_spec, Sale_Price ~ ., data = ames_tr)
 
   set.seed(281)
   grf_wt_fit <- fit(
