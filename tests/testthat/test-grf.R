@@ -301,18 +301,10 @@ test_that('grf quantile regression', {
 
   grf_qtl <- predict(grf_fit, ames_te)
   expect_equal(nrow(grf_qtl), nrow(ames_te))
-  expect_equal(
-    grf_qtl[0, ],
-    structure(
-      list(
-        .pred_quantile = structure(
-          list(),
-          quantile_levels = c(0.25, 0.5, 0.75),
-          class = c("quantile_pred", "vctrs_vctr", "list")
-        )
-      ),
-      row.names = integer(0),
-      class = c("tbl_df", "tbl", "data.frame")
-    )
+  expect_named(grf_qtl, ".pred_quantile")
+  expect_s3_class(grf_qtl$.pred_quantile, "quantile_pred")
+  expect_identical(
+    hardhat::extract_quantile_levels(grf_qtl$.pred_quantile),
+    (1:3) / 4
   )
 })
