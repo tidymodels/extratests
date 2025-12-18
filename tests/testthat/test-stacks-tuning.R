@@ -97,7 +97,7 @@ test_that("stacking with grid search works", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_grid) == length(model_st_grid$member_fits))
+  expect_identical(nrow(betas_grid), length(model_st_grid$member_fits))
   expect_true(all(betas_grid$terms %in% names(model_st_grid$member_fits)))
 
   preds_grid <-
@@ -145,7 +145,7 @@ test_that("stacking with Bayesian tuning works", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_bayes) == length(model_st_bayes$member_fits))
+  expect_identical(nrow(betas_bayes), length(model_st_bayes$member_fits))
   expect_true(all(betas_bayes$terms %in% names(model_st_bayes$member_fits)))
 
   preds_bayes <-
@@ -198,7 +198,7 @@ test_that("stacking with finetune works (anova)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_anova) == length(model_st_anova$member_fits))
+  expect_identical(nrow(betas_anova), length(model_st_anova$member_fits))
   expect_true(all(betas_anova$terms %in% names(model_st_anova$member_fits)))
 
   preds_anova <-
@@ -280,7 +280,10 @@ test_that("stacking with finetune works (sim_anneal)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_sim_anneal) == length(model_st_sim_anneal$member_fits))
+  expect_identical(
+    nrow(betas_sim_anneal),
+    length(model_st_sim_anneal$member_fits)
+  )
   expect_true(all(
     betas_sim_anneal$terms %in% names(model_st_sim_anneal$member_fits)
   ))
@@ -335,7 +338,7 @@ test_that("stacking with finetune works (win_loss)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_win_loss) == length(model_st_win_loss$member_fits))
+  expect_identical(nrow(betas_win_loss), length(model_st_win_loss$member_fits))
   expect_true(all(
     betas_win_loss$terms %in% names(model_st_win_loss$member_fits)
   ))

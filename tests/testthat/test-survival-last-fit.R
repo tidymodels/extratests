@@ -63,7 +63,7 @@ test_that("last fit for survival models with static metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
@@ -153,7 +153,7 @@ test_that("last fit for survival models with integrated metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
@@ -257,7 +257,7 @@ test_that("last fit for survival models with dynamic metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == length(time_points))
+  expect_identical(nrow(metric_sum), length(time_points))
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
@@ -365,9 +365,9 @@ test_that("last fit for survival models with mixture of metrics", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == length(time_points) + 2)
+  expect_identical(nrow(metric_sum), length(time_points) + 2L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 2)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 2L)
   expect_equal(
     as.vector(table(metric_sum$.metric)),
     c(length(time_points), 1L, 1L)

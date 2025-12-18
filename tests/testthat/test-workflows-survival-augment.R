@@ -54,7 +54,7 @@ test_that("augment survival workflows with eval_time", {
     new_data = head(sim_dat, 1),
     eval_time = times[1]
   )
-  expect_true(nrow(res_1_row) == 1)
+  expect_identical(nrow(res_1_row), 1L)
   expect_equal(
     names(res_1_row),
     c(".pred", ".pred_time", "event_time", "X1", "X2")

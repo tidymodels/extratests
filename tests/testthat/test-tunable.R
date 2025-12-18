@@ -81,7 +81,7 @@ test_that('model with main and engine parameters', {
     purrr::map_chr(c5_info$call_info[1:3], ~ .x$fun),
     c("trees", "min_n", "sample_prop")
   )
-  expect_true(sum(purrr::map_lgl(c5_info$call_info, is.null)) == 1)
+  expect_identical(sum(purrr::map_lgl(c5_info$call_info, is.null)), 1L)
 })
 
 test_that('bad model inputs', {

@@ -17,7 +17,7 @@ test_that('parsnip models with formula interface', {
     fit(Species ~ ., data = scat)
 
   parsnip_form_names <- names(parsnip_form_fit$fit$variable.importance)
-  expect_true(sum(grepl("Location", parsnip_form_names)) == 1)
+  expect_identical(sum(grepl("Location", parsnip_form_names)), 1L)
 
   expect_error(
     predict(parsnip_form_fit, scat),
@@ -31,7 +31,7 @@ test_that('parsnip models with xy interface', {
     fit_xy(x = scat[, -1], y = scat$Species)
 
   parsnip_xy_names <- names(parsnip_xy_fit$fit$variable.importance)
-  expect_true(sum(grepl("Location", parsnip_xy_names)) == 1)
+  expect_identical(sum(grepl("Location", parsnip_xy_names)), 1L)
 
   expect_error(
     predict(parsnip_xy_fit, scat[, -1]),
@@ -58,7 +58,7 @@ test_that('workflows', {
     pluck("variable.importance") %>%
     names()
 
-  expect_true(sum(grepl("Location", parsnip_wflow_names)) == 1)
+  expect_identical(sum(grepl("Location", parsnip_wflow_names)), 1L)
 
   expect_error(
     predict(parsnip_wflow_fit, scat[, -1]),

@@ -113,7 +113,7 @@ test_that("sim annealing tuning survival models with static metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 5)
+  expect_identical(nrow(metric_sum), 5L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "concordance_survival"))
 
@@ -128,7 +128,7 @@ test_that("sim annealing tuning survival models with static metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 50)
+  expect_identical(nrow(metric_all), 50L)
   expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "concordance_survival"))
 
@@ -276,7 +276,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 5)
+  expect_identical(nrow(metric_sum), 5L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
 
@@ -291,7 +291,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 50)
+  expect_identical(nrow(metric_all), 50L)
   expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival_integrated"))
 
@@ -460,7 +460,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == (nrow(grid) + 2) * length(time_points))
+  expect_identical(nrow(metric_sum), (nrow(grid) + 2L) * length(time_points))
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "brier_survival"))
 
@@ -476,8 +476,9 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(
-    nrow(metric_all) == ((nrow(grid) + 2) * length(time_points)) * nrow(sim_rs)
+  expect_identical(
+    nrow(metric_all),
+    ((nrow(grid) + 2L) * length(time_points)) * nrow(sim_rs)
   )
   expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "brier_survival"))
@@ -653,12 +654,13 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  grid_size <- (nrow(grid) + 2)
-  expect_true(
-    nrow(metric_sum) == (grid_size * length(time_points)) + grid_size * 2
+  grid_size <- nrow(grid) + 2L
+  expect_identical(
+    nrow(metric_sum),
+    (grid_size * length(time_points)) + grid_size * 2L
   )
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 10L)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 10L)
   expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(sa_mixed_res, summarize = FALSE)
@@ -673,13 +675,13 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  expect_true(
-    nrow(metric_all) ==
-      ((nrow(grid) + 2) * length(time_points) + (nrow(grid) + 2) * 2) *
-        nrow(sim_rs)
+  expect_identical(
+    nrow(metric_all),
+    ((nrow(grid) + 2L) * length(time_points) + (nrow(grid) + 2L) * 2L) *
+      nrow(sim_rs)
   )
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 100L)
+  expect_identical(sum(is.na(metric_all$.eval_time)), 100L)
   expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
   # test prediction collection -------------------------------------------------

@@ -161,7 +161,7 @@ test_that("race tuning (anova) survival models with static metric", {
   ###
 
   metric_aov_all <- collect_metrics(aov_static_res, summarize = FALSE)
-  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_identical(nrow(metric_aov_all), nrow(aov_finished) * nrow(sim_rs))
   expect_ptype(metric_aov_all, exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "concordance_survival"))
 
@@ -376,7 +376,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
   ###
 
   metric_aov_all <- collect_metrics(aov_integrated_res, summarize = FALSE)
-  expect_true(nrow(metric_aov_all) == nrow(aov_finished) * nrow(sim_rs))
+  expect_identical(nrow(metric_aov_all), nrow(aov_finished) * nrow(sim_rs))
   expect_ptype(metric_aov_all, exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "brier_survival_integrated"))
 
@@ -624,9 +624,9 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
   ###
 
   metric_aov_all <- collect_metrics(aov_dyn_res, summarize = FALSE)
-  expect_true(
-    nrow(metric_aov_all) ==
-      nrow(aov_finished) * nrow(sim_rs) * length(time_points)
+  expect_identical(
+    nrow(metric_aov_all),
+    nrow(aov_finished) * nrow(sim_rs) * length(time_points)
   )
   expect_ptype(metric_aov_all, exp_metric_all)
   expect_true(all(metric_aov_all$.metric == "brier_survival"))
@@ -949,7 +949,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     .estimate = numeric(0),
     .config = character(0)
   )
-  num_metrics <- length(time_points) + 2
+  num_metrics <- length(time_points) + 2L
 
   ###
 
@@ -962,7 +962,10 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   expect_equal(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
   expect_ptype(metric_aov_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
+  expect_identical(
+    sum(is.na(metric_aov_sum$.eval_time)),
+    2L * nrow(aov_finished)
+  )
   expect_equal(
     as.vector(table(metric_aov_sum$.metric)),
     c(4L, 1L, 1L) * nrow(aov_finished)
@@ -971,11 +974,15 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
   ###
 
   metric_aov_all <- collect_metrics(aov_mixed_res, summarize = FALSE)
-  expect_true(
-    nrow(metric_aov_all) == num_metrics * nrow(aov_finished) * nrow(sim_rs)
+  expect_identical(
+    nrow(metric_aov_all),
+    num_metrics * nrow(aov_finished) * nrow(sim_rs)
   )
   expect_ptype(metric_aov_all, exp_metric_all)
-  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 2 * nrow(aov_finished))
+  expect_identical(
+    sum(is.na(metric_aov_sum$.eval_time)),
+    2L * nrow(aov_finished)
+  )
   expect_equal(
     as.vector(table(metric_aov_sum$.metric)),
     c(4L, 1L, 1L) * nrow(aov_finished)
