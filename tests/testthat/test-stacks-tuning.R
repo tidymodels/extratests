@@ -98,7 +98,7 @@ test_that("stacking with grid search works", {
     ungroup()
 
   expect_identical(nrow(betas_grid), length(model_st_grid$member_fits))
-  expect_true(all(betas_grid$terms %in% names(model_st_grid$member_fits)))
+  expect_in(betas_grid$terms, names(model_st_grid$member_fits))
 
   preds_grid <-
     predict(model_st_grid, ames_test)
@@ -146,7 +146,7 @@ test_that("stacking with Bayesian tuning works", {
     ungroup()
 
   expect_identical(nrow(betas_bayes), length(model_st_bayes$member_fits))
-  expect_true(all(betas_bayes$terms %in% names(model_st_bayes$member_fits)))
+  expect_in(betas_bayes$terms, names(model_st_bayes$member_fits))
 
   preds_bayes <-
     predict(model_st_bayes, ames_test)
@@ -199,7 +199,7 @@ test_that("stacking with finetune works (anova)", {
     ungroup()
 
   expect_identical(nrow(betas_anova), length(model_st_anova$member_fits))
-  expect_true(all(betas_anova$terms %in% names(model_st_anova$member_fits)))
+  expect_in(betas_anova$terms, names(model_st_anova$member_fits))
 
   preds_anova <-
     predict(model_st_anova, ames_test)

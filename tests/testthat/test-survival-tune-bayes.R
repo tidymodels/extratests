@@ -374,7 +374,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(bayes_dynamic_res$.metrics[[1]]))
+  expect_in(".eval_time", names(bayes_dynamic_res$.metrics[[1]]))
   expect_named(
     bayes_dynamic_res$.predictions[[1]],
     c(".pred", ".row", "event_time", "tree_depth", ".config"),
@@ -550,7 +550,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(bayes_mixed_res$.metrics[[1]]))
   expect_named(
     bayes_mixed_res$.predictions[[1]],
     c(".pred", ".row", ".pred_time", "event_time", "tree_depth", ".config"),

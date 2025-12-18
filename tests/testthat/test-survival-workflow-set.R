@@ -346,7 +346,7 @@ test_that("resampling survival models with dynamic metric", {
 
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
-  expect_true(".eval_time" %in% names(wflow_set_mtrcs))
+  expect_in(".eval_time", names(wflow_set_mtrcs))
   expect_equal(nrow(wflow_set_mtrcs), 2 * length(time_points))
   expect_all_equal(wflow_set_mtrcs$.metric, "brier_survival")
 
@@ -466,7 +466,7 @@ test_that("resampling survival models with mixture of metric types", {
 
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
-  expect_true(".eval_time" %in% names(wflow_set_mtrcs))
+  expect_in(".eval_time", names(wflow_set_mtrcs))
   expect_equal(nrow(wflow_set_mtrcs), 12)
 
   exp_metric_sum <-

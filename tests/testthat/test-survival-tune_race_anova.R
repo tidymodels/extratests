@@ -507,7 +507,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(aov_dyn_res$.metrics[[1]]))
+  expect_in(".eval_time", names(aov_dyn_res$.metrics[[1]]))
 
   expect_named(
     aov_dyn_res$.predictions[[1]],
@@ -766,7 +766,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(aov_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(aov_mixed_res$.metrics[[1]]))
 
   expect_named(
     aov_mixed_res$.predictions[[1]],

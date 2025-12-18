@@ -332,7 +332,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(grid_dynamic_res$.metrics[[1]]))
+  expect_in(".eval_time", names(grid_dynamic_res$.metrics[[1]]))
   expect_named(
     grid_dynamic_res$.predictions[[1]],
     c(".pred", ".row", "penalty", "event_time", ".config"),
@@ -497,7 +497,7 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(grid_mixed_res$.metrics[[1]]))
   expect_named(
     grid_mixed_res$.predictions[[1]],
     c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config"),

@@ -283,7 +283,7 @@ test_that("resampling survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(rs_dynamic_res$.metrics[[1]]))
+  expect_in(".eval_time", names(rs_dynamic_res$.metrics[[1]]))
 
   expect_named(
     rs_dynamic_res$.predictions[[1]],
@@ -413,7 +413,7 @@ test_that("resampling survival models mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(rs_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(rs_mixed_res$.metrics[[1]]))
   expect_named(
     rs_mixed_res$.predictions[[1]],
     c(".pred", ".row", ".pred_time", "event_time", ".config"),
