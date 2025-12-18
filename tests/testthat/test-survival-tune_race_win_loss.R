@@ -153,14 +153,14 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_wl_sum$.metric, "concordance_survival")
 
   ###
 
   metric_wl_all <- collect_metrics(wl_static_res, summarize = FALSE)
   expect_identical(nrow(metric_wl_all), nrow(wl_finished) * nrow(sim_rs))
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_wl_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -367,14 +367,14 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_wl_sum$.metric, "brier_survival_integrated")
 
   ###
 
   metric_wl_all <- collect_metrics(wl_integrated_res, summarize = FALSE)
   expect_identical(nrow(metric_wl_all), nrow(wl_finished) * nrow(sim_rs))
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_wl_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -598,7 +598,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   expect_equal(nrow(wl_finished) * length(time_points), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_wl_sum$.metric, "brier_survival")
 
   ###
 
@@ -608,7 +608,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     nrow(wl_finished) * nrow(sim_rs) * length(time_points)
   )
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "brier_survival"))
+  expect_all_equal(metric_wl_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 

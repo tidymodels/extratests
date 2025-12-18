@@ -84,7 +84,7 @@ test_that("resampling survival models with static metric", {
 
   expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_sum$.metric, "concordance_survival")
 
   metric_all <- collect_metrics(rs_static_res, summarize = FALSE)
   exp_metric_all <-
@@ -99,7 +99,7 @@ test_that("resampling survival models with static metric", {
   expect_identical(nrow(metric_all), 10L)
   expect_ptype(metric_all, exp_metric_all)
 
-  expect_true(all(metric_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -194,7 +194,7 @@ test_that("resampling survival models with integrated metric", {
 
   expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_sum$.metric, "brier_survival_integrated")
 
   metric_all <- collect_metrics(rs_integrated_res, summarize = FALSE)
   exp_metric_all <-
@@ -208,7 +208,7 @@ test_that("resampling survival models with integrated metric", {
 
   expect_identical(nrow(metric_all), 10L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -318,7 +318,7 @@ test_that("resampling survival models with dynamic metric", {
 
   expect_identical(nrow(metric_sum), length(time_points))
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_sum$.metric, "brier_survival")
 
   metric_all <- collect_metrics(rs_dynamic_res, summarize = FALSE)
   exp_metric_all <-
@@ -333,7 +333,7 @@ test_that("resampling survival models with dynamic metric", {
 
   expect_identical(nrow(metric_all), length(time_points) * nrow(sim_rs))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival"))
+  expect_all_equal(metric_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 

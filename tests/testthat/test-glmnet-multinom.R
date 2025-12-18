@@ -199,7 +199,7 @@ test_that("formula interface can deal with missing values", {
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
   expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(all(is.na(f_pred[1, ])))
+  expect_all_equal(unlist(f_pred[1, ]), NA_real_)
 })
 
 test_that("glmnet multi_predict(): type class", {
@@ -258,24 +258,18 @@ test_that("glmnet multi_predict(): type class", {
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 2)))
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(names(.x) == c(".pred_class", "penalty"))
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c(".pred_class", "penalty"))
     )
   } else {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(names(.x) == c("penalty", ".pred_class"))
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c("penalty", ".pred_class"))
     )
   }
 
@@ -356,28 +350,18 @@ test_that("glmnet multi_predict(): type prob", {
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 5))))
-  )
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 5)))
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(
-          names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty")
-        )
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))
     )
   } else {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(
-          names(.x) == c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L")
-        )
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L"))
     )
   }
 

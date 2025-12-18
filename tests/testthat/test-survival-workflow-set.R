@@ -118,7 +118,7 @@ test_that("resampling survival models with static metric", {
 
   expect_false(".eval_time" %in% names(wflow_set_mtrcs))
   expect_equal(nrow(wflow_set_mtrcs), 2)
-  expect_true(all(wflow_set_mtrcs$.metric == "concordance_survival"))
+  expect_all_equal(wflow_set_mtrcs$.metric, "concordance_survival")
 
   exp_metric_sum <-
     tibble(
@@ -233,7 +233,7 @@ test_that("resampling survival models with integrated metric", {
 
   expect_false(".eval_time" %in% names(wflow_set_mtrcs))
   expect_equal(nrow(wflow_set_mtrcs), 2)
-  expect_true(all(wflow_set_mtrcs$.metric == "brier_survival_integrated"))
+  expect_all_equal(wflow_set_mtrcs$.metric, "brier_survival_integrated")
 
   exp_metric_sum <-
     tibble(
@@ -348,7 +348,7 @@ test_that("resampling survival models with dynamic metric", {
 
   expect_true(".eval_time" %in% names(wflow_set_mtrcs))
   expect_equal(nrow(wflow_set_mtrcs), 2 * length(time_points))
-  expect_true(all(wflow_set_mtrcs$.metric == "brier_survival"))
+  expect_all_equal(wflow_set_mtrcs$.metric, "brier_survival")
 
   exp_metric_sum <-
     tibble(

@@ -104,7 +104,7 @@ test_that("Bayesian tuning survival models with static metric", {
 
   expect_identical(nrow(metric_sum), 5L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_sum$.metric, "concordance_survival")
 
   metric_all <- collect_metrics(bayes_static_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -119,7 +119,7 @@ test_that("Bayesian tuning survival models with static metric", {
 
   expect_identical(nrow(metric_all), 50L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -255,7 +255,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
 
   expect_identical(nrow(metric_sum), 5L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_sum$.metric, "brier_survival_integrated")
 
   metric_all <- collect_metrics(bayes_integrated_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -270,7 +270,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
 
   expect_identical(nrow(metric_all), 50L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -425,7 +425,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   expect_identical(nrow(metric_sum), 20L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_sum$.metric, "brier_survival")
 
   metric_all <- collect_metrics(bayes_dynamic_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -441,7 +441,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   expect_identical(nrow(metric_all), 200L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival"))
+  expect_all_equal(metric_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 

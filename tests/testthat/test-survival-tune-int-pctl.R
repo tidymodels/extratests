@@ -53,7 +53,7 @@ test_that("percentile internals for survival models with static metric", {
 
   expect_ptype(static_int, exp_ptype)
   expect_identical(nrow(static_int), 1L)
-  expect_true(all(static_int$.metric == "concordance_survival"))
+  expect_all_equal(static_int$.metric, "concordance_survival")
 
   # make sure `alpha` works
   set.seed(1)
@@ -128,7 +128,7 @@ test_that("percentile internals for survival models with integrated metric", {
   expect_ptype(integrated_int, exp_ptype)
   expect_identical(nrow(integrated_int), nrow(grid))
   expect_equal(sort(integrated_int$penalty), grid$penalty)
-  expect_true(all(integrated_int$.metric == "brier_survival_integrated"))
+  expect_all_equal(integrated_int$.metric, "brier_survival_integrated")
 })
 
 
@@ -200,7 +200,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
   expect_ptype(dyn_int, exp_ptype)
   expect_identical(nrow(dyn_int), nrow(winners))
   expect_equal(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
-  expect_true(all(dyn_int$.metric == "brier_survival"))
+  expect_all_equal(dyn_int$.metric, "brier_survival")
 })
 
 

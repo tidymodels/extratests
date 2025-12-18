@@ -215,12 +215,8 @@ test_that("glmnet multi_predict(): type numeric", {
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(hpc))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(names(.x) == c("penalty", ".pred"))))
-  )
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 2)))
+  expect_all_equal(purrr::map(f_pred$.pred, names), list(c("penalty", ".pred")))
 
   # single prediction
   f_pred_1 <- multi_predict(
@@ -356,9 +352,7 @@ test_that("base-R families: type numeric", {
   )
 
   expect_identical(names(pred), ".pred")
-  expect_true(
-    all(purrr::map_lgl(mpred$.pred, ~ all(names(.x) == c("penalty", ".pred"))))
-  )
+  expect_all_equal(purrr::map(mpred$.pred, names), list(c("penalty", ".pred")))
   expect_identical(
     pred$.pred,
     mpred %>% tidyr::unnest(cols = .pred) %>% pull(.pred)
@@ -375,9 +369,7 @@ test_that("base-R families: type numeric", {
     penalty = c(0.05, 0.1)
   )
 
-  expect_true(
-    all(purrr::map_lgl(mpred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
+  expect_all_equal(purrr::map(mpred$.pred, dim), list(c(2, 2)))
 })
 
 test_that("base-R families: type NULL", {

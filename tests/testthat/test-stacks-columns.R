@@ -59,7 +59,7 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
 
   # the column map should point to colnames adapted from make.names
   # rather than the original outcome names
-  expect_true(all(grepl(".1", fitted$cols_map$tuned)))
+  expect_all_true(grepl(".1", fitted$cols_map$tuned))
 
   # prediction correctly points to new outcome levels
   expect_silent(

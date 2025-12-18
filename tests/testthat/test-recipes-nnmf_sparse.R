@@ -42,7 +42,7 @@ test_that('No NNF', {
   )
   expect_equal(rec$steps[[1]]$res$w, NULL)
   expect_snapshot(print(rec))
-  expect_true(all(is.na(tidy(rec, 1)$value)))
+  expect_all_equal(tidy(rec, 1)$value, NA_real_)
 })
 
 test_that('tunable', {
@@ -52,7 +52,7 @@ test_that('tunable', {
     step_nnmf_sparse(all_predictors())
   rec_param <- tunable(rec$steps[[1]])
   expect_equal(rec_param$name, c("num_comp", "penalty"))
-  expect_true(all(rec_param$source == "recipe"))
+  expect_all_equal(rec_param$source, "recipe")
   expect_true(is.list(rec_param$call_info))
   expect_equal(nrow(rec_param), 2)
   expect_equal(
