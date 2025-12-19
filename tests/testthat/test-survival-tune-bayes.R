@@ -213,7 +213,7 @@ test_that("Bayesian tuning survival models with integrated metric", {
     c(".pred", ".row", "event_time", "tree_depth", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(bayes_integrated_res$.predictions[[1]]$.pred))
+  expect_type(bayes_integrated_res$.predictions[[1]]$.pred, "list")
   expect_named(
     bayes_integrated_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -380,7 +380,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     c(".pred", ".row", "event_time", "tree_depth", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(bayes_dynamic_res$.predictions[[1]]$.pred))
+  expect_type(bayes_dynamic_res$.predictions[[1]]$.pred, "list")
   expect_named(
     bayes_dynamic_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -556,7 +556,7 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     c(".pred", ".row", ".pred_time", "event_time", "tree_depth", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(bayes_mixed_res$.predictions[[1]]$.pred))
+  expect_type(bayes_mixed_res$.predictions[[1]]$.pred, "list")
   expect_named(
     bayes_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),

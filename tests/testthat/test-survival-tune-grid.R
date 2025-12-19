@@ -186,7 +186,7 @@ test_that("grid tuning survival models with integrated metric", {
     c(".pred", ".row", "penalty", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_integrated_res$.predictions[[1]]$.pred))
+  expect_type(grid_integrated_res$.predictions[[1]]$.pred, "list")
   expect_equal(
     names(grid_integrated_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
@@ -338,7 +338,7 @@ test_that("grid tuning survival models with dynamic metric", {
     c(".pred", ".row", "penalty", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_dynamic_res$.predictions[[1]]$.pred))
+  expect_type(grid_dynamic_res$.predictions[[1]]$.pred, "list")
   expect_equal(
     names(grid_dynamic_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
@@ -503,7 +503,7 @@ test_that("grid tuning survival models mixture of metric types", {
     c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
+  expect_type(grid_mixed_res$.predictions[[1]]$.pred, "list")
   expect_equal(
     names(grid_mixed_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")

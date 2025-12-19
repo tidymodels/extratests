@@ -53,7 +53,7 @@ test_that('tunable', {
   rec_param <- tunable(rec$steps[[1]])
   expect_equal(rec_param$name, c("num_comp", "penalty"))
   expect_all_equal(rec_param$source, "recipe")
-  expect_true(is.list(rec_param$call_info))
+  expect_type(rec_param$call_info, "list")
   expect_equal(nrow(rec_param), 2)
   expect_equal(
     names(rec_param),

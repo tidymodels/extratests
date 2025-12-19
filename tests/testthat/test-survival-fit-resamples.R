@@ -168,7 +168,7 @@ test_that("resampling survival models with integrated metric", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(rs_integrated_res$.predictions[[1]]$.pred))
+  expect_type(rs_integrated_res$.predictions[[1]]$.pred, "list")
   expect_named(
     rs_integrated_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -290,7 +290,7 @@ test_that("resampling survival models with dynamic metric", {
     c(".pred", ".row", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(rs_dynamic_res$.predictions[[1]]$.pred))
+  expect_type(rs_dynamic_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     rs_dynamic_res$.predictions[[1]]$.pred[[1]],
@@ -419,7 +419,7 @@ test_that("resampling survival models mixture of metric types", {
     c(".pred", ".row", ".pred_time", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(rs_mixed_res$.predictions[[1]]$.pred))
+  expect_type(rs_mixed_res$.predictions[[1]]$.pred, "list")
   expect_named(
     rs_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),

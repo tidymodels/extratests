@@ -271,7 +271,7 @@ test_that("race tuning (anova) survival models with integrated metric", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(aov_integrated_res$.predictions[[1]]$.pred))
+  expect_type(aov_integrated_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     aov_integrated_res$.predictions[[1]]$.pred[[1]],
@@ -515,7 +515,7 @@ test_that("race tuning (anova) survival models with dynamic metrics", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(aov_dyn_res$.predictions[[1]]$.pred))
+  expect_type(aov_dyn_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     aov_dyn_res$.predictions[[1]]$.pred[[1]],
@@ -781,7 +781,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(aov_mixed_res$.predictions[[1]]$.pred))
+  expect_type(aov_mixed_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     aov_mixed_res$.predictions[[1]]$.pred[[1]],

@@ -236,7 +236,7 @@ test_that("sim annealing tuning survival models with integrated metric", {
     c(".pred", ".row", "trees", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(sa_integrated_res$.predictions[[1]]$.pred))
+  expect_type(sa_integrated_res$.predictions[[1]]$.pred, "list")
   expect_named(
     sa_integrated_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -415,7 +415,7 @@ test_that("sim annealing tuning survival models with dynamic metric", {
     c(".pred", ".row", "trees", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(sa_dynamic_res$.predictions[[1]]$.pred))
+  expect_type(sa_dynamic_res$.predictions[[1]]$.pred, "list")
   expect_named(
     sa_dynamic_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -605,7 +605,7 @@ test_that("sim annealing tuning survival models with mixture of metric types", {
     c(".pred", ".row", "trees", ".pred_time", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(sa_mixed_res$.predictions[[1]]$.pred))
+  expect_type(sa_mixed_res$.predictions[[1]]$.pred, "list")
   expect_named(
     sa_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
