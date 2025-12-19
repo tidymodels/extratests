@@ -19,9 +19,8 @@ test_that('LDA parallel test', {
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
 
-  expect_error(
-    res <- fit_resamples(discrim_mod, Class ~ ., folds),
-    regex = NA
+  expect_no_error(
+    res <- fit_resamples(discrim_mod, Class ~ ., folds)
   )
   stopCluster(cl)
   registerDoSEQ() # stopCluster() does not reset the number of workers
@@ -44,9 +43,8 @@ test_that('recipe-adjacent parallel test', {
   cl <- makePSOCKcluster(2)
   registerDoParallel(cl)
 
-  expect_error(
-    res <- fit_resamples(discrim_wflow, folds),
-    regex = NA
+  expect_no_error(
+    res <- fit_resamples(discrim_wflow, folds)
   )
   stopCluster(cl)
   registerDoSEQ()
