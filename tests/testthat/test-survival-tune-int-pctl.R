@@ -273,15 +273,21 @@ test_that("percentile internals for survival models mixture of metric types", {
   )
   expect_identical(sum(mixed_int$.metric == "brier_survival_integrated"), 1L)
   expect_identical(sum(mixed_int$.metric == "concordance_survival"), 1L)
-  expect_true(all(
-    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
-  ))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "brier_survival_integrated"
-  ])))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "concordance_survival"
-  ])))
+  expect_all_false(
+    is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "brier_survival_integrated"
+    ],
+    NA_real_
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "concordance_survival"
+    ],
+    NA_real_
+  )
 })
 
 test_that("percentile internals for subset of eval times", {
@@ -350,13 +356,19 @@ test_that("percentile internals for subset of eval times", {
   expect_identical(sum(mixed_int$.metric == "brier_survival"), 2L)
   expect_identical(sum(mixed_int$.metric == "brier_survival_integrated"), 1L)
   expect_identical(sum(mixed_int$.metric == "concordance_survival"), 1L)
-  expect_true(all(
-    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
-  ))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "brier_survival_integrated"
-  ])))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "concordance_survival"
-  ])))
+  expect_all_false(
+    is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "brier_survival_integrated"
+    ],
+    NA_real_
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "concordance_survival"
+    ],
+    NA_real_
+  )
 })
