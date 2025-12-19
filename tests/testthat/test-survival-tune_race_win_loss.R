@@ -153,14 +153,14 @@ test_that("race tuning (win_loss) survival models with static metric", {
 
   expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_wl_sum$.metric, "concordance_survival")
 
   ###
 
   metric_wl_all <- collect_metrics(wl_static_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs))
+  expect_identical(nrow(metric_wl_all), nrow(wl_finished) * nrow(sim_rs))
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_wl_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -267,7 +267,7 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(wl_integrated_res$.predictions[[1]]$.pred))
+  expect_type(wl_integrated_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     wl_integrated_res$.predictions[[1]]$.pred[[1]],
@@ -367,14 +367,14 @@ test_that("race tuning (win_loss) survival models with integrated metric", {
 
   expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_wl_sum$.metric, "brier_survival_integrated")
 
   ###
 
   metric_wl_all <- collect_metrics(wl_integrated_res, summarize = FALSE)
-  expect_true(nrow(metric_wl_all) == nrow(wl_finished) * nrow(sim_rs))
+  expect_identical(nrow(metric_wl_all), nrow(wl_finished) * nrow(sim_rs))
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_wl_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -486,7 +486,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(wl_dyn_res$.metrics[[1]]))
+  expect_in(".eval_time", names(wl_dyn_res$.metrics[[1]]))
 
   expect_named(
     wl_dyn_res$.predictions[[1]],
@@ -494,7 +494,7 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(wl_dyn_res$.predictions[[1]]$.pred))
+  expect_type(wl_dyn_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     wl_dyn_res$.predictions[[1]]$.pred[[1]],
@@ -598,17 +598,17 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
 
   expect_equal(nrow(wl_finished) * length(time_points), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(all(metric_wl_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_wl_sum$.metric, "brier_survival")
 
   ###
 
   metric_wl_all <- collect_metrics(wl_dyn_res, summarize = FALSE)
-  expect_true(
-    nrow(metric_wl_all) ==
-      nrow(wl_finished) * nrow(sim_rs) * length(time_points)
+  expect_identical(
+    nrow(metric_wl_all),
+    nrow(wl_finished) * nrow(sim_rs) * length(time_points)
   )
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(all(metric_wl_all$.metric == "brier_survival"))
+  expect_all_equal(metric_wl_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -729,7 +729,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(wl_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(wl_mixed_res$.metrics[[1]]))
 
   expect_named(
     wl_mixed_res$.predictions[[1]],
@@ -744,7 +744,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     ignore.order = TRUE
   )
 
-  expect_true(is.list(wl_mixed_res$.predictions[[1]]$.pred))
+  expect_type(wl_mixed_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     wl_mixed_res$.predictions[[1]]$.pred[[1]],
@@ -912,7 +912,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
     .estimate = numeric(0),
     .config = character(0)
   )
-  num_metrics <- length(time_points) + 2
+  num_metrics <- length(time_points) + 2L
 
   ###
 
@@ -925,7 +925,7 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
 
   expect_equal(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_identical(sum(is.na(metric_wl_sum$.eval_time)), 2L * nrow(wl_finished))
   expect_equal(
     as.vector(table(metric_wl_sum$.metric)),
     c(4L, 1L, 1L) * nrow(wl_finished)
@@ -934,11 +934,12 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
   ###
 
   metric_wl_all <- collect_metrics(wl_mixed_res, summarize = FALSE)
-  expect_true(
-    nrow(metric_wl_all) == num_metrics * nrow(wl_finished) * nrow(sim_rs)
+  expect_identical(
+    nrow(metric_wl_all),
+    num_metrics * nrow(wl_finished) * nrow(sim_rs)
   )
   expect_ptype(metric_wl_all, exp_metric_all)
-  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 2 * nrow(wl_finished))
+  expect_identical(sum(is.na(metric_wl_sum$.eval_time)), 2L * nrow(wl_finished))
   expect_equal(
     as.vector(table(metric_wl_sum$.metric)),
     c(4L, 1L, 1L) * nrow(wl_finished)

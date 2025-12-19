@@ -42,8 +42,8 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
       add_candidates(tuned)
   )
 
-  expect_true(inherits(data_st, "data_stack"))
-  expect_true(".pred_Adelie.1_tuned_0_2_0" %in% colnames(data_st))
+  expect_s3_class(data_st, "data_stack")
+  expect_in(".pred_Adelie.1_tuned_0_2_0", colnames(data_st))
 
   # glmnet will likely present warnings
   suppressMessages(
@@ -59,12 +59,12 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
 
   # the column map should point to colnames adapted from make.names
   # rather than the original outcome names
-  expect_true(all(grepl(".1", fitted$cols_map$tuned)))
+  expect_all_true(grepl(".1", fitted$cols_map$tuned))
 
   # prediction correctly points to new outcome levels
   expect_silent(
     preds <- predict(fitted, dat)
   )
 
-  expect_true(inherits(preds, "tbl_df"))
+  expect_s3_class(preds, "tbl_df")
 })

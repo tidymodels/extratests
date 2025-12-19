@@ -38,7 +38,7 @@ test_that('recipe with tunable parameters', {
     spline_info$component,
     expected_cols
   )
-  expect_true(all(spline_info$source == "recipe"))
+  expect_all_equal(spline_info$source, "recipe")
   nms <- c('neighbors', 'threshold', 'deg_free', 'degree')
   expect_equal(spline_info$name, nms)
   ids <- c('imputation', 'threshold', 'deg_free', 'degree')
@@ -63,9 +63,9 @@ test_that('model with main and engine parameters', {
   c5_info <- tune_args(bst_model)
   check_tune_args_tibble(c5_info)
   expect_equal(nrow(c5_info), 2)
-  expect_true(all(c5_info$source == "model_spec"))
-  expect_true(all(c5_info$component == "boost_tree"))
-  expect_true(all(is.na(c5_info$component_id)))
+  expect_all_equal(c5_info$source, "model_spec")
+  expect_all_equal(c5_info$component, "boost_tree")
+  expect_all_equal(c5_info$component_id, NA_character_)
   nms <- c("trees", "rules")
   expect_equal(c5_info$name, nms)
   ids <- c("funky name \n", "rules")
@@ -89,7 +89,7 @@ test_that("workflow with tunable recipe", {
 
   wf_info <- tune_args(wf_tunable_recipe)
   check_tune_args_tibble(wf_info)
-  expect_true(all(wf_info$source == "recipe"))
+  expect_all_equal(wf_info$source, "recipe")
 })
 
 test_that("workflow with tunable model", {
@@ -103,7 +103,7 @@ test_that("workflow with tunable model", {
   wf_info <- tune_args(wf_tunable_model)
   check_tune_args_tibble(wf_info)
   expect_equal(nrow(wf_info), 2)
-  expect_true(all(wf_info$source == "model_spec"))
+  expect_all_equal(wf_info$source, "model_spec")
 })
 
 test_that("workflow with tunable recipe and model", {

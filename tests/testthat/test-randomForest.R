@@ -58,7 +58,7 @@ test_that('randomForest classification execution', {
   #   data = lending_club,
   #   control = caught_ctrl
   # )
-  # expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  # expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   expect_error(
     fit_xy(
@@ -206,7 +206,7 @@ test_that('randomForest regression execution', {
     data = mtcars,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   randomForest_xy_catch <- fit_xy(
     bad_rf_reg,
@@ -214,7 +214,7 @@ test_that('randomForest regression execution', {
     y = mtcars$mpg,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_xy_catch$fit, "try-error"))
+  expect_s3_class(randomForest_xy_catch$fit, "try-error")
 })
 
 test_that('randomForest regression prediction', {

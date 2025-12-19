@@ -285,14 +285,10 @@ test_that("glmnet multi_predict(): type class", {
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(lending_club))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
-  expect_true(
-    all(purrr::map_lgl(
-      f_pred$.pred,
-      ~ all(names(.x) == c("penalty", ".pred_class"))
-    ))
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 2)))
+  expect_all_equal(
+    purrr::map(f_pred$.pred, names),
+    list(c("penalty", ".pred_class"))
   )
 
   # single prediction
@@ -375,14 +371,10 @@ test_that("glmnet multi_predict(): type prob", {
   expect_s3_class(f_pred, "tbl_df")
   expect_equal(names(f_pred), ".pred")
   expect_equal(nrow(f_pred), nrow(lending_club))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 3))))
-  )
-  expect_true(
-    all(purrr::map_lgl(
-      f_pred$.pred,
-      ~ all(names(.x) == c("penalty", ".pred_bad", ".pred_good"))
-    ))
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 3)))
+  expect_all_equal(
+    purrr::map(f_pred$.pred, names),
+    list(c("penalty", ".pred_bad", ".pred_good"))
   )
 
   # single prediction
@@ -575,11 +567,9 @@ test_that("base-R families: type class", {
   )
 
   expect_identical(names(pred), ".pred_class")
-  expect_true(
-    all(purrr::map_lgl(
-      mpred$.pred,
-      ~ all(names(.x) == c("penalty", ".pred_class"))
-    ))
+  expect_all_equal(
+    purrr::map(mpred$.pred, names),
+    list(c("penalty", ".pred_class"))
   )
   expect_identical(
     pred$.pred_class,
@@ -597,9 +587,7 @@ test_that("base-R families: type class", {
     penalty = c(0.05, 0.1)
   )
 
-  expect_true(
-    all(purrr::map_lgl(mpred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
+  expect_all_equal(purrr::map(mpred$.pred, dim), list(c(2, 2)))
 })
 
 test_that("base-R families: type prob", {
@@ -632,11 +620,9 @@ test_that("base-R families: type prob", {
   )
 
   expect_identical(names(pred), c(".pred_bad", ".pred_good"))
-  expect_true(
-    all(purrr::map_lgl(
-      mpred$.pred,
-      ~ all(names(.x) == c("penalty", ".pred_bad", ".pred_good"))
-    ))
+  expect_all_equal(
+    purrr::map(mpred$.pred, names),
+    list(c("penalty", ".pred_bad", ".pred_good"))
   )
   expect_identical(
     pred$.pred_bad,
@@ -654,9 +640,7 @@ test_that("base-R families: type prob", {
     penalty = c(0.05, 0.1)
   )
 
-  expect_true(
-    all(purrr::map_lgl(mpred$.pred, ~ all(dim(.x) == c(2, 3))))
-  )
+  expect_all_equal(purrr::map(mpred$.pred, dim), list(c(2, 3)))
 })
 
 test_that("base-R families: type NULL", {
