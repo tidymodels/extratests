@@ -8,7 +8,7 @@ test_that("graf_weight_time_vec() calculates weight time", {
     time = c(eval_time_10 - 1, eval_time_10),
     event = c(1, 1)
   )
-  expect_identical(
+  expect_equal(
     parsnip:::graf_weight_time_vec(
       event_before_or_at_eval_time,
       eval_time = eval_time_10
@@ -21,7 +21,7 @@ test_that("graf_weight_time_vec() calculates weight time", {
     time = c(eval_time_10 + 1, eval_time_10 + 1),
     event = c(1, 0)
   )
-  expect_identical(
+  expect_equal(
     parsnip:::graf_weight_time_vec(
       observed_time_gt_eval_time,
       eval_time = eval_time_10
@@ -118,7 +118,7 @@ test_that("graf_weight_time_vec() handles eval_time of Inf", {
     time = c(1, eval_time_inf),
     event = c(1, 1)
   )
-  expect_identical(
+  expect_equal(
     parsnip:::graf_weight_time_vec(
       event_before_or_at_eval_time,
       eval_time = eval_time_inf

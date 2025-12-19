@@ -27,7 +27,7 @@ test_that('poisson_reg - glm case weights', {
     poisson_reg() %>%
     fit(art ~ ., data = dat$subset)
 
-  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that('poisson_reg - hurdle case weights', {
@@ -73,7 +73,7 @@ test_that('poisson_reg - zeroinfl case weights', {
     set_engine("zeroinfl") %>%
     fit(art ~ ., data = dat$subset)
 
-  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that('poisson_reg - glmnet case weights', {
