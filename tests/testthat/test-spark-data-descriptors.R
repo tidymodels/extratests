@@ -48,27 +48,27 @@ test_that("spark descriptor", {
   class_tab2 <- table(as.character(hpc$class), dnn = NULL)
 
   expect_equal(
-    template2(6L, 4L, 150L, NA_integer_, 1L),
+    template2(6, 4, 150, NA_integer_, 1),
     eval_descrs2(parsnip:::get_descr_form(compounds ~ ., data = hpc_descr))
   )
   expect_equal(
-    template2(3L, 1L, 150L, NA_integer_, 1L),
+    template2(3, 1, 150, NA_integer_, 1),
     eval_descrs2(parsnip:::get_descr_form(compounds ~ class, data = hpc_descr))
   )
   expect_equal(
-    template2(1L, 1L, 150L, NA_integer_, 0L),
+    template2(1, 1, 150, NA_integer_, 0),
     eval_descrs2(parsnip:::get_descr_form(
       compounds ~ input_fields,
       data = hpc_descr
     ))
   )
   expect_equal(
-    template2(4L, 4L, 150L, class_tab2, 0L),
+    template2(4, 4, 150, class_tab2, 0),
     eval_descrs2(parsnip:::get_descr_form(class ~ ., data = hpc_descr)),
     ignore_attr = TRUE
   )
   expect_equal(
-    template2(1L, 1L, 150L, class_tab2, 0L),
+    template2(1, 1, 150, class_tab2, 0),
     eval_descrs2(parsnip:::get_descr_form(
       class ~ input_fields,
       data = hpc_descr
