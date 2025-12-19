@@ -20,9 +20,8 @@ test_that('parsnip models with formula interface', {
   expect_identical(sum(grepl("(Intercept)", parsnip_form_names)), 1L)
   expect_identical(sum(grepl("^Alley", parsnip_form_names)), 2L)
 
-  expect_error(
-    predict(parsnip_form_fit, ames %>% select(Year_Built, Alley)),
-    regex = NA
+  expect_no_error(
+    predict(parsnip_form_fit, ames %>% select(Year_Built, Alley))
   )
 })
 
@@ -41,9 +40,8 @@ test_that('parsnip models with xy interface', {
 
   expect_identical(sum(grepl("(Intercept)", parsnip_xy_names)), 1L)
 
-  expect_error(
-    predict(parsnip_xy_fit, ames %>% select(Year_Built, Longitude)),
-    regex = NA
+  expect_no_error(
+    predict(parsnip_xy_fit, ames %>% select(Year_Built, Longitude))
   )
 })
 
@@ -68,8 +66,7 @@ test_that('workflows', {
   expect_identical(sum(grepl("(Intercept)", parsnip_wflow_names)), 1L)
   expect_identical(sum(grepl("^Alley", parsnip_wflow_names)), 2L)
 
-  expect_error(
-    predict(parsnip_wflow_fit, ames %>% select(Year_Built, Alley)),
-    regex = NA
+  expect_no_error(
+    predict(parsnip_wflow_fit, ames %>% select(Year_Built, Alley))
   )
 })
