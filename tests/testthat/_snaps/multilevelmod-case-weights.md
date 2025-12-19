@@ -4,7 +4,8 @@
       print(wt_fit$fit$call)
     Output
       rstanarm::stan_glmer(formula = value ~ (1 | id), data = data, 
-          family = stats::gaussian, weights = weights, refresh = 0)
+          family = stats::gaussian, weights = weights, iter = ~10, 
+          chains = ~1, refresh = 0)
 
 # linear_reg - lme4::lmer case weights
 
@@ -19,7 +20,8 @@
       print(wt_fit$fit$call)
     Output
       rstanarm::stan_glmer(formula = Class ~ A + B + (1 | id), data = data, 
-          family = stats::binomial, weights = weights, seed = ~1, refresh = 0)
+          family = stats::binomial, weights = weights, seed = ~1, iter = ~10, 
+          chains = ~1, refresh = 0)
 
 # logistic_reg - lme4::glmer case weights
 
@@ -35,7 +37,7 @@
       print(wt_fit$fit$call)
     Output
       rstanarm::stan_glmer(formula = art ~ (1 | id), data = data, family = stats::poisson, 
-          weights = weights, seed = ~1, refresh = 0)
+          weights = weights, seed = ~1, iter = ~10, chains = ~1, refresh = 0)
 
 # poisson_reg - lme4::glmer case weights
 
