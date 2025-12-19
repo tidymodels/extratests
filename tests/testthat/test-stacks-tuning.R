@@ -222,9 +222,10 @@ test_that("stacking with finetune works (anova)", {
     ) %>%
     pull(col_name)
 
-  expect_true(all(
-    colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs
-  ))
+  expect_in(
+    colnames(data_st_anova)[2:length(data_st_anova)],
+    retain_configs
+  )
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
@@ -284,9 +285,10 @@ test_that("stacking with finetune works (sim_anneal)", {
     nrow(betas_sim_anneal),
     length(model_st_sim_anneal$member_fits)
   )
-  expect_true(all(
-    betas_sim_anneal$terms %in% names(model_st_sim_anneal$member_fits)
-  ))
+  expect_in(
+    betas_sim_anneal$terms,
+    names(model_st_sim_anneal$member_fits)
+  )
 
   preds_sim_anneal <-
     predict(model_st_sim_anneal, ames_test)
@@ -317,10 +319,10 @@ test_that("stacking with finetune works (win_loss)", {
 
   expect_true(inherits(data_st_win_loss, "tbl_df"))
 
-  expect_true(all(
-    colnames(data_st_win_loss)[2:length(data_st_win_loss)] %in%
-      purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
-  ))
+  expect_in(
+    colnames(data_st_win_loss)[2:length(data_st_win_loss)],
+    purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
+  )
 
   model_st_win_loss <-
     data_st_win_loss %>%
@@ -339,9 +341,10 @@ test_that("stacking with finetune works (win_loss)", {
     ungroup()
 
   expect_identical(nrow(betas_win_loss), length(model_st_win_loss$member_fits))
-  expect_true(all(
-    betas_win_loss$terms %in% names(model_st_win_loss$member_fits)
-  ))
+  expect_in(
+    betas_win_loss$terms,
+    names(model_st_win_loss$member_fits)
+  )
 
   preds_win_loss <-
     predict(model_st_win_loss, ames_test)
