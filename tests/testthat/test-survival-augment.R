@@ -36,7 +36,7 @@ test_that("augmenting survival models", {
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
-  expect_true(is.list(sr_aug$.pred))
+  expect_type(sr_aug$.pred, "list")
   expect_named(
     sr_aug$.pred[[1]],
     c(
@@ -63,7 +63,7 @@ test_that("augmenting survival models", {
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
-  expect_true(is.list(glmn_aug$.pred))
+  expect_type(glmn_aug$.pred, "list")
   expect_named(
     glmn_aug$.pred[[1]],
     c(
@@ -146,7 +146,7 @@ test_that("augment() works for tune_results", {
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
-  expect_true(is.list(aug_res$.pred))
+  expect_type(aug_res$.pred, "list")
   expect_named(
     aug_res$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -209,7 +209,7 @@ test_that("augment() works for resample_results", {
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
-  expect_true(is.list(aug_res$.pred))
+  expect_type(aug_res$.pred, "list")
   expect_named(
     aug_res$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -261,7 +261,7 @@ test_that("augment() works for last fit", {
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
-  expect_true(is.list(aug_res$.pred))
+  expect_type(aug_res$.pred, "list")
   expect_named(
     aug_res$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),

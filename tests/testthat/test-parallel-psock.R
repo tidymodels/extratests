@@ -26,7 +26,7 @@ test_that('LDA parallel test', {
   stopCluster(cl)
   registerDoSEQ() # stopCluster() does not reset the number of workers
 
-  expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
+  expect_all_equal(purrr::map_int(res$.notes, nrow), 0L)
 })
 
 # ------------------------------------------------------------------------------
@@ -51,5 +51,5 @@ test_that('recipe-adjacent parallel test', {
   stopCluster(cl)
   registerDoSEQ()
 
-  expect_true(all(purrr::map_lgl(res$.notes, ~ nrow(.x) == 0)))
+  expect_all_equal(purrr::map_int(res$.notes, nrow), 0L)
 })

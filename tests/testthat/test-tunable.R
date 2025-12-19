@@ -36,10 +36,10 @@ test_that('recipe with tunable parameters', {
     spline_info$component,
     expected_cols
   )
-  expect_true(all(spline_info$source == "recipe"))
+  expect_all_equal(spline_info$source, "recipe")
   nms <- c('neighbors', 'threshold', 'deg_free', 'degree')
   expect_equal(spline_info$name, nms)
-  expect_true(all(purrr::map_lgl(spline_info$call_info, ~ .x$pkg == "dials")))
+  expect_all_equal(purrr::map_chr(spline_info$call_info, "pkg"), "dials")
   nms <- c('neighbors', 'threshold', 'spline_degree', 'degree_int')
   expect_equal(purrr::map_chr(spline_info$call_info, ~ .x$fun), nms)
 })
@@ -60,10 +60,10 @@ test_that('model with main and engine parameters', {
   c5_info <- tunable(bst_model)
   check_tunable_tibble(c5_info)
   expect_equal(nrow(c5_info), 9)
-  expect_true(all(c5_info$source == "model_spec"))
-  expect_true(all(c5_info$component == "boost_tree"))
-  expect_true(all(c5_info$component_id[1:3] == "main"))
-  expect_true(all(c5_info$component_id[-(1:3)] == "engine"))
+  expect_all_equal(c5_info$source, "model_spec")
+  expect_all_equal(c5_info$component, "boost_tree")
+  expect_all_equal(c5_info$component_id[1:3], "main")
+  expect_all_equal(c5_info$component_id[-(1:3)], "engine")
   nms <- c(
     "trees",
     "min_n",
@@ -76,12 +76,12 @@ test_that('model with main and engine parameters', {
     "bands"
   )
   expect_equal(c5_info$name, nms)
-  expect_true(all(purrr::map_lgl(c5_info$call_info[1:3], ~ .x$pkg == "dials")))
+  expect_all_equal(purrr::map_chr(c5_info$call_info[1:3], "pkg"), "dials")
   expect_equal(
     purrr::map_chr(c5_info$call_info[1:3], ~ .x$fun),
     c("trees", "min_n", "sample_prop")
   )
-  expect_true(sum(purrr::map_lgl(c5_info$call_info, is.null)) == 1)
+  expect_identical(sum(purrr::map_lgl(c5_info$call_info, is.null)), 1L)
 })
 
 test_that('bad model inputs', {
@@ -121,7 +121,7 @@ test_that("workflow with tunable recipe", {
 
   wf_info <- tunable(wf_tunable_recipe)
   check_tunable_tibble(wf_info)
-  expect_true(all(wf_info$source == "recipe"))
+  expect_all_equal(wf_info$source, "recipe")
 })
 
 test_that("workflow with tunable model", {
@@ -135,7 +135,7 @@ test_that("workflow with tunable model", {
   wf_info <- tunable(wf_tunable_model)
   check_tunable_tibble(wf_info)
   expect_equal(nrow(wf_info), 9)
-  expect_true(all(wf_info$source == "model_spec"))
+  expect_all_equal(wf_info$source, "model_spec")
 })
 
 test_that("workflow with tunable recipe and model", {

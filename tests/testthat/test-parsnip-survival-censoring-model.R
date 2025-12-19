@@ -7,7 +7,7 @@ test_that("`reverse_km()`: fit reverse Kaplan-Meier curves", {
   mod_fit <- survival_reg() %>%
     fit(Surv(time, status) ~ age + sex, data = lung)
 
-  expect_true(any(names(mod_fit) == "censor_probs"))
+  expect_in("censor_probs", names(mod_fit))
 
   expect_s3_class(
     mod_fit$censor_probs,

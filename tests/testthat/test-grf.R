@@ -122,11 +122,9 @@ test_that('grf classification with case weights', {
   )
   expect_s3_class(grf_wt_fit$fit, "probability_forest")
   expect_false(
-    isTRUE(
-      all.equal(
-        grf_wt_fit$fit$predictions,
-        grf_fit$fit$predictions
-      )
+    identical(
+      grf_wt_fit$fit$predictions,
+      grf_fit$fit$predictions
     )
   )
   expect_equal(
@@ -141,11 +139,9 @@ test_that('grf classification with case weights', {
     fit(scat_cw)
 
   expect_false(
-    isTRUE(
-      all.equal(
-        grf_fit$fit$predictions,
-        grf_wf_fit$fit$fit$fit$predictions
-      )
+    identical(
+      grf_fit$fit$predictions,
+      grf_wf_fit$fit$fit$fit$predictions
     )
   )
   expect_equal(
@@ -240,11 +236,9 @@ test_that('grf regression with case weights', {
   )
   expect_s3_class(grf_wt_fit$fit, "regression_forest")
   expect_false(
-    isTRUE(
-      all.equal(
-        grf_wt_fit$fit$predictions,
-        grf_fit$fit$predictions
-      )
+    identical(
+      grf_wt_fit$fit$predictions,
+      grf_fit$fit$predictions
     )
   )
   expect_equal(
@@ -259,11 +253,9 @@ test_that('grf regression with case weights', {
     fit(ames_cw)
 
   expect_false(
-    isTRUE(
-      all.equal(
-        grf_fit$fit$predictions,
-        grf_wf_fit$fit$fit$fit$predictions
-      )
+    identical(
+      grf_fit$fit$predictions,
+      grf_wf_fit$fit$fit$fit$predictions
     )
   )
   expect_equal(

@@ -86,20 +86,16 @@ test_that("grid tuning survival models with importance case weights", {
     )
 
   expect_false(
-    isTRUE(
-      all.equal(
-        weights_none_tune_res$.extracts[[1]]$.extracts[[1]],
-        weights_imp_tune_res$.extracts[[1]]$.extracts[[1]]
-      )
+    identical(
+      weights_none_tune_res$.extracts[[1]]$.extracts[[1]],
+      weights_imp_tune_res$.extracts[[1]]$.extracts[[1]]
     )
   )
 
   expect_false(
-    isTRUE(
-      all.equal(
-        collect_metrics(weights_none_tune_res),
-        collect_metrics(weights_imp_tune_res)
-      )
+    identical(
+      collect_metrics(weights_none_tune_res),
+      collect_metrics(weights_imp_tune_res)
     )
   )
 })

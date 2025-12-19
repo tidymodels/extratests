@@ -82,9 +82,9 @@ test_that("resampling survival models with static metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_sum$.metric, "concordance_survival")
 
   metric_all <- collect_metrics(rs_static_res, summarize = FALSE)
   exp_metric_all <-
@@ -96,10 +96,10 @@ test_that("resampling survival models with static metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == 10)
+  expect_identical(nrow(metric_all), 10L)
   expect_ptype(metric_all, exp_metric_all)
 
-  expect_true(all(metric_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -168,7 +168,7 @@ test_that("resampling survival models with integrated metric", {
     ignore.order = TRUE
   )
 
-  expect_true(is.list(rs_integrated_res$.predictions[[1]]$.pred))
+  expect_type(rs_integrated_res$.predictions[[1]]$.pred, "list")
   expect_named(
     rs_integrated_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -192,9 +192,9 @@ test_that("resampling survival models with integrated metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_sum$.metric, "brier_survival_integrated")
 
   metric_all <- collect_metrics(rs_integrated_res, summarize = FALSE)
   exp_metric_all <-
@@ -206,9 +206,9 @@ test_that("resampling survival models with integrated metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == 10)
+  expect_identical(nrow(metric_all), 10L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -283,14 +283,14 @@ test_that("resampling survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(rs_dynamic_res$.metrics[[1]]))
+  expect_in(".eval_time", names(rs_dynamic_res$.metrics[[1]]))
 
   expect_named(
     rs_dynamic_res$.predictions[[1]],
     c(".pred", ".row", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(rs_dynamic_res$.predictions[[1]]$.pred))
+  expect_type(rs_dynamic_res$.predictions[[1]]$.pred, "list")
 
   expect_named(
     rs_dynamic_res$.predictions[[1]]$.pred[[1]],
@@ -316,9 +316,9 @@ test_that("resampling survival models with dynamic metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == length(time_points))
+  expect_identical(nrow(metric_sum), length(time_points))
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_sum$.metric, "brier_survival")
 
   metric_all <- collect_metrics(rs_dynamic_res, summarize = FALSE)
   exp_metric_all <-
@@ -331,9 +331,9 @@ test_that("resampling survival models with dynamic metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == length(time_points) * nrow(sim_rs))
+  expect_identical(nrow(metric_all), length(time_points) * nrow(sim_rs))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival"))
+  expect_all_equal(metric_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -413,13 +413,13 @@ test_that("resampling survival models mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(rs_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(rs_mixed_res$.metrics[[1]]))
   expect_named(
     rs_mixed_res$.predictions[[1]],
     c(".pred", ".row", ".pred_time", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(rs_mixed_res$.predictions[[1]]$.pred))
+  expect_type(rs_mixed_res$.predictions[[1]]$.pred, "list")
   expect_named(
     rs_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
@@ -444,9 +444,9 @@ test_that("resampling survival models mixture of metric types", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == length(time_points) + 2)
+  expect_identical(nrow(metric_sum), length(time_points) + 2L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 2)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 2L)
   expect_equal(
     as.vector(table(metric_sum$.metric)),
     c(length(time_points), 1L, 1L)
@@ -463,9 +463,9 @@ test_that("resampling survival models mixture of metric types", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == (length(time_points) + 2) * nrow(sim_rs))
+  expect_identical(nrow(metric_all), (length(time_points) + 2L) * nrow(sim_rs))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 2 * nrow(sim_rs))
+  expect_identical(sum(is.na(metric_all$.eval_time)), 2L * nrow(sim_rs))
   expect_equal(
     as.vector(table(metric_all$.metric)),
     c(length(time_points), 1L, 1L) * nrow(sim_rs)
