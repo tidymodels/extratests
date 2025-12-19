@@ -13,8 +13,8 @@ test_that('tune recipe and model, which has_unknowns', {
   rf_mod <-
     rand_forest(mode = "regression", mtry = tune()) %>%
     set_engine("randomForest")
-  iter1 <- 2
-  iter2 <- 2
+  iter1 <- 2L
+  iter2 <- 2L
   iterT <- iter1 + iter2
 
   set.seed(4400)
@@ -45,9 +45,9 @@ test_that('tune recipe and model, which has_unknowns', {
     c("mtry", "num_comp", ".metric", ".estimator", ".estimate", ".config")
   )
   res_est <- collect_metrics(res)
-  expect_identical(nrow(res_est), iterT * 2)
+  expect_identical(nrow(res_est), iterT * 2L)
   expect_identical(sum(res_est$.metric == "rmse"), iterT)
   expect_identical(sum(res_est$.metric == "rsq"), iterT)
   expect_identical(dplyr::n_distinct(res_est$.config), iterT)
-  expect_identical(res_est$n, rep(10, iterT * 2))
+  expect_identical(res_est$n, rep(10L, iterT * 2))
 })

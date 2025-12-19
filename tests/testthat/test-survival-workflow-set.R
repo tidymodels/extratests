@@ -117,7 +117,7 @@ test_that("resampling survival models with static metric", {
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
   expect_false(".eval_time" %in% names(wflow_set_mtrcs))
-  expect_identical(nrow(wflow_set_mtrcs), 2)
+  expect_identical(nrow(wflow_set_mtrcs), 2L)
   expect_all_equal(wflow_set_mtrcs$.metric, "concordance_survival")
 
   exp_metric_sum <-
@@ -139,7 +139,7 @@ test_that("resampling survival models with static metric", {
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_stc)
 
-  expect_identical(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   static_ptype <- tibble::tibble(
     wflow_id = character(0),
@@ -232,7 +232,7 @@ test_that("resampling survival models with integrated metric", {
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
   expect_false(".eval_time" %in% names(wflow_set_mtrcs))
-  expect_identical(nrow(wflow_set_mtrcs), 2)
+  expect_identical(nrow(wflow_set_mtrcs), 2L)
   expect_all_equal(wflow_set_mtrcs$.metric, "brier_survival_integrated")
 
   exp_metric_sum <-
@@ -254,7 +254,7 @@ test_that("resampling survival models with integrated metric", {
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_stc)
 
-  expect_identical(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   static_ptype <- tibble::tibble(
     wflow_id = character(0),
@@ -347,7 +347,7 @@ test_that("resampling survival models with dynamic metric", {
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
   expect_in(".eval_time", names(wflow_set_mtrcs))
-  expect_identical(nrow(wflow_set_mtrcs), 2 * length(time_points))
+  expect_identical(nrow(wflow_set_mtrcs), 2L * length(time_points))
   expect_all_equal(wflow_set_mtrcs$.metric, "brier_survival")
 
   exp_metric_sum <-
@@ -370,7 +370,7 @@ test_that("resampling survival models with dynamic metric", {
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_stc)
 
-  expect_identical(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   static_ptype <- tibble::tibble(
     wflow_id = character(0),
@@ -467,7 +467,7 @@ test_that("resampling survival models with mixture of metric types", {
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_stc)
 
   expect_in(".eval_time", names(wflow_set_mtrcs))
-  expect_identical(nrow(wflow_set_mtrcs), 12)
+  expect_identical(nrow(wflow_set_mtrcs), 12L)
 
   exp_metric_sum <-
     tibble(
@@ -489,7 +489,7 @@ test_that("resampling survival models with mixture of metric types", {
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_stc)
 
-  expect_identical(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   static_ptype <- tibble::tibble(
     wflow_id = character(0),

@@ -100,9 +100,9 @@ test_that("predict() can handle NA times", {
     time = c(NA_real_, pred_times),
     as_vector = TRUE
   )
-  expect_identical(length(pred_miss), length(pred_times) + 1)
+  expect_identical(length(pred_miss), length(pred_times) + 1L)
   expect_identical(sum(is.na(pred_miss)), 1L)
-  expect_identical(which(is.na(pred_miss)), 1)
+  expect_identical(which(is.na(pred_miss)), 1L)
 })
 
 test_that("predict() avoids zero probabilities", {

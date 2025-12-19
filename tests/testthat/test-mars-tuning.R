@@ -33,7 +33,7 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
     type = "latin_hypercube"
   )
 
-  expect_identical(nrow(params_grid), 7)
+  expect_identical(nrow(params_grid), 7L)
 
   expect_error(
     mars_smol_grid <- min_grid(mars_spec, params_grid),
@@ -48,7 +48,7 @@ test_that("tuning for mars() -- submodels *and* no submodels", {
     5
   )
 
-  expect_identical(sum(smol_vec), 2)
+  expect_identical(sum(smol_vec), 2L)
 
   expect_error(
     rs <- tune_grid(

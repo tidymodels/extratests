@@ -54,7 +54,7 @@ test_that('tunable', {
   expect_identical(rec_param$name, c("num_comp", "penalty"))
   expect_all_equal(rec_param$source, "recipe")
   expect_type(rec_param$call_info, "list")
-  expect_identical(nrow(rec_param), 2)
+  expect_identical(nrow(rec_param), 2L)
   expect_identical(
     names(rec_param),
     c('name', 'call_info', 'source', 'component', 'component_id')

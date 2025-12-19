@@ -85,9 +85,9 @@ test_that("glmnet prediction: type class", {
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ])
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE])
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("glmnet prediction: column order of `new_data` irrelevant", {
@@ -150,9 +150,9 @@ test_that("glmnet prediction: type prob", {
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "prob")
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE], type = "prob")
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("glmnet prediction: type raw", {
@@ -195,9 +195,9 @@ test_that("glmnet prediction: type raw", {
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "raw")
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE], type = "raw")
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("formula interface can deal with missing values", {
@@ -305,8 +305,8 @@ test_that("glmnet multi_predict(): type class", {
     type = "class"
   )
   expect_identical(f_pred_1, xy_pred_1)
-  expect_identical(nrow(f_pred_1), 1)
-  expect_identical(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(nrow(f_pred_1), 1L)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2L)
 })
 
 test_that("glmnet multi_predict(): type prob", {
@@ -391,8 +391,8 @@ test_that("glmnet multi_predict(): type prob", {
     type = "prob"
   )
   expect_identical(f_pred_1, xy_pred_1)
-  expect_identical(nrow(f_pred_1), 1)
-  expect_identical(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(nrow(f_pred_1), 1L)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2L)
 })
 
 test_that("glmnet multi_predict(): type NULL", {

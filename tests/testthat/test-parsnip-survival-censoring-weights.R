@@ -186,7 +186,7 @@ test_that('compute Graf weights', {
   wts <- .censoring_weights_graf(fit, pred_surv)
   expect_identical(names(wts), names(pred_surv))
   expect_identical(nrow(wts), nrow(pred_surv))
-  expect_identical(dim(wts$.pred[[1]]), c(length(eval_times), 5))
+  expect_identical(dim(wts$.pred[[1]]), c(length(eval_times), 5L))
   expect_identical(wts$.pred[[1]]$.eval_time, eval_times)
   expect_identical(
     names(wts$.pred[[1]]),

@@ -62,7 +62,7 @@ test_that("augment survival workflows with eval_time", {
   expect_type(res_1_row$.pred_time, "double")
   expect_type(res_1_row$.pred, "list")
   expect_ptype(res_1_row$.pred[[1]], exp_pred_col)
-  expect_identical(nrow(res_1_row$.pred[[1]]), 1)
+  expect_identical(nrow(res_1_row$.pred[[1]]), 1L)
   expect_identical(res_1_row$.pred[[1]]$.eval_time, times[1])
 
   ## Obligatory glmnet example for "what could go wrong" coverage:

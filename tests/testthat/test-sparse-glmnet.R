@@ -80,12 +80,12 @@ test_that('matrix composition works', {
     NA
   )
   expect_type(processed$predictors, "double")
-  expect_identical(dim(processed$predictors), c(5000, 3))
+  expect_identical(dim(processed$predictors), c(5000L, 3L))
 
   forged <- forge(mlc_churn, blueprint = processed$blueprint)$predictors
 
   expect_type(forged, "double")
-  expect_identical(dim(forged), c(5000, 3))
+  expect_identical(dim(forged), c(5000L, 3L))
 
   expect_error(
     wf_pre <-
@@ -95,7 +95,7 @@ test_that('matrix composition works', {
     NA
   )
   expect_type(wf_pre$pre$mold$predictors, "double")
-  expect_identical(dim(wf_pre$pre$mold$predictors), c(5000, 3))
+  expect_identical(dim(wf_pre$pre$mold$predictors), c(5000L, 3L))
 
   expect_error(
     .fit_model(wf_pre, control = control_workflow()),

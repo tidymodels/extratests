@@ -31,7 +31,7 @@ test_that('grid search', {
     regex = NA
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(rf_tune)))
-  expect_identical(nrow(collect_metrics(rf_tune)), num_mtrc * 4)
+  expect_identical(nrow(collect_metrics(rf_tune)), num_mtrc * 4L)
 })
 
 
@@ -55,5 +55,5 @@ test_that('Bayes search', {
     regex = NA
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(rf_search)))
-  expect_identical(nrow(collect_metrics(rf_search)), num_mtrc * 5)
+  expect_identical(nrow(collect_metrics(rf_search)), num_mtrc * 5L)
 })

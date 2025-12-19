@@ -91,9 +91,9 @@ test_that("glmnet prediction: type numeric", {
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc[1, ])
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE])
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that('glmnet prediction: column order of `new_data` irrelevant', {
@@ -142,9 +142,9 @@ test_that("glmnet prediction: type raw", {
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc[1, ], type = "raw")
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE], type = "raw")
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("formula interface can deal with missing values", {
@@ -232,8 +232,8 @@ test_that("glmnet multi_predict(): type numeric", {
     penalty = penalty_values
   )
   expect_identical(f_pred_1, xy_pred_1)
-  expect_identical(nrow(f_pred_1), 1)
-  expect_identical(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(nrow(f_pred_1), 1L)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2L)
 })
 
 test_that("glmnet multi_predict(): type NULL", {

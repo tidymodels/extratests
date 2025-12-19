@@ -6,7 +6,7 @@ test_that('recipe with no steps', {
 
   bare_info <- tunable(bare_rec)
   check_tunable_tibble(bare_info)
-  expect_identical(nrow(bare_info), 0)
+  expect_identical(nrow(bare_info), 0L)
 })
 
 test_that('recipe with no tunable parameters', {
@@ -15,7 +15,7 @@ test_that('recipe with no tunable parameters', {
 
   rm_info <- tunable(rm_rec)
   check_tunable_tibble(rm_info)
-  expect_identical(nrow(rm_info), 0)
+  expect_identical(nrow(rm_info), 0L)
 })
 
 test_that('recipe with tunable parameters', {
@@ -49,7 +49,7 @@ test_that('model with no parameters', {
 
   lm_info <- tunable(lm_model)
   check_tunable_tibble(lm_info)
-  expect_identical(nrow(lm_info), 0)
+  expect_identical(nrow(lm_info), 0L)
 })
 
 test_that('model with main and engine parameters', {
@@ -59,7 +59,7 @@ test_that('model with main and engine parameters', {
 
   c5_info <- tunable(bst_model)
   check_tunable_tibble(c5_info)
-  expect_identical(nrow(c5_info), 9)
+  expect_identical(nrow(c5_info), 9L)
   expect_all_equal(c5_info$source, "model_spec")
   expect_all_equal(c5_info$component, "boost_tree")
   expect_all_equal(c5_info$component_id[1:3], "main")
@@ -102,7 +102,7 @@ test_that("workflow with no tunable parameters", {
 
   wf_info <- tunable(wf_untunable)
   check_tunable_tibble(wf_info)
-  expect_identical(nrow(wf_info), 0)
+  expect_identical(nrow(wf_info), 0L)
 })
 
 test_that("workflow with tunable recipe", {
@@ -134,7 +134,7 @@ test_that("workflow with tunable model", {
 
   wf_info <- tunable(wf_tunable_model)
   check_tunable_tibble(wf_info)
-  expect_identical(nrow(wf_info), 9)
+  expect_identical(nrow(wf_info), 9L)
   expect_all_equal(wf_info$source, "model_spec")
 })
 
