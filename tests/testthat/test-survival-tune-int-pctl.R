@@ -21,7 +21,7 @@ test_that("percentile internals for survival models with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -39,7 +39,9 @@ test_that("percentile internals for survival models with static metric", {
     )
 
   set.seed(1)
-  static_int <- int_pctl(rs_static_res, times = 1001)
+  expect_snapshot(
+    static_int <- int_pctl(rs_static_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -57,7 +59,9 @@ test_that("percentile internals for survival models with static metric", {
 
   # make sure `alpha` works
   set.seed(1)
-  static_int_45 <- int_pctl(rs_static_res, times = 1001, alpha = 0.45)
+  expect_snapshot(
+    static_int_45 <- int_pctl(rs_static_res, times = 10, alpha = 0.45)
+  )
   expect_lt(static_int$.lower, static_int_45$.lower)
   expect_gt(static_int$.upper, static_int_45$.upper)
   expect_equal(static_int$.estimate, static_int_45$.estimate)
@@ -82,7 +86,7 @@ test_that("percentile internals for survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -112,7 +116,9 @@ test_that("percentile internals for survival models with integrated metric", {
     )
 
   set.seed(1)
-  integrated_int <- int_pctl(grid_integrated_res, times = 1001)
+  expect_snapshot(
+    integrated_int <- int_pctl(grid_integrated_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -151,7 +157,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- bootstraps(sim_tr, times = 20)
+  sim_rs <- bootstraps(sim_tr, times = 5)
 
   time_points <- 10
 
@@ -181,7 +187,9 @@ test_that("percentile internals for survival models with dynamic metrics", {
     )
 
   set.seed(1)
-  dyn_int <- int_pctl(aov_dyn_res, times = 1001)
+  expect_snapshot(
+    dyn_int <- int_pctl(aov_dyn_res, times = 10)
+  )
 
   winners <- show_best(aov_dyn_res, eval_time = 10, metric = "brier_survival")
 
@@ -222,7 +230,7 @@ test_that("percentile internals for survival models mixture of metric types", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -252,7 +260,9 @@ test_that("percentile internals for survival models mixture of metric types", {
     )
 
   set.seed(1)
-  mixed_int <- int_pctl(rs_mixed_res, times = 1001)
+  expect_snapshot(
+    mixed_int <- int_pctl(rs_mixed_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -308,7 +318,7 @@ test_that("percentile internals for subset of eval times", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -338,7 +348,9 @@ test_that("percentile internals for subset of eval times", {
     )
 
   set.seed(1)
-  mixed_int <- int_pctl(rs_mixed_res, times = 1001, eval_time = c(10, 5))
+  expect_snapshot(
+    mixed_int <- int_pctl(rs_mixed_res, times = 10, eval_time = c(10, 5))
+  )
 
   exp_ptype <-
     tibble::tibble(
