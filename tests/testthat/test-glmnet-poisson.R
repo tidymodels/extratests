@@ -63,9 +63,9 @@ test_that("glmnet prediction: type numeric", {
   # single prediction
   skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
   f_pred_1 <- predict(f_fit, seniors[1, ])
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, seniors_x[1, , drop = FALSE])
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that('glmnet prediction: column order of `new_data` irrelevant', {
@@ -114,9 +114,9 @@ test_that("glmnet prediction: type raw", {
   # single prediction
   skip_if_not_installed("poissonreg", minimum_version = "1.0.1.9000")
   f_pred_1 <- predict(f_fit, seniors[1, ], type = "raw")
-  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, seniors_x[1, , drop = FALSE], type = "raw")
-  expect_identical(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("formula interface can deal with missing values", {
