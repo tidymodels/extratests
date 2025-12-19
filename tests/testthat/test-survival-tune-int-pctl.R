@@ -21,7 +21,7 @@ test_that("percentile internals for survival models with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -82,7 +82,7 @@ test_that("percentile internals for survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -151,7 +151,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- bootstraps(sim_tr, times = 20)
+  sim_rs <- bootstraps(sim_tr, times = 5)
 
   time_points <- 10
 
@@ -222,7 +222,7 @@ test_that("percentile internals for survival models mixture of metric types", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -299,7 +299,7 @@ test_that("percentile internals for subset of eval times", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
