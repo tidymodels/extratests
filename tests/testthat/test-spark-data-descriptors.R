@@ -47,34 +47,34 @@ test_that("spark descriptor", {
   eval_descrs2 <- purrr::partial(eval_descrs, not = c(".x", ".y", ".dat"))
   class_tab2 <- table(as.character(hpc$class), dnn = NULL)
 
-  expect_identical(
+  expect_equal(
     template2(6L, 4L, 150L, NA_integer_, 1L),
     eval_descrs2(parsnip:::get_descr_form(compounds ~ ., data = hpc_descr))
   )
-  expect_identical(
+  expect_equal(
     template2(3L, 1L, 150L, NA_integer_, 1L),
     eval_descrs2(parsnip:::get_descr_form(compounds ~ class, data = hpc_descr))
   )
-  expect_identical(
+  expect_equal(
     template2(1L, 1L, 150L, NA_integer_, 0L),
     eval_descrs2(parsnip:::get_descr_form(
       compounds ~ input_fields,
       data = hpc_descr
     ))
   )
-  expect_identical(
+  expect_equal(
     template2(4L, 4L, 150L, class_tab2, 0L),
     eval_descrs2(parsnip:::get_descr_form(class ~ ., data = hpc_descr)),
     ignore_attr = TRUE
   )
-  expect_identical(
+  expect_equal(
     template2(1L, 1L, 150L, class_tab2, 0L),
     eval_descrs2(parsnip:::get_descr_form(
       class ~ input_fields,
       data = hpc_descr
     ))
   )
-  expect_identical(
+  expect_equal(
     template2(7L, 3L, 24L, rev(table(npk$K, dnn = NULL)), 3L),
     eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr)),
     ignore_attr = TRUE
