@@ -39,9 +39,9 @@ test_that("glmnet execution and model object", {
     NA
   )
 
-  expect_equal(f_fit$fit, xy_fit$fit)
+  expect_identical(f_fit$fit, xy_fit$fit)
   # removing call element
-  expect_equal(f_fit$fit[-12], exp_fit[-12])
+  expect_identical(f_fit$fit[-12], exp_fit[-12])
 })
 
 test_that("glmnet prediction: type class", {
@@ -72,22 +72,22 @@ test_that("glmnet prediction: type class", {
 
   f_pred <- predict(f_fit, lending_club, type = "class")
   xy_pred <- predict(xy_fit, lending_club_x, type = "class")
-  expect_equal(f_pred, xy_pred)
-  expect_equal(
+  expect_identical(f_pred, xy_pred)
+  expect_identical(
     f_pred$.pred_class %>% as.character(),
     exp_pred %>% as.vector()
   )
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred_class")
-  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_identical(names(f_pred), ".pred_class")
+  expect_identical(nrow(f_pred), nrow(lending_club))
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ])
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE])
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1)
 })
 
 test_that("glmnet prediction: column order of `new_data` irrelevant", {
@@ -103,7 +103,7 @@ test_that("glmnet prediction: column order of `new_data` irrelevant", {
     y = lending_club$Class
   )
 
-  expect_equal(
+  expect_identical(
     predict(xy_fit, lending_club[1:7, sample(num_pred)]),
     predict(xy_fit, lending_club[1:7, num_pred])
   )
@@ -137,22 +137,22 @@ test_that("glmnet prediction: type prob", {
 
   f_pred <- predict(f_fit, lending_club, type = "prob")
   xy_pred <- predict(xy_fit, lending_club_x, type = "prob")
-  expect_equal(f_pred, xy_pred)
-  expect_equal(
+  expect_identical(f_pred, xy_pred)
+  expect_identical(
     f_pred$.pred_good,
     exp_pred %>% as.vector()
   )
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), c(".pred_bad", ".pred_good"))
-  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_identical(names(f_pred), c(".pred_bad", ".pred_good"))
+  expect_identical(nrow(f_pred), nrow(lending_club))
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "prob")
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE], type = "prob")
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1)
 })
 
 test_that("glmnet prediction: type raw", {
@@ -183,21 +183,21 @@ test_that("glmnet prediction: type raw", {
 
   f_pred <- predict(f_fit, lending_club, type = "raw")
   xy_pred <- predict(xy_fit, lending_club_x, type = "raw")
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9001"
   if (parsnip_version_without_bug_fix) {
     exp_pred <- predict(exp_fit, lending_club_x)
-    expect_equal(f_pred, exp_pred)
+    expect_identical(f_pred, exp_pred)
   } else {
-    expect_equal(f_pred, exp_pred)
+    expect_identical(f_pred, exp_pred)
   }
 
   # single prediction
   f_pred_1 <- predict(f_fit, lending_club[1, ], type = "raw")
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1)
   xy_pred_1 <- predict(xy_fit, lending_club_x[1, , drop = FALSE], type = "raw")
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1)
 })
 
 test_that("formula interface can deal with missing values", {
@@ -215,7 +215,7 @@ test_that("formula interface can deal with missing values", {
   )
 
   f_pred <- predict(f_fit, lending_club)
-  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_identical(nrow(f_pred), nrow(lending_club))
   # no expectation for the first value to be NA because glmnet itself
   # returns a non-NA value
 })
@@ -254,7 +254,7 @@ test_that("glmnet multi_predict(): type class", {
   xy_fit <- fit_xy(lr_spec, x = lending_club_x, y = lending_club_y)
 
   expect_true(has_multi_predict(xy_fit))
-  expect_equal(multi_predict_args(xy_fit), "penalty")
+  expect_identical(multi_predict_args(xy_fit), "penalty")
 
   f_pred <- multi_predict(
     f_fit,
@@ -268,7 +268,7 @@ test_that("glmnet multi_predict(): type class", {
     penalty = penalty_values,
     type = "class"
   )
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
@@ -278,13 +278,13 @@ test_that("glmnet multi_predict(): type class", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::pull(.pred_class)
-  expect_equal(as.character(f_pred_001), unname(exp_pred[, 1]))
-  expect_equal(as.character(f_pred_01), unname(exp_pred[, 2]))
+  expect_identical(as.character(f_pred_001), unname(exp_pred[, 1]))
+  expect_identical(as.character(f_pred_01), unname(exp_pred[, 2]))
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred")
-  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_identical(names(f_pred), ".pred")
+  expect_identical(nrow(f_pred), nrow(lending_club))
   expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 2)))
   expect_all_equal(
     purrr::map(f_pred$.pred, names),
@@ -304,9 +304,9 @@ test_that("glmnet multi_predict(): type class", {
     penalty = c(0.123, 0.5),
     type = "class"
   )
-  expect_equal(f_pred_1, xy_pred_1)
-  expect_equal(nrow(f_pred_1), 1)
-  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(f_pred_1, xy_pred_1)
+  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2)
 })
 
 test_that("glmnet multi_predict(): type prob", {
@@ -354,7 +354,7 @@ test_that("glmnet multi_predict(): type prob", {
     penalty = penalty_values,
     type = "prob"
   )
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
@@ -364,13 +364,13 @@ test_that("glmnet multi_predict(): type prob", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::pull(.pred_good)
-  expect_equal(f_pred_001, unname(exp_pred[, 1]))
-  expect_equal(f_pred_01, unname(exp_pred[, 2]))
+  expect_identical(f_pred_001, unname(exp_pred[, 1]))
+  expect_identical(f_pred_01, unname(exp_pred[, 2]))
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred")
-  expect_equal(nrow(f_pred), nrow(lending_club))
+  expect_identical(names(f_pred), ".pred")
+  expect_identical(nrow(f_pred), nrow(lending_club))
   expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 3)))
   expect_all_equal(
     purrr::map(f_pred$.pred, names),
@@ -390,9 +390,9 @@ test_that("glmnet multi_predict(): type prob", {
     penalty = penalty_values,
     type = "prob"
   )
-  expect_equal(f_pred_1, xy_pred_1)
-  expect_equal(nrow(f_pred_1), 1)
-  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(f_pred_1, xy_pred_1)
+  expect_identical(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2)
 })
 
 test_that("glmnet multi_predict(): type NULL", {
@@ -456,7 +456,7 @@ test_that('multi_predict() with default or single penalty value', {
     type = "prob"
   )
   mp_res <- do.call("rbind", mp_res$.pred)
-  expect_equal(mp_res[[".pred_No"]], unname(pred_glmn[, 1]))
+  expect_identical(mp_res[[".pred_No"]], unname(pred_glmn[, 1]))
 
   skip_if(packageVersion("parsnip") < "1.0.4.9002")
 
@@ -493,15 +493,15 @@ test_that("class predictions are factors with all levels", {
 
   f_pred <- predict(f_fit, lending_club, type = "class")
   xy_pred <- predict(xy_fit, lending_club_x, type = "class")
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
   expect_s3_class(f_pred$.pred_class, "factor")
-  expect_equal(levels(f_pred$.pred_class), levels(lending_club$Class))
+  expect_identical(levels(f_pred$.pred_class), levels(lending_club$Class))
 
   f_pred <- multi_predict(f_fit, lending_club, type = "class")
   xy_pred <- multi_predict(xy_fit, lending_club_x, type = "class")
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
   expect_s3_class(f_pred$.pred[[1]]$.pred_class, "factor")
-  expect_equal(
+  expect_identical(
     levels(f_pred$.pred[[1]]$.pred_class),
     levels(lending_club$Class)
   )
@@ -549,7 +549,7 @@ test_that("base-R families: type class", {
   )
 
   expect_true(has_multi_predict(f_fit))
-  expect_equal(multi_predict_args(f_fit), "penalty")
+  expect_identical(multi_predict_args(f_fit), "penalty")
 
   pred <- predict(f_fit, lending_club[1:5, ], type = "class")
   pred_005 <- predict(
@@ -607,7 +607,7 @@ test_that("base-R families: type prob", {
   )
 
   expect_true(has_multi_predict(f_fit))
-  expect_equal(multi_predict_args(f_fit), "penalty")
+  expect_identical(multi_predict_args(f_fit), "penalty")
 
   pred <- predict(f_fit, lending_club[1:5, ], type = "prob")
   pred_005 <- predict(f_fit, lending_club[1:5, ], type = "prob", penalty = 0.05)

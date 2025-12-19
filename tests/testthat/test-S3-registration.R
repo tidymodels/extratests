@@ -30,7 +30,7 @@ test_that('recipe tunable methods', {
 test_that('recipe required_pkgs methods', {
   pls_pkgs <- required_pkgs(test_recipe, FALSE)
 
-  expect_equal(pls_pkgs, "mixOmics")
+  expect_identical(pls_pkgs, "mixOmics")
 })
 
 
@@ -40,5 +40,5 @@ test_that('workflows required_pkgs methods', {
   expect_in("mixOmics", rec_pkgs)
 
   form_pkgs <- required_pkgs(test_form_wflow, FALSE)
-  expect_equal(form_pkgs, "glmnet")
+  expect_identical(form_pkgs, "glmnet")
 })

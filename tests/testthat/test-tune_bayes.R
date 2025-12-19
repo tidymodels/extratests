@@ -39,15 +39,15 @@ test_that('tune recipe and model, which has_unknowns', {
     iter = iter2
   ) %>%
     suppressMessages()
-  expect_equal(unique(res$id), folds$id)
-  expect_equal(
+  expect_identical(unique(res$id), folds$id)
+  expect_identical(
     colnames(res$.metrics[[1]]),
     c("mtry", "num_comp", ".metric", ".estimator", ".estimate", ".config")
   )
   res_est <- collect_metrics(res)
-  expect_equal(nrow(res_est), iterT * 2)
-  expect_equal(sum(res_est$.metric == "rmse"), iterT)
-  expect_equal(sum(res_est$.metric == "rsq"), iterT)
-  expect_equal(dplyr::n_distinct(res_est$.config), iterT)
-  expect_equal(res_est$n, rep(10, iterT * 2))
+  expect_identical(nrow(res_est), iterT * 2)
+  expect_identical(sum(res_est$.metric == "rmse"), iterT)
+  expect_identical(sum(res_est$.metric == "rsq"), iterT)
+  expect_identical(dplyr::n_distinct(res_est$.config), iterT)
+  expect_identical(res_est$n, rep(10, iterT * 2))
 })

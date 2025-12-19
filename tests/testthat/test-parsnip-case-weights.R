@@ -140,7 +140,7 @@ test_that('linear_reg - lm case weights', {
     linear_reg() %>%
     fit(mpg ~ ., data = dat$subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that('linear_reg - glm case weights', {
@@ -161,7 +161,7 @@ test_that('linear_reg - glm case weights', {
     set_engine("glm") %>%
     fit(mpg ~ ., data = dat$subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that('linear_reg - glmnet case weights', {
@@ -182,7 +182,7 @@ test_that('linear_reg - glmnet case weights', {
     set_engine("glmnet", path_values = 10^(-4:-1)) %>%
     fit(Sale_Price ~ ., data = dat$subset)
 
-  expect_equal(sub_fit$fit$beta, wt_fit$fit$beta)
+  expect_identical(sub_fit$fit$beta, wt_fit$fit$beta)
 })
 
 
@@ -204,7 +204,7 @@ test_that('logistic_reg - glm case weights', {
     logistic_reg() %>%
     fit(Class ~ ., data = dat$subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that('logistic_reg - glmnet case weights', {
@@ -225,7 +225,7 @@ test_that('logistic_reg - glmnet case weights', {
     set_engine("glmnet", path_values = 10^(-4:-1)) %>%
     fit(Class ~ ., data = dat$subset)
 
-  expect_equal(sub_fit$fit$beta, wt_fit$fit$beta)
+  expect_identical(sub_fit$fit$beta, wt_fit$fit$beta)
 })
 
 test_that('logistic_reg - stan case weights', {
@@ -310,7 +310,7 @@ test_that('multinom_reg - glmnet case weights', {
     set_engine("glmnet", path_values = 10^(-4:-1)) %>%
     fit(island ~ ., data = dat$subset)
 
-  expect_equal(sub_fit$fit$beta, wt_fit$fit$beta)
+  expect_identical(sub_fit$fit$beta, wt_fit$fit$beta)
 })
 
 # rand_forest -------------------------------------------------------------

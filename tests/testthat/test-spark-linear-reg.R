@@ -28,7 +28,7 @@ test_that('spark execution', {
   )
 
   expect_false(has_multi_predict(spark_fit))
-  expect_equal(multi_predict_args(spark_fit), NA_character_)
+  expect_identical(multi_predict_args(spark_fit), NA_character_)
 
   expect_error(
     spark_pred <- predict(spark_fit, hpc_linreg_te),
@@ -43,6 +43,6 @@ test_that('spark execution', {
   lm_fit <- lm(compounds ~ ., data = hpc[-(1:4), ])
   lm_pred <- unname(predict(lm_fit, hpc[1:4, -1]))
 
-  expect_equal(as.data.frame(spark_pred)$pred, lm_pred)
-  expect_equal(as.data.frame(spark_pred_num)$pred, lm_pred)
+  expect_identical(as.data.frame(spark_pred)$pred, lm_pred)
+  expect_identical(as.data.frame(spark_pred_num)$pred, lm_pred)
 })

@@ -10,7 +10,7 @@ test_that('linear regression', {
   ps_coefs <- tidy(ps_mod)
   gn_coefs <- as.matrix(coef(ps_mod$fit, s = .1))
   for (i in ps_coefs$term) {
-    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
+    expect_identical(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
   }
 })
 
@@ -27,7 +27,7 @@ test_that('logistic regression', {
   ps_coefs <- tidy(ps_mod)
   gn_coefs <- as.matrix(coef(ps_mod$fit, s = .1))
   for (i in ps_coefs$term) {
-    expect_equal(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
+    expect_identical(ps_coefs$estimate[ps_coefs$term == i], gn_coefs[i, 1])
   }
 })
 
@@ -46,7 +46,7 @@ test_that('multinomial regression', {
   gn_coefs <- purrr::map(gn_coefs, as.matrix)
   for (i in unique(ps_coefs$term)) {
     for (j in unique(ps_coefs$class)) {
-      expect_equal(
+      expect_identical(
         ps_coefs$estimate[ps_coefs$term == i & ps_coefs$class == j],
         gn_coefs[[j]][i, 1]
       )

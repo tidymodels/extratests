@@ -33,8 +33,8 @@ test_that('grf classification', {
   ###
 
   grf_cls <- predict(grf_fit, scat_te)
-  expect_equal(nrow(grf_cls), nrow(scat_te))
-  expect_equal(
+  expect_identical(nrow(grf_cls), nrow(scat_te))
+  expect_identical(
     grf_cls[0, ],
     structure(
       list(
@@ -52,8 +52,8 @@ test_that('grf classification', {
   ###
 
   grf_prb <- predict(grf_fit, scat_te, type = "prob")
-  expect_equal(nrow(grf_prb), nrow(scat_te))
-  expect_equal(
+  expect_identical(nrow(grf_prb), nrow(scat_te))
+  expect_identical(
     grf_prb[0, ],
     structure(
       list(
@@ -69,8 +69,8 @@ test_that('grf classification', {
   ###
 
   grf_ci <- predict(grf_fit, scat_te, type = "conf_int")
-  expect_equal(nrow(grf_ci), nrow(scat_te))
-  expect_equal(
+  expect_identical(nrow(grf_ci), nrow(scat_te))
+  expect_identical(
     grf_ci[0, ],
     structure(
       list(
@@ -127,7 +127,7 @@ test_that('grf classification with case weights', {
       grf_fit$fit$predictions
     )
   )
-  expect_equal(
+  expect_identical(
     grf_wt_fit$fit$sample.weights,
     scat_cw$wts[not_missing]
   )
@@ -144,7 +144,7 @@ test_that('grf classification with case weights', {
       grf_wf_fit$fit$fit$fit$predictions
     )
   )
-  expect_equal(
+  expect_identical(
     grf_wf_fit$fit$fit$fit$sample.weights,
     scat_cw$wts
   )
@@ -178,8 +178,8 @@ test_that('grf regression', {
   ###
 
   grf_num <- predict(grf_fit, ames_te)
-  expect_equal(nrow(grf_num), nrow(ames_te))
-  expect_equal(
+  expect_identical(nrow(grf_num), nrow(ames_te))
+  expect_identical(
     grf_num[0, ],
     structure(
       list(.pred = double(0)),
@@ -191,8 +191,8 @@ test_that('grf regression', {
   ###
 
   grf_ci <- predict(grf_fit, ames_te, type = "conf_int")
-  expect_equal(nrow(grf_ci), nrow(ames_te))
-  expect_equal(
+  expect_identical(nrow(grf_ci), nrow(ames_te))
+  expect_identical(
     grf_ci[0, ],
     structure(
       list(.pred_lower = double(0), .pred_upper = double(0)),
@@ -241,7 +241,7 @@ test_that('grf regression with case weights', {
       grf_fit$fit$predictions
     )
   )
-  expect_equal(
+  expect_identical(
     grf_wt_fit$fit$sample.weights,
     ames_cw$wts
   )
@@ -258,7 +258,7 @@ test_that('grf regression with case weights', {
       grf_wf_fit$fit$fit$fit$predictions
     )
   )
-  expect_equal(
+  expect_identical(
     grf_wf_fit$fit$fit$fit$sample.weights,
     ames_cw$wts
   )
@@ -292,7 +292,7 @@ test_that('grf quantile regression', {
   ###
 
   grf_qtl <- predict(grf_fit, ames_te)
-  expect_equal(nrow(grf_qtl), nrow(ames_te))
+  expect_identical(nrow(grf_qtl), nrow(ames_te))
   expect_named(grf_qtl, ".pred_quantile")
   expect_s3_class(grf_qtl$.pred_quantile, "quantile_pred")
   expect_identical(

@@ -50,7 +50,7 @@ test_that('stan_glm execution', {
   )
 
   expect_false(has_multi_predict(res))
-  expect_equal(multi_predict_args(res), NA_character_)
+  expect_identical(multi_predict_args(res), NA_character_)
 
   expect_error(
     res <- fit(
@@ -91,7 +91,7 @@ test_that('stan prediction', {
   )
 
   set.seed(383)
-  expect_equal(
+  expect_identical(
     uni_pred,
     predict(res_xy, hpc[1:5, num_pred])$.pred,
     tolerance = 0.1
@@ -103,7 +103,11 @@ test_that('stan prediction', {
     data = hpc,
     control = quiet_ctrl
   )
-  expect_equal(inl_pred, predict(res_form, hpc[1:5, ])$.pred, tolerance = 0.1)
+  expect_identical(
+    inl_pred,
+    predict(res_form, hpc[1:5, ])$.pred,
+    tolerance = 0.1
+  )
 })
 
 
@@ -162,26 +166,26 @@ test_that('stan intervals', {
     apply(2, quantile, prob = 0.965) %>%
     unname()
 
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_lower,
     ci_lower,
     ignore_attr = TRUE,
     tolerance = 1e-2
   )
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_upper,
     ci_upper,
     ignore_attr = TRUE,
     tolerance = 1e-2
   )
 
-  expect_equal(
+  expect_identical(
     prediction_parsnip$.pred_lower,
     pi_lower,
     ignore_attr = TRUE,
     tolerance = .1
   )
-  expect_equal(
+  expect_identical(
     prediction_parsnip$.pred_upper,
     pi_upper,
     ignore_attr = TRUE,

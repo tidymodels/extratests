@@ -57,7 +57,10 @@ spark_test_connection <- function() {
   suppressPackageStartupMessages(library(sparklyr))
   if (is.null(.env_tests$spark_connection)) {
     version <- Sys.getenv("SPARK_VERSION", unset = "3.5.7")
-    sc <- try(sparklyr::spark_connect("local", version = version), silent = TRUE)
+    sc <- try(
+      sparklyr::spark_connect("local", version = version),
+      silent = TRUE
+    )
     if (inherits(sc, "try-error")) {
       return(NULL)
     }
@@ -69,5 +72,5 @@ spark_test_connection <- function() {
 # ------------------------------------------------------------------------------
 
 expect_ptype <- function(x, ptype) {
-  expect_equal(x[0, names(ptype)], ptype)
+  expect_identical(x[0, names(ptype)], ptype)
 }

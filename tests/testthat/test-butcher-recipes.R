@@ -28,7 +28,7 @@ test_that("recipe + step_nnmf_sparse + bake() works", {
     step_nnmf_sparse(all_numeric_predictors(), num_comp = 2, seed = 473) %>%
     prep()
   x <- butcher(rec)
-  expect_equal(bake(rec, biomass_te), bake(x, biomass_te))
+  expect_identical(bake(rec, biomass_te), bake(x, biomass_te))
 })
 
 
@@ -44,5 +44,5 @@ test_that("recipe + step_ica + bake() works", {
     step_ica(Petal.Width, Sepal.Width, num_comp = 2) %>%
     prep()
   x <- butcher(rec)
-  expect_equal(bake(rec, iris), bake(x, iris))
+  expect_identical(bake(rec, iris), bake(x, iris))
 })

@@ -79,11 +79,11 @@ test_that("last fit for survival models with static metric", {
 
   unsum_pred <- collect_predictions(rs_static_res)
   expect_ptype(unsum_pred, static_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_te))
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
 
   sum_pred <- collect_predictions(rs_static_res, summarize = TRUE)
   expect_ptype(sum_pred, static_ptype[, names(static_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_te))
+  expect_identical(nrow(sum_pred), nrow(sim_te))
 })
 
 test_that("last fit for survival models with integrated metric", {
@@ -137,7 +137,7 @@ test_that("last fit for survival models with integrated metric", {
     c(".eval_time", ".pred_survival", ".weight_censored"),
     ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     rs_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -176,17 +176,17 @@ test_that("last fit for survival models with integrated metric", {
 
   unsum_pred <- collect_predictions(rs_integrated_res)
   expect_ptype(unsum_pred, integrated_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_te))
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
 
   expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_integrated_res, summarize = TRUE)
   expect_ptype(sum_pred, integrated_ptype[, names(integrated_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_te))
+  expect_identical(nrow(sum_pred), nrow(sim_te))
 
   expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
 test_that("last fit for survival models with dynamic metric", {
@@ -240,7 +240,7 @@ test_that("last fit for survival models with dynamic metric", {
     c(".eval_time", ".pred_survival", ".weight_censored"),
     ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     rs_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -280,17 +280,17 @@ test_that("last fit for survival models with dynamic metric", {
 
   unsum_pred <- collect_predictions(rs_dynamic_res)
   expect_ptype(unsum_pred, dynamic_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_te))
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
 
   expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_dynamic_res, summarize = TRUE)
   expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_te))
+  expect_identical(nrow(sum_pred), nrow(sim_te))
 
   expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
 test_that("last fit for survival models with mixture of metrics", {
@@ -348,7 +348,7 @@ test_that("last fit for survival models with mixture of metrics", {
     c(".eval_time", ".pred_survival", ".weight_censored"),
     ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     rs_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -368,7 +368,7 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_identical(nrow(metric_sum), length(time_points) + 2L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_identical(sum(is.na(metric_sum$.eval_time)), 2L)
-  expect_equal(
+  expect_identical(
     as.vector(table(metric_sum$.metric)),
     c(length(time_points), 1L, 1L)
   )
@@ -392,15 +392,15 @@ test_that("last fit for survival models with mixture of metrics", {
 
   unsum_pred <- collect_predictions(rs_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_te))
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_mixed_res, summarize = TRUE)
   expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_te))
+  expect_identical(nrow(sum_pred), nrow(sim_te))
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })

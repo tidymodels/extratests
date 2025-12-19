@@ -30,7 +30,7 @@ test_that("augmenting survival models", {
     fit(event_time ~ ., data = sim_tr)
 
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(sr_aug), nrow(sim_tr))
+  expect_identical(nrow(sr_aug), nrow(sim_tr))
   expect_named(
     sr_aug,
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
@@ -57,7 +57,7 @@ test_that("augmenting survival models", {
     fit(event_time ~ ., data = sim_tr)
 
   glmn_aug <- augment(glmn_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(glmn_aug), nrow(sim_tr))
+  expect_identical(nrow(glmn_aug), nrow(sim_tr))
   expect_named(
     glmn_aug,
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
@@ -140,7 +140,7 @@ test_that("augment() works for tune_results", {
     aug_res <- augment(grid_mixed_res)
   )
 
-  expect_equal(nrow(aug_res), nrow(sim_tr))
+  expect_identical(nrow(aug_res), nrow(sim_tr))
   expect_named(
     aug_res,
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
@@ -203,7 +203,7 @@ test_that("augment() works for resample_results", {
 
   aug_res <- augment(rs_mixed_res)
 
-  expect_equal(nrow(aug_res), nrow(sim_tr))
+  expect_identical(nrow(aug_res), nrow(sim_tr))
   expect_named(
     aug_res,
     c(".pred", ".pred_time", "event_time", "X1", "X2"),
@@ -255,7 +255,7 @@ test_that("augment() works for last fit", {
 
   aug_res <- augment(rs_mixed_res)
 
-  expect_equal(nrow(aug_res), nrow(sim_te))
+  expect_identical(nrow(aug_res), nrow(sim_te))
   expect_named(
     aug_res,
     c(".pred", ".pred_time", "event_time", "X1", "X2"),

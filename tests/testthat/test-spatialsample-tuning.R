@@ -30,8 +30,8 @@ test_that("can tune with spatialsample object", {
   )
 
   expect_error(tree_metrics <- collect_metrics(rs), NA)
-  expect_equal(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
-  expect_equal(unique(tree_metrics$.metric), "rmse")
+  expect_identical(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
+  expect_identical(unique(tree_metrics$.metric), "rmse")
 })
 
 test_that("can tune with sf-based spatialsample object", {
@@ -51,19 +51,19 @@ test_that("can tune with sf-based spatialsample object", {
     NA
   )
   expect_error(tree_metrics <- collect_metrics(rs), NA)
-  expect_equal(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
-  expect_equal(unique(tree_metrics$.metric), "rmse")
+  expect_identical(tree_metrics$.config, paste0("pre0_mod", 1:5, "_post0"))
+  expect_identical(unique(tree_metrics$.metric), "rmse")
 
   # ensure that:
   # 1. the splits used by tune are the splits created by spatialsample
   # 2. these splits respect the exclusion buffer
   data_first_split <- block$splits[[1]]
   rs_first_split <- rs$splits[[1]]
-  expect_equal(
+  expect_identical(
     nrow(analysis(rs_first_split)),
     nrow(analysis(data_first_split))
   )
-  expect_equal(
+  expect_identical(
     nrow(assessment(rs_first_split)),
     nrow(assessment(data_first_split))
   )

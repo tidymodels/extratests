@@ -20,16 +20,16 @@ test_that('parallel seeds', {
 
   set.seed(1)
   res_1 <- fit_resamples(rf_spec, Class ~ ., folds)
-  expect_equal(nrow(res_1$.notes[[1]]), 0)
+  expect_identical(nrow(res_1$.notes[[1]]), 0)
 
   set.seed(1)
   res_2 <- fit_resamples(rf_spec, Class ~ ., folds)
-  expect_equal(nrow(res_2$.notes[[1]]), 0)
+  expect_identical(nrow(res_2$.notes[[1]]), 0)
 
   stopCluster(cl)
   registerDoSEQ() # stopCluster() does not reset the number of workers
 
-  expect_equal(
+  expect_identical(
     collect_metrics(res_1),
     collect_metrics(res_2)
   )

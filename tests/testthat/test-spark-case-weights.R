@@ -37,7 +37,7 @@ test_that("linear_reg - spark case weights", {
     set_engine("spark") %>%
     fit(mpg ~ ., data = mtcars_subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that("logistic_reg - spark case weights", {
@@ -78,7 +78,7 @@ test_that("logistic_reg - spark case weights", {
     set_engine("spark") %>%
     fit(Class ~ ., data = dat_subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })
 
 test_that("multinom_reg - spark case weights", {
@@ -119,5 +119,5 @@ test_that("multinom_reg - spark case weights", {
     set_engine("spark") %>%
     fit(island ~ ., data = penguin_subset)
 
-  expect_equal(coef(sub_fit$fit), coef(wt_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(wt_fit$fit))
 })

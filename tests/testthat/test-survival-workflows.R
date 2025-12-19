@@ -21,7 +21,7 @@ test_that("can `fit()` a censored workflow with a formula", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
@@ -44,7 +44,7 @@ test_that("can `fit()` a censored workflow with a model formula", {
 
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$coefficients,
     survival::coxph(
       formula = surv ~ . - sex + strata(sex),
@@ -73,7 +73,7 @@ test_that("can `fit()` a censored workflow with variables", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
@@ -97,7 +97,7 @@ test_that("can `fit()` a censored workflow with a recipe", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
