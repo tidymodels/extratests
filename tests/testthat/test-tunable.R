@@ -6,7 +6,7 @@ test_that('recipe with no steps', {
 
   bare_info <- tunable(bare_rec)
   check_tunable_tibble(bare_info)
-  expect_equal(nrow(bare_info), 0)
+  expect_identical(nrow(bare_info), 0L)
 })
 
 test_that('recipe with no tunable parameters', {
@@ -15,7 +15,7 @@ test_that('recipe with no tunable parameters', {
 
   rm_info <- tunable(rm_rec)
   check_tunable_tibble(rm_info)
-  expect_equal(nrow(rm_info), 0)
+  expect_identical(nrow(rm_info), 0L)
 })
 
 test_that('recipe with tunable parameters', {
@@ -32,16 +32,16 @@ test_that('recipe with tunable parameters', {
   spline_info <- tunable(spline_rec)
   check_tunable_tibble(spline_info)
   expected_cols <- c('step_impute_knn', 'step_other', 'step_bs', 'step_bs')
-  expect_equal(
+  expect_identical(
     spline_info$component,
     expected_cols
   )
   expect_all_equal(spline_info$source, "recipe")
   nms <- c('neighbors', 'threshold', 'deg_free', 'degree')
-  expect_equal(spline_info$name, nms)
+  expect_identical(spline_info$name, nms)
   expect_all_equal(purrr::map_chr(spline_info$call_info, "pkg"), "dials")
   nms <- c('neighbors', 'threshold', 'spline_degree', 'degree_int')
-  expect_equal(purrr::map_chr(spline_info$call_info, ~ .x$fun), nms)
+  expect_identical(purrr::map_chr(spline_info$call_info, ~ .x$fun), nms)
 })
 
 test_that('model with no parameters', {
@@ -49,7 +49,7 @@ test_that('model with no parameters', {
 
   lm_info <- tunable(lm_model)
   check_tunable_tibble(lm_info)
-  expect_equal(nrow(lm_info), 0)
+  expect_identical(nrow(lm_info), 0L)
 })
 
 test_that('model with main and engine parameters', {
@@ -59,7 +59,7 @@ test_that('model with main and engine parameters', {
 
   c5_info <- tunable(bst_model)
   check_tunable_tibble(c5_info)
-  expect_equal(nrow(c5_info), 9)
+  expect_identical(nrow(c5_info), 9L)
   expect_all_equal(c5_info$source, "model_spec")
   expect_all_equal(c5_info$component, "boost_tree")
   expect_all_equal(c5_info$component_id[1:3], "main")
@@ -75,9 +75,9 @@ test_that('model with main and engine parameters', {
     "fuzzyThreshold",
     "bands"
   )
-  expect_equal(c5_info$name, nms)
+  expect_identical(c5_info$name, nms)
   expect_all_equal(purrr::map_chr(c5_info$call_info[1:3], "pkg"), "dials")
-  expect_equal(
+  expect_identical(
     purrr::map_chr(c5_info$call_info[1:3], ~ .x$fun),
     c("trees", "min_n", "sample_prop")
   )
@@ -102,7 +102,7 @@ test_that("workflow with no tunable parameters", {
 
   wf_info <- tunable(wf_untunable)
   check_tunable_tibble(wf_info)
-  expect_equal(nrow(wf_info), 0)
+  expect_identical(nrow(wf_info), 0L)
 })
 
 test_that("workflow with tunable recipe", {
@@ -134,7 +134,7 @@ test_that("workflow with tunable model", {
 
   wf_info <- tunable(wf_tunable_model)
   check_tunable_tibble(wf_info)
-  expect_equal(nrow(wf_info), 9)
+  expect_identical(nrow(wf_info), 9L)
   expect_all_equal(wf_info$source, "model_spec")
 })
 
@@ -155,7 +155,7 @@ test_that("workflow with tunable recipe and model", {
 
   wf_info <- tunable(wf_tunable)
   check_tunable_tibble(wf_info)
-  expect_equal(
+  expect_identical(
     wf_info$source,
     c(rep("model_spec", 9), rep("recipe", 4))
   )

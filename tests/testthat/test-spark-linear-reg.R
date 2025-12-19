@@ -28,7 +28,7 @@ test_that('spark execution', {
   )
 
   expect_false(has_multi_predict(spark_fit))
-  expect_equal(multi_predict_args(spark_fit), NA_character_)
+  expect_identical(multi_predict_args(spark_fit), NA_character_)
 
   expect_error(
     spark_pred <- predict(spark_fit, hpc_linreg_te),

@@ -64,7 +64,7 @@ test_that("percentile internals for survival models with static metric", {
   )
   expect_lt(static_int$.lower, static_int_45$.lower)
   expect_gt(static_int$.upper, static_int_45$.upper)
-  expect_equal(static_int$.estimate, static_int_45$.estimate)
+  expect_identical(static_int$.estimate, static_int_45$.estimate)
 })
 
 
@@ -133,7 +133,7 @@ test_that("percentile internals for survival models with integrated metric", {
 
   expect_ptype(integrated_int, exp_ptype)
   expect_identical(nrow(integrated_int), nrow(grid))
-  expect_equal(sort(integrated_int$penalty), grid$penalty)
+  expect_identical(sort(integrated_int$penalty), grid$penalty)
   expect_all_equal(integrated_int$.metric, "brier_survival_integrated")
 })
 
@@ -207,7 +207,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
 
   expect_ptype(dyn_int, exp_ptype)
   expect_identical(nrow(dyn_int), nrow(winners))
-  expect_equal(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
+  expect_identical(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
   expect_all_equal(dyn_int$.metric, "brier_survival")
 })
 

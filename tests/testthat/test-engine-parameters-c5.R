@@ -29,7 +29,7 @@ test_that('single tree grid search', {
       tune_grid(Class ~ ., resamples = folds, grid = grid)
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(tree_tuned)))
-  expect_equal(nrow(collect_metrics(tree_tuned)), num_mtrc * 4)
+  expect_identical(nrow(collect_metrics(tree_tuned)), num_mtrc * 4L)
 })
 
 
@@ -42,7 +42,7 @@ test_that('single tree Bayesian search', {
       suppressMessages()
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(tree_search)))
-  expect_equal(nrow(collect_metrics(tree_search)), num_mtrc * 5)
+  expect_identical(nrow(collect_metrics(tree_search)), num_mtrc * 5L)
 })
 
 ## -----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ test_that('boosted tree grid search', {
       tune_grid(Class ~ ., resamples = folds, grid = grid)
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(boost_tuned)))
-  expect_equal(nrow(collect_metrics(boost_tuned)), num_mtrc * 4)
+  expect_identical(nrow(collect_metrics(boost_tuned)), num_mtrc * 4L)
 })
 
 test_that('boosted tree Bayesian search', {
@@ -66,5 +66,5 @@ test_that('boosted tree Bayesian search', {
       suppressMessages()
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(boost_search)))
-  expect_equal(nrow(collect_metrics(boost_search)), num_mtrc * 5)
+  expect_identical(nrow(collect_metrics(boost_search)), num_mtrc * 5L)
 })

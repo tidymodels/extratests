@@ -37,16 +37,16 @@ test_that("augment survival workflows with eval_time", {
 
   times <- c(2.0, 1.0)
   res <- augment(wflow_fit, new_data = head(sim_dat), eval_time = times)
-  expect_equal(nrow(res), nrow(head(sim_dat)))
-  expect_equal(
+  expect_identical(nrow(res), nrow(head(sim_dat)))
+  expect_identical(
     names(res),
     c(".pred", ".pred_time", "event_time", "X1", "X2")
   )
   expect_type(res$.pred_time, "double")
   expect_type(res$.pred, "list")
   expect_ptype(res$.pred[[1]], exp_pred_col)
-  expect_equal(nrow(res$.pred[[2]]), length(times))
-  expect_equal(res$.pred[[3]]$.eval_time, times)
+  expect_identical(nrow(res$.pred[[2]]), length(times))
+  expect_identical(res$.pred[[3]]$.eval_time, times)
 
   # Predicting a single row and eval time
   res_1_row <- augment(
@@ -55,15 +55,15 @@ test_that("augment survival workflows with eval_time", {
     eval_time = times[1]
   )
   expect_identical(nrow(res_1_row), 1L)
-  expect_equal(
+  expect_identical(
     names(res_1_row),
     c(".pred", ".pred_time", "event_time", "X1", "X2")
   )
   expect_type(res_1_row$.pred_time, "double")
   expect_type(res_1_row$.pred, "list")
   expect_ptype(res_1_row$.pred[[1]], exp_pred_col)
-  expect_equal(nrow(res_1_row$.pred[[1]]), 1)
-  expect_equal(res_1_row$.pred[[1]]$.eval_time, times[1])
+  expect_identical(nrow(res_1_row$.pred[[1]]), 1L)
+  expect_identical(res_1_row$.pred[[1]]$.eval_time, times[1])
 
   ## Obligatory glmnet example for "what could go wrong" coverage:
   ## This will need to be updated when https://github.com/tidymodels/workflows/issues/209 is resolved

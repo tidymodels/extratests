@@ -25,8 +25,8 @@ test_that('Correct values', {
 
   rec_res <- juice(rec, all_predictors(), composition = "matrix")[1:10, ]
 
-  expect_equal(unname(rec$steps[[1]]$res$w), exp_w)
-  expect_equal(unname(exp_pred), unname(rec_res))
+  expect_identical(unname(rec$steps[[1]]$res$w), exp_w)
+  expect_identical(unname(exp_pred), unname(rec_res))
 })
 
 test_that('No NNF', {
@@ -36,11 +36,11 @@ test_that('No NNF', {
     step_nnmf_sparse(all_predictors(), seed = 2432, num_comp = 0) %>%
     prep()
 
-  expect_equal(
+  expect_identical(
     names(juice(rec)),
     names(iris)
   )
-  expect_equal(rec$steps[[1]]$res$w, NULL)
+  expect_identical(rec$steps[[1]]$res$w, NULL)
   expect_snapshot(print(rec))
   expect_all_equal(tidy(rec, 1)$value, NA_real_)
 })
@@ -51,11 +51,11 @@ test_that('tunable', {
     recipe(~., data = iris) %>%
     step_nnmf_sparse(all_predictors())
   rec_param <- tunable(rec$steps[[1]])
-  expect_equal(rec_param$name, c("num_comp", "penalty"))
+  expect_identical(rec_param$name, c("num_comp", "penalty"))
   expect_all_equal(rec_param$source, "recipe")
   expect_type(rec_param$call_info, "list")
-  expect_equal(nrow(rec_param), 2)
-  expect_equal(
+  expect_identical(nrow(rec_param), 2L)
+  expect_identical(
     names(rec_param),
     c('name', 'call_info', 'source', 'component', 'component_id')
   )
@@ -71,7 +71,7 @@ test_that('keep_original_cols works', {
 
   nnmf_pred <- bake(nnmf_trained, new_data = iris[1:10, ], all_predictors())
 
-  expect_equal(
+  expect_identical(
     colnames(nnmf_pred),
     c(
       "Sepal.Length",
@@ -113,7 +113,7 @@ test_that('tidy method', {
   rec_prep <- prep(rec)
   wts <- rec_prep$steps[[1]]$res$w
 
-  expect_equal(
+  expect_identical(
     tidy(rec, 1),
     tibble::tribble(
       ~terms, ~value,   ~component,    ~id,
@@ -122,7 +122,7 @@ test_that('tidy method', {
     )
   )
 
-  expect_equal(
+  expect_identical(
     tidy(rec_prep, 1),
     tibble::tibble(
       terms = setNames(rep(c("disp", "wt"), 2), rep(c("disp", "wt"), 2)),

@@ -70,7 +70,7 @@ test_that('stan_glm prediction', {
     class = "factor"
   )
 
-  expect_equal(
+  expect_identical(
     xy_pred,
     parsnip:::predict_class.model_fit(xy_fit, lending_club[1:7, num_pred])
   )
@@ -89,7 +89,7 @@ test_that('stan_glm prediction', {
     class = "factor"
   )
 
-  expect_equal(
+  expect_identical(
     form_pred,
     parsnip:::predict_class.model_fit(
       res_form,
@@ -123,7 +123,7 @@ test_that('stan_glm probability', {
       0.0253642111906806, 0.974635788809319
     )
 
-  expect_equal(
+  expect_identical(
     xy_pred %>% as.data.frame(),
     parsnip:::predict_classprob.model_fit(
       xy_fit,
@@ -153,7 +153,7 @@ test_that('stan_glm probability', {
       0.013776487556396,   0.986223512443604,
       0.00359938202445076, 0.996400617975549
     )
-  expect_equal(
+  expect_identical(
     form_pred %>% as.data.frame(),
     parsnip:::predict_classprob.model_fit(
       res_form,
@@ -223,31 +223,31 @@ test_that('stan intervals', {
       `5` = 0.00405145389896896
     )
 
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_lower_good,
     stan_lower,
     ignore_attr = TRUE,
     tolerance = 0.01
   )
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_upper_good,
     stan_upper,
     ignore_attr = TRUE,
     tolerance = 0.01
   )
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_lower_bad,
     1 - stan_upper,
     ignore_attr = TRUE,
     tolerance = 0.03
   )
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.pred_upper_bad,
     1 - stan_lower,
     ignore_attr = TRUE,
     tolerance = 0.03
   )
-  expect_equal(
+  expect_identical(
     confidence_parsnip$.std_error,
     stan_std,
     ignore_attr = TRUE,
@@ -264,17 +264,17 @@ test_that('stan intervals', {
       `4` = 0.198389410902796,
       `5` = 0.0446989708829856
     )
-  expect_equal(
+  expect_identical(
     prediction_parsnip$.pred_lower_good,
     stan_pred_lower,
     ignore_attr = TRUE
   )
-  expect_equal(
+  expect_identical(
     prediction_parsnip$.pred_upper_good,
     stan_pred_upper,
     ignore_attr = TRUE
   )
-  expect_equal(
+  expect_identical(
     prediction_parsnip$.std_error,
     stan_pred_std,
     tolerance = 0.1,

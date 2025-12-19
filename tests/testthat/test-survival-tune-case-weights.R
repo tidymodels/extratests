@@ -170,7 +170,7 @@ test_that("grid tuning survival models with frequency case weights", {
       control = rctrl
     )
 
-  expect_equal(
+  expect_identical(
     coef(weights_none_tune_res$.extracts[[1]]$.extracts[[1]]),
     coef(weights_frq_tune_res$.extracts[[1]]$.extracts[[1]])
   )

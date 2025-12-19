@@ -63,7 +63,7 @@ test_that('spark execution', {
     regexp = NA
   )
 
-  expect_equal(colnames(spark_reg_pred), "pred")
+  expect_identical(colnames(spark_reg_pred), "pred")
 
   expect_equal(
     as.data.frame(spark_reg_pred)$pred,
@@ -128,7 +128,7 @@ test_that('spark execution', {
     regexp = NA
   )
 
-  expect_equal(colnames(spark_class_pred), "pred_class")
+  expect_identical(colnames(spark_class_pred), "pred_class")
 
   expect_equal(
     as.data.frame(spark_class_pred)$pred_class,
@@ -166,7 +166,7 @@ test_that('spark execution', {
     regexp = NA
   )
 
-  expect_equal(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
+  expect_identical(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
 
   expect_equal(
     as.data.frame(spark_class_prob),

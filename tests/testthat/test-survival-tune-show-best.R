@@ -26,7 +26,7 @@ test_that("show_best with censored data - integrated metric - grid", {
       eval_time = obj$times
     )
 
-  expect_equal(
+  expect_identical(
     show_best(grid_int_res, metric = "brier_survival_integrated"),
     grid_int_res %>%
       collect_metrics() %>%
@@ -63,7 +63,7 @@ test_that("show_best with censored data - dynamic metric - bayes", {
       eval_time = 100
     )
 
-  expect_equal(
+  expect_identical(
     show_best(bayes_dyn_res, metric = "brier_survival", eval_time = 100, n = 2),
     bayes_dyn_res %>%
       collect_metrics() %>%
@@ -118,7 +118,7 @@ test_that("show_best with censored data - static metric - anova racing", {
     dplyr::slice(1) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     sort(
       show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config
     ),
@@ -177,7 +177,7 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     dplyr::slice(1:5) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     show_best(race_stc_res, metric = "concordance_survival")$.config,
     winners
   )
@@ -239,7 +239,7 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     dplyr::slice(1:5) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     show_best(race_dyn_res, metric = "brier_survival")$.config,
     winners
   )

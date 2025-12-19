@@ -75,7 +75,7 @@ test_that("spark descriptor", {
     ))
   )
   expect_equal(
-    template2(7, 3, 24, rev(table(npk$K, dnn = NULL)), 3),
+    template2(7L, 3L, 24L, rev(table(npk$K, dnn = NULL)), 3L),
     eval_descrs2(parsnip:::get_descr_form(K ~ ., data = npk_descr)),
     ignore_attr = TRUE
   )

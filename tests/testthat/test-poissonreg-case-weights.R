@@ -50,7 +50,7 @@ test_that('poisson_reg - hurdle case weights', {
     set_engine("hurdle") %>%
     fit(art ~ ., data = dat$subset)
 
-  expect_equal(coef(sub_fit$fit), coef(sub_fit$fit))
+  expect_identical(coef(sub_fit$fit), coef(sub_fit$fit))
 })
 
 test_that('poisson_reg - zeroinfl case weights', {
