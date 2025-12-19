@@ -67,9 +67,9 @@ test_that("can tune with sf-based spatialsample object", {
     nrow(assessment(rs_first_split)),
     nrow(assessment(data_first_split))
   )
-  expect_true(
+  expect_lt(
     nrow(assessment(rs_first_split)) +
-      nrow(analysis(rs_first_split)) <
-      nrow(boston_canopy)
+      nrow(analysis(rs_first_split)),
+    nrow(boston_canopy)
   )
 })

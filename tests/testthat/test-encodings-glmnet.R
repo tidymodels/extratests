@@ -17,8 +17,8 @@ test_that('parsnip models with formula interface', {
 
   parsnip_form_names <- tidy(parsnip_form_fit)$term
 
-  expect_true(sum(grepl("(Intercept)", parsnip_form_names)) == 1)
-  expect_true(sum(grepl("^Alley", parsnip_form_names)) == 2)
+  expect_identical(sum(grepl("(Intercept)", parsnip_form_names)), 1L)
+  expect_identical(sum(grepl("^Alley", parsnip_form_names)), 2L)
 
   expect_error(
     predict(parsnip_form_fit, ames %>% select(Year_Built, Alley)),
@@ -39,7 +39,7 @@ test_that('parsnip models with xy interface', {
 
   parsnip_xy_names <- tidy(parsnip_xy_fit)$term
 
-  expect_true(sum(grepl("(Intercept)", parsnip_xy_names)) == 1)
+  expect_identical(sum(grepl("(Intercept)", parsnip_xy_names)), 1L)
 
   expect_error(
     predict(parsnip_xy_fit, ames %>% select(Year_Built, Longitude)),
@@ -65,8 +65,8 @@ test_that('workflows', {
     tidy() %>%
     pull(term)
 
-  expect_true(sum(grepl("(Intercept)", parsnip_wflow_names)) == 1)
-  expect_true(sum(grepl("^Alley", parsnip_wflow_names)) == 2)
+  expect_identical(sum(grepl("(Intercept)", parsnip_wflow_names)), 1L)
+  expect_identical(sum(grepl("^Alley", parsnip_wflow_names)), 2L)
 
   expect_error(
     predict(parsnip_wflow_fit, ames %>% select(Year_Built, Alley)),

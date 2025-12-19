@@ -1,6 +1,4 @@
-## Skip entire file is Spark is not installed
-skip_if(spark_not_installed())
-skip_if_not_installed("sparklyr", minimum_version = "1.9.1.9000")
+skip_if_no_spark()
 
 library(testthat)
 library(parsnip)
@@ -13,13 +11,7 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('spark execution', {
-  skip_if_not_installed("sparklyr")
-
-  suppressPackageStartupMessages(library(sparklyr))
-
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
+  sc <- spark_test_connection()
 
   hpc_rf_tr <- copy_to(sc, hpc[-(1:4), ], "hpc_rf_tr", overwrite = TRUE)
   hpc_rf_te <- copy_to(sc, hpc[1:4, -1], "hpc_rf_te", overwrite = TRUE)
@@ -185,6 +177,4 @@ test_that('spark execution', {
     as.data.frame(spark_class_prob_classprob),
     as.data.frame(spark_class_dup_classprob)
   )
-
-  spark_disconnect_all()
 })
