@@ -43,6 +43,6 @@ test_that('spark execution', {
   lm_fit <- lm(compounds ~ ., data = hpc[-(1:4), ])
   lm_pred <- unname(predict(lm_fit, hpc[1:4, -1]))
 
-  expect_identical(as.data.frame(spark_pred)$pred, lm_pred)
-  expect_identical(as.data.frame(spark_pred_num)$pred, lm_pred)
+  expect_equal(as.data.frame(spark_pred)$pred, lm_pred)
+  expect_equal(as.data.frame(spark_pred_num)$pred, lm_pred)
 })

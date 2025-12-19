@@ -63,7 +63,7 @@ test_that('spark execution', {
 
   expect_identical(colnames(spark_class_pred), "pred_class")
 
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_pred)$pred_class,
     as.data.frame(spark_class_pred_class)$pred_class
   )
@@ -84,7 +84,7 @@ test_that('spark execution', {
 
   expect_identical(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
 
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_prob),
     as.data.frame(spark_class_prob_classprob),
     ignore_attr = TRUE

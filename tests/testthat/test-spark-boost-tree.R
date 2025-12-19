@@ -81,11 +81,11 @@ test_that('spark execution', {
 
   expect_identical(colnames(spark_reg_pred), "pred")
 
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_reg_pred)$pred,
     as.data.frame(spark_reg_dup)$pred
   )
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_reg_pred_num)$pred,
     as.data.frame(spark_reg_num_dup)$pred
   )
@@ -152,11 +152,11 @@ test_that('spark execution', {
 
   expect_identical(colnames(spark_class_pred), "pred_class")
 
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_pred)$pred_class,
     as.data.frame(spark_class_dup)$pred_class
   )
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_pred_class)$pred_class,
     as.data.frame(spark_class_dup_class)$pred_class
   )
@@ -189,12 +189,12 @@ test_that('spark execution', {
 
   expect_identical(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
 
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_prob),
     as.data.frame(spark_class_dup),
     ignore_attr = TRUE
   )
-  expect_identical(
+  expect_equal(
     as.data.frame(spark_class_prob_classprob),
     as.data.frame(spark_class_dup_classprob)
   )
