@@ -79,14 +79,14 @@ test_that("stacking with grid search works", {
     stacks() %>%
     add_candidates(wf_set_grid)
 
-  expect_true(inherits(data_st_grid, "tbl_df"))
+  expect_s3_class(data_st_grid, "tbl_df")
 
   model_st_grid <-
     data_st_grid %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_grid, "model_stack"))
+  expect_s3_class(model_st_grid, "model_stack")
 
   betas_grid <-
     stacks:::.get_glmn_coefs(
@@ -103,7 +103,7 @@ test_that("stacking with grid search works", {
   preds_grid <-
     predict(model_st_grid, ames_test)
 
-  expect_true(inherits(preds_grid, "tbl_df"))
+  expect_s3_class(preds_grid, "tbl_df")
 })
 
 test_that("stacking with Bayesian tuning works", {
@@ -127,14 +127,14 @@ test_that("stacking with Bayesian tuning works", {
       suppressMessages()
   )
 
-  expect_true(inherits(data_st_bayes, "tbl_df"))
+  expect_s3_class(data_st_bayes, "tbl_df")
 
   model_st_bayes <-
     data_st_bayes %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_bayes, "model_stack"))
+  expect_s3_class(model_st_bayes, "model_stack")
 
   betas_bayes <-
     stacks:::.get_glmn_coefs(
@@ -151,7 +151,7 @@ test_that("stacking with Bayesian tuning works", {
   preds_bayes <-
     predict(model_st_bayes, ames_test)
 
-  expect_true(inherits(preds_bayes, "tbl_df"))
+  expect_s3_class(preds_bayes, "tbl_df")
 })
 
 test_that("stacking with finetune works (anova)", {
@@ -177,7 +177,7 @@ test_that("stacking with finetune works (anova)", {
       add_candidates(wf_set_anova)
   )
 
-  expect_true(inherits(data_st_anova, "tbl_df"))
+  expect_s3_class(data_st_anova, "tbl_df")
 
   # ensure that only candidates with complete resamples were kept
   raw_preds <- tune::collect_predictions(wf_set_anova, summarize = TRUE)
@@ -187,7 +187,7 @@ test_that("stacking with finetune works (anova)", {
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_anova, "model_stack"))
+  expect_s3_class(model_st_anova, "model_stack")
 
   betas_anova <-
     stacks:::.get_glmn_coefs(
@@ -204,7 +204,7 @@ test_that("stacking with finetune works (anova)", {
   preds_anova <-
     predict(model_st_anova, ames_test)
 
-  expect_true(inherits(preds_anova, "tbl_df"))
+  expect_s3_class(preds_anova, "tbl_df")
 
   skip_if_not_installed("stacks", "1.1.1.9001")
 
@@ -263,14 +263,14 @@ test_that("stacking with finetune works (sim_anneal)", {
     stacks() %>%
     add_candidates(wf_set_sim_anneal)
 
-  expect_true(inherits(data_st_sim_anneal, "tbl_df"))
+  expect_s3_class(data_st_sim_anneal, "tbl_df")
 
   model_st_sim_anneal <-
     data_st_sim_anneal %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_sim_anneal, "model_stack"))
+  expect_s3_class(model_st_sim_anneal, "model_stack")
 
   betas_sim_anneal <-
     stacks:::.get_glmn_coefs(
@@ -293,7 +293,7 @@ test_that("stacking with finetune works (sim_anneal)", {
   preds_sim_anneal <-
     predict(model_st_sim_anneal, ames_test)
 
-  expect_true(inherits(preds_sim_anneal, "tbl_df"))
+  expect_s3_class(preds_sim_anneal, "tbl_df")
 })
 
 test_that("stacking with finetune works (win_loss)", {
@@ -317,7 +317,7 @@ test_that("stacking with finetune works (win_loss)", {
     stacks() %>%
     add_candidates(wf_set_win_loss)
 
-  expect_true(inherits(data_st_win_loss, "tbl_df"))
+  expect_s3_class(data_st_win_loss, "tbl_df")
 
   expect_in(
     colnames(data_st_win_loss)[2:length(data_st_win_loss)],
@@ -329,7 +329,7 @@ test_that("stacking with finetune works (win_loss)", {
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_win_loss, "model_stack"))
+  expect_s3_class(model_st_win_loss, "model_stack")
 
   betas_win_loss <-
     stacks:::.get_glmn_coefs(
@@ -349,5 +349,5 @@ test_that("stacking with finetune works (win_loss)", {
   preds_win_loss <-
     predict(model_st_win_loss, ames_test)
 
-  expect_true(inherits(preds_win_loss, "tbl_df"))
+  expect_s3_class(preds_win_loss, "tbl_df")
 })

@@ -23,8 +23,8 @@ test_form_wflow <-
 
 test_that('recipe tunable methods', {
   pls_info <- tunable(test_recipe)
-  expect_true(tibble::is_tibble(pls_info))
-  expect_true(nrow(pls_info) > 0)
+  expect_s3_class(pls_info, c("tbl_df", "tbl", "data.frame"))
+  expect_gt(nrow(pls_info), 0)
 })
 
 test_that('recipe required_pkgs methods', {

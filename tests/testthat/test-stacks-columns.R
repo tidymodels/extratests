@@ -42,7 +42,7 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
       add_candidates(tuned)
   )
 
-  expect_true(inherits(data_st, "data_stack"))
+  expect_s3_class(data_st, "data_stack")
   expect_in(".pred_Adelie.1_tuned_0_2_0", colnames(data_st))
 
   # glmnet will likely present warnings
@@ -66,5 +66,5 @@ test_that("stacks can accommodate outcome levels that are not valid colnames", {
     preds <- predict(fitted, dat)
   )
 
-  expect_true(inherits(preds, "tbl_df"))
+  expect_s3_class(preds, "tbl_df")
 })
