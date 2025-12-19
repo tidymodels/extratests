@@ -195,7 +195,10 @@ test_that("formula interface can deal with missing values", {
 
   f_pred <- predict(f_fit, hpc_data, type = "class")
   expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(is.na(f_pred$.pred_class[1]))
+  expect_identical(
+    f_pred$.pred_class[1],
+    factor(NA_character_, levels = c("VF", "F", "M", "L"))
+  )
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
   expect_equal(nrow(f_pred), nrow(hpc_data))

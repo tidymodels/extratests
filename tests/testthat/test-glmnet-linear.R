@@ -159,7 +159,7 @@ test_that("formula interface can deal with missing values", {
 
   f_pred <- predict(f_fit, hpc)
   expect_equal(nrow(f_pred), nrow(hpc))
-  expect_true(is.na(f_pred$.pred[1]))
+  expect_identical(f_pred$.pred[1], NA_real_)
 })
 
 test_that("glmnet multi_predict(): type numeric", {
