@@ -14,6 +14,8 @@ library(tidyr)
 library(dplyr)
 
 test_that("stacks can accommodate outcome levels that are not valid colnames", {
+  # skip on pre-0.2.4
+  skip_if_not_installed("tune", "1.3.0.9006")
   skip_if_not_installed("stacks", "1.1.1.9001")
 
   data("penguins")

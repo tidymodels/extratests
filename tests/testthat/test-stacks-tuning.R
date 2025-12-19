@@ -62,7 +62,7 @@ wf_set <-
 
 # tests ------------------------------------------------------------------
 test_that("stacking with grid search works", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_grid <-
     workflow_map(
@@ -155,7 +155,7 @@ test_that("stacking with Bayesian tuning works", {
 })
 
 test_that("stacking with finetune works (anova)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_anova <-
     workflow_map(
@@ -229,8 +229,8 @@ test_that("stacking with finetune works (anova)", {
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
-  skip_if(utils::packageVersion("finetune") < "1.1.0.9001")
+  skip_if_not_installed("stacks", "1.0.0.9000")
+  skip_if_not_installed("finetune", "1.1.0.9001")
 
   wf_set_sim_anneal <-
     workflow_map(
@@ -297,7 +297,7 @@ test_that("stacking with finetune works (sim_anneal)", {
 })
 
 test_that("stacking with finetune works (win_loss)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_win_loss <-
     workflow_map(

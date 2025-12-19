@@ -3,7 +3,7 @@ library(recipes)
 suppressPackageStartupMessages(library(Matrix)) # Waiting for fix in RcppML
 
 test_that('Correct values', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
 
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf_sparse(all_predictors(), seed = 2432)
@@ -30,7 +30,7 @@ test_that('Correct values', {
 })
 
 test_that('No NNF', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
 
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf_sparse(all_predictors(), seed = 2432, num_comp = 0) %>%
@@ -46,7 +46,7 @@ test_that('No NNF', {
 })
 
 test_that('tunable', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
   rec <-
     recipe(~., data = iris) %>%
     step_nnmf_sparse(all_predictors())
@@ -62,7 +62,7 @@ test_that('tunable', {
 })
 
 test_that('keep_original_cols works', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
 
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf_sparse(all_predictors(), seed = 2432, keep_original_cols = TRUE)
@@ -85,7 +85,7 @@ test_that('keep_original_cols works', {
 })
 
 test_that('can prep recipes with no keep_original_cols', {
-  skip_if(utils::packageVersion("recipes") < "0.1.17.9001")
+  skip_if_not_installed("recipes", "0.1.17.9001")
 
   rec <- recipe(Species ~ ., data = iris) %>%
     step_nnmf_sparse(all_predictors(), seed = 2432)
@@ -105,7 +105,7 @@ test_that('can prep recipes with no keep_original_cols', {
 })
 
 test_that('tidy method', {
-  skip_if(utils::packageVersion("recipes") < "1.0.6.9000")
+  skip_if_not_installed("recipes", "1.0.6.9000")
 
   set.seed(1)
   rec <- recipe(~., data = mtcars) %>%
