@@ -129,7 +129,7 @@ test_that('grf classification with case weights', {
   )
   expect_identical(
     grf_wt_fit$fit$sample.weights,
-    scat_cw$wts[not_missing]
+    unclass(scat_cw$wts[not_missing])
   )
 
   set.seed(281)
@@ -146,7 +146,7 @@ test_that('grf classification with case weights', {
   )
   expect_identical(
     grf_wf_fit$fit$fit$fit$sample.weights,
-    scat_cw$wts
+    unclass(scat_cw$wts)
   )
 })
 
@@ -243,7 +243,7 @@ test_that('grf regression with case weights', {
   )
   expect_identical(
     grf_wt_fit$fit$sample.weights,
-    ames_cw$wts
+    unclass(ames_cw$wts)
   )
 
   set.seed(281)
@@ -260,7 +260,7 @@ test_that('grf regression with case weights', {
   )
   expect_identical(
     grf_wf_fit$fit$fit$fit$sample.weights,
-    ames_cw$wts
+    unclass(ames_cw$wts)
   )
 })
 
