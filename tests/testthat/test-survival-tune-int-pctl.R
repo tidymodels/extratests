@@ -58,8 +58,8 @@ test_that("percentile internals for survival models with static metric", {
   # make sure `alpha` works
   set.seed(1)
   static_int_45 <- int_pctl(rs_static_res, times = 1001, alpha = 0.45)
-  expect_true(static_int$.lower < static_int_45$.lower)
-  expect_true(static_int$.upper > static_int_45$.upper)
+  expect_lt(static_int$.lower, static_int_45$.lower)
+  expect_gt(static_int$.upper, static_int_45$.upper)
   expect_equal(static_int$.estimate, static_int_45$.estimate)
 })
 

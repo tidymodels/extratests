@@ -762,7 +762,7 @@ test_that("race tuning (anova) survival models with mixture of metric types", {
     "Racing will minimize the brier_survival metric at time 10",
     aov_mixed_output
   )))
-  expect_true(length(num_final_aov) < nrow(grid_winner))
+  expect_lt(length(num_final_aov), nrow(grid_winner))
 
   # test structure of results --------------------------------------------------
 
