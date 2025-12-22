@@ -27,7 +27,8 @@ test_that("grid tuning survival models with importance case weights", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(1)
@@ -104,7 +105,6 @@ test_that("grid tuning survival models with importance case weights", {
   )
 })
 
-
 test_that("grid tuning survival models with frequency case weights", {
   skip_if_not_installed("prodlim")
 
@@ -124,7 +124,8 @@ test_that("grid tuning survival models with frequency case weights", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(1)

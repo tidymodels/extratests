@@ -448,8 +448,130 @@ test_that("grid tuning survival models with dynamic metric", {
   expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
+test_that("grid tuning survival models with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+
+  # Grid search with linear_pred metrics ---------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  grid_linpred_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = gctrl
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_false(".eval_time" %in% names(grid_linpred_res$.metrics[[1]]))
+  expect_named(
+    grid_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(grid_linpred_res)
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+
+  expect_true(nrow(metric_sum) == 3)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_true(all(metric_sum$.metric == "royston_survival"))
+
+  metric_all <- collect_metrics(grid_linpred_res, summarize = FALSE)
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
+
+  expect_true(nrow(metric_all) == 30)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_true(all(metric_all$.metric == "royston_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  linpred_ptype <- tibble::tibble(
+    .pred_linear_pred = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    penalty = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  unsum_pred <- collect_predictions(grid_linpred_res)
+  expect_ptype(unsum_pred, linpred_ptype)
+  expect_equal(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
+
+  sum_pred <- collect_predictions(grid_linpred_res, summarize = TRUE)
+  no_id <- linpred_ptype[, names(linpred_ptype) != "id"]
+  expect_ptype(sum_pred, no_id)
+  expect_equal(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
+
+  # test metric collection pivoting --------------------------------------------
+
+  metric_all <- collect_metrics(grid_linpred_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    royston_survival = numeric(0)
+  )
+
+  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+})
+
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
 
   # standard setup start -------------------------------------------------------
 
@@ -480,7 +602,8 @@ test_that("grid tuning survival models mixture of metric types", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(2193)
@@ -500,7 +623,15 @@ test_that("grid tuning survival models mixture of metric types", {
   expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
   expect_named(
     grid_mixed_res$.predictions[[1]],
-    c(".pred", ".row", "penalty", ".pred_time", "event_time", ".config"),
+    c(
+      ".pred",
+      ".row",
+      "penalty",
+      ".pred_time",
+      ".pred_linear_pred",
+      "event_time",
+      ".config"
+    ),
     ignore.order = TRUE
   )
   expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
@@ -540,10 +671,10 @@ test_that("grid tuning survival models mixture of metric types", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_sum) == 18)
+  expect_equal(nrow(metric_sum), 3 * (length(time_points) + 3))
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 6)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L))
+  expect_equal(sum(is.na(metric_sum$.eval_time)), 9)
+  expect_equal(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L, 3L))
 
   metric_all <- collect_metrics(grid_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -556,16 +687,17 @@ test_that("grid tuning survival models mixture of metric types", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_all) == 180)
+  expect_equal(nrow(metric_all), 10 * 3 * (length(time_points) + 3))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 60)
-  expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L))
+  expect_equal(sum(is.na(metric_all$.eval_time)), 90)
+  expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L, 30L))
 
   # test prediction collection -------------------------------------------------
 
   mixed_ptype <- tibble::tibble(
     .pred = list(),
     .pred_time = numeric(0),
+    .pred_linear_pred = numeric(0),
     id = character(0),
     .row = integer(0),
     penalty = numeric(0),
@@ -630,7 +762,8 @@ test_that("grid tuning survival models mixture of metric types", {
     .eval_time = numeric(0),
     brier_survival = numeric(0),
     brier_survival_integrated = numeric(0),
-    concordance_survival = numeric(0)
+    concordance_survival = numeric(0),
+    royston_survival = numeric(0)
   )
 
   expect_ptype(metric_all, exp_metric_all)

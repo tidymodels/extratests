@@ -13,7 +13,8 @@ test_that("compute_metrics works with survival models", {
   metrics <- metric_set(
     concordance_survival,
     brier_survival_integrated,
-    brier_survival
+    brier_survival,
+    royston_survival
   )
 
   times <- c(2, 50, 100)

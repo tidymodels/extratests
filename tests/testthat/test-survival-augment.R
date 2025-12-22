@@ -121,7 +121,8 @@ test_that("augment() works for tune_results", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(2193)
@@ -143,7 +144,7 @@ test_that("augment() works for tune_results", {
   expect_equal(nrow(aug_res), nrow(sim_tr))
   expect_named(
     aug_res,
-    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    c(".pred", ".pred_time", ".pred_linear_pred", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
   expect_true(is.list(aug_res$.pred))
@@ -240,7 +241,8 @@ test_that("augment() works for last fit", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(2193)
@@ -258,7 +260,7 @@ test_that("augment() works for last fit", {
   expect_equal(nrow(aug_res), nrow(sim_te))
   expect_named(
     aug_res,
-    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    c(".pred", ".pred_time", ".pred_linear_pred", "event_time", "X1", "X2"),
     ignore.order = TRUE
   )
   expect_true(is.list(aug_res$.pred))

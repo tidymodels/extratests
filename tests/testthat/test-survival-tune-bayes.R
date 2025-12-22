@@ -483,6 +483,90 @@ test_that("Bayesian tuning survival models with dynamic metric", {
   expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
+test_that("Bayesian tuning survival models with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+  bctrl <- control_bayes(save_pred = TRUE)
+
+  # Bayes with linear_pred metrics ---------------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  init_grid_linpred_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = gctrl
+    )
+
+  set.seed(2193)
+  bayes_linpred_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = linpred_mtrc,
+      control = bctrl,
+      initial = init_grid_linpred_res
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_false(".eval_time" %in% names(bayes_linpred_res$.metrics[[1]]))
+  expect_named(
+    bayes_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "event_time", "penalty", ".config"),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(bayes_linpred_res)
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  expect_equal(nrow(metric_sum), 5)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_true(all(metric_sum$.metric == "royston_survival"))
+})
+
+
 test_that("Bayesian tuning survival models with mixture of metric types", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
@@ -684,4 +768,98 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival_integrated")
   )
+})
+
+
+test_that("Bayesian tuning survival models with mixture of metric types including linear_pred", {
+  # this is a separate to above because the other one uses a decision tree model
+  # which does not give us the linear predictor
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+  bctrl <- control_bayes(save_pred = TRUE)
+
+  # Bayes with a mixture of all four types ------------------------------------
+
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
+
+  set.seed(2193)
+  init_grid_mixed_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = gctrl
+    )
+
+  set.seed(2193)
+  bayes_mixed_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      initial = init_grid_mixed_res,
+      control = bctrl
+    ) |>
+    suppressWarnings()
+
+  # test structure of results --------------------------------------------------
+
+  expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
+  expect_named(
+    bayes_mixed_res$.predictions[[1]],
+    c(
+      ".pred",
+      ".row",
+      ".pred_time",
+      ".pred_linear_pred",
+      "event_time",
+      "penalty",
+      ".config"
+    ),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(bayes_mixed_res)
+  num_metrics <- length(time_points) + 3 # brier at 4 times + integrated + concordance + royston
+
+  expect_true(nrow(metric_sum) == 5 * num_metrics)
+  expect_true("royston_survival" %in% metric_sum$.metric)
 })
