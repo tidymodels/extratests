@@ -391,6 +391,33 @@
       4        9.44e-11 brier_survival_integrated         NA 0.285    30 0.00426
       5        1   e-10 brier_survival_integrated         NA 0.285    30 0.00426
 
+# race tuning (win_loss) survival models mixture of metric types including linear_pred
+
+    Code
+      show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Output
+      # A tibble: 1 x 6
+        penalty .metric        .eval_time   mean     n std_err
+          <dbl> <chr>               <dbl>  <dbl> <int>   <dbl>
+      1    0.01 brier_survival          1 0.0192    30 0.00158
+
+---
+
+    Code
+      show_best(wl_mixed_res, metric = "royston_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Condition
+      Warning:
+      Metric "brier_survival" was used to evaluate model candidates in the race but "royston_survival" has been chosen to rank the candidates. These results may not agree with the race.
+      Warning in `show_best()`:
+      `eval_time` is only used for dynamic survival metrics.
+    Output
+      # A tibble: 1 x 6
+        penalty .metric          .eval_time  mean     n std_err
+          <dbl> <chr>                 <dbl> <dbl> <int>   <dbl>
+      1    0.01 royston_survival         NA 0.433    30  0.0111
+
 # race tuning (W/L) - unneeded eval_time
 
     Code

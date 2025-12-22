@@ -38,7 +38,6 @@ test_that("show_best with censored data - integrated metric - grid", {
   )
 })
 
-
 test_that("show_best with censored data - dynamic metric - bayes", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "2.0.1.9000")
@@ -82,7 +81,6 @@ test_that("show_best with censored data - dynamic metric - bayes", {
     error = TRUE
   )
 })
-
 
 test_that("show_best with censored data - static metric - anova racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
@@ -135,7 +133,6 @@ test_that("show_best with censored data - static metric - anova racing", {
     error = TRUE
   )
 })
-
 
 test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
@@ -192,7 +189,6 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     error = TRUE
   )
 })
-
 
 test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
@@ -256,6 +252,69 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
   )
   expect_snapshot(
     show_best(race_dyn_res, metric = "brier_survival_integrated"),
+    error = TRUE
+  )
+})
+
+test_that("show_best with censored data - linpred metric (+stc) - SA", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("finetune", minimum_version = "1.1.0.9006")
+
+  obj <- make_churn_cens_objects()
+  suppressPackageStartupMessages(library("finetune"))
+
+  ph_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  linpred_met <- metric_set(royston_survival, concordance_survival)
+
+  sa_ctrl <- control_sim_anneal(
+    save_pred = TRUE,
+    verbose_iter = FALSE,
+    verbose = FALSE
+  )
+
+  set.seed(2193)
+  suppressWarnings({
+    sa_linpred_res <-
+      ph_spec %>%
+      tune_sim_anneal(
+        obj$rec,
+        resamples = obj$rs,
+        iter = 2,
+        metrics = linpred_met,
+        control = sa_ctrl
+      )
+  })
+
+  winners <-
+    sa_linpred_res %>%
+    collect_metrics() %>%
+    filter(.metric == "royston_survival") %>%
+    arrange(desc(mean)) %>%
+    dplyr::slice(1:5) %>%
+    pluck(".config")
+
+  expect_equal(
+    show_best(sa_linpred_res, metric = "royston_survival")$.config,
+    winners
+  )
+
+  expect_snapshot(
+    show_best(sa_linpred_res)
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "concordance_survival")
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "royston_survival", eval_time = 1)
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "brier_survival"),
     error = TRUE
   )
 })
