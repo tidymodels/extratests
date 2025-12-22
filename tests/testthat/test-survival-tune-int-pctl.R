@@ -234,7 +234,7 @@ test_that("percentile internals for survival models with linear pred metric", {
     last_fit(
       event_time ~ X1 + X2,
       split = split,
-      metrics = stc_mtrc
+      metrics = linpred_mtrc
     )
 
   set.seed(1)
