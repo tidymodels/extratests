@@ -452,7 +452,7 @@ test_that("resampling survival models with linear_pred metric", {
       control = ctrl
     )
 
-  expect_equal(
+  expect_identical(
     extract_workflow_set_result(wflow_set_fit_linpred, "form_ph"),
     spec_ph_rs
   )
@@ -476,7 +476,7 @@ test_that("resampling survival models with linear_pred metric", {
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_linpred)
 
   expect_false(".eval_time" %in% names(wflow_set_mtrcs))
-  expect_equal(nrow(wflow_set_mtrcs), 2)
+  expect_identical(nrow(wflow_set_mtrcs), 2L)
   expect_true(all(wflow_set_mtrcs$.metric == "royston_survival"))
 
   exp_metric_sum <-
@@ -496,7 +496,7 @@ test_that("resampling survival models with linear_pred metric", {
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_linpred)
 
-  expect_equal(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   linpred_ptype <- tibble::tibble(
     wflow_id = character(0),
@@ -709,7 +709,7 @@ test_that("resampling survival models mixture of metric types including linear_p
       control = ctrl
     )
 
-  expect_equal(
+  expect_identical(
     extract_workflow_set_result(wflow_set_fit_mix, "form_ph"),
     spec_ph_rs
   )
@@ -719,9 +719,9 @@ test_that("resampling survival models mixture of metric types including linear_p
   wflow_set_mtrcs <- collect_metrics(wflow_set_fit_mix)
 
   expect_true(".eval_time" %in% names(wflow_set_mtrcs))
-  num_metrics <- length(time_points) + 3
-  expect_equal(nrow(wflow_set_mtrcs), 2 * num_metrics)
-  expect_true(sum(is.na(wflow_set_mtrcs$.eval_time)) == 6)
+  num_metrics <- length(time_points) + 3L
+  expect_identical(nrow(wflow_set_mtrcs), 2L * num_metrics)
+  expect_identical(sum(is.na(wflow_set_mtrcs$.eval_time)), 6L)
 
   exp_metric_sum <-
     tibble(
@@ -743,7 +743,7 @@ test_that("resampling survival models mixture of metric types including linear_p
 
   wflow_set_preds <- collect_predictions(wflow_set_fit_mix)
 
-  expect_equal(nrow(wflow_set_preds), 750)
+  expect_identical(nrow(wflow_set_preds), 750L)
 
   mixed_ptype <- tibble::tibble(
     wflow_id = character(0),

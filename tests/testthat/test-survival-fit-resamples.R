@@ -428,7 +428,7 @@ test_that("resampling survival models with linear_pred metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "royston_survival"))
 
@@ -442,7 +442,7 @@ test_that("resampling survival models with linear_pred metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == 10)
+  expect_identical(nrow(metric_all), 10L)
   expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "royston_survival"))
 
@@ -458,11 +458,11 @@ test_that("resampling survival models with linear_pred metric", {
 
   unsum_pred <- collect_predictions(rs_linpred_res)
   expect_ptype(unsum_pred, linpred_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+  expect_identical(nrow(unsum_pred), nrow(sim_tr))
 
   sum_pred <- collect_predictions(rs_linpred_res, summarize = TRUE)
   expect_ptype(sum_pred, linpred_ptype[, names(linpred_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr))
+  expect_identical(nrow(sum_pred), nrow(sim_tr))
 })
 
 test_that("resampling survival models mixture of metric types", {
@@ -685,13 +685,13 @@ test_that("resampling survival models mixture of metric types including linear_p
     ),
     ignore.order = TRUE
   )
-  expect_true(is.list(rs_mixed_res$.predictions[[1]]$.pred))
+  expect_type(rs_mixed_res$.predictions[[1]]$.pred, "list")
   expect_named(
     rs_mixed_res$.predictions[[1]]$.pred[[1]],
     c(".eval_time", ".pred_survival", ".weight_censored"),
     ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     rs_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -711,10 +711,10 @@ test_that("resampling survival models mixture of metric types including linear_p
     )
 
   # 4 time points for brier_survival + 1 for integrated + 1 for concordance + 1 for royston
-  expect_true(nrow(metric_sum) == length(time_points) + 3)
+  expect_identical(nrow(metric_sum), length(time_points) + 3L)
   expect_ptype(metric_sum, exp_metric_sum)
   # concordance, integrated, and royston don't have eval_time
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 3)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 3L)
   expect_equal(
     as.vector(table(metric_sum$.metric)),
     c(length(time_points), 1L, 1L, 1L)
@@ -731,9 +731,9 @@ test_that("resampling survival models mixture of metric types including linear_p
       .config = character(0)
     )
 
-  expect_true(nrow(metric_all) == (length(time_points) + 3) * nrow(sim_rs))
+  expect_identical(nrow(metric_all), (length(time_points) + 3L) * nrow(sim_rs))
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 3 * nrow(sim_rs))
+  expect_identical(sum(is.na(metric_all$.eval_time)), 3L * nrow(sim_rs))
   expect_equal(
     as.vector(table(metric_all$.metric)),
     c(length(time_points), 1L, 1L, 1L) * nrow(sim_rs)
@@ -760,17 +760,17 @@ test_that("resampling survival models mixture of metric types including linear_p
 
   unsum_pred <- collect_predictions(rs_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr))
+  expect_identical(nrow(unsum_pred), nrow(sim_tr))
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(rs_mixed_res, summarize = TRUE)
   expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr))
+  expect_identical(nrow(sum_pred), nrow(sim_tr))
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   expect_no_error(show_best(rs_mixed_res, metric = "royston_survival"))
 })

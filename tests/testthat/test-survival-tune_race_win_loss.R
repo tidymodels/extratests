@@ -734,7 +734,7 @@ test_that("race tuning (win_loss) survival models with linear_pred metric", {
     filter(n == nrow(sim_rs))
   metric_wl_sum <- collect_metrics(wl_linpred_res)
 
-  expect_equal(nrow(wl_finished), nrow(metric_wl_sum))
+  expect_identical(nrow(wl_finished), nrow(metric_wl_sum))
   expect_ptype(metric_wl_sum, exp_metric_sum)
   expect_true(all(metric_wl_sum$.metric == "royston_survival"))
 })
@@ -1160,7 +1160,8 @@ test_that("race tuning (win_loss) survival models mixture of metric types includ
       metrics = mix_mtrc,
       eval_time = time_points,
       control = rctrl
-    )
+    ) %>%
+    suppressWarnings()
 
   # test structure of results --------------------------------------------------
 
@@ -1188,11 +1189,11 @@ test_that("race tuning (win_loss) survival models mixture of metric types includ
     filter(n == nrow(sim_rs))
 
   metric_wl_sum <- collect_metrics(wl_mixed_res)
-  num_metrics <- length(time_points) + 3
+  num_metrics <- length(time_points) + 3L
 
-  expect_equal(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
+  expect_identical(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
   expect_true("royston_survival" %in% metric_wl_sum$.metric)
-  expect_true(sum(is.na(metric_wl_sum$.eval_time)) == 3 * nrow(wl_finished))
+  expect_identical(sum(is.na(metric_wl_sum$.eval_time)), 3L * nrow(wl_finished))
 
   # test prediction collection -------------------------------------------------
 
@@ -1222,18 +1223,18 @@ test_that("race tuning (win_loss) survival models mixture of metric types includ
 
   unsum_pred <- collect_predictions(wl_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(nrow(unsum_pred), mixed_oob * nrow(wl_finished))
+  expect_identical(nrow(unsum_pred), mixed_oob * nrow(wl_finished))
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(wl_mixed_res, summarize = TRUE)
   no_id <- mixed_ptype[, names(mixed_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
+  expect_identical(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 
@@ -1259,7 +1260,7 @@ test_that("race tuning (win_loss) survival models mixture of metric types includ
     royston_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (W/L) - unneeded eval_time", {

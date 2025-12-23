@@ -350,7 +350,7 @@ test_that("last fit for survival models with linear_pred metric", {
       .config = character(0)
     )
 
-  expect_true(nrow(metric_sum) == 1)
+  expect_identical(nrow(metric_sum), 1L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "royston_survival"))
 
@@ -366,11 +366,11 @@ test_that("last fit for survival models with linear_pred metric", {
 
   unsum_pred <- collect_predictions(rs_linpred_res)
   expect_ptype(unsum_pred, linpred_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_te))
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
 
   sum_pred <- collect_predictions(rs_linpred_res, summarize = TRUE)
   expect_ptype(sum_pred, linpred_ptype[, names(linpred_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_te))
+  expect_identical(nrow(sum_pred), nrow(sim_te))
 })
 
 test_that("last fit for survival models with mixture of metrics", {

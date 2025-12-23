@@ -755,7 +755,7 @@ test_that("race tuning (anova) survival models with linear_pred metric", {
     filter(n == nrow(sim_rs))
   metric_aov_sum <- collect_metrics(aov_linpred_res)
 
-  expect_equal(nrow(aov_finished), nrow(metric_aov_sum))
+  expect_identical(nrow(aov_finished), nrow(metric_aov_sum))
   expect_ptype(metric_aov_sum, exp_metric_sum)
   expect_true(all(metric_aov_sum$.metric == "royston_survival"))
 })
@@ -1188,7 +1188,8 @@ test_that("race tuning (anova) survival models mixture of metric types including
       metrics = mix_mtrc,
       eval_time = time_points,
       control = rctrl
-    )
+    ) %>%
+    suppressWarnings()
 
   # test structure of results --------------------------------------------------
 
@@ -1216,11 +1217,14 @@ test_that("race tuning (anova) survival models mixture of metric types including
     filter(n == nrow(sim_rs))
 
   metric_aov_sum <- collect_metrics(aov_mixed_res)
-  num_metrics <- length(time_points) + 3
+  num_metrics <- length(time_points) + 3L
 
-  expect_equal(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
+  expect_identical(nrow(aov_finished) * num_metrics, nrow(metric_aov_sum))
   expect_true("royston_survival" %in% metric_aov_sum$.metric)
-  expect_true(sum(is.na(metric_aov_sum$.eval_time)) == 3 * nrow(aov_finished))
+  expect_identical(
+    sum(is.na(metric_aov_sum$.eval_time)),
+    3L * nrow(aov_finished)
+  )
 
   # test prediction collection -------------------------------------------------
 
@@ -1250,18 +1254,18 @@ test_that("race tuning (anova) survival models mixture of metric types including
 
   unsum_pred <- collect_predictions(aov_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(nrow(unsum_pred), mixed_oob * nrow(aov_finished))
+  expect_identical(nrow(unsum_pred), mixed_oob * nrow(aov_finished))
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(aov_mixed_res, summarize = TRUE)
   no_id <- mixed_ptype[, names(mixed_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
+  expect_identical(nrow(sum_pred), nrow(sim_tr) * nrow(aov_finished))
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 
@@ -1287,7 +1291,7 @@ test_that("race tuning (anova) survival models mixture of metric types including
     royston_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("race tuning (anova) - unneeded eval_time", {

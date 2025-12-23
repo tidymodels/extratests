@@ -279,17 +279,15 @@ test_that("show_best with censored data - linpred metric (+stc) - SA", {
   )
 
   set.seed(2193)
-  suppressWarnings({
-    sa_linpred_res <-
-      ph_spec %>%
-      tune_sim_anneal(
-        obj$rec,
-        resamples = obj$rs,
-        iter = 2,
-        metrics = linpred_met,
-        control = sa_ctrl
-      )
-  })
+  sa_linpred_res <-
+    ph_spec %>%
+    tune_sim_anneal(
+      obj$rec,
+      resamples = obj$rs,
+      iter = 2,
+      metrics = linpred_met,
+      control = sa_ctrl
+    )
 
   winners <-
     sa_linpred_res %>%
@@ -299,7 +297,7 @@ test_that("show_best with censored data - linpred metric (+stc) - SA", {
     dplyr::slice(1:5) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     show_best(sa_linpred_res, metric = "royston_survival")$.config,
     winners
   )

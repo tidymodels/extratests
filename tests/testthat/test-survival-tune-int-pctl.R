@@ -251,14 +251,14 @@ test_that("percentile internals for survival models with linear pred metric", {
     )
 
   expect_ptype(linpred_int, exp_ptype)
-  expect_true(nrow(linpred_int) == 1)
+  expect_identical(nrow(linpred_int), 1L)
   expect_true(all(linpred_int$.metric == "royston_survival"))
 
   # make sure `alpha` works
   set.seed(1)
   linpred_int_45 <- int_pctl(rs_linpred_res, times = 1001, alpha = 0.45)
-  expect_true(linpred_int$.lower < linpred_int_45$.lower)
-  expect_true(linpred_int$.upper > linpred_int_45$.upper)
+  expect_lt(linpred_int$.lower, linpred_int_45$.lower)
+  expect_gt(linpred_int$.upper, linpred_int_45$.upper)
   expect_equal(linpred_int$.estimate, linpred_int_45$.estimate)
 })
 

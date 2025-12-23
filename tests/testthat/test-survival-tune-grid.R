@@ -512,7 +512,7 @@ test_that("grid tuning survival models with linear_pred metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_sum) == 3)
+  expect_identical(nrow(metric_sum), 3L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "royston_survival"))
 
@@ -526,7 +526,7 @@ test_that("grid tuning survival models with linear_pred metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_all) == 30)
+  expect_identical(nrow(metric_all), 30L)
   expect_ptype(metric_all, exp_metric_all)
   expect_true(all(metric_all$.metric == "royston_survival"))
 
@@ -543,7 +543,7 @@ test_that("grid tuning survival models with linear_pred metric", {
 
   unsum_pred <- collect_predictions(grid_linpred_res)
   expect_ptype(unsum_pred, linpred_ptype)
-  expect_equal(
+  expect_identical(
     nrow(unsum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
@@ -551,7 +551,7 @@ test_that("grid tuning survival models with linear_pred metric", {
   sum_pred <- collect_predictions(grid_linpred_res, summarize = TRUE)
   no_id <- linpred_ptype[, names(linpred_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
-  expect_equal(
+  expect_identical(
     nrow(sum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
@@ -565,7 +565,7 @@ test_that("grid tuning survival models with linear_pred metric", {
     royston_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models mixture of metric types", {

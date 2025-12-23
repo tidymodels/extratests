@@ -561,7 +561,7 @@ test_that("Bayesian tuning survival models with linear_pred metric", {
     .iter = integer(0)
   )
 
-  expect_equal(nrow(metric_sum), 5)
+  expect_identical(nrow(metric_sum), 5L)
   expect_ptype(metric_sum, exp_metric_sum)
   expect_true(all(metric_sum$.metric == "royston_survival"))
 })
@@ -858,8 +858,8 @@ test_that("Bayesian tuning survival models with mixture of metric types includin
   # test metric collection -----------------------------------------------------
 
   metric_sum <- collect_metrics(bayes_mixed_res)
-  num_metrics <- length(time_points) + 3 # brier at 4 times + integrated + concordance + royston
+  num_metrics <- length(time_points) + 3L
 
-  expect_true(nrow(metric_sum) == 5 * num_metrics)
+  expect_identical(nrow(metric_sum), 5L * num_metrics)
   expect_true("royston_survival" %in% metric_sum$.metric)
 })
