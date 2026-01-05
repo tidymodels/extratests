@@ -199,6 +199,8 @@ test_that("fit best with linear_pred metric", {
 
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   # standard setup start -------------------------------------------------------
 

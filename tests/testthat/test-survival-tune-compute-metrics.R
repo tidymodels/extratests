@@ -7,6 +7,9 @@ skip_if_not_installed("tune", minimum_version = "1.1.2.9014")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("compute_metrics works with survival models", {
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+
   lung_surv <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
