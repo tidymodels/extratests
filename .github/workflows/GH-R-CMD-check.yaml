@@ -66,7 +66,7 @@ jobs:
             "tidymodels/stacks",
             "tidymodels/themis",
             "tidymodels/tidymodels",
-            "tidymodels/tune",
+            "tidymodels/tune@linear-pred-metric",
             "tidymodels/workflowsets",
             "tidymodels/workflows"
           )))
@@ -89,7 +89,7 @@ jobs:
             "tidymodels/rsample",
             "tidymodels/spatialsample",
             "tidymodels/tailor",
-            "tidymodels/yardstick"
+            "tidymodels/yardstick@royston"
           )))
         shell: Rscript {0}
 
