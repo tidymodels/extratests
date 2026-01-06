@@ -34,7 +34,7 @@ test_that("graf_weight_time_vec() calculates weight time", {
     time = c(eval_time_10 - 1, eval_time_10),
     event = c(0, 0)
   )
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(
       censoring_before_or_at_eval_time,
       eval_time = eval_time_10
@@ -54,7 +54,7 @@ test_that("graf_weight_time_vec() guards against information leakage via `eps`",
     time = time_before_or_at_eval_time,
     event = c(1, 1)
   )
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(
       event_before_or_at_eval_time,
       eval_time = eval_time_10,
@@ -68,7 +68,7 @@ test_that("graf_weight_time_vec() guards against information leakage via `eps`",
     time = c(eval_time_10 + 1, eval_time_10 + 1),
     event = c(1, 0)
   )
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(
       observed_time_gt_eval_time,
       eval_time = eval_time_10,
@@ -87,7 +87,7 @@ test_that("graf_weight_time_vec() does not return negative weight times", {
   # Graf et al (1999) Category 1
   # unmodified weight time is event_time < eps
   event_time_lt_eps <- survival::Surv(time = c(-1, 0), event = c(1, 1))
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(event_time_lt_eps, eval_time = 10),
     c(0, 0)
   )
@@ -96,7 +96,7 @@ test_that("graf_weight_time_vec() does not return negative weight times", {
   # unmodified weight time is eval_time < eps
   eval_time_lt_eps <- c(-1, 0)
   observed_time_gt_eval_time <- survival::Surv(time = c(1, 1), event = c(1, 0))
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(
       observed_time_gt_eval_time,
       eval_time = eval_time_lt_eps
@@ -134,7 +134,7 @@ test_that("graf_weight_time_vec() handles eval_time of Inf", {
     time = c(1, eval_time_inf),
     event = c(0, 0)
   )
-  expect_equal(
+  expect_identical(
     parsnip:::graf_weight_time_vec(
       censoring_before_or_at_eval_time,
       eval_time = eval_time_inf
@@ -175,7 +175,7 @@ test_that('compute Graf weights', {
       pred_surv$surv,
       eval_time = pred_surv$.pred[[1]]$.eval_time
     )
-  expect_equal(
+  expect_identical(
     wt_times,
     c(NA, 0.9999999999, 1.9999999999, 2.9999999999, NA),
     tolerance = 0.01
@@ -184,11 +184,11 @@ test_that('compute Graf weights', {
   cens_probs <- predict(fit$censor_probs, time = wt_times, as_vector = TRUE)
 
   wts <- .censoring_weights_graf(fit, pred_surv)
-  expect_equal(names(wts), names(pred_surv))
-  expect_equal(nrow(wts), nrow(pred_surv))
-  expect_equal(dim(wts$.pred[[1]]), c(length(eval_times), 5))
-  expect_equal(wts$.pred[[1]]$.eval_time, eval_times)
-  expect_equal(
+  expect_identical(names(wts), names(pred_surv))
+  expect_identical(nrow(wts), nrow(pred_surv))
+  expect_identical(dim(wts$.pred[[1]]), c(length(eval_times), 5L))
+  expect_identical(wts$.pred[[1]]$.eval_time, eval_times)
+  expect_identical(
     names(wts$.pred[[1]]),
     c(
       ".eval_time",
@@ -200,7 +200,7 @@ test_that('compute Graf weights', {
   )
 
   wts2 <- wts %>% unnest(.pred)
-  expect_equal(wts2$.weight_censored, 1 / cens_probs)
+  expect_identical(wts2$.weight_censored, 1 / cens_probs)
 })
 
 test_that("error messages in context of .censoring_weights_graf()", {

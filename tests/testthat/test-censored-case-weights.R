@@ -61,7 +61,7 @@ test_that("boost_tree - mboost censored case weights", {
     regexp = NA
   )
 
-  expect_equal(wt_fit$fit$`(weights)`, as.vector(dat$wts))
+  expect_identical(wt_fit$fit$`(weights)`, as.vector(dat$wts))
 })
 
 
@@ -92,7 +92,7 @@ test_that('proportional_hazards - survival censored case weights', {
     regexp = NA
   )
 
-  expect_equal(wt_fit$fit$weights, as.vector(wts))
+  expect_identical(wt_fit$fit$weights, as.vector(wts))
 })
 
 test_that('proportional_hazards - glmnet censored case weights', {

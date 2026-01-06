@@ -20,8 +20,8 @@ rec <-
   recipe(
     churn ~
       number_vmail_messages +
-        number_customer_service_calls +
-        international_plan,
+      number_customer_service_calls +
+      international_plan,
     data = mlc_churn
   )
 
@@ -79,13 +79,13 @@ test_that('matrix composition works', {
     processed <- mold(rec, mlc_churn, blueprint = matrix_bp),
     NA
   )
-  expect_true(is.numeric(processed$predictors))
-  expect_equal(dim(processed$predictors), c(5000, 3))
+  expect_type(processed$predictors, "double")
+  expect_identical(dim(processed$predictors), c(5000L, 3L))
 
   forged <- forge(mlc_churn, blueprint = processed$blueprint)$predictors
 
-  expect_true(is.numeric(forged))
-  expect_equal(dim(forged), c(5000, 3))
+  expect_type(forged, "double")
+  expect_identical(dim(forged), c(5000L, 3L))
 
   expect_error(
     wf_pre <-
@@ -94,8 +94,8 @@ test_that('matrix composition works', {
       .fit_pre(data = mlc_churn),
     NA
   )
-  expect_true(is.numeric(wf_pre$pre$mold$predictors))
-  expect_equal(dim(wf_pre$pre$mold$predictors), c(5000, 3))
+  expect_type(wf_pre$pre$mold$predictors, "double")
+  expect_identical(dim(wf_pre$pre$mold$predictors), c(5000L, 3L))
 
   expect_error(
     .fit_model(wf_pre, control = control_workflow()),

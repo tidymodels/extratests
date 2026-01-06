@@ -41,7 +41,7 @@ test_that('recipe parameters', {
     type = rep("step", 7)
   )
 
-  expect_equal(rec_res_1, exp_1)
+  expect_identical(rec_res_1, exp_1)
 
   # un-randomify the id names
   rec_2_id <- rec_2
@@ -52,7 +52,7 @@ test_that('recipe parameters', {
   rec_res_2 <- varying_args(rec_2_id)
   exp_2 <- exp_1
   exp_2$varying <- FALSE
-  expect_equal(rec_res_2, exp_2)
+  expect_identical(rec_res_2, exp_2)
 
   rec_res_3 <- varying_args(rec_3)
 
@@ -63,7 +63,7 @@ test_that('recipe parameters', {
     type = character()
   )
 
-  expect_equal(rec_res_3, exp_3)
+  expect_identical(rec_res_3, exp_3)
 })
 
 test_that("recipe steps with non-varying args error if specified as varying()", {
@@ -87,12 +87,12 @@ test_that("`full = FALSE` returns only varying arguments", {
 
   x_rec <- rec_1
 
-  expect_equal(
+  expect_identical(
     varying_args(x_spec, full = FALSE)$name,
     c("min_n", "sample.fraction")
   )
 
-  expect_equal(
+  expect_identical(
     varying_args(x_rec, full = FALSE)$name,
     c("neighbors", "num_comp")
   )

@@ -58,7 +58,7 @@ test_that('randomForest classification execution', {
   #   data = lending_club,
   #   control = caught_ctrl
   # )
-  # expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  # expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   expect_error(
     fit_xy(
@@ -83,7 +83,7 @@ test_that('randomForest classification prediction', {
 
   xy_pred <- predict(xy_fit$fit, newdata = lending_club[1:6, num_pred])
   xy_pred <- unname(xy_pred)
-  expect_equal(
+  expect_identical(
     xy_pred,
     predict(xy_fit, new_data = lending_club[1:6, num_pred])$.pred_class
   )
@@ -100,7 +100,7 @@ test_that('randomForest classification prediction', {
     newdata = lending_club[1:6, c("funded_amnt", "int_rate")]
   )
   form_pred <- unname(form_pred)
-  expect_equal(
+  expect_identical(
     form_pred,
     predict(
       form_fit,
@@ -126,7 +126,7 @@ test_that('randomForest classification probabilities', {
   )
   xy_pred <- as_tibble(as.data.frame(xy_pred))
   names(xy_pred) <- paste0(".pred_", names(xy_pred))
-  expect_equal(
+  expect_identical(
     xy_pred,
     predict(xy_fit, new_data = lending_club[1:6, num_pred], type = "prob")
   )
@@ -136,7 +136,7 @@ test_that('randomForest classification probabilities', {
     new_data = lending_club[1, num_pred],
     type = "prob"
   )
-  expect_equal(xy_pred[1, ], one_row)
+  expect_identical(xy_pred[1, ], one_row)
 
   form_fit <- fit(
     lc_basic,
@@ -152,7 +152,7 @@ test_that('randomForest classification probabilities', {
   )
   form_pred <- as_tibble(as.data.frame(form_pred))
   names(form_pred) <- paste0(".pred_", names(form_pred))
-  expect_equal(
+  expect_identical(
     form_pred,
     predict(
       form_fit,
@@ -206,7 +206,7 @@ test_that('randomForest regression execution', {
     data = mtcars,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   randomForest_xy_catch <- fit_xy(
     bad_rf_reg,
@@ -214,7 +214,7 @@ test_that('randomForest regression execution', {
     y = mtcars$mpg,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_xy_catch$fit, "try-error"))
+  expect_s3_class(randomForest_xy_catch$fit, "try-error")
 })
 
 test_that('randomForest regression prediction', {
@@ -230,7 +230,7 @@ test_that('randomForest regression prediction', {
   xy_pred <- predict(xy_fit$fit, newdata = tail(mtcars))
   xy_pred <- unname(xy_pred)
 
-  expect_equal(xy_pred, predict(xy_fit, new_data = tail(mtcars))$.pred)
+  expect_identical(xy_pred, predict(xy_fit, new_data = tail(mtcars))$.pred)
 })
 
 ## -----------------------------------------------------------------------------
@@ -255,14 +255,14 @@ test_that('argument checks for data dimensions', {
     xy_fit <- spec %>% fit_xy(x = penguins[, -6], y = penguins$body_mass_g),
   )
 
-  expect_equal(f_fit$fit$mtry, 6)
-  expect_equal(
+  expect_identical(f_fit$fit$mtry, 6)
+  expect_identical(
     f_fit$fit$call$nodesize,
     rlang::expr(min_rows(~1000, x)),
     ignore_attr = TRUE
   )
-  expect_equal(xy_fit$fit$mtry, 6)
-  expect_equal(
+  expect_identical(xy_fit$fit$mtry, 6)
+  expect_identical(
     xy_fit$fit$call$nodesize,
     rlang::expr(min_rows(~1000, x)),
     ignore_attr = TRUE

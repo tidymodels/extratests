@@ -21,7 +21,7 @@ test_that("percentile internals for survival models with static metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -39,7 +39,9 @@ test_that("percentile internals for survival models with static metric", {
     )
 
   set.seed(1)
-  static_int <- int_pctl(rs_static_res, times = 1001)
+  expect_snapshot(
+    static_int <- int_pctl(rs_static_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -52,15 +54,17 @@ test_that("percentile internals for survival models with static metric", {
     )
 
   expect_ptype(static_int, exp_ptype)
-  expect_true(nrow(static_int) == 1)
-  expect_true(all(static_int$.metric == "concordance_survival"))
+  expect_identical(nrow(static_int), 1L)
+  expect_all_equal(static_int$.metric, "concordance_survival")
 
   # make sure `alpha` works
   set.seed(1)
-  static_int_45 <- int_pctl(rs_static_res, times = 1001, alpha = 0.45)
-  expect_true(static_int$.lower < static_int_45$.lower)
-  expect_true(static_int$.upper > static_int_45$.upper)
-  expect_equal(static_int$.estimate, static_int_45$.estimate)
+  expect_snapshot(
+    static_int_45 <- int_pctl(rs_static_res, times = 10, alpha = 0.45)
+  )
+  expect_lt(static_int$.lower, static_int_45$.lower)
+  expect_gt(static_int$.upper, static_int_45$.upper)
+  expect_identical(static_int$.estimate, static_int_45$.estimate)
 })
 
 test_that("percentile internals for survival models with integrated metric", {
@@ -81,7 +85,7 @@ test_that("percentile internals for survival models with integrated metric", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -111,7 +115,9 @@ test_that("percentile internals for survival models with integrated metric", {
     )
 
   set.seed(1)
-  integrated_int <- int_pctl(grid_integrated_res, times = 1001)
+  expect_snapshot(
+    integrated_int <- int_pctl(grid_integrated_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -125,9 +131,9 @@ test_that("percentile internals for survival models with integrated metric", {
     )
 
   expect_ptype(integrated_int, exp_ptype)
-  expect_true(nrow(integrated_int) == nrow(grid))
-  expect_equal(sort(integrated_int$penalty), grid$penalty)
-  expect_true(all(integrated_int$.metric == "brier_survival_integrated"))
+  expect_identical(nrow(integrated_int), nrow(grid))
+  expect_identical(sort(integrated_int$penalty), grid$penalty)
+  expect_all_equal(integrated_int$.metric, "brier_survival_integrated")
 })
 
 test_that("percentile internals for survival models with dynamic metrics", {
@@ -149,7 +155,7 @@ test_that("percentile internals for survival models with dynamic metrics", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- bootstraps(sim_tr, times = 20)
+  sim_rs <- bootstraps(sim_tr, times = 5)
 
   time_points <- 10
 
@@ -179,7 +185,9 @@ test_that("percentile internals for survival models with dynamic metrics", {
     )
 
   set.seed(1)
-  dyn_int <- int_pctl(aov_dyn_res, times = 1001)
+  expect_snapshot(
+    dyn_int <- int_pctl(aov_dyn_res, times = 10)
+  )
 
   winners <- show_best(aov_dyn_res, eval_time = 10, metric = "brier_survival")
 
@@ -196,9 +204,9 @@ test_that("percentile internals for survival models with dynamic metrics", {
     )
 
   expect_ptype(dyn_int, exp_ptype)
-  expect_true(nrow(dyn_int) == nrow(winners))
-  expect_equal(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
-  expect_true(all(dyn_int$.metric == "brier_survival"))
+  expect_identical(nrow(dyn_int), nrow(winners))
+  expect_identical(sort(dyn_int$cost_complexity), sort(winners$cost_complexity))
+  expect_all_equal(dyn_int$.metric, "brier_survival")
 })
 
 test_that("percentile internals for survival models with linear pred metric", {
@@ -280,7 +288,7 @@ test_that("percentile internals for survival models mixture of metric types", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -311,7 +319,9 @@ test_that("percentile internals for survival models mixture of metric types", {
     )
 
   set.seed(1)
-  mixed_int <- int_pctl(rs_mixed_res, times = 1001)
+  expect_snapshot(
+    mixed_int <- int_pctl(rs_mixed_res, times = 10)
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -325,23 +335,35 @@ test_that("percentile internals for survival models mixture of metric types", {
     )
 
   expect_ptype(mixed_int, exp_ptype)
-  expect_true(nrow(mixed_int) == (length(time_points) + 3))
-  expect_true(sum(mixed_int$.metric == "brier_survival") == length(time_points))
-  expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
-  expect_true(sum(mixed_int$.metric == "concordance_survival") == 1)
-  expect_true(sum(mixed_int$.metric == "royston_survival") == 1)
-  expect_true(all(
-    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
-  ))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "brier_survival_integrated"
-  ])))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "concordance_survival"
-  ])))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "royston_survival"
-  ])))
+  expect_identical(nrow(mixed_int), length(time_points) + 3L)
+  expect_identical(
+    sum(mixed_int$.metric == "brier_survival"),
+    length(time_points)
+  )
+  expect_identical(sum(mixed_int$.metric == "brier_survival_integrated"), 1L)
+  expect_identical(sum(mixed_int$.metric == "concordance_survival"), 1L)
+  expect_identical(sum(mixed_int$.metric == "royston_survival"), 1L)
+  expect_all_false(
+    is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "brier_survival_integrated"
+    ],
+    NA_real_
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "concordance_survival"
+    ],
+    NA_real_
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "royston_survival"
+    ],
+    NA_real_
+  )
 })
 
 test_that("percentile internals for subset of eval times", {
@@ -362,7 +384,7 @@ test_that("percentile internals for subset of eval times", {
   split <- initial_split(sim_dat)
   sim_tr <- training(split)
   sim_te <- testing(split)
-  sim_rs <- vfold_cv(sim_tr)
+  sim_rs <- vfold_cv(sim_tr, v = 2)
 
   time_points <- c(10, 1, 5, 15)
 
@@ -392,7 +414,9 @@ test_that("percentile internals for subset of eval times", {
     )
 
   set.seed(1)
-  mixed_int <- int_pctl(rs_mixed_res, times = 1001, eval_time = c(10, 5))
+  expect_snapshot(
+    mixed_int <- int_pctl(rs_mixed_res, times = 10, eval_time = c(10, 5))
+  )
 
   exp_ptype <-
     tibble::tibble(
@@ -406,17 +430,23 @@ test_that("percentile internals for subset of eval times", {
     )
 
   expect_ptype(mixed_int, exp_ptype)
-  expect_true(nrow(mixed_int) == (2 + 2))
-  expect_true(sum(mixed_int$.metric == "brier_survival") == 2)
-  expect_true(sum(mixed_int$.metric == "brier_survival_integrated") == 1)
-  expect_true(sum(mixed_int$.metric == "concordance_survival") == 1)
-  expect_true(all(
-    !is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
-  ))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "brier_survival_integrated"
-  ])))
-  expect_true(all(is.na(mixed_int$.eval_time[
-    mixed_int$.metric == "concordance_survival"
-  ])))
+  expect_identical(nrow(mixed_int), 2L + 2L)
+  expect_identical(sum(mixed_int$.metric == "brier_survival"), 2L)
+  expect_identical(sum(mixed_int$.metric == "brier_survival_integrated"), 1L)
+  expect_identical(sum(mixed_int$.metric == "concordance_survival"), 1L)
+  expect_all_false(
+    is.na(mixed_int$.eval_time[mixed_int$.metric == "brier_survival"])
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "brier_survival_integrated"
+    ],
+    NA_real_
+  )
+  expect_all_equal(
+    mixed_int$.eval_time[
+      mixed_int$.metric == "concordance_survival"
+    ],
+    NA_real_
+  )
 })

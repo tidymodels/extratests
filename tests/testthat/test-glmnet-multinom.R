@@ -35,9 +35,9 @@ test_that("glmnet execution and model object", {
     NA
   )
 
-  expect_equal(f_fit$fit, xy_fit$fit)
+  expect_identical(f_fit$fit, xy_fit$fit)
   # removing call element
-  expect_equal(f_fit$fit[-14], exp_fit[-14])
+  expect_identical(f_fit$fit[-14], exp_fit[-14])
 })
 
 test_that("glmnet prediction: column order of `new_data` irrelevant", {
@@ -53,7 +53,7 @@ test_that("glmnet prediction: column order of `new_data` irrelevant", {
     y = hpc$class
   )
 
-  expect_equal(
+  expect_identical(
     predict(xy_fit, hpc[rows, c(3:1, 4)], type = "class"),
     predict(xy_fit, hpc[rows, 1:4], type = "class")
   )
@@ -83,22 +83,22 @@ test_that("glmnet prediction: type class", {
 
   f_pred <- predict(f_fit, hpc_data, type = "class")
   xy_pred <- predict(xy_fit, hpc_x, type = "class")
-  expect_equal(f_pred, xy_pred)
-  expect_equal(
+  expect_identical(f_pred, xy_pred)
+  expect_identical(
     f_pred$.pred_class %>% as.character(),
     exp_pred %>% as.vector()
   )
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred_class")
-  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_identical(names(f_pred), ".pred_class")
+  expect_identical(nrow(f_pred), nrow(hpc_data))
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc_data[1, ])
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE])
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("glmnet prediction: type prob", {
@@ -125,22 +125,25 @@ test_that("glmnet prediction: type prob", {
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
   xy_pred <- predict(xy_fit, hpc_x, type = "prob")
-  expect_equal(f_pred, xy_pred)
-  expect_equal(
+  expect_identical(f_pred, xy_pred)
+  expect_identical(
     as.matrix(f_pred) %>% unname(),
     exp_pred[,, 1] %>% unname()
   )
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), c(".pred_VF", ".pred_F", ".pred_M", ".pred_L"))
-  expect_equal(nrow(f_pred), nrow(hpc_data))
+  expect_identical(
+    names(f_pred),
+    c(".pred_VF", ".pred_F", ".pred_M", ".pred_L")
+  )
+  expect_identical(nrow(f_pred), nrow(hpc_data))
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc_data[1, ], type = "prob")
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE], type = "prob")
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("glmnet prediction: type raw", {
@@ -167,21 +170,21 @@ test_that("glmnet prediction: type raw", {
 
   f_pred <- predict(f_fit, hpc_data, type = "raw")
   xy_pred <- predict(xy_fit, hpc_x, type = "raw")
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9001"
   if (parsnip_version_without_bug_fix) {
     exp_pred <- predict(exp_fit, hpc_x)
-    expect_equal(f_pred, exp_pred)
+    expect_identical(f_pred, exp_pred)
   } else {
-    expect_equal(f_pred, exp_pred)
+    expect_identical(f_pred, exp_pred)
   }
 
   # single prediction
   f_pred_1 <- predict(f_fit, hpc_data[1, ], type = "raw")
-  expect_equal(nrow(f_pred_1), 1)
+  expect_identical(nrow(f_pred_1), 1L)
   xy_pred_1 <- predict(xy_fit, hpc_x[1, , drop = FALSE], type = "raw")
-  expect_equal(nrow(xy_pred_1), 1)
+  expect_identical(nrow(xy_pred_1), 1L)
 })
 
 test_that("formula interface can deal with missing values", {
@@ -194,12 +197,15 @@ test_that("formula interface can deal with missing values", {
   f_fit <- fit(mr_spec, class ~ log(compounds) + input_fields, data = hpc_data)
 
   f_pred <- predict(f_fit, hpc_data, type = "class")
-  expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(is.na(f_pred$.pred_class[1]))
+  expect_identical(nrow(f_pred), nrow(hpc_data))
+  expect_identical(
+    f_pred$.pred_class[1],
+    factor(NA_character_, levels = c("VF", "F", "M", "L"))
+  )
 
   f_pred <- predict(f_fit, hpc_data, type = "prob")
-  expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(all(is.na(f_pred[1, ])))
+  expect_identical(nrow(f_pred), nrow(hpc_data))
+  expect_all_equal(unlist(f_pred[1, ]), NA_real_)
 })
 
 test_that("glmnet multi_predict(): type class", {
@@ -227,7 +233,7 @@ test_that("glmnet multi_predict(): type class", {
   xy_fit <- fit_xy(mr_spec, x = hpc_x, y = hpc_y)
 
   expect_true(has_multi_predict(xy_fit))
-  expect_equal(multi_predict_args(xy_fit), "penalty")
+  expect_identical(multi_predict_args(xy_fit), "penalty")
 
   f_pred <- multi_predict(
     f_fit,
@@ -241,7 +247,7 @@ test_that("glmnet multi_predict(): type class", {
     penalty = penalty_values,
     type = "class"
   )
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
@@ -251,31 +257,25 @@ test_that("glmnet multi_predict(): type class", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::pull(.pred_class)
-  expect_equal(as.character(f_pred_001), unname(exp_pred[, 1]))
-  expect_equal(as.character(f_pred_01), unname(exp_pred[, 2]))
+  expect_identical(as.character(f_pred_001), unname(exp_pred[, 1]))
+  expect_identical(as.character(f_pred_01), unname(exp_pred[, 2]))
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred")
-  expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 2))))
-  )
+  expect_identical(names(f_pred), ".pred")
+  expect_identical(nrow(f_pred), nrow(hpc_data))
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 2)))
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(names(.x) == c(".pred_class", "penalty"))
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c(".pred_class", "penalty"))
     )
   } else {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(names(.x) == c("penalty", ".pred_class"))
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c("penalty", ".pred_class"))
     )
   }
 
@@ -292,9 +292,9 @@ test_that("glmnet multi_predict(): type class", {
     penalty = penalty_values,
     type = "class"
   )
-  expect_equal(f_pred_1, xy_pred_1)
-  expect_equal(nrow(f_pred_1), 1)
-  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(f_pred_1, xy_pred_1)
+  expect_identical(nrow(f_pred_1), 1L)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2L)
 })
 
 test_that("glmnet multi_predict(): type prob", {
@@ -333,7 +333,7 @@ test_that("glmnet multi_predict(): type prob", {
     penalty = penalty_values,
     type = "prob"
   )
-  expect_equal(f_pred, xy_pred)
+  expect_identical(f_pred, xy_pred)
 
   f_pred_001 <- f_pred %>%
     tidyr::unnest(cols = .pred) %>%
@@ -343,41 +343,31 @@ test_that("glmnet multi_predict(): type prob", {
     tidyr::unnest(cols = .pred) %>%
     dplyr::filter(penalty == 0.1) %>%
     dplyr::select(-penalty)
-  expect_equal(
+  expect_identical(
     as.matrix(f_pred_001) %>% unname(),
     exp_pred[,, 1] %>% unname()
   )
-  expect_equal(
+  expect_identical(
     as.matrix(f_pred_01) %>% unname(),
     exp_pred[,, 2] %>% unname()
   )
 
   # check format
   expect_s3_class(f_pred, "tbl_df")
-  expect_equal(names(f_pred), ".pred")
-  expect_equal(nrow(f_pred), nrow(hpc_data))
-  expect_true(
-    all(purrr::map_lgl(f_pred$.pred, ~ all(dim(.x) == c(2, 5))))
-  )
+  expect_identical(names(f_pred), ".pred")
+  expect_identical(nrow(f_pred), nrow(hpc_data))
+  expect_all_equal(purrr::map(f_pred$.pred, dim), list(c(2, 5)))
   parsnip_version_without_bug_fix <-
     utils::packageVersion("parsnip") < "1.0.3.9002"
   if (parsnip_version_without_bug_fix) {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(
-          names(.x) == c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty")
-        )
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c(".pred_VF", ".pred_F", ".pred_M", ".pred_L", "penalty"))
     )
   } else {
-    expect_true(
-      all(purrr::map_lgl(
-        f_pred$.pred,
-        ~ all(
-          names(.x) == c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L")
-        )
-      ))
+    expect_all_equal(
+      purrr::map(f_pred$.pred, names),
+      list(c("penalty", ".pred_VF", ".pred_F", ".pred_M", ".pred_L"))
     )
   }
 
@@ -394,9 +384,9 @@ test_that("glmnet multi_predict(): type prob", {
     penalty = penalty_values,
     type = "prob"
   )
-  expect_equal(f_pred_1, xy_pred_1)
-  expect_equal(nrow(f_pred_1), 1)
-  expect_equal(nrow(f_pred_1$.pred[[1]]), 2)
+  expect_identical(f_pred_1, xy_pred_1)
+  expect_identical(nrow(f_pred_1), 1L)
+  expect_identical(nrow(f_pred_1$.pred[[1]]), 2L)
 })
 
 test_that("glmnet multi_predict(): type NULL", {
@@ -482,7 +472,7 @@ test_that("class predictions are factors with all levels", {
   yhat <- predict(basic, new_data = nd, penalty = .1)
   yhat_multi <- multi_predict(basic, new_data = nd, penalty = .1)$.pred
   expect_s3_class(yhat_multi[[1]]$.pred_class, "factor")
-  expect_equal(levels(yhat_multi[[1]]$.pred_class), levels(hpc$class))
+  expect_identical(levels(yhat_multi[[1]]$.pred_class), levels(hpc$class))
 })
 
 test_that('error traps', {

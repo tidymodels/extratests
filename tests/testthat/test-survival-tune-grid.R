@@ -77,9 +77,9 @@ test_that("grid tuning survival models with static metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_sum) == 3)
+  expect_identical(nrow(metric_sum), 3L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "concordance_survival"))
+  expect_all_equal(metric_sum$.metric, "concordance_survival")
 
   metric_all <- collect_metrics(grid_static_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -91,9 +91,9 @@ test_that("grid tuning survival models with static metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_all) == 30)
+  expect_identical(nrow(metric_all), 30L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "concordance_survival"))
+  expect_all_equal(metric_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -108,7 +108,7 @@ test_that("grid tuning survival models with static metric", {
 
   unsum_pred <- collect_predictions(grid_static_res)
   expect_ptype(unsum_pred, static_ptype)
-  expect_equal(
+  expect_identical(
     nrow(unsum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
@@ -116,7 +116,7 @@ test_that("grid tuning survival models with static metric", {
   sum_pred <- collect_predictions(grid_static_res, summarize = TRUE)
   no_id <- static_ptype[, names(static_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
-  expect_equal(
+  expect_identical(
     nrow(sum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
@@ -132,7 +132,7 @@ test_that("grid tuning survival models with static metric", {
     concordance_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with integrated metric", {
@@ -186,12 +186,12 @@ test_that("grid tuning survival models with integrated metric", {
     c(".pred", ".row", "penalty", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_integrated_res$.predictions[[1]]$.pred))
-  expect_equal(
+  expect_type(grid_integrated_res$.predictions[[1]]$.pred, "list")
+  expect_identical(
     names(grid_integrated_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
-  expect_equal(
+  expect_identical(
     grid_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -216,9 +216,9 @@ test_that("grid tuning survival models with integrated metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_sum) == 3)
+  expect_identical(nrow(metric_sum), 3L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_sum$.metric, "brier_survival_integrated")
 
   metric_all <- collect_metrics(grid_integrated_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -230,9 +230,9 @@ test_that("grid tuning survival models with integrated metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_all) == 30)
+  expect_identical(nrow(metric_all), 30L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+  expect_all_equal(metric_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -254,24 +254,24 @@ test_that("grid tuning survival models with integrated metric", {
 
   unsum_pred <- collect_predictions(grid_integrated_res)
   expect_ptype(unsum_pred, integrated_ptype)
-  expect_equal(
+  expect_identical(
     nrow(unsum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_integrated_res, summarize = TRUE)
   no_id <- integrated_ptype[, names(integrated_ptype) != "id"]
   expect_ptype(sum_pred, no_id)
-  expect_equal(
+  expect_identical(
     nrow(sum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test metric collection pivoting --------------------------------------------
 
@@ -284,7 +284,7 @@ test_that("grid tuning survival models with integrated metric", {
     brier_survival_integrated = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -332,18 +332,18 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(grid_dynamic_res$.metrics[[1]]))
+  expect_in(".eval_time", names(grid_dynamic_res$.metrics[[1]]))
   expect_named(
     grid_dynamic_res$.predictions[[1]],
     c(".pred", ".row", "penalty", "event_time", ".config"),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_dynamic_res$.predictions[[1]]$.pred))
-  expect_equal(
+  expect_type(grid_dynamic_res$.predictions[[1]]$.pred, "list")
+  expect_identical(
     names(grid_dynamic_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
-  expect_equal(
+  expect_identical(
     grid_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -376,9 +376,9 @@ test_that("grid tuning survival models with dynamic metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_sum) == 12)
+  expect_identical(nrow(metric_sum), 12L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival"))
+  expect_all_equal(metric_sum$.metric, "brier_survival")
 
   metric_all <- collect_metrics(grid_dynamic_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -391,9 +391,9 @@ test_that("grid tuning survival models with dynamic metric", {
     .config = character(0)
   )
 
-  expect_true(nrow(metric_all) == 120)
+  expect_identical(nrow(metric_all), 120L)
   expect_ptype(metric_all, exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival"))
+  expect_all_equal(metric_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -415,23 +415,23 @@ test_that("grid tuning survival models with dynamic metric", {
 
   unsum_pred <- collect_predictions(grid_dynamic_res)
   expect_ptype(unsum_pred, dynamic_ptype)
-  expect_equal(
+  expect_identical(
     nrow(unsum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_dynamic_res, summarize = TRUE)
   expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
-  expect_equal(
+  expect_identical(
     nrow(sum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test metric collection pivoting --------------------------------------------
 
@@ -445,7 +445,127 @@ test_that("grid tuning survival models with dynamic metric", {
     brier_survival = numeric(0)
   )
 
-  expect_equal(metric_all %>% dplyr::slice(), exp_metric_all)
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
+})
+
+test_that("grid tuning survival models with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+
+  # Grid search with linear_pred metrics ---------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  grid_linpred_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = gctrl
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_false(".eval_time" %in% names(grid_linpred_res$.metrics[[1]]))
+  expect_named(
+    grid_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(grid_linpred_res)
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+
+  expect_identical(nrow(metric_sum), 3L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_true(all(metric_sum$.metric == "royston_survival"))
+
+  metric_all <- collect_metrics(grid_linpred_res, summarize = FALSE)
+  exp_metric_all <- tibble(
+    id = character(0),
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    .estimate = numeric(0),
+    .config = character(0)
+  )
+
+  expect_identical(nrow(metric_all), 30L)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_true(all(metric_all$.metric == "royston_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  linpred_ptype <- tibble::tibble(
+    .pred_linear_pred = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    penalty = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  unsum_pred <- collect_predictions(grid_linpred_res)
+  expect_ptype(unsum_pred, linpred_ptype)
+  expect_identical(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
+
+  sum_pred <- collect_predictions(grid_linpred_res, summarize = TRUE)
+  no_id <- linpred_ptype[, names(linpred_ptype) != "id"]
+  expect_ptype(sum_pred, no_id)
+  expect_identical(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
+
+  # test metric collection pivoting --------------------------------------------
+
+  metric_all <- collect_metrics(grid_linpred_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    royston_survival = numeric(0)
+  )
+
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
 test_that("grid tuning survival models with linear_pred metric", {
@@ -620,7 +740,7 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(grid_mixed_res$.metrics[[1]]))
+  expect_in(".eval_time", names(grid_mixed_res$.metrics[[1]]))
   expect_named(
     grid_mixed_res$.predictions[[1]],
     c(
@@ -634,12 +754,12 @@ test_that("grid tuning survival models mixture of metric types", {
     ),
     ignore.order = TRUE
   )
-  expect_true(is.list(grid_mixed_res$.predictions[[1]]$.pred))
-  expect_equal(
+  expect_type(grid_mixed_res$.predictions[[1]]$.pred, "list")
+  expect_identical(
     names(grid_mixed_res$.predictions[[1]]$.pred[[1]]),
     c(".eval_time", ".pred_survival", ".weight_censored")
   )
-  expect_equal(
+  expect_identical(
     grid_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -671,10 +791,10 @@ test_that("grid tuning survival models mixture of metric types", {
     .config = character(0)
   )
 
-  expect_equal(nrow(metric_sum), 3 * (length(time_points) + 3))
+  expect_true(nrow(metric_sum), 3 * (length(time_points) + 3))
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_equal(sum(is.na(metric_sum$.eval_time)), 9)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L, 3L))
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 9L)
+  expect_identical(as.vector(table(metric_sum$.metric)), c(12L, 3L, 3L, 3L))
 
   metric_all <- collect_metrics(grid_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -687,10 +807,10 @@ test_that("grid tuning survival models mixture of metric types", {
     .config = character(0)
   )
 
-  expect_equal(nrow(metric_all), 10 * 3 * (length(time_points) + 3))
+  expect_identical(nrow(metric_all), 10 * 3 * (length(time_points) + 3))
   expect_ptype(metric_all, exp_metric_all)
-  expect_equal(sum(is.na(metric_all$.eval_time)), 90)
-  expect_equal(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L, 30L))
+  expect_identical(sum(is.na(metric_all$.eval_time)), 90L)
+  expect_identical(as.vector(table(metric_all$.metric)), c(120L, 30L, 30L, 30L))
 
   # test prediction collection -------------------------------------------------
 
@@ -714,23 +834,23 @@ test_that("grid tuning survival models mixture of metric types", {
 
   unsum_pred <- collect_predictions(grid_mixed_res)
   expect_ptype(unsum_pred, mixed_ptype)
-  expect_equal(
+  expect_identical(
     nrow(unsum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(grid_mixed_res, summarize = TRUE)
   expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
-  expect_equal(
+  expect_identical(
     nrow(sum_pred),
     nrow(sim_tr) * length(unique(unsum_pred$.config))
   )
 
   expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 

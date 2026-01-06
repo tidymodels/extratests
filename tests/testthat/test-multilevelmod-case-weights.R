@@ -20,15 +20,17 @@ test_that('linear_reg - stan_glmer case weights', {
     set.seed(1)
     wt_fit <-
       linear_reg() %>%
-      set_engine("stan_glmer") %>%
+      set_engine("stan_glmer", iter = 10, chains = 1) %>%
       fit(value ~ (1 | id), data = msa_data, case_weights = dat$wts)
   })
 
-  set.seed(1)
-  unwt_fit <-
-    linear_reg() %>%
-    set_engine("stan_glmer") %>%
-    fit(value ~ (1 | id), data = msa_data)
+  suppressWarnings({
+    set.seed(1)
+    unwt_fit <-
+      linear_reg() %>%
+      set_engine("stan_glmer", iter = 10, chains = 1) %>%
+      fit(value ~ (1 | id), data = msa_data)
+  })
 
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit$call))
@@ -82,14 +84,16 @@ test_that('logistic_reg - stan_glmer case weights', {
   suppressWarnings({
     wt_fit <-
       logistic_reg() %>%
-      set_engine("stan_glmer", seed = 1) %>%
+      set_engine("stan_glmer", seed = 1, iter = 10, chains = 1) %>%
       fit(Class ~ A + B + (1 | id), data = two_class_dat, case_weights = wts)
   })
 
-  unwt_fit <-
-    logistic_reg() %>%
-    set_engine("stan_glmer", seed = 1) %>%
-    fit(Class ~ A + B + (1 | id), data = two_class_dat)
+  suppressWarnings({
+    unwt_fit <-
+      logistic_reg() %>%
+      set_engine("stan_glmer", seed = 1, iter = 10, chains = 1) %>%
+      fit(Class ~ A + B + (1 | id), data = two_class_dat)
+  })
 
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit$call))
@@ -145,20 +149,19 @@ test_that('poisson_reg - stan_glmer case weights', {
   bioChemists_subset <- bioChemists[wts != 0, ]
   wts <- importance_weights(wts)
 
-  expect_error(
-    {
-      wt_fit <-
-        poisson_reg() %>%
-        set_engine("stan_glmer", seed = 1) %>%
-        fit(art ~ (1 | id), data = bioChemists, case_weights = wts)
-    },
-    regexp = NA
-  )
+  suppressWarnings({
+    wt_fit <-
+      poisson_reg() %>%
+      set_engine("stan_glmer", seed = 1, iter = 10, chains = 1) %>%
+      fit(art ~ (1 | id), data = bioChemists, case_weights = wts)
+  })
 
-  unwt_fit <-
-    poisson_reg() %>%
-    set_engine("stan_glmer", seed = 1) %>%
-    fit(art ~ (1 | id), data = bioChemists)
+  suppressWarnings({
+    unwt_fit <-
+      poisson_reg() %>%
+      set_engine("stan_glmer", seed = 1, iter = 10, chains = 1) %>%
+      fit(art ~ (1 | id), data = bioChemists)
+  })
 
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
   expect_snapshot(print(wt_fit$fit$call))

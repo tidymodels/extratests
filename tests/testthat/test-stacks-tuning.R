@@ -62,7 +62,7 @@ wf_set <-
 
 # tests ------------------------------------------------------------------
 test_that("stacking with grid search works", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_grid <-
     workflow_map(
@@ -79,14 +79,14 @@ test_that("stacking with grid search works", {
     stacks() %>%
     add_candidates(wf_set_grid)
 
-  expect_true(inherits(data_st_grid, "tbl_df"))
+  expect_s3_class(data_st_grid, "tbl_df")
 
   model_st_grid <-
     data_st_grid %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_grid, "model_stack"))
+  expect_s3_class(model_st_grid, "model_stack")
 
   betas_grid <-
     stacks:::.get_glmn_coefs(
@@ -97,13 +97,13 @@ test_that("stacking with grid search works", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_grid) == length(model_st_grid$member_fits))
-  expect_true(all(betas_grid$terms %in% names(model_st_grid$member_fits)))
+  expect_identical(nrow(betas_grid), length(model_st_grid$member_fits))
+  expect_in(betas_grid$terms, names(model_st_grid$member_fits))
 
   preds_grid <-
     predict(model_st_grid, ames_test)
 
-  expect_true(inherits(preds_grid, "tbl_df"))
+  expect_s3_class(preds_grid, "tbl_df")
 })
 
 test_that("stacking with Bayesian tuning works", {
@@ -127,14 +127,14 @@ test_that("stacking with Bayesian tuning works", {
       suppressMessages()
   )
 
-  expect_true(inherits(data_st_bayes, "tbl_df"))
+  expect_s3_class(data_st_bayes, "tbl_df")
 
   model_st_bayes <-
     data_st_bayes %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_bayes, "model_stack"))
+  expect_s3_class(model_st_bayes, "model_stack")
 
   betas_bayes <-
     stacks:::.get_glmn_coefs(
@@ -145,17 +145,17 @@ test_that("stacking with Bayesian tuning works", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_bayes) == length(model_st_bayes$member_fits))
-  expect_true(all(betas_bayes$terms %in% names(model_st_bayes$member_fits)))
+  expect_identical(nrow(betas_bayes), length(model_st_bayes$member_fits))
+  expect_in(betas_bayes$terms, names(model_st_bayes$member_fits))
 
   preds_bayes <-
     predict(model_st_bayes, ames_test)
 
-  expect_true(inherits(preds_bayes, "tbl_df"))
+  expect_s3_class(preds_bayes, "tbl_df")
 })
 
 test_that("stacking with finetune works (anova)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_anova <-
     workflow_map(
@@ -177,7 +177,7 @@ test_that("stacking with finetune works (anova)", {
       add_candidates(wf_set_anova)
   )
 
-  expect_true(inherits(data_st_anova, "tbl_df"))
+  expect_s3_class(data_st_anova, "tbl_df")
 
   # ensure that only candidates with complete resamples were kept
   raw_preds <- tune::collect_predictions(wf_set_anova, summarize = TRUE)
@@ -187,7 +187,7 @@ test_that("stacking with finetune works (anova)", {
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_anova, "model_stack"))
+  expect_s3_class(model_st_anova, "model_stack")
 
   betas_anova <-
     stacks:::.get_glmn_coefs(
@@ -198,13 +198,13 @@ test_that("stacking with finetune works (anova)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_anova) == length(model_st_anova$member_fits))
-  expect_true(all(betas_anova$terms %in% names(model_st_anova$member_fits)))
+  expect_identical(nrow(betas_anova), length(model_st_anova$member_fits))
+  expect_in(betas_anova$terms, names(model_st_anova$member_fits))
 
   preds_anova <-
     predict(model_st_anova, ames_test)
 
-  expect_true(inherits(preds_anova, "tbl_df"))
+  expect_s3_class(preds_anova, "tbl_df")
 
   skip_if_not_installed("stacks", "1.1.1.9001")
 
@@ -222,14 +222,15 @@ test_that("stacking with finetune works (anova)", {
     ) %>%
     pull(col_name)
 
-  expect_true(all(
-    colnames(data_st_anova)[2:length(data_st_anova)] %in% retain_configs
-  ))
+  expect_in(
+    colnames(data_st_anova)[2:length(data_st_anova)],
+    retain_configs
+  )
 })
 
 test_that("stacking with finetune works (sim_anneal)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
-  skip_if(utils::packageVersion("finetune") < "1.1.0.9001")
+  skip_if_not_installed("stacks", "1.0.0.9000")
+  skip_if_not_installed("finetune", "1.1.0.9001")
 
   wf_set_sim_anneal <-
     workflow_map(
@@ -262,14 +263,14 @@ test_that("stacking with finetune works (sim_anneal)", {
     stacks() %>%
     add_candidates(wf_set_sim_anneal)
 
-  expect_true(inherits(data_st_sim_anneal, "tbl_df"))
+  expect_s3_class(data_st_sim_anneal, "tbl_df")
 
   model_st_sim_anneal <-
     data_st_sim_anneal %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_sim_anneal, "model_stack"))
+  expect_s3_class(model_st_sim_anneal, "model_stack")
 
   betas_sim_anneal <-
     stacks:::.get_glmn_coefs(
@@ -280,19 +281,23 @@ test_that("stacking with finetune works (sim_anneal)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_sim_anneal) == length(model_st_sim_anneal$member_fits))
-  expect_true(all(
-    betas_sim_anneal$terms %in% names(model_st_sim_anneal$member_fits)
-  ))
+  expect_identical(
+    nrow(betas_sim_anneal),
+    length(model_st_sim_anneal$member_fits)
+  )
+  expect_in(
+    betas_sim_anneal$terms,
+    names(model_st_sim_anneal$member_fits)
+  )
 
   preds_sim_anneal <-
     predict(model_st_sim_anneal, ames_test)
 
-  expect_true(inherits(preds_sim_anneal, "tbl_df"))
+  expect_s3_class(preds_sim_anneal, "tbl_df")
 })
 
 test_that("stacking with finetune works (win_loss)", {
-  skip_if(utils::packageVersion("stacks") < "1.0.0.9000")
+  skip_if_not_installed("stacks", "1.0.0.9000")
 
   wf_set_win_loss <-
     workflow_map(
@@ -312,19 +317,19 @@ test_that("stacking with finetune works (win_loss)", {
     stacks() %>%
     add_candidates(wf_set_win_loss)
 
-  expect_true(inherits(data_st_win_loss, "tbl_df"))
+  expect_s3_class(data_st_win_loss, "tbl_df")
 
-  expect_true(all(
-    colnames(data_st_win_loss)[2:length(data_st_win_loss)] %in%
-      purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
-  ))
+  expect_in(
+    colnames(data_st_win_loss)[2:length(data_st_win_loss)],
+    purrr::flatten_chr(attr(data_st_win_loss, "cols_map"))
+  )
 
   model_st_win_loss <-
     data_st_win_loss %>%
     blend_predictions(times = 8, penalty = 5^c(-3:-1)) %>%
     fit_members()
 
-  expect_true(inherits(model_st_win_loss, "model_stack"))
+  expect_s3_class(model_st_win_loss, "model_stack")
 
   betas_win_loss <-
     stacks:::.get_glmn_coefs(
@@ -335,13 +340,14 @@ test_that("stacking with finetune works (win_loss)", {
     dplyr::filter(terms != "(Intercept)" && estimate != 0) %>%
     ungroup()
 
-  expect_true(nrow(betas_win_loss) == length(model_st_win_loss$member_fits))
-  expect_true(all(
-    betas_win_loss$terms %in% names(model_st_win_loss$member_fits)
-  ))
+  expect_identical(nrow(betas_win_loss), length(model_st_win_loss$member_fits))
+  expect_in(
+    betas_win_loss$terms,
+    names(model_st_win_loss$member_fits)
+  )
 
   preds_win_loss <-
     predict(model_st_win_loss, ames_test)
 
-  expect_true(inherits(preds_win_loss, "tbl_df"))
+  expect_s3_class(preds_win_loss, "tbl_df")
 })

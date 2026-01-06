@@ -38,13 +38,13 @@ test_that("compute_metrics works with survival models", {
 
   recomp <- compute_metrics(tune_res, metrics, summarize = TRUE)
   original <- collect_metrics(tune_res)
-  expect_equal(recomp, original)
+  expect_identical(recomp, original)
 
   # ------------------------------------------------------------------------------
 
   recomp_rs <- compute_metrics(tune_res, metrics, summarize = TRUE)
   original_rs <- collect_metrics(tune_res, summarize = TRUE)
-  expect_equal(recomp_rs, original_rs)
+  expect_identical(recomp_rs, original_rs)
 
   # ------------------------------------------------------------------------------
 
@@ -55,5 +55,5 @@ test_that("compute_metrics works with survival models", {
   )
   stc_original <- collect_metrics(tune_res) %>%
     filter(.metric == "concordance_survival")
-  expect_equal(stc_only, stc_original %>% select(-.eval_time))
+  expect_identical(stc_only, stc_original %>% select(-.eval_time))
 })

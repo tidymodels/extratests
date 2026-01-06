@@ -23,52 +23,48 @@ grid <-
 ## -----------------------------------------------------------------------------
 
 test_that('single tree grid search', {
-  expect_error(
+  expect_no_error(
     tree_tuned <-
       tree_mod %>%
-      tune_grid(Class ~ ., resamples = folds, grid = grid),
-    regex = NA
+      tune_grid(Class ~ ., resamples = folds, grid = grid)
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(tree_tuned)))
-  expect_equal(nrow(collect_metrics(tree_tuned)), num_mtrc * 4)
+  expect_identical(nrow(collect_metrics(tree_tuned)), num_mtrc * 4L)
 })
 
 
 test_that('single tree Bayesian search', {
   set.seed(2893)
-  expect_error(
+  expect_no_error(
     tree_search <-
       tree_mod %>%
       tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2) %>%
-      suppressMessages(),
-    regex = NA
+      suppressMessages()
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(tree_search)))
-  expect_equal(nrow(collect_metrics(tree_search)), num_mtrc * 5)
+  expect_identical(nrow(collect_metrics(tree_search)), num_mtrc * 5L)
 })
 
 ## -----------------------------------------------------------------------------
 
 test_that('boosted tree grid search', {
-  expect_error(
+  expect_no_error(
     boost_tuned <-
       boost_mod %>%
-      tune_grid(Class ~ ., resamples = folds, grid = grid),
-    regex = NA
+      tune_grid(Class ~ ., resamples = folds, grid = grid)
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(boost_tuned)))
-  expect_equal(nrow(collect_metrics(boost_tuned)), num_mtrc * 4)
+  expect_identical(nrow(collect_metrics(boost_tuned)), num_mtrc * 4L)
 })
 
 test_that('boosted tree Bayesian search', {
   set.seed(2893)
-  expect_error(
+  expect_no_error(
     boost_search <-
       boost_mod %>%
       tune_bayes(Class ~ ., resamples = folds, initial = 3, iter = 2) %>%
-      suppressMessages(),
-    regex = NA
+      suppressMessages()
   )
   num_mtrc <- nrow(as_tibble(.get_tune_metrics(boost_search)))
-  expect_equal(nrow(collect_metrics(boost_search)), num_mtrc * 5)
+  expect_identical(nrow(collect_metrics(boost_search)), num_mtrc * 5L)
 })
