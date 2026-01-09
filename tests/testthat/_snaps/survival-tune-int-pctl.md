@@ -36,7 +36,7 @@
       mixed_int <- int_pctl(rs_mixed_res, times = 10)
     Condition
       Warning in `rsample::int_pctl()`:
-      Recommend at least 1000 non-missing bootstrap resamples for terms `brier_survival`, `brier_survival_integrated`, and `concordance_survival`.
+      Recommend at least 1000 non-missing bootstrap resamples for terms `brier_survival`, `brier_survival_integrated`, `concordance_survival`, and `royston_survival`.
 
 # percentile internals for subset of eval times
 

@@ -8,6 +8,8 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9003")
 
 test_that("grid tuning survival models with importance case weights", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   ## ------------------------------------------------------------------------------
 
@@ -27,7 +29,8 @@ test_that("grid tuning survival models with importance case weights", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(1)
@@ -100,9 +103,10 @@ test_that("grid tuning survival models with importance case weights", {
   )
 })
 
-
 test_that("grid tuning survival models with frequency case weights", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   ## ------------------------------------------------------------------------------
 
@@ -120,7 +124,8 @@ test_that("grid tuning survival models with frequency case weights", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(1)
