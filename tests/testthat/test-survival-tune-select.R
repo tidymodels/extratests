@@ -253,8 +253,86 @@ test_that("grid tuning survival models with dynamic metric", {
   )
 })
 
+
+test_that("select_*() with linear pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr, repeats = 3)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^seq(-2, -1, length.out = 10))
+
+  gctrl <- control_grid(save_pred = TRUE)
+
+  ## Grid search with static metrics --------------------------------------------
+
+  stc_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  grid_static_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = stc_mtrc,
+      control = gctrl
+    )
+
+  ## Test selecting functions --------------------------------------------------
+
+  expect_snapshot(
+    select_best(grid_static_res)
+  )
+
+  expect_snapshot(
+    select_best(grid_static_res, metric = "royston_survival")
+  )
+
+  expect_snapshot(
+    select_best(grid_static_res, metric = "royston_survival", eval_time = 0)
+  )
+
+  expect_snapshot(
+    select_by_one_std_err(
+      grid_static_res,
+      metric = "royston_survival",
+      penalty
+    )
+  )
+
+  expect_snapshot(
+    select_by_pct_loss(
+      grid_static_res,
+      metric = "royston_survival",
+      penalty
+    )
+  )
+})
+
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   # standard setup start -------------------------------------------------------
 
@@ -285,7 +363,8 @@ test_that("grid tuning survival models mixture of metric types", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(2193)

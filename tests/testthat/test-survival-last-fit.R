@@ -293,8 +293,90 @@ test_that("last fit for survival models with dynamic metric", {
   expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
+test_that("last fit for survival models with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+
+  # last fit for models with linear_pred metrics -------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  rs_linpred_res <-
+    proportional_hazards(penalty = 0.01) %>%
+    set_engine("glmnet") %>%
+    last_fit(
+      event_time ~ X1 + X2,
+      split = split,
+      metrics = linpred_mtrc
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_named(
+    rs_linpred_res,
+    c("splits", "id", ".metrics", ".notes", ".predictions", ".workflow"),
+    ignore.order = TRUE
+  )
+  expect_false(".eval_time" %in% names(rs_linpred_res$.metrics[[1]]))
+  expect_named(
+    rs_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "event_time", ".config"),
+    ignore.order = TRUE
+  )
+  expect_s3_class(rs_linpred_res$.workflow[[1]], "workflow")
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(rs_linpred_res)
+  exp_metric_sum <-
+    tibble(
+      .metric = character(0),
+      .estimator = character(0),
+      .estimate = numeric(0),
+      .config = character(0)
+    )
+
+  expect_identical(nrow(metric_sum), 1L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_true(all(metric_sum$.metric == "royston_survival"))
+
+  # test prediction collection -------------------------------------------------
+
+  linpred_ptype <- tibble::tibble(
+    .pred_linear_pred = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  unsum_pred <- collect_predictions(rs_linpred_res)
+  expect_ptype(unsum_pred, linpred_ptype)
+  expect_identical(nrow(unsum_pred), nrow(sim_te))
+
+  sum_pred <- collect_predictions(rs_linpred_res, summarize = TRUE)
+  expect_ptype(sum_pred, linpred_ptype[, names(linpred_ptype) != "id"])
+  expect_identical(nrow(sum_pred), nrow(sim_te))
+})
+
 test_that("last fit for survival models with mixture of metrics", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
 
   # standard setup start -------------------------------------------------------
 
@@ -316,7 +398,8 @@ test_that("last fit for survival models with mixture of metrics", {
   mix_mtrc <- metric_set(
     brier_survival,
     brier_survival_integrated,
-    concordance_survival
+    concordance_survival,
+    royston_survival
   )
 
   set.seed(2193)
@@ -339,7 +422,14 @@ test_that("last fit for survival models with mixture of metrics", {
   expect_in(".eval_time", names(rs_mixed_res$.metrics[[1]]))
   expect_named(
     rs_mixed_res$.predictions[[1]],
-    c(".pred", ".row", ".pred_time", "event_time", ".config"),
+    c(
+      ".pred",
+      ".row",
+      ".pred_time",
+      ".pred_linear_pred",
+      "event_time",
+      ".config"
+    ),
     ignore.order = TRUE
   )
   expect_type(rs_mixed_res$.predictions[[1]]$.pred, "list")
@@ -365,18 +455,19 @@ test_that("last fit for survival models with mixture of metrics", {
       .config = character(0)
     )
 
-  expect_identical(nrow(metric_sum), length(time_points) + 2L)
+  expect_identical(nrow(metric_sum), length(time_points) + 3L)
   expect_ptype(metric_sum, exp_metric_sum)
-  expect_identical(sum(is.na(metric_sum$.eval_time)), 2L)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 3L)
   expect_identical(
     as.vector(table(metric_sum$.metric)),
-    c(length(time_points), 1L, 1L)
+    c(length(time_points), 1L, 1L, 1L)
   )
 
   # test prediction collection -------------------------------------------------
   mixed_ptype <- tibble::tibble(
     .pred = list(),
     .pred_time = numeric(0),
+    .pred_linear_pred = numeric(0),
     id = character(0),
     .row = integer(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],

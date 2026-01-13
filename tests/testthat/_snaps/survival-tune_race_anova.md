@@ -369,6 +369,33 @@
       4          0.0944 brier_survival_integrated         NA 0.338    30 0.00480
       5          0.1    brier_survival_integrated         NA 0.338    30 0.00480
 
+# race tuning (anova) survival models mixture of metric types including linear_pred
+
+    Code
+      show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Output
+      # A tibble: 1 x 6
+        penalty .metric        .eval_time   mean     n std_err
+          <dbl> <chr>               <dbl>  <dbl> <int>   <dbl>
+      1  0.0001 brier_survival          1 0.0192    30 0.00158
+
+---
+
+    Code
+      show_best(aov_mixed_res, metric = "royston_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Condition
+      Warning:
+      Metric "brier_survival" was used to evaluate model candidates in the race but "royston_survival" has been chosen to rank the candidates. These results may not agree with the race.
+      Warning in `show_best()`:
+      `eval_time` is only used for dynamic survival metrics.
+    Output
+      # A tibble: 1 x 6
+        penalty .metric          .eval_time  mean     n std_err
+          <dbl> <chr>                 <dbl> <dbl> <int>   <dbl>
+      1  0.0001 royston_survival         NA 0.433    30  0.0111
+
 # race tuning (anova) - unneeded eval_time
 
     Code

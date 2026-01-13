@@ -176,3 +176,53 @@
       Error in `show_best()`:
       ! "brier_survival_integrated" was not in the metric set. Please choose from: "brier_survival" and "concordance_survival".
 
+# show_best with censored data - linpred metric (+stc) - SA
+
+    Code
+      show_best(sa_linpred_res)
+    Condition
+      Warning in `show_best()`:
+      No value of `metric` was given; "royston_survival" will be used.
+    Output
+      # A tibble: 3 x 8
+           penalty .metric          .estimator  mean     n   std_err .config     .iter
+             <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
+      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
+      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
+      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+
+---
+
+    Code
+      show_best(sa_linpred_res, metric = "concordance_survival")
+    Output
+      # A tibble: 3 x 8
+           penalty .metric              .estimator  mean     n std_err .config   .iter
+             <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     <int>
+      1 0.00000168 concordance_survival standard   0.938    10 0.00376 initial_~     0
+      2 0.0000470  concordance_survival standard   0.938    10 0.00376 Iter1         1
+      3 0.000153   concordance_survival standard   0.938    10 0.00376 Iter2         2
+
+---
+
+    Code
+      show_best(sa_linpred_res, metric = "royston_survival", eval_time = 1)
+    Condition
+      Warning in `show_best()`:
+      `eval_time` is only used for dynamic survival metrics.
+    Output
+      # A tibble: 3 x 8
+           penalty .metric          .estimator  mean     n   std_err .config     .iter
+             <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
+      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
+      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
+      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+
+---
+
+    Code
+      show_best(sa_linpred_res, metric = "brier_survival")
+    Condition
+      Error in `show_best()`:
+      ! "brier_survival" was not in the metric set. Please choose from: "royston_survival" and "concordance_survival".
+

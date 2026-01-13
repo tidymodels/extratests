@@ -664,6 +664,81 @@ test_that("race tuning (win_loss) survival models with dynamic metrics", {
   expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
+test_that("race tuning (win_loss) survival models with linear_pred metric", {
+  skip_if_not_installed("BradleyTerry2")
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- bootstraps(sim_tr, times = 20)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
+
+  # Racing with linear_pred metrics --------------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  wl_linpred_res <-
+    mod_spec %>%
+    tune_race_win_loss(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = rctrl
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_false(".eval_time" %in% names(wl_linpred_res$.metrics[[1]]))
+  expect_named(
+    wl_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "penalty", "event_time", ".config"),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0)
+  )
+
+  wl_finished <-
+    map_dfr(wl_linpred_res$.metrics, I) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+  metric_wl_sum <- collect_metrics(wl_linpred_res)
+
+  expect_identical(nrow(wl_finished), nrow(metric_wl_sum))
+  expect_ptype(metric_wl_sum, exp_metric_sum)
+  expect_true(all(metric_wl_sum$.metric == "royston_survival"))
+})
+
 test_that("race tuning (win_loss) survival models with mixture of metric types", {
   skip_if_not_installed("BradleyTerry2")
   skip_if_not_installed("flexsurv")
@@ -1035,6 +1110,159 @@ test_that("race tuning (win_loss) survival models with mixture of metric types",
   expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
 })
 
+test_that("race tuning (win_loss) survival models mixture of metric types including linear_pred", {
+  # this is a separate to above because the other one uses a decision tree model
+  # which does not give us the linear predictor
+  skip_if_not_installed("BradleyTerry2")
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- bootstraps(sim_tr, times = 30)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  rctrl <- control_race(save_pred = TRUE, verbose_elim = FALSE, verbose = FALSE)
+
+  # Racing with mixed metrics including linear_pred ----------------------------
+
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
+
+  set.seed(2193)
+  wl_mixed_res <-
+    mod_spec %>%
+    tune_race_win_loss(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = rctrl
+    ) %>%
+    suppressWarnings()
+
+  # test structure of results --------------------------------------------------
+
+  expect_true(".eval_time" %in% names(wl_mixed_res$.metrics[[1]]))
+  expect_named(
+    wl_mixed_res$.predictions[[1]],
+    c(
+      ".pred",
+      ".row",
+      "penalty",
+      ".pred_time",
+      ".pred_linear_pred",
+      "event_time",
+      ".config"
+    ),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  wl_finished <-
+    map_dfr(wl_mixed_res$.metrics, I) %>%
+    filter(.eval_time == 5) %>%
+    count(.config) %>%
+    filter(n == nrow(sim_rs))
+
+  metric_wl_sum <- collect_metrics(wl_mixed_res)
+  num_metrics <- length(time_points) + 3L
+
+  expect_identical(nrow(wl_finished) * num_metrics, nrow(metric_wl_sum))
+  expect_true("royston_survival" %in% metric_wl_sum$.metric)
+  expect_identical(sum(is.na(metric_wl_sum$.eval_time)), 3L * nrow(wl_finished))
+
+  # test prediction collection -------------------------------------------------
+
+  mixed_ptype <- tibble::tibble(
+    .pred = list(),
+    .pred_time = numeric(0),
+    .pred_linear_pred = numeric(0),
+    id = character(0),
+    .row = integer(0),
+    penalty = numeric(0),
+    event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    .config = character(0)
+  )
+
+  mixed_list_ptype <-
+    tibble::tibble(
+      .eval_time = numeric(0),
+      .pred_survival = numeric(0),
+      .weight_censored = numeric(0)
+    )
+
+  mixed_oob <-
+    wl_mixed_res %>%
+    mutate(oob = map_int(splits, ~ nrow(assessment(.x)))) %>%
+    pluck("oob") %>%
+    sum()
+
+  unsum_pred <- collect_predictions(wl_mixed_res)
+  expect_ptype(unsum_pred, mixed_ptype)
+  expect_identical(nrow(unsum_pred), mixed_oob * nrow(wl_finished))
+
+  expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
+
+  sum_pred <- collect_predictions(wl_mixed_res, summarize = TRUE)
+  no_id <- mixed_ptype[, names(mixed_ptype) != "id"]
+  expect_ptype(sum_pred, no_id)
+  expect_identical(nrow(sum_pred), nrow(sim_tr) * nrow(wl_finished))
+
+  expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
+
+  # test show_best() -----------------------------------------------------------
+
+  expect_snapshot(
+    show_best(wl_mixed_res, metric = "brier_survival", eval_time = 1) %>%
+      select(-.estimator, -.config)
+  )
+  expect_snapshot(
+    show_best(wl_mixed_res, metric = "royston_survival", eval_time = 1) %>%
+      select(-.estimator, -.config)
+  )
+
+  # test metric collection pivoting --------------------------------------------
+
+  metric_all <- collect_metrics(wl_mixed_res, type = "wide")
+  exp_metric_all <- tibble(
+    penalty = numeric(0),
+    .config = character(0),
+    .eval_time = numeric(0),
+    brier_survival = numeric(0),
+    brier_survival_integrated = numeric(0),
+    concordance_survival = numeric(0),
+    royston_survival = numeric(0)
+  )
+
+  expect_identical(metric_all %>% dplyr::slice(), exp_metric_all)
+})
 
 test_that("race tuning (W/L) - unneeded eval_time", {
   skip_if_not_installed("BradleyTerry2")
