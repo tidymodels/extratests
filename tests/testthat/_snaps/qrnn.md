@@ -70,6 +70,15 @@
       fit(set_mode(set_engine(mlp(activation = "POTAAATO"), "qrnn"),
       "quantile regression", quantile_levels = (1:9) / 10), outcome ~ ., data = dat)
     Condition
-      Error in `parsnip::mcqrnn_wrap()`:
+      Error in `parsnip::mcqrnn_train()`:
       ! Could not find an activation function called `POTAAATO()` in the qrnn package.
+
+---
+
+    Code
+      fit(set_mode(set_engine(mlp(), "qrnn", Th.prime = "something"),
+      "quantile regression", quantile_levels = (1:9) / 10), outcome ~ ., data = dat)
+    Condition
+      Error in `parsnip::mcqrnn_train()`:
+      ! Could not find an activation gradient function called `something()` in the qrnn package.
 

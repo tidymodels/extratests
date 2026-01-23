@@ -62,4 +62,12 @@ test_that('mlp execution, quantile regression', {
       fit(outcome ~ ., data = dat),
     error = TRUE
   )
+
+  expect_snapshot(
+    mlp() |>
+      set_engine("qrnn", Th.prime = "something") |>
+      set_mode("quantile regression", quantile_levels = (1:9) / 10) |>
+      fit(outcome ~ ., data = dat),
+    error = TRUE
+  )
 })
