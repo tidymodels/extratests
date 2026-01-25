@@ -280,12 +280,14 @@ test_that('mars - earth case weights', {
 # mlp ---------------------------------------------------------------------
 
 test_that('mlp - nnet case weights', {
+  skip_if_not_installed("parsnip", minimum_version = "1.4.1.9001")
   dat <- make_two_class_wts()
 
-  expect_snapshot_error(
+  expect_error(
     mlp() %>%
       set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts),
+    regexp = NA
   )
 })
 

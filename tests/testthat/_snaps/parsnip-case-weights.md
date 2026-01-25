@@ -31,10 +31,6 @@
       earth(formula = Class ~ ., data = data, weights = weights, keepxy = TRUE, 
           glm = ~list(family = stats::binomial))
 
-# mlp - nnet case weights
-
-    Case weights are not enabled by the underlying model implementation.
-
 # rand_forest - ranger case weights
 
     Code
