@@ -1,6 +1,6 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
 test_that("show_best with censored data - integrated metric - grid", {
-
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
 
@@ -26,7 +26,7 @@ test_that("show_best with censored data - integrated metric - grid", {
       eval_time = obj$times
     )
 
-  expect_equal(
+  expect_identical(
     show_best(grid_int_res, metric = "brier_survival_integrated"),
     grid_int_res %>%
       collect_metrics() %>%
@@ -36,14 +36,11 @@ test_that("show_best with censored data - integrated metric - grid", {
   expect_snapshot(
     show_best(grid_int_res)
   )
-
 })
 
-
 test_that("show_best with censored data - dynamic metric - bayes", {
-
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
-  skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9000")
 
   obj <- make_churn_cens_objects()
 
@@ -65,7 +62,7 @@ test_that("show_best with censored data - dynamic metric - bayes", {
       eval_time = 100
     )
 
-  expect_equal(
+  expect_identical(
     show_best(bayes_dyn_res, metric = "brier_survival", eval_time = 100, n = 2),
     bayes_dyn_res %>%
       collect_metrics() %>%
@@ -83,12 +80,9 @@ test_that("show_best with censored data - dynamic metric - bayes", {
     show_best(bayes_dyn_res, metric = "brier_survival_integrated"),
     error = TRUE
   )
-
 })
 
-
 test_that("show_best with censored data - static metric - anova racing", {
-
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
@@ -122,8 +116,10 @@ test_that("show_best with censored data - static metric - anova racing", {
     dplyr::slice(1) %>%
     pluck(".config")
 
-  expect_equal(
-    sort(show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config),
+  expect_identical(
+    sort(
+      show_best(race_stc_res, metric = "concordance_survival", n = 1)$.config
+    ),
     winner
   )
   expect_snapshot(
@@ -136,12 +132,9 @@ test_that("show_best with censored data - static metric - anova racing", {
     show_best(race_stc_res, metric = "brier_survival_integrated"),
     error = TRUE
   )
-
 })
 
-
 test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
-
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
@@ -181,7 +174,7 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     dplyr::slice(1:5) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     show_best(race_stc_res, metric = "concordance_survival")$.config,
     winners
   )
@@ -195,9 +188,7 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
     show_best(race_stc_res, metric = "brier_survival_integrated"),
     error = TRUE
   )
-
 })
-
 
 test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
@@ -244,7 +235,7 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     dplyr::slice(1:5) %>%
     pluck(".config")
 
-  expect_equal(
+  expect_identical(
     show_best(race_dyn_res, metric = "brier_survival")$.config,
     winners
   )
@@ -252,7 +243,8 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     show_best(race_dyn_res)
   )
   expect_snapshot(
-    show_best(race_dyn_res, metric = "concordance_survival")
+    show_best(race_dyn_res, metric = "concordance_survival") |>
+      mutate(mean = round(mean, 2), std_err = round(std_err, 2)) # to avoid rounding differences
   )
   expect_snapshot(
     show_best(race_dyn_res, metric = "brier_survival", eval_time = 1),
@@ -262,6 +254,65 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
     show_best(race_dyn_res, metric = "brier_survival_integrated"),
     error = TRUE
   )
-
 })
 
+test_that("show_best with censored data - linpred metric (+stc) - SA", {
+  skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("finetune", minimum_version = "1.1.0.9006")
+
+  obj <- make_churn_cens_objects()
+  suppressPackageStartupMessages(library("finetune"))
+
+  ph_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  linpred_met <- metric_set(royston_survival, concordance_survival)
+
+  sa_ctrl <- control_sim_anneal(
+    save_pred = TRUE,
+    verbose_iter = FALSE,
+    verbose = FALSE
+  )
+
+  set.seed(2193)
+  sa_linpred_res <-
+    ph_spec %>%
+    tune_sim_anneal(
+      obj$rec,
+      resamples = obj$rs,
+      iter = 2,
+      metrics = linpred_met,
+      control = sa_ctrl
+    )
+
+  winners <-
+    sa_linpred_res %>%
+    collect_metrics() %>%
+    filter(.metric == "royston_survival") %>%
+    arrange(desc(mean)) %>%
+    dplyr::slice(1:5) %>%
+    pluck(".config")
+
+  expect_identical(
+    show_best(sa_linpred_res, metric = "royston_survival")$.config,
+    winners
+  )
+
+  expect_snapshot(
+    show_best(sa_linpred_res)
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "concordance_survival")
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "royston_survival", eval_time = 1)
+  )
+  expect_snapshot(
+    show_best(sa_linpred_res, metric = "brier_survival"),
+    error = TRUE
+  )
+})

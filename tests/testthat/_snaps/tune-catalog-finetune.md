@@ -16,7 +16,7 @@
     Code
       catalog_summary_test
     Output
-      A: x5   B: x5
+      A: x183   B: x183
 
 ---
 

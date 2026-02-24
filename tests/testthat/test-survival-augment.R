@@ -9,7 +9,6 @@ skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("augmenting survival models", {
-
   # General setup --------------------------------------------------------------
 
   set.seed(1)
@@ -31,13 +30,23 @@ test_that("augmenting survival models", {
     fit(event_time ~ ., data = sim_tr)
 
   sr_aug <- augment(sr_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(sr_aug), nrow(sim_tr))
-  expect_equal(names(sr_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
-  expect_true(is.list(sr_aug$.pred))
-  expect_equal(
-    names(sr_aug$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored")
+  expect_identical(nrow(sr_aug), nrow(sim_tr))
+  expect_named(
+    sr_aug,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
+  expect_type(sr_aug$.pred, "list")
+  expect_named(
+    sr_aug$.pred[[1]],
+    c(
+      ".eval_time",
+      ".pred_survival",
+      ".weight_time",
+      ".pred_censored",
+      ".weight_censored"
+    ),
+    ignore.order = TRUE
   )
 
   # proportional_hazards() -----------------------------------------------------
@@ -48,13 +57,23 @@ test_that("augmenting survival models", {
     fit(event_time ~ ., data = sim_tr)
 
   glmn_aug <- augment(glmn_fit, new_data = sim_tr, eval_time = time_points)
-  expect_equal(nrow(glmn_aug), nrow(sim_tr))
-  expect_equal(names(glmn_aug), c(".pred", ".pred_time", "event_time", "X1", "X2"))
-  expect_true(is.list(glmn_aug$.pred))
-  expect_equal(
-    names(glmn_aug$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_time", ".pred_censored",
-      ".weight_censored")
+  expect_identical(nrow(glmn_aug), nrow(sim_tr))
+  expect_named(
+    glmn_aug,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
+  expect_type(glmn_aug$.pred, "list")
+  expect_named(
+    glmn_aug$.pred[[1]],
+    c(
+      ".eval_time",
+      ".pred_survival",
+      ".weight_time",
+      ".pred_censored",
+      ".weight_censored"
+    ),
+    ignore.order = TRUE
   )
 })
 
@@ -71,7 +90,8 @@ test_that("augment() for survival models errors if eval_time is missing", {
 
 test_that("augment() works for tune_results", {
   skip_if_not_installed("prodlim")
-  skip_if_not_installed("tune", "1.1.2.9016")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   # standard setup start -------------------------------------------------------
 
@@ -99,7 +119,12 @@ test_that("augment() works for tune_results", {
 
   # Grid search with a mixture of metrics --------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-
@@ -117,12 +142,17 @@ test_that("augment() works for tune_results", {
     aug_res <- augment(grid_mixed_res)
   )
 
-  expect_equal(nrow(aug_res), nrow(sim_tr))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
-  expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_identical(nrow(aug_res), nrow(sim_tr))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", ".pred_linear_pred", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
+  expect_type(aug_res$.pred, "list")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 
   expect_no_warning(
@@ -156,7 +186,11 @@ test_that("augment() works for resample_results", {
 
   # resampling models with a mixture of metrics --------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -171,17 +205,24 @@ test_that("augment() works for resample_results", {
 
   aug_res <- augment(rs_mixed_res)
 
-  expect_equal(nrow(aug_res), nrow(sim_tr))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
-  expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_identical(nrow(aug_res), nrow(sim_tr))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
+  expect_type(aug_res$.pred, "list")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 })
 
 test_that("augment() works for last fit", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   # standard setup start -------------------------------------------------------
 
@@ -200,7 +241,12 @@ test_that("augment() works for last fit", {
 
   # last fit for models with a mixture of metrics ------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
 
   set.seed(2193)
   rs_mixed_res <-
@@ -214,11 +260,16 @@ test_that("augment() works for last fit", {
 
   aug_res <- augment(rs_mixed_res)
 
-  expect_equal(nrow(aug_res), nrow(sim_te))
-  expect_equal(names(aug_res), c(".pred", ".pred_time", "event_time", "X1", "X2"))
-  expect_true(is.list(aug_res$.pred))
-  expect_equal(
-    names(aug_res$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_identical(nrow(aug_res), nrow(sim_te))
+  expect_named(
+    aug_res,
+    c(".pred", ".pred_time", ".pred_linear_pred", "event_time", "X1", "X2"),
+    ignore.order = TRUE
+  )
+  expect_type(aug_res$.pred, "list")
+  expect_named(
+    aug_res$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
 })

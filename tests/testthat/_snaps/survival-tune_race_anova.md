@@ -1,3 +1,58 @@
+# race tuning (anova) survival models with static metric
+
+    Code
+      ggplot2::get_labs(stc_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(stc_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
 # race tuning (anova) survival models with integrated metric
 
     Code
@@ -7,13 +62,234 @@
       Warning in `show_best()`:
       `eval_time` is only used for dynamic survival metrics.
 
+---
+
+    Code
+      ggplot2::get_labs(int_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival_integrated"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(int_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "brier_survival_integrated"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
 # race tuning (anova) survival models with dynamic metrics
 
     4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
 
+---
+
+    Code
+      ggplot2::get_labs(dyn_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(dyn_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "brier_survival @10"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
 # race tuning (anova) survival models with mixture of metric types
 
     4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
+
+---
+
+    Code
+      ggplot2::get_labs(mix_race_plot)
+    Output
+      $x.sec
+      NULL
+      
+      $x
+      [1] "Analysis Stage"
+      
+      $y
+      [1] "brier_survival"
+      
+      $y.sec
+      NULL
+      
+      $group
+      [1] ".config"
+      
+      $colour
+      [1] ".config"
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] ""
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_multi_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] ""
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
+
+---
+
+    Code
+      ggplot2::get_labs(mix_alt_autoplot)
+    Output
+      $alpha
+      [1] "# resamples"
+      
+      $size
+      [1] "# resamples"
+      
+      $x.sec
+      NULL
+      
+      $x
+                  cost_complexity 
+      "Cost-Complexity Parameter" 
+      
+      $y
+      [1] "concordance_survival"
+      
+      $y.sec
+      NULL
+      
+      $alt
+      [1] ""
+      
 
 ---
 
@@ -92,6 +368,33 @@
       3          0.0891 brier_survival_integrated         NA 0.338    30 0.00480
       4          0.0944 brier_survival_integrated         NA 0.338    30 0.00480
       5          0.1    brier_survival_integrated         NA 0.338    30 0.00480
+
+# race tuning (anova) survival models mixture of metric types including linear_pred
+
+    Code
+      show_best(aov_mixed_res, metric = "brier_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Output
+      # A tibble: 1 x 6
+        penalty .metric        .eval_time   mean     n std_err
+          <dbl> <chr>               <dbl>  <dbl> <int>   <dbl>
+      1  0.0001 brier_survival          1 0.0192    30 0.00158
+
+---
+
+    Code
+      show_best(aov_mixed_res, metric = "royston_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Condition
+      Warning:
+      Metric "brier_survival" was used to evaluate model candidates in the race but "royston_survival" has been chosen to rank the candidates. These results may not agree with the race.
+      Warning in `show_best()`:
+      `eval_time` is only used for dynamic survival metrics.
+    Output
+      # A tibble: 1 x 6
+        penalty .metric          .eval_time  mean     n std_err
+          <dbl> <chr>                 <dbl> <dbl> <int>   <dbl>
+      1  0.0001 royston_survival         NA 0.433    30  0.0111
 
 # race tuning (anova) - unneeded eval_time
 

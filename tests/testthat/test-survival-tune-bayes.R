@@ -5,6 +5,7 @@ skip_if_not_installed("parsnip", minimum_version = "1.1.0.9003")
 skip_if_not_installed("censored", minimum_version = "0.2.0.9000")
 skip_if_not_installed("tune", minimum_version = "1.1.2.9012")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
+skip_if_not_installed("tune", minimum_version = "2.0.1.9000")
 
 test_that("Bayesian tuning survival models with static metric", {
   skip_if_not_installed("prodlim")
@@ -37,7 +38,7 @@ test_that("Bayesian tuning survival models with static metric", {
 
   # Bayes with static metrics --------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   init_grid_static_res <-
@@ -65,9 +66,10 @@ test_that("Bayesian tuning survival models with static metric", {
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(bayes_static_res$.metrics[[1]]))
-  expect_equal(
-    names(bayes_static_res$.predictions[[1]]),
-    c(".pred_time", ".row", "tree_depth", "event_time", ".config")
+  expect_named(
+    bayes_static_res$.predictions[[1]],
+    c(".pred_time", ".row", "event_time", "tree_depth", ".config"),
+    ignore.order = TRUE
   )
 
   # test autoplot --------------------------------------------------------------
@@ -100,9 +102,9 @@ test_that("Bayesian tuning survival models with static metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 5)
-  expect_equal(metric_sum[0,], exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "concordance_survival"))
+  expect_identical(nrow(metric_sum), 5L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_all_equal(metric_sum$.metric, "concordance_survival")
 
   metric_all <- collect_metrics(bayes_static_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -115,9 +117,9 @@ test_that("Bayesian tuning survival models with static metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 50)
-  expect_equal(metric_all[0,], exp_metric_all)
-  expect_true(all(metric_all$.metric == "concordance_survival"))
+  expect_identical(nrow(metric_all), 50L)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_all_equal(metric_all$.metric, "concordance_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -125,20 +127,25 @@ test_that("Bayesian tuning survival models with static metric", {
     .pred_time = numeric(0),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
 
   unsum_pred <- collect_predictions(bayes_static_res)
-  expect_equal(unsum_pred[0,], static_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(unsum_pred, static_ptype)
+  expect_identical(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
   sum_pred <- collect_predictions(bayes_static_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], static_ptype[, names(static_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
-
+  expect_ptype(sum_pred, static_ptype[, names(static_ptype) != "id"])
+  expect_identical(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 })
 
 test_that("Bayesian tuning survival models with integrated metric", {
@@ -185,32 +192,34 @@ test_that("Bayesian tuning survival models with integrated metric", {
       control = gctrl
     )
 
-    set.seed(2193)
-    bayes_integrated_res <-
-      mod_spec %>%
-      tune_bayes(
-        event_time ~ X1 + X2,
-        resamples = sim_rs,
-        iter = 2,
-        metrics = sint_mtrc,
-        eval_time = time_points,
-        control = bctrl,
-        initial = init_grid_integrated_res
-      )
+  set.seed(2193)
+  bayes_integrated_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = sint_mtrc,
+      eval_time = time_points,
+      control = bctrl,
+      initial = init_grid_integrated_res
+    )
 
   # test structure of results --------------------------------------------------
 
   expect_false(".eval_time" %in% names(bayes_integrated_res$.metrics[[1]]))
-  expect_equal(
-    names(bayes_integrated_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+  expect_named(
+    bayes_integrated_res$.predictions[[1]],
+    c(".pred", ".row", "event_time", "tree_depth", ".config"),
+    ignore.order = TRUE
   )
-  expect_true(is.list(bayes_integrated_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(bayes_integrated_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_type(bayes_integrated_res$.predictions[[1]]$.pred, "list")
+  expect_named(
+    bayes_integrated_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     bayes_integrated_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -244,9 +253,9 @@ test_that("Bayesian tuning survival models with integrated metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 5)
-  expect_equal(metric_sum[0,], exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival_integrated"))
+  expect_identical(nrow(metric_sum), 5L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_all_equal(metric_sum$.metric, "brier_survival_integrated")
 
   metric_all <- collect_metrics(bayes_integrated_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -259,9 +268,9 @@ test_that("Bayesian tuning survival models with integrated metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 50)
-  expect_equal(metric_all[0,], exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival_integrated"))
+  expect_identical(nrow(metric_all), 50L)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_all_equal(metric_all$.metric, "brier_survival_integrated")
 
   # test prediction collection -------------------------------------------------
 
@@ -269,8 +278,8 @@ test_that("Bayesian tuning survival models with integrated metric", {
     .pred = list(),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -283,18 +292,24 @@ test_that("Bayesian tuning survival models with integrated metric", {
     )
 
   unsum_pred <- collect_predictions(bayes_integrated_res)
-  expect_equal(unsum_pred[0,], integrated_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(unsum_pred, integrated_ptype)
+  expect_identical(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(unsum_pred$.pred[[1]][0,], integrated_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_ptype(unsum_pred$.pred[[1]], integrated_list_ptype)
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_integrated_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], integrated_ptype[, names(integrated_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(sum_pred, integrated_ptype[, names(integrated_ptype) != "id"])
+  expect_identical(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(sum_pred$.pred[[1]][0,], integrated_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_ptype(sum_pred$.pred[[1]], integrated_list_ptype)
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
 
 test_that("Bayesian tuning survival models with dynamic metric", {
@@ -328,7 +343,7 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   # Bayes with dynamic metric --------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   init_grid_dynamic_res <-
@@ -359,17 +374,19 @@ test_that("Bayesian tuning survival models with dynamic metric", {
 
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(bayes_dynamic_res$.metrics[[1]]))
-  expect_equal(
-    names(bayes_dynamic_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", "event_time", ".config")
+  expect_in(".eval_time", names(bayes_dynamic_res$.metrics[[1]]))
+  expect_named(
+    bayes_dynamic_res$.predictions[[1]],
+    c(".pred", ".row", "event_time", "tree_depth", ".config"),
+    ignore.order = TRUE
   )
-  expect_true(is.list(bayes_dynamic_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(bayes_dynamic_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_type(bayes_dynamic_res$.predictions[[1]]$.pred, "list")
+  expect_named(
+    bayes_dynamic_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     bayes_dynamic_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -406,9 +423,9 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 20)
-  expect_equal(metric_sum[0,], exp_metric_sum)
-  expect_true(all(metric_sum$.metric == "brier_survival"))
+  expect_identical(nrow(metric_sum), 20L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_all_equal(metric_sum$.metric, "brier_survival")
 
   metric_all <- collect_metrics(bayes_dynamic_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -422,9 +439,9 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 200)
-  expect_equal(metric_all[0,], exp_metric_all)
-  expect_true(all(metric_all$.metric == "brier_survival"))
+  expect_identical(nrow(metric_all), 200L)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_all_equal(metric_all$.metric, "brier_survival")
 
   # test prediction collection -------------------------------------------------
 
@@ -432,8 +449,8 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     .pred = list(),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -446,24 +463,114 @@ test_that("Bayesian tuning survival models with dynamic metric", {
     )
 
   unsum_pred <- collect_predictions(bayes_dynamic_res)
-  expect_equal(unsum_pred[0,], dynamic_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(unsum_pred, dynamic_ptype)
+  expect_identical(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(unsum_pred$.pred[[1]][0,], dynamic_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_ptype(unsum_pred$.pred[[1]], dynamic_list_ptype)
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_dynamic_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], dynamic_ptype[, names(dynamic_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(sum_pred, dynamic_ptype[, names(dynamic_ptype) != "id"])
+  expect_identical(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(sum_pred$.pred[[1]][0,], dynamic_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
-
+  expect_ptype(sum_pred$.pred[[1]], dynamic_list_ptype)
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 })
+
+test_that("Bayesian tuning survival models with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+  bctrl <- control_bayes(save_pred = TRUE)
+
+  # Bayes with linear_pred metrics ---------------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  init_grid_linpred_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = gctrl
+    )
+
+  set.seed(2193)
+  bayes_linpred_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = linpred_mtrc,
+      control = bctrl,
+      initial = init_grid_linpred_res
+    )
+
+  # test structure of results --------------------------------------------------
+
+  expect_false(".eval_time" %in% names(bayes_linpred_res$.metrics[[1]]))
+  expect_named(
+    bayes_linpred_res$.predictions[[1]],
+    c(".pred_linear_pred", ".row", "event_time", "penalty", ".config"),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(bayes_linpred_res)
+  exp_metric_sum <- tibble(
+    penalty = numeric(0),
+    .metric = character(0),
+    .estimator = character(0),
+    mean = numeric(0),
+    n = integer(0),
+    std_err = numeric(0),
+    .config = character(0),
+    .iter = integer(0)
+  )
+
+  expect_identical(nrow(metric_sum), 5L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_true(all(metric_sum$.metric == "royston_survival"))
+})
+
 
 test_that("Bayesian tuning survival models with mixture of metric types", {
   skip_if_not_installed("prodlim")
   skip_if_not_installed("coin") # required for partykit engine
+  skip_if_not_installed("tune", minimum_version = "1.3.0.9005")
 
   # standard setup start -------------------------------------------------------
 
@@ -492,7 +599,11 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
 
   # Bayes with a mixture of all three types ------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival
+  )
 
   set.seed(2193)
   init_grid_mixed_res <-
@@ -521,20 +632,21 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
       )
   })
 
-
   # test structure of results --------------------------------------------------
 
-  expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
-  expect_equal(
-    names(bayes_mixed_res$.predictions[[1]]),
-    c(".pred", ".row", "tree_depth", ".pred_time", "event_time", ".config")
+  expect_in(".eval_time", names(bayes_mixed_res$.metrics[[1]]))
+  expect_named(
+    bayes_mixed_res$.predictions[[1]],
+    c(".pred", ".row", ".pred_time", "event_time", "tree_depth", ".config"),
+    ignore.order = TRUE
   )
-  expect_true(is.list(bayes_mixed_res$.predictions[[1]]$.pred))
-  expect_equal(
-    names(bayes_mixed_res$.predictions[[1]]$.pred[[1]]),
-    c(".eval_time", ".pred_survival", ".weight_censored")
+  expect_type(bayes_mixed_res$.predictions[[1]]$.pred, "list")
+  expect_named(
+    bayes_mixed_res$.predictions[[1]]$.pred[[1]],
+    c(".eval_time", ".pred_survival", ".weight_censored"),
+    ignore.order = TRUE
   )
-  expect_equal(
+  expect_identical(
     bayes_mixed_res$.predictions[[1]]$.pred[[1]]$.eval_time,
     time_points
   )
@@ -575,10 +687,10 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_sum) == 30)
-  expect_equal(metric_sum[0,], exp_metric_sum)
-  expect_true(sum(is.na(metric_sum$.eval_time)) == 10)
-  expect_equal(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
+  expect_identical(nrow(metric_sum), 30L)
+  expect_ptype(metric_sum, exp_metric_sum)
+  expect_identical(sum(is.na(metric_sum$.eval_time)), 10L)
+  expect_identical(as.vector(table(metric_sum$.metric)), c(20L, 5L, 5L))
 
   metric_all <- collect_metrics(bayes_mixed_res, summarize = FALSE)
   exp_metric_all <- tibble(
@@ -592,10 +704,10 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     .iter = integer(0)
   )
 
-  expect_true(nrow(metric_all) == 300)
-  expect_equal(metric_all[0,], exp_metric_all)
-  expect_true(sum(is.na(metric_all$.eval_time)) == 100)
-  expect_equal(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
+  expect_identical(nrow(metric_all), 300L)
+  expect_ptype(metric_all, exp_metric_all)
+  expect_identical(sum(is.na(metric_all$.eval_time)), 100L)
+  expect_identical(as.vector(table(metric_all$.metric)), c(200L, 50L, 50L))
 
   # test prediction collection -------------------------------------------------
 
@@ -604,8 +716,8 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     .pred_time = numeric(0),
     id = character(0),
     .row = integer(0),
-    tree_depth = numeric(0),
     event_time = survival::Surv(0, 1, type = "right")[FALSE],
+    tree_depth = numeric(0),
     .config = character(0),
     .iter = integer(0)
   )
@@ -618,23 +730,33 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
     )
 
   unsum_pred <- collect_predictions(bayes_mixed_res)
-  expect_equal(unsum_pred[0,], mixed_ptype)
-  expect_equal(nrow(unsum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(unsum_pred, mixed_ptype)
+  expect_identical(
+    nrow(unsum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(unsum_pred$.pred[[1]][0,], mixed_list_ptype)
-  expect_equal(nrow(unsum_pred$.pred[[1]]), length(time_points))
+  expect_ptype(unsum_pred$.pred[[1]], mixed_list_ptype)
+  expect_identical(nrow(unsum_pred$.pred[[1]]), length(time_points))
 
   sum_pred <- collect_predictions(bayes_mixed_res, summarize = TRUE)
-  expect_equal(sum_pred[0,], mixed_ptype[, names(mixed_ptype) != "id"])
-  expect_equal(nrow(sum_pred), nrow(sim_tr) * length(unique(unsum_pred$.config)))
+  expect_ptype(sum_pred, mixed_ptype[, names(mixed_ptype) != "id"])
+  expect_identical(
+    nrow(sum_pred),
+    nrow(sim_tr) * length(unique(unsum_pred$.config))
+  )
 
-  expect_equal(sum_pred$.pred[[1]][0,], mixed_list_ptype)
-  expect_equal(nrow(sum_pred$.pred[[1]]), length(time_points))
+  expect_ptype(sum_pred$.pred[[1]], mixed_list_ptype)
+  expect_identical(nrow(sum_pred$.pred[[1]]), length(time_points))
 
   # test show_best() -----------------------------------------------------------
 
   expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival"))
-  expect_snapshot(show_best(bayes_mixed_res, metric = "brier_survival", eval_time = 1))
+  expect_snapshot(show_best(
+    bayes_mixed_res,
+    metric = "brier_survival",
+    eval_time = 1
+  ))
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival", eval_time = c(1.1)),
     error = TRUE
@@ -646,5 +768,98 @@ test_that("Bayesian tuning survival models with mixture of metric types", {
   expect_snapshot(
     show_best(bayes_mixed_res, metric = "brier_survival_integrated")
   )
+})
 
+
+test_that("Bayesian tuning survival models with mixture of metric types including linear_pred", {
+  # this is a separate to above because the other one uses a decision tree model
+  # which does not give us the linear predictor
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  time_points <- c(10, 1, 5, 15)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_pred = TRUE)
+  bctrl <- control_bayes(save_pred = TRUE)
+
+  # Bayes with a mixture of all four types ------------------------------------
+
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
+
+  set.seed(2193)
+  init_grid_mixed_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      control = gctrl
+    )
+
+  set.seed(2193)
+  bayes_mixed_res <-
+    mod_spec %>%
+    tune_bayes(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      iter = 2,
+      metrics = mix_mtrc,
+      eval_time = time_points,
+      initial = init_grid_mixed_res,
+      control = bctrl
+    ) |>
+    suppressWarnings()
+
+  # test structure of results --------------------------------------------------
+
+  expect_true(".eval_time" %in% names(bayes_mixed_res$.metrics[[1]]))
+  expect_named(
+    bayes_mixed_res$.predictions[[1]],
+    c(
+      ".pred",
+      ".row",
+      ".pred_time",
+      ".pred_linear_pred",
+      "event_time",
+      "penalty",
+      ".config"
+    ),
+    ignore.order = TRUE
+  )
+
+  # test metric collection -----------------------------------------------------
+
+  metric_sum <- collect_metrics(bayes_mixed_res)
+  num_metrics <- length(time_points) + 3L
+
+  expect_identical(nrow(metric_sum), 5L * num_metrics)
+  expect_true("royston_survival" %in% metric_sum$.metric)
 })

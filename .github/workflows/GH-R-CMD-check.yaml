@@ -6,9 +6,9 @@
 # usethis::use_github_action("check-standard") will install it.
 on:
   push:
-    branches: [main, master]
+    branches: main
   pull_request:
-    branches: [main, master]
+    branches: main
   schedule:
     # runs tests every day at 1am EST
     - cron:  '0 5 * * *'
@@ -82,8 +82,15 @@ jobs:
             "tidymodels/poissonreg",
             "tidymodels/rules"
           )))
-          # Temp due to dimRed removal from CRAN
-          try(pak::pkg_install("gdkrmr/dimRed"))
+          try(pak::pkg_install(c(
+            "tidymodels/dials",
+            "tidymodels/hardhat",
+            "tidymodels/modeldata",
+            "tidymodels/rsample",
+            "tidymodels/spatialsample",
+            "tidymodels/tailor",
+            "tidymodels/yardstick"
+          )))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2

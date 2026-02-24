@@ -35,7 +35,7 @@ test_that("fit best with static metric", {
 
   # standard setup end -------------------------------------------------------
 
-  stc_mtrc  <- metric_set(concordance_survival)
+  stc_mtrc <- metric_set(concordance_survival)
 
   set.seed(2193)
   grid_static_res <-
@@ -99,7 +99,6 @@ test_that("grid tuning survival models with integrated metric", {
   expect_silent(integrated_res <- fit_best(grid_integrated_res))
   expect_s3_class(integrated_res, "workflow")
   expect_true(is_trained_workflow(integrated_res))
-
 })
 
 test_that("grid tuning survival models with dynamic metric", {
@@ -131,7 +130,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   # standard setup end -------------------------------------------------------
 
-  dyn_mtrc  <- metric_set(brier_survival)
+  dyn_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   grid_dynamic_res <-
@@ -149,11 +148,59 @@ test_that("grid tuning survival models with dynamic metric", {
   dynamic_res <- fit_best(grid_dynamic_res, eval_time = 1)
   expect_s3_class(dynamic_res, "workflow")
   expect_true(is_trained_workflow(dynamic_res))
+})
 
+test_that("fit best with linear_pred metric", {
+  skip_if_not_installed("prodlim")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+
+  # standard setup start -------------------------------------------------------
+
+  set.seed(1)
+  sim_dat <- prodlim::SimSurv(500) %>%
+    mutate(event_time = Surv(time, event)) %>%
+    select(event_time, X1, X2)
+
+  set.seed(2)
+  split <- initial_split(sim_dat)
+  sim_tr <- training(split)
+  sim_te <- testing(split)
+  sim_rs <- vfold_cv(sim_tr)
+
+  mod_spec <-
+    proportional_hazards(penalty = tune(), mixture = 1) %>%
+    set_engine("glmnet") %>%
+    set_mode("censored regression")
+
+  grid <- tibble(penalty = 10^c(-4, -2, -1))
+
+  gctrl <- control_grid(save_workflow = TRUE)
+
+  # standard setup end -------------------------------------------------------
+
+  linpred_mtrc <- metric_set(royston_survival)
+
+  set.seed(2193)
+  grid_linpred_res <-
+    mod_spec %>%
+    tune_grid(
+      event_time ~ X1 + X2,
+      resamples = sim_rs,
+      grid = grid,
+      metrics = linpred_mtrc,
+      control = gctrl
+    )
+
+  expect_silent(linpred_res <- fit_best(grid_linpred_res))
+  expect_s3_class(linpred_res, "workflow")
+  expect_true(is_trained_workflow(linpred_res))
 })
 
 test_that("grid tuning survival models mixture of metric types", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   # standard setup start -------------------------------------------------------
 
@@ -181,7 +228,12 @@ test_that("grid tuning survival models mixture of metric types", {
 
   # standard setup end -------------------------------------------------------
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
 
   set.seed(2193)
   grid_mixed_res <-

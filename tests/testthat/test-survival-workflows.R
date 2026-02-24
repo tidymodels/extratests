@@ -21,7 +21,7 @@ test_that("can `fit()` a censored workflow with a formula", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
@@ -44,11 +44,12 @@ test_that("can `fit()` a censored workflow with a model formula", {
 
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$coefficients,
     survival::coxph(
       formula = surv ~ . - sex + strata(sex),
-      data = lung)$coefficients
+      data = lung
+    )$coefficients
   )
 })
 
@@ -60,7 +61,11 @@ test_that("can `fit()` a censored workflow with variables", {
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
-  workflow <- add_variables(workflow, outcomes = surv, predictors = everything())
+  workflow <- add_variables(
+    workflow,
+    outcomes = surv,
+    predictors = everything()
+  )
   workflow <- add_model(workflow, mod)
 
   wf_fit <- fit(workflow, lung)
@@ -68,7 +73,7 @@ test_that("can `fit()` a censored workflow with variables", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
@@ -92,7 +97,7 @@ test_that("can `fit()` a censored workflow with a recipe", {
   expect_s3_class(wf_fit$fit$fit, "model_fit")
 
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
-  expect_equal(
+  expect_identical(
     wf_fit$fit$fit$fit$beta,
     censored::coxnet_train(surv ~ ., data = lung)$fit$beta
   )
@@ -113,18 +118,21 @@ test_that("can `predict()` a censored workflow with a formula", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
-  expect_true(
-    all(purrr::map_lgl(
-      preds$.pred,
-       ~ identical(names(.x), c(".eval_time", ".pred_survival"))
-    ))
+  expect_all_equal(
+    purrr::map(preds$.pred, names),
+    list(c(".eval_time", ".pred_survival"))
   )
 
   expect_error(
@@ -149,20 +157,22 @@ test_that("can `predict()` a censored workflow with a model formula", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
-
-  expect_identical(names(preds), ".pred")
-  expect_type(preds$.pred, "list")
-  expect_true(
-    all(purrr::map_lgl(
-      preds$.pred,
-      ~ identical(names(.x), c(".eval_time", ".pred_survival"))
-    ))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
   )
 
+  expect_named(preds, ".pred")
+  expect_type(preds$.pred, "list")
+  expect_all_equal(
+    purrr::map(preds$.pred, names),
+    list(c(".eval_time", ".pred_survival"))
+  )
   expect_error(
     predict(wf_fit, new_data = lung, type = "numeric")
   )
@@ -176,25 +186,32 @@ test_that("can `predict()` a censored workflow with variables", {
   mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
 
   workflow <- workflow()
-  workflow <- add_variables(workflow, outcomes = surv, predictors = everything())
+  workflow <- add_variables(
+    workflow,
+    outcomes = surv,
+    predictors = everything()
+  )
   workflow <- add_model(workflow, mod)
 
   wf_fit <- fit(workflow, lung)
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
-  expect_true(
-    all(purrr::map_lgl(
-      preds$.pred,
-      ~ identical(names(.x), c(".eval_time", ".pred_survival"))
-    ))
+  expect_all_equal(
+    purrr::map(preds$.pred, names),
+    list(c(".eval_time", ".pred_survival"))
   )
 
   expect_error(
@@ -219,18 +236,21 @@ test_that("can `predict()` a censored workflow with a recipe", {
 
   preds <- predict(wf_fit, new_data = lung)
 
-  expect_identical(names(preds), ".pred_time")
+  expect_named(preds, ".pred_time")
   expect_type(preds$.pred_time, "double")
 
-  preds <- predict(wf_fit, new_data = lung, type = "survival", eval_time = c(100, 200))
+  preds <- predict(
+    wf_fit,
+    new_data = lung,
+    type = "survival",
+    eval_time = c(100, 200)
+  )
 
-  expect_identical(names(preds), ".pred")
+  expect_named(preds, ".pred")
   expect_type(preds$.pred, "list")
-  expect_true(
-    all(purrr::map_lgl(
-      preds$.pred,
-      ~ identical(names(.x), c(".eval_time", ".pred_survival"))
-    ))
+  expect_all_equal(
+    purrr::map(preds$.pred, names),
+    list(c(".eval_time", ".pred_survival"))
   )
 
   expect_error(

@@ -10,7 +10,7 @@ test_that("preprocessing formula doesn't result in extra intercept - xy_xy()", {
     extract_fit_engine() %>%
     coef() %>%
     rownames()
-  expect_equal(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
+  expect_identical(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
 
   expect_no_error(
     predict(wflow_fit, new_data = mtcars)
@@ -27,7 +27,7 @@ test_that("preprocessing formula doesn't result in extra intercept - xy_form()",
     extract_fit_engine() %>%
     coef() %>%
     names()
-  expect_equal(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
+  expect_identical(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
 
   expect_no_error(
     predict(wflow_fit, new_data = mtcars)
@@ -37,14 +37,17 @@ test_that("preprocessing formula doesn't result in extra intercept - xy_form()",
 test_that("preprocessing formula doesn't result in extra intercept - form_xy()", {
   wflow_fit <- workflow() %>%
     add_formula(mpg ~ cyl + disp + hp) %>%
-    add_model(linear_reg(penalty = 0.1, engine = "glmnet"), formula = mpg ~ .) %>%
+    add_model(
+      linear_reg(penalty = 0.1, engine = "glmnet"),
+      formula = mpg ~ .
+    ) %>%
     fit(data = mtcars)
 
   coef_names <- wflow_fit %>%
     extract_fit_engine() %>%
     coef() %>%
     rownames()
-  expect_equal(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
+  expect_identical(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
 
   expect_no_error(
     predict(wflow_fit, new_data = mtcars)
@@ -61,7 +64,7 @@ test_that("preprocessing formula doesn't result in extra intercept - form_form()
     extract_fit_engine() %>%
     coef() %>%
     names()
-  expect_equal(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
+  expect_identical(coef_names, c("(Intercept)", "cyl", "disp", "hp"))
 
   expect_no_error(
     predict(wflow_fit, new_data = mtcars)

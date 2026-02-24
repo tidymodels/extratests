@@ -7,10 +7,18 @@ skip_if_not_installed("tune", minimum_version = "1.1.2.9014")
 skip_if_not_installed("yardstick", minimum_version = "1.2.0.9001")
 
 test_that("compute_metrics works with survival models", {
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
+
   lung_surv <- lung %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  metrics <- metric_set(concordance_survival, brier_survival_integrated, brier_survival)
+  metrics <- metric_set(
+    concordance_survival,
+    brier_survival_integrated,
+    brier_survival,
+    royston_survival
+  )
 
   times <- c(2, 50, 100)
 
@@ -30,18 +38,22 @@ test_that("compute_metrics works with survival models", {
 
   recomp <- compute_metrics(tune_res, metrics, summarize = TRUE)
   original <- collect_metrics(tune_res)
-  expect_equal(recomp, original)
+  expect_identical(recomp, original)
 
   # ------------------------------------------------------------------------------
 
   recomp_rs <- compute_metrics(tune_res, metrics, summarize = TRUE)
   original_rs <- collect_metrics(tune_res, summarize = TRUE)
-  expect_equal(recomp_rs, original_rs)
+  expect_identical(recomp_rs, original_rs)
 
   # ------------------------------------------------------------------------------
 
-  stc_only <- compute_metrics(tune_res, metric_set(concordance_survival), summarize = TRUE)
-  stc_original <- collect_metrics(tune_res) %>% filter(.metric == "concordance_survival")
-  expect_equal(stc_only, stc_original %>% select(-.eval_time))
-
+  stc_only <- compute_metrics(
+    tune_res,
+    metric_set(concordance_survival),
+    summarize = TRUE
+  )
+  stc_original <- collect_metrics(tune_res) %>%
+    filter(.metric == "concordance_survival")
+  expect_identical(stc_only, stc_original %>% select(-.eval_time))
 })

@@ -13,9 +13,15 @@
 
     Code
       expect_snapshot_plot(print(autoplot(sa_dynamic_res)), "dyn-sa")
+
+---
+
+    Code
+      expect_snapshot_plot(print(autoplot(sa_dynamic_res, eval_time = 1, type = "parameters")),
+      "dyn-sa-param")
     Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
+      Warning:
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
 
 # sim annealing tuning survival models with mixture of metric types
 
@@ -32,9 +38,15 @@
 
     Code
       expect_snapshot_plot(print(autoplot(sa_mixed_res)), "mix-sa-0-times")
+
+---
+
+    Code
+      expect_snapshot_plot(print(autoplot(sa_mixed_res, eval_time = 1, type = "parameters")),
+      "mix-sa-param")
     Condition
-      Warning in `filter_plot_eval_time()`:
-      No evaluation time was set; a value of 5 was used.
+      Warning:
+      `eval_time` is not used with `autoplot(..., type = 'parameters')`.
 
 ---
 
@@ -48,8 +60,8 @@
         trees .metric        .estimator .eval_time  mean     n std_err .config   .iter
         <dbl> <chr>          <chr>           <dbl> <dbl> <int>   <dbl> <chr>     <int>
       1    20 brier_survival standard           10 0.174    10  0.0195 initial_~     0
-      2    15 brier_survival standard           10 0.180    10  0.0194 Iter1         1
-      3    13 brier_survival standard           10 0.183    10  0.0194 Iter2         2
+      2    17 brier_survival standard           10 0.178    10  0.0195 Iter2         2
+      3    15 brier_survival standard           10 0.180    10  0.0194 Iter1         1
       4     5 brier_survival standard           10 0.203    10  0.0197 initial_~     0
       5     1 brier_survival standard           10 0.222    10  0.0204 initial_~     0
 
@@ -62,8 +74,8 @@
         trees .metric        .estimator .eval_time   mean     n std_err .config  .iter
         <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>    <int>
       1    20 brier_survival standard            1 0.0207    10 0.00505 initial~     0
-      2    15 brier_survival standard            1 0.0208    10 0.00508 Iter1        1
-      3    13 brier_survival standard            1 0.0209    10 0.00509 Iter2        2
+      2    17 brier_survival standard            1 0.0208    10 0.00507 Iter2        2
+      3    15 brier_survival standard            1 0.0208    10 0.00508 Iter1        1
       4     5 brier_survival standard            1 0.0210    10 0.00515 initial~     0
       5     1 brier_survival standard            1 0.0211    10 0.00518 initial~     0
 
@@ -87,8 +99,8 @@
         trees .metric        .estimator .eval_time   mean     n std_err .config  .iter
         <dbl> <chr>          <chr>           <dbl>  <dbl> <int>   <dbl> <chr>    <int>
       1    20 brier_survival standard            1 0.0207    10 0.00505 initial~     0
-      2    15 brier_survival standard            1 0.0208    10 0.00508 Iter1        1
-      3    13 brier_survival standard            1 0.0209    10 0.00509 Iter2        2
+      2    17 brier_survival standard            1 0.0208    10 0.00507 Iter2        2
+      3    15 brier_survival standard            1 0.0208    10 0.00508 Iter1        1
       4     5 brier_survival standard            1 0.0210    10 0.00515 initial~     0
       5     1 brier_survival standard            1 0.0211    10 0.00518 initial~     0
 
@@ -101,8 +113,52 @@
         trees .metric          .estimator .eval_time  mean     n std_err .config .iter
         <dbl> <chr>            <chr>           <dbl> <dbl> <int>   <dbl> <chr>   <int>
       1    20 brier_survival_~ standard           NA 0.129    10 0.00812 initia~     0
-      2    15 brier_survival_~ standard           NA 0.134    10 0.00807 Iter1       1
-      3    13 brier_survival_~ standard           NA 0.136    10 0.00804 Iter2       2
+      2    17 brier_survival_~ standard           NA 0.132    10 0.00807 Iter2       2
+      3    15 brier_survival_~ standard           NA 0.134    10 0.00807 Iter1       1
       4     5 brier_survival_~ standard           NA 0.150    10 0.00839 initia~     0
       5     1 brier_survival_~ standard           NA 0.163    10 0.00886 initia~     0
+
+# sim annealing tuning survival models mixture of metric types including linear_pred
+
+    Code
+      set.seed(2193)
+      sa_mixed_res <- mod_spec %>% tune_sim_anneal(event_time ~ X1 + X2, resamples = sim_rs,
+      iter = 2, metrics = mix_mtrc, eval_time = time_points, initial = init_grid_mixed_res,
+      control = sctrl)
+    Condition
+      Warning in `tune_sim_anneal()`:
+      4 evaluation times are available; the first will be used (i.e. `eval_time = 10`).
+
+---
+
+    Code
+      show_best(sa_mixed_res, metric = "brier_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Output
+      # A tibble: 5 x 7
+            penalty .metric        .eval_time   mean     n std_err .iter
+              <dbl> <chr>               <dbl>  <dbl> <int>   <dbl> <int>
+      1 0.1         brier_survival          1 0.0208    10 0.00503     0
+      2 0.01        brier_survival          1 0.0208    10 0.00498     0
+      3 0.0001      brier_survival          1 0.0208    10 0.00498     0
+      4 0.00000959  brier_survival          1 0.0208    10 0.00498     1
+      5 0.000000727 brier_survival          1 0.0208    10 0.00498     2
+
+---
+
+    Code
+      show_best(sa_mixed_res, metric = "royston_survival", eval_time = 1) %>% select(
+        -.estimator, -.config)
+    Condition
+      Warning in `show_best()`:
+      `eval_time` is only used for dynamic survival metrics.
+    Output
+      # A tibble: 5 x 7
+            penalty .metric          .eval_time  mean     n std_err .iter
+              <dbl> <chr>                 <dbl> <dbl> <int>   <dbl> <int>
+      1 0.01        royston_survival         NA 0.442    10  0.0554     0
+      2 0.0001      royston_survival         NA 0.441    10  0.0553     0
+      3 0.00000959  royston_survival         NA 0.441    10  0.0553     1
+      4 0.000000727 royston_survival         NA 0.441    10  0.0553     2
+      5 0.1         royston_survival         NA 0.433    10  0.0558     0
 

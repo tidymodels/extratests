@@ -1,9 +1,9 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip",   "1.0.1")
-skip_if_not_installed("hardhat",   "1.2.0")
+skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("hardhat", "1.2.0")
 skip_if_not_installed("yardstick", "1.0.0")
 skip_if_not_installed("workflows", "1.0.0")
-skip_if_not_installed("recipes",   "1.0.0")
+skip_if_not_installed("recipes", "1.0.0")
 
 # load all extension packages to register the engines
 suppressPackageStartupMessages(library(discrim))
@@ -15,13 +15,15 @@ test_that('discrim_flexible - earth case weights', {
 
   dat <- make_two_class_wts()
 
-  expect_error({
-    wt_fit <-
-      discrim_flexible(prune_method = "none") %>%
-      set_engine("earth") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        discrim_flexible(prune_method = "none") %>%
+        set_engine("earth") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     discrim_flexible(prune_method = "none") %>%
@@ -44,13 +46,15 @@ test_that('LDA - sda case weights', {
   wts <- order(-two_class_dat$B)
   wts <- importance_weights(wts)
 
-  expect_error({
-    wt_fit <-
-      discrim_linear(penalty = 0.0001) %>%
-      set_engine("mda") %>%
-      fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
-  },
-  regexp = NA)
+  expect_error(
+    {
+      wt_fit <-
+        discrim_linear(penalty = 0.0001) %>%
+        set_engine("mda") %>%
+        fit(Class ~ ., data = two_class_dat, case_weights = dat$wts)
+    },
+    regexp = NA
+  )
 
   unwt_fit <-
     discrim_linear(penalty = 0.0001) %>%
