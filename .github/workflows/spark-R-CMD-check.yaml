@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: 'release', spark: '4.0.1'}
+          - {os: ubuntu-latest, r: 'release', spark: '4.0.0', hadoop: '3'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -58,7 +58,15 @@ jobs:
             any::devtools
           needs: check
 
+      - name: Cache Spark
+        id: cache-spark
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/spark/spark-${{ matrix.config.spark }}-bin-hadoop${{ matrix.config.hadoop }}
+          key: sparklyr-spark-${{ matrix.config.spark }}-bin-hadoop${{ matrix.config.hadoop }}
+
       - name: Install Spark
+        if: steps.cache-spark.outputs.cache-hit != 'true'
         run: |
           sparklyr::spark_install(version = Sys.getenv("SPARK_VERSION"))
         shell: Rscript {0}
