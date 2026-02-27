@@ -1,6 +1,7 @@
 test_that('aorsf - regression', {
   skip_if_not_installed("aorsf")
   skip_if_not_installed("bonsai")
+  skip_if_not_installed("parsnip", minimum_version = "1.4.1.9003")
 
   spec <- rand_forest(
     trees = 15,
