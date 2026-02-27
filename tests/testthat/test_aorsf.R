@@ -21,6 +21,7 @@ test_that('aorsf - regression', {
 test_that('aorsf - classification', {
   skip_if_not_installed("aorsf")
   skip_if_not_installed("bonsai")
+  skip_if_not_installed("parsnip", minimum_version = "1.4.1.9003")
 
   spec <- rand_forest(
     trees = 15,
@@ -49,6 +50,7 @@ test_that('aorsf - censored regression', {
   skip_if_not_installed("aorsf")
   skip_if_not_installed("censored")
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("parsnip", minimum_version = "1.4.1.9003")
 
   set.seed(156)
   sim_dat <- prodlim::SimSurv(100) %>%
