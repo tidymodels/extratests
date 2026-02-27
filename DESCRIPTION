@@ -36,6 +36,7 @@ Suggests:
     LiblineaR,
     lightgbm,
     lubridate,
+    MASS,
     Matrix,
     mda,
     mixOmics,
