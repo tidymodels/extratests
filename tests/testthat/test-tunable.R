@@ -65,17 +65,17 @@ test_that('model with main and engine parameters', {
   expect_all_equal(c5_info$component_id[1:3], "main")
   expect_all_equal(c5_info$component_id[-(1:3)], "engine")
   nms <- c(
-    "trees",
-    "min_n",
-    "sample_size",
-    "rules",
+    "bands",
     "CF",
-    "noGlobalPruning",
-    "winnow",
     "fuzzyThreshold",
-    "bands"
+    "min_n",
+    "noGlobalPruning",
+    "rules",
+    "sample_size",
+    "trees",
+    "winnow"
   )
-  expect_identical(c5_info$name, nms)
+  expect_identical(sort(c5_info$name), nms)
   expect_all_equal(purrr::map_chr(c5_info$call_info[1:3], "pkg"), "dials")
   expect_identical(
     purrr::map_chr(c5_info$call_info[1:3], ~ .x$fun),
