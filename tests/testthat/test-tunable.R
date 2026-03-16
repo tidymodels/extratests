@@ -75,7 +75,7 @@ test_that('model with main and engine parameters', {
     "trees",
     "winnow"
   )
-  expect_identical(sort(c5_info$name), nms)
+  expect_identical(sort(c5_info$name), sort(nms))
   expect_all_equal(purrr::map_chr(c5_info$call_info[1:3], "pkg"), "dials")
   expect_identical(
     purrr::map_chr(c5_info$call_info[1:3], ~ .x$fun),
