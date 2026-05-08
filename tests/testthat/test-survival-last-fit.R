@@ -317,7 +317,7 @@ test_that("last fit for survival models with linear_pred metric", {
   set.seed(2193)
   rs_linpred_res <-
     proportional_hazards(penalty = 0.01) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     last_fit(
       event_time ~ X1 + X2,
       split = split,

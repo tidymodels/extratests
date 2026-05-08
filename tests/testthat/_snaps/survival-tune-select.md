@@ -208,7 +208,7 @@
       # A tibble: 1 x 2
         penalty .config         
           <dbl> <chr>           
-      1  0.0129 pre0_mod02_post0
+      1    0.01 pre0_mod01_post0
 
 ---
 
@@ -218,7 +218,7 @@
       # A tibble: 1 x 2
         penalty .config         
           <dbl> <chr>           
-      1  0.0129 pre0_mod02_post0
+      1    0.01 pre0_mod01_post0
 
 ---
 
@@ -231,7 +231,7 @@
       # A tibble: 1 x 2
         penalty .config         
           <dbl> <chr>           
-      1  0.0129 pre0_mod02_post0
+      1    0.01 pre0_mod01_post0
 
 ---
 

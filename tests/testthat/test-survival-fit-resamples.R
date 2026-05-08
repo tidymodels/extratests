@@ -387,7 +387,7 @@ test_that("resampling survival models with linear_pred metric", {
 
   mod_spec <-
     proportional_hazards(penalty = 0.01) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   rsctrl <- control_resamples(save_pred = TRUE)
@@ -645,7 +645,7 @@ test_that("resampling survival models mixture of metric types including linear_p
 
   mod_spec <-
     proportional_hazards(penalty = 0.01) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   rsctrl <- control_resamples(save_pred = TRUE)

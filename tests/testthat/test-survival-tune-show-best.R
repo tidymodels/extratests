@@ -267,7 +267,7 @@ test_that("show_best with censored data - linpred metric (+stc) - SA", {
 
   ph_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   linpred_met <- metric_set(royston_survival, concordance_survival)

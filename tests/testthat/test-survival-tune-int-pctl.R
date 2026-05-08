@@ -91,7 +91,7 @@ test_that("percentile internals for survival models with integrated metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = c(0.01, 0.1))
