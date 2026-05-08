@@ -187,9 +187,9 @@
       # A tibble: 3 x 8
            penalty .metric          .estimator  mean     n   std_err .config     .iter
              <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
-      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
-      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
-      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+      1 0.00000168 royston_survival standard   0.999    10 0.0000725 initial_pr~     0
+      2 0.0000470  royston_survival standard   0.999    10 0.0000725 Iter1           1
+      3 0.000153   royston_survival standard   0.999    10 0.0000725 Iter2           2
 
 ---
 
@@ -197,11 +197,11 @@
       show_best(sa_linpred_res, metric = "concordance_survival")
     Output
       # A tibble: 3 x 8
-           penalty .metric              .estimator  mean     n std_err .config   .iter
-             <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     <int>
-      1 0.00000168 concordance_survival standard   0.938    10 0.00376 initial_~     0
-      2 0.0000470  concordance_survival standard   0.938    10 0.00376 Iter1         1
-      3 0.000153   concordance_survival standard   0.938    10 0.00376 Iter2         2
+           penalty .metric              .estimator  mean     n  std_err .config  .iter
+             <dbl> <chr>                <chr>      <dbl> <int>    <dbl> <chr>    <int>
+      1 0.00000168 concordance_survival standard   0.994    10 0.000398 initial~     0
+      2 0.0000470  concordance_survival standard   0.994    10 0.000398 Iter1        1
+      3 0.000153   concordance_survival standard   0.994    10 0.000398 Iter2        2
 
 ---
 
@@ -214,9 +214,9 @@
       # A tibble: 3 x 8
            penalty .metric          .estimator  mean     n   std_err .config     .iter
              <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
-      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
-      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
-      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+      1 0.00000168 royston_survival standard   0.999    10 0.0000725 initial_pr~     0
+      2 0.0000470  royston_survival standard   0.999    10 0.0000725 Iter1           1
+      3 0.000153   royston_survival standard   0.999    10 0.0000725 Iter2           2
 
 ---
 

@@ -12,5 +12,5 @@
       wt_fit$fit$call
     Output
       glmnet::glmnet(x = data_obj$x, y = data_obj$y, family = "cox", 
-          weights = weights, alpha = alpha, lambda = lambda)
+          weights = weights, alpha = alpha, lambda = lambda, cox.ties = ..1)
 

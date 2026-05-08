@@ -104,7 +104,7 @@ test_that('proportional_hazards - glmnet censored case weights', {
     {
       wt_fit <-
         proportional_hazards(penalty = 0.1) %>%
-        set_engine("glmnet") %>%
+        set_engine("glmnet", cox.ties = "efron") %>%
         set_mode("censored regression") %>%
         fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
     },
@@ -113,7 +113,7 @@ test_that('proportional_hazards - glmnet censored case weights', {
 
   unwt_fit <-
     proportional_hazards(penalty = 0.1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression") %>%
     fit(Surv(time, event) ~ ., data = dat$full)
 

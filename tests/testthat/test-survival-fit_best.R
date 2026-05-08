@@ -26,7 +26,7 @@ test_that("fit best with static metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -73,7 +73,7 @@ test_that("grid tuning survival models with integrated metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -121,7 +121,7 @@ test_that("grid tuning survival models with dynamic metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -170,7 +170,7 @@ test_that("fit best with linear_pred metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -219,7 +219,7 @@ test_that("grid tuning survival models mixture of metric types", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))

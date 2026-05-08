@@ -32,7 +32,7 @@ test_that("resampling survival models with static metric", {
 
   spec_ph <-
     proportional_hazards(penalty = .5) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   # putting together a workflow set --------------------------------------------
@@ -178,7 +178,7 @@ test_that("resampling survival models with integrated metric", {
 
   spec_ph <-
     proportional_hazards(penalty = .5) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   # putting together a workflow set --------------------------------------------
@@ -293,7 +293,7 @@ test_that("resampling survival models with dynamic metric", {
 
   spec_ph <-
     proportional_hazards(penalty = .5) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   # putting together a workflow set --------------------------------------------
@@ -405,7 +405,7 @@ test_that("resampling survival models with linear_pred metric", {
 
   spec_ph <-
     proportional_hazards(penalty = .1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   spec_sr <-
@@ -535,7 +535,7 @@ test_that("resampling survival models with mixture of metric types", {
 
   spec_ph <-
     proportional_hazards(penalty = .5) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   # putting together a workflow set --------------------------------------------
@@ -655,7 +655,7 @@ test_that("resampling survival models mixture of metric types including linear_p
 
   spec_ph <-
     proportional_hazards(penalty = .1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   spec_sr <-

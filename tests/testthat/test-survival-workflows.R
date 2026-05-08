@@ -10,7 +10,8 @@ test_that("can `fit()` a censored workflow with a formula", {
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_formula(workflow, surv ~ .)
@@ -23,7 +24,7 @@ test_that("can `fit()` a censored workflow with a formula", {
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
   expect_identical(
     wf_fit$fit$fit$fit$beta,
-    censored::coxnet_train(surv ~ ., data = lung)$fit$beta
+    censored::coxnet_train(surv ~ ., data = lung, cox.ties = "efron")$fit$beta
   )
 })
 
@@ -58,7 +59,8 @@ test_that("can `fit()` a censored workflow with variables", {
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_variables(
@@ -75,7 +77,7 @@ test_that("can `fit()` a censored workflow with variables", {
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
   expect_identical(
     wf_fit$fit$fit$fit$beta,
-    censored::coxnet_train(surv ~ ., data = lung)$fit$beta
+    censored::coxnet_train(surv ~ ., data = lung, cox.ties = "efron")$fit$beta
   )
 })
 
@@ -86,7 +88,8 @@ test_that("can `fit()` a censored workflow with a recipe", {
 
   rec <- recipes::recipe(surv ~ ., lung)
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_recipe(workflow, rec)
@@ -99,7 +102,7 @@ test_that("can `fit()` a censored workflow with a recipe", {
   skip_if_not_installed("censored", minimum_version = "0.2.0.9001")
   expect_identical(
     wf_fit$fit$fit$fit$beta,
-    censored::coxnet_train(surv ~ ., data = lung)$fit$beta
+    censored::coxnet_train(surv ~ ., data = lung, cox.ties = "efron")$fit$beta
   )
 })
 
@@ -108,7 +111,8 @@ test_that("can `predict()` a censored workflow with a formula", {
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_formula(workflow, surv ~ .)
@@ -183,7 +187,8 @@ test_that("can `predict()` a censored workflow with variables", {
     tidyr::drop_na() %>%
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_variables(
@@ -226,7 +231,8 @@ test_that("can `predict()` a censored workflow with a recipe", {
 
   rec <- recipes::recipe(surv ~ ., lung)
 
-  mod <- proportional_hazards(engine = "glmnet", penalty = 0.1)
+  mod <- proportional_hazards(penalty = 0.1) %>%
+    set_engine("glmnet", cox.ties = "efron")
 
   workflow <- workflow()
   workflow <- add_recipe(workflow, rec)
