@@ -57,10 +57,12 @@
       Warning in `show_best()`:
       No value of `metric` was given; "concordance_survival" will be used.
     Output
-      # A tibble: 1 x 7
+      # A tibble: 3 x 7
         cost_complexity .metric              .estimator  mean     n std_err .config   
                   <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     
-      1         0.00001 concordance_survival standard   0.278    10  0.0147 pre0_mod1~
+      1         0.00001 concordance_survival standard   0.569    10  0.0105 pre0_mod1~
+      2         0.001   concordance_survival standard   0.550    10  0.0254 pre0_mod2~
+      3         0.00316 concordance_survival standard   0.540    10  0.0389 pre0_mod3~
 
 ---
 
@@ -70,10 +72,12 @@
       Warning in `show_best()`:
       `eval_time` is only used for dynamic survival metrics.
     Output
-      # A tibble: 1 x 7
+      # A tibble: 3 x 7
         cost_complexity .metric              .estimator  mean     n std_err .config   
                   <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     
-      1         0.00001 concordance_survival standard   0.278    10  0.0147 pre0_mod1~
+      1         0.00001 concordance_survival standard   0.569    10  0.0105 pre0_mod1~
+      2         0.001   concordance_survival standard   0.550    10  0.0254 pre0_mod2~
+      3         0.00316 concordance_survival standard   0.540    10  0.0389 pre0_mod3~
 
 ---
 
@@ -94,11 +98,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 pre0_m~
-      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 pre0_m~
-      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 pre0_m~
-      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 pre0_m~
-      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 pre0_m~
+      1       0.000118  concordance~ standard           NA 0.583    10  0.0135 pre0_m~
+      2       0.0000384 concordance~ standard           NA 0.576    10  0.0141 pre0_m~
+      3       0.0000192 concordance~ standard           NA 0.575    10  0.0139 pre0_m~
+      4       0.0000107 concordance~ standard           NA 0.574    10  0.0139 pre0_m~
+      5       0.000327  concordance~ standard           NA 0.574    10  0.0161 pre0_m~
 
 ---
 
@@ -111,11 +115,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 pre0_m~
-      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 pre0_m~
-      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 pre0_m~
-      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 pre0_m~
-      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 pre0_m~
+      1       0.000118  concordance~ standard           NA 0.583    10  0.0135 pre0_m~
+      2       0.0000384 concordance~ standard           NA 0.576    10  0.0141 pre0_m~
+      3       0.0000192 concordance~ standard           NA 0.575    10  0.0139 pre0_m~
+      4       0.0000107 concordance~ standard           NA 0.574    10  0.0139 pre0_m~
+      5       0.000327  concordance~ standard           NA 0.574    10  0.0161 pre0_m~
 
 ---
 
@@ -154,11 +158,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0000192 concordance~ standard           NA  0.28    10    0.01 pre0_m~
-      2       0.0000107 concordance~ standard           NA  0.28    10    0.01 pre0_m~
-      3       0.0000384 concordance~ standard           NA  0.28    10    0.02 pre0_m~
-      4       0.000118  concordance~ standard           NA  0.27    10    0.01 pre0_m~
-      5       0.000327  concordance~ standard           NA  0.26    10    0.01 pre0_m~
+      1       0.000118  concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      2       0.0000384 concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      3       0.0000192 concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      4       0.0000107 concordance~ standard           NA  0.57    10    0.01 pre0_m~
+      5       0.000327  concordance~ standard           NA  0.57    10    0.02 pre0_m~
 
 ---
 

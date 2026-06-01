@@ -86,6 +86,7 @@ test_that("show_best with censored data - static metric - anova racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+  skip_if_not_installed("censored", minimum_version = "0.3.4.9001")
 
   obj <- make_churn_cens_objects()
   suppressPackageStartupMessages(library("finetune"))
@@ -138,6 +139,7 @@ test_that("show_best with censored data - static metric (+dyn) - W/L racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+  skip_if_not_installed("censored", minimum_version = "0.3.4.9001")
 
   obj <- make_churn_cens_objects()
   suppressPackageStartupMessages(library("finetune"))
@@ -194,6 +196,7 @@ test_that("show_best with censored data - dyn metric (+stc) - W/L racing", {
   skip_if_not_installed("parsnip", minimum_version = "1.1.1.9007")
   skip_if_not_installed("tune", minimum_version = "1.2.1.9000")
   skip_if_not_installed("finetune", minimum_version = "1.1.0.9004")
+  skip_if_not_installed("censored", minimum_version = "0.3.4.9001")
 
   obj <- make_churn_cens_objects()
   suppressPackageStartupMessages(library("finetune"))
