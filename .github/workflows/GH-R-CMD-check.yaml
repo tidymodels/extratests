@@ -77,7 +77,7 @@ jobs:
             "tidymodels/censored@rand_forest-ranger",
             "tidymodels/discrim",
             "tidymodels/multilevelmod",
-            "tidymodels/parsnip",
+            "tidymodels/parsnip@sparsity-mode",
             "tidymodels/plsmod",
             "tidymodels/poissonreg",
             "tidymodels/rules"
