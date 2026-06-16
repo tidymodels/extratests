@@ -74,7 +74,7 @@ jobs:
           try(pak::pkg_install(c(
             "tidymodels/baguette",
             "tidymodels/bonsai",
-            "tidymodels/censored",
+            "tidymodels/censored@rand_forest-ranger",
             "tidymodels/discrim",
             "tidymodels/multilevelmod",
             "tidymodels/parsnip",
