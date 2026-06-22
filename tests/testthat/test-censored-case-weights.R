@@ -131,16 +131,16 @@ test_that('rand_forest - ranger censored case weights', {
 
   dat <- make_cens_wts()
 
-  expect_error(
+  expect_no_error(
     {
       set.seed(1)
       wt_fit <-
         rand_forest() %>%
         set_engine("ranger") %>%
         set_mode("censored regression") %>%
-        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-    },
-    regexp = NA
+        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts) %>%
+        extract_fit_engine()
+    }
   )
 
   set.seed(1)
@@ -148,11 +148,12 @@ test_that('rand_forest - ranger censored case weights', {
     rand_forest() %>%
     set_engine("ranger") %>%
     set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
+    fit(Surv(time, event) ~ ., data = dat$full) %>%
+    extract_fit_engine()
 
   # ranger survival has no $predictions; compare the OOB survival matrix instead
-  expect_unequal(unwt_fit$fit$survival, wt_fit$fit$survival)
+  expect_unequal(unwt_fit$survival, wt_fit$survival)
 
   # confirms the data name-map routed weights to `case.weights`
-  expect_snapshot(wt_fit$fit$call)
+  expect_snapshot(wt_fit$call)
 })

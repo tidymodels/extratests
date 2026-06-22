@@ -17,7 +17,7 @@
 # rand_forest - ranger censored case weights
 
     Code
-      wt_fit$fit$call
+      wt_fit$call
     Output
       ranger::ranger(formula = Surv(time, event) ~ ., data = data, 
           num.threads = 1, verbose = FALSE, seed = sample.int(10^5, 
