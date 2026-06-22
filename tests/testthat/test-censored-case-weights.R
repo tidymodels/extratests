@@ -121,3 +121,39 @@ test_that('proportional_hazards - glmnet censored case weights', {
   expect_snapshot(wt_fit$fit$call)
   expect_unequal(coef(unwt_fit$fit), coef(wt_fit$fit))
 })
+
+
+# random forest -----------------------------------------------------------
+
+test_that('rand_forest - ranger censored case weights', {
+  skip_if_not_installed("censored", "0.3.4.9002")
+  skip_if_not_installed("ranger")
+
+  dat <- make_cens_wts()
+
+  expect_no_error(
+    {
+      set.seed(1)
+      wt_fit <-
+        rand_forest() %>%
+        set_engine("ranger") %>%
+        set_mode("censored regression") %>%
+        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts) %>%
+        extract_fit_engine()
+    }
+  )
+
+  set.seed(1)
+  unwt_fit <-
+    rand_forest() %>%
+    set_engine("ranger") %>%
+    set_mode("censored regression") %>%
+    fit(Surv(time, event) ~ ., data = dat$full) %>%
+    extract_fit_engine()
+
+  # ranger survival has no $predictions; compare the OOB survival matrix instead
+  expect_unequal(unwt_fit$survival, wt_fit$survival)
+
+  # confirms the data name-map routed weights to `case.weights`
+  expect_snapshot(wt_fit$call)
+})
