@@ -74,10 +74,10 @@ jobs:
           try(pak::pkg_install(c(
             "tidymodels/baguette",
             "tidymodels/bonsai",
-            "tidymodels/censored@rand_forest-ranger",
+            "tidymodels/censored",
             "tidymodels/discrim",
             "tidymodels/multilevelmod",
-            "tidymodels/parsnip@sparsity-mode",
+            "tidymodels/parsnip",
             "tidymodels/plsmod",
             "tidymodels/poissonreg",
             "tidymodels/rules"
