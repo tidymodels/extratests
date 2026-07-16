@@ -157,3 +157,37 @@ test_that('rand_forest - ranger censored case weights', {
   # confirms the data name-map routed weights to `case.weights`
   expect_snapshot(wt_fit$call)
 })
+
+
+test_that('rand_forest - randomForestSRC censored case weights', {
+  skip_if_not_installed("censored", "0.3.4.9003")
+  skip_if_not_installed("randomForestSRC")
+
+  dat <- make_cens_wts()
+
+  expect_no_error(
+    {
+      set.seed(1)
+      wt_fit <-
+        rand_forest() %>%
+        set_engine("randomForestSRC") %>%
+        set_mode("censored regression") %>%
+        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts) %>%
+        extract_fit_engine()
+    }
+  )
+
+  set.seed(1)
+  unwt_fit <-
+    rand_forest() %>%
+    set_engine("randomForestSRC") %>%
+    set_mode("censored regression") %>%
+    fit(Surv(time, event) ~ ., data = dat$full) %>%
+    extract_fit_engine()
+
+  # compare the OOB survival matrix
+  expect_unequal(unwt_fit$survival.oob, wt_fit$survival.oob)
+
+  # confirms the data name-map routed weights to `case.wt`
+  expect_snapshot(wt_fit$call)
+})
