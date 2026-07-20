@@ -23,3 +23,11 @@
           num.threads = 1, verbose = FALSE, seed = sample.int(10^5, 
               1), case.weights = weights)
 
+# rand_forest - randomForestSRC censored case weights
+
+    Code
+      wt_fit$call
+    Output
+      randomForestSRC::rfsrc(formula = Surv(..y_time, ..y_status) ~ 
+          ., data = data, case.wt = weights)
+
