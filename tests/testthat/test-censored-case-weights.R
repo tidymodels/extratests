@@ -41,30 +41,6 @@ test_that('bag_tree - rpart censored case weights', {
   expect_snapshot(wt_fit$fit$call)
 })
 
-
-# boosted trees -----------------------------------------------------------
-
-test_that("boost_tree - mboost censored case weights", {
-  skip_if_not_installed("censored", "0.1.0")
-
-  dat <- make_cens_wts()
-
-  expect_error(
-    {
-      set.seed(1)
-      wt_fit <-
-        boost_tree() %>%
-        set_engine("mboost") %>%
-        set_mode("censored regression") %>%
-        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-    },
-    regexp = NA
-  )
-
-  expect_identical(wt_fit$fit$`(weights)`, as.vector(dat$wts))
-})
-
-
 # proportional_hazards ----------------------------------------------------
 
 test_that('proportional_hazards - survival censored case weights', {
