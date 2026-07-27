@@ -103,6 +103,7 @@ test_that('poisson_reg - glmnet case weights', {
 
 test_that('poisson_reg - stan case weights', {
   skip_if_not_installed("poissonreg", "1.0.1")
+  skip_if_not_installed("rstanarm")
 
   dat <- make_biochem_wts()
 

@@ -229,6 +229,8 @@ test_that('logistic_reg - glmnet case weights', {
 })
 
 test_that('logistic_reg - stan case weights', {
+  skip_if_not_installed("rstanarm")
+
   dat <- make_two_class_wts()
 
   expect_error(
