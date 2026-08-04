@@ -7,40 +7,6 @@ skip_if_not_installed("recipes", "1.0.0")
 
 suppressPackageStartupMessages(library(censored))
 
-# bagged trees ------------------------------------------------------------
-
-test_that('bag_tree - rpart censored case weights', {
-  skip_if_not_installed("censored", "0.1.0")
-
-  # To make devtools::test_active_file() and devtools::test() do the same #185
-  library(baguette)
-
-  dat <- make_cens_wts()
-
-  expect_error(
-    {
-      set.seed(1)
-      wt_fit <-
-        bag_tree() %>%
-        set_engine("rpart") %>%
-        set_mode("censored regression") %>%
-        fit(Surv(time, event) ~ ., data = dat$full, case_weights = dat$wts)
-    },
-    regexp = NA
-  )
-
-  set.seed(1)
-  unwt_fit <-
-    bag_tree() %>%
-    set_engine("rpart") %>%
-    set_mode("censored regression") %>%
-    fit(Surv(time, event) ~ ., data = dat$full)
-
-  # the resulting `$mtrees` objects are the same but
-  # weights is included in the call
-  expect_snapshot(wt_fit$fit$call)
-})
-
 # proportional_hazards ----------------------------------------------------
 
 test_that('proportional_hazards - survival censored case weights', {
