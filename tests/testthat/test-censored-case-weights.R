@@ -68,7 +68,7 @@ test_that('proportional_hazards - glmnet censored case weights', {
 # random forest -----------------------------------------------------------
 
 test_that('rand_forest - ranger censored case weights', {
-  skip_if_not_installed("censored", "0.3.4.9002")
+  skip_if_not_installed("censored", "0.3.5.9000")
   skip_if_not_installed("ranger")
 
   dat <- make_cens_wts()
@@ -102,7 +102,7 @@ test_that('rand_forest - ranger censored case weights', {
 
 
 test_that('rand_forest - randomForestSRC censored case weights', {
-  skip_if_not_installed("censored", "0.3.4.9003")
+  skip_if_not_installed("censored", "0.3.5.9000")
   skip_if_not_installed("randomForestSRC")
 
   dat <- make_cens_wts()
