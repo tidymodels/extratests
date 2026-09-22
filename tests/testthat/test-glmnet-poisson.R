@@ -136,7 +136,7 @@ test_that("formula interface can deal with missing values", {
 })
 
 test_that("model errors on missing penalty value", {
-  skip_if_not_installed("parsnip", minimum_version = "1.2.1.9003")
+  skip_if_not_installed("parsnip", minimum_version = "1.6.0.9001")
   skip_if_not_installed("glmnet")
 
   expect_snapshot(error = TRUE, {

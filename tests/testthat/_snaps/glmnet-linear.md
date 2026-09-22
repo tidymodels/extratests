@@ -14,10 +14,11 @@
       linear_reg() %>% set_engine("glmnet") %>% fit(mpg ~ ., data = mtcars[-(1:4), ])
     Condition
       Error in `translate()`:
-      x For the glmnet engine, `penalty` must be a single number (or a value of `tune()`).
+      x For the "glmnet" engine, `penalty` must be a single number (or a value of `tune()`).
       ! There are 0 values for `penalty`.
       i To try multiple values for total regularization, use the tune package.
       i To predict multiple penalties, use `multi_predict()`.
+      i To override the default path, use `path_values`.
 
 ---
 
