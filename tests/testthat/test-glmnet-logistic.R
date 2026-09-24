@@ -1,3 +1,4 @@
+skip_if_not_installed("parsnip", "1.6.0.9001")
 library(testthat)
 library(parsnip)
 
