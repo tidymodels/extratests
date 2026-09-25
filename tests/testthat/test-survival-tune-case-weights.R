@@ -8,6 +8,8 @@ skip_if_not_installed("yardstick", minimum_version = "1.2.0.9003")
 
 test_that("grid tuning survival models with importance case weights", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   ## ------------------------------------------------------------------------------
 
@@ -17,12 +19,19 @@ test_that("grid tuning survival models with importance case weights", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet", path_values = grid$penalty) %>%
+    set_engine("glmnet", path_values = grid$penalty, cox.ties = "efron") %>%
     set_mode("censored regression")
 
-  gctrl <- control_grid(save_pred = TRUE, extract = function(x) coef(extract_fit_engine(x)))
+  gctrl <- control_grid(save_pred = TRUE, extract = function(x) {
+    coef(extract_fit_engine(x))
+  })
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -80,29 +89,24 @@ test_that("grid tuning survival models with importance case weights", {
     )
 
   expect_false(
-    isTRUE(
-      all.equal(
-        weights_none_tune_res$.extracts[[1]]$.extracts[[1]],
-        weights_imp_tune_res$.extracts[[1]]$.extracts[[1]]
-      )
+    identical(
+      weights_none_tune_res$.extracts[[1]]$.extracts[[1]],
+      weights_imp_tune_res$.extracts[[1]]$.extracts[[1]]
     )
   )
 
   expect_false(
-    isTRUE(
-      all.equal(
-        collect_metrics(weights_none_tune_res),
-        collect_metrics(weights_imp_tune_res)
-      )
+    identical(
+      collect_metrics(weights_none_tune_res),
+      collect_metrics(weights_imp_tune_res)
     )
   )
-
 })
-
-
 
 test_that("grid tuning survival models with frequency case weights", {
   skip_if_not_installed("prodlim")
+  skip_if_not_installed("tune", minimum_version = "2.0.1.9001")
+  skip_if_not_installed("yardstick", minimum_version = "1.3.2.9000")
 
   ## ------------------------------------------------------------------------------
 
@@ -112,12 +116,17 @@ test_that("grid tuning survival models with frequency case weights", {
 
   mod_spec <-
     proportional_hazards(penalty = 0.01, mixture = 1) %>%
-    set_engine("glmnet", path_values = grid$penalty) %>%
+    set_engine("glmnet", path_values = grid$penalty, cox.ties = "efron") %>%
     set_mode("censored regression")
 
   rctrl <- control_resamples(extract = function(x) extract_fit_engine(x))
 
-  mix_mtrc  <- metric_set(brier_survival, brier_survival_integrated, concordance_survival)
+  mix_mtrc <- metric_set(
+    brier_survival,
+    brier_survival_integrated,
+    concordance_survival,
+    royston_survival
+  )
 
   set.seed(1)
   sim_dat <- prodlim::SimSurv(500) %>%
@@ -170,6 +179,4 @@ test_that("grid tuning survival models with frequency case weights", {
     coef(weights_none_tune_res$.extracts[[1]]$.extracts[[1]]),
     coef(weights_frq_tune_res$.extracts[[1]]$.extracts[[1]])
   )
-
-
 })

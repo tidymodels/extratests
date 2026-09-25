@@ -21,7 +21,11 @@ test_that(".check_cens_type()", {
     parsnip:::.check_cens_type(left_c, type = "right", fail = TRUE)
   })
   expect_snapshot(error = TRUE, {
-    parsnip:::.check_cens_type(left_c, type = c("right", "interval"), fail = TRUE)
+    parsnip:::.check_cens_type(
+      left_c,
+      type = c("right", "interval"),
+      fail = TRUE
+    )
   })
 })
 
@@ -47,36 +51,36 @@ test_that(".extract_surv_time()", {
   intv_c <- survival::Surv(times, times2, events, type = "interval")
   count_c <- survival::Surv(times, times2, events)
 
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(right_c),
     times
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(left_c),
     times
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(intv_c),
     tibble::tibble(time1 = times, time2 = rep(1.0, 5))
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(count_c),
     tibble::tibble(start = times, stop = times2)
   )
 
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(right_c[1]),
     times[1]
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(left_c[1]),
     times[1]
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(intv_c[1]),
     tibble::tibble(time1 = times[1], time2 = 1.0)
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(count_c[1]),
     tibble::tibble(start = times[1], stop = times2[1])
   )
@@ -110,19 +114,19 @@ test_that(".extract_surv_status()", {
   intv_c <- survival::Surv(times, times2, events, type = "interval")
   count_c <- survival::Surv(times, times2, events)
 
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(right_c),
     events
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(left_c),
     events
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(intv_c),
     events
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(count_c),
     events
   )
@@ -158,18 +162,28 @@ test_that(".extract_surv_status() does not transform status for interval censori
   events_interval_full <- c(1, 0:3)
   events_interval_12 <- c(1, 2, 1, 2, 1)
 
-  intv_c <- survival::Surv(times, times2, events_interval_full, type = "interval")
-  intv_c_12 <- survival::Surv(times, times2, events_interval_12, type = "interval")
+  intv_c <- survival::Surv(
+    times,
+    times2,
+    events_interval_full,
+    type = "interval"
+  )
+  intv_c_12 <- survival::Surv(
+    times,
+    times2,
+    events_interval_12,
+    type = "interval"
+  )
 
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_time(intv_c),
     tibble::tibble(time1 = times, time2 = c(rep(1.0, 4), 200))
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(intv_c),
     events_interval_full
   )
-  expect_equal(
+  expect_identical(
     parsnip:::.extract_surv_status(intv_c_12),
     events_interval_12
   )

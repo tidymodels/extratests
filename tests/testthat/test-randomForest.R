@@ -19,7 +19,6 @@ bad_rf_cls <- rand_forest(mode = "classification") %>%
 # ------------------------------------------------------------------------------
 
 test_that('randomForest classification execution', {
-
   skip_if_not_installed("randomForest")
 
   # check: passes interactively but not on R CMD check
@@ -59,7 +58,7 @@ test_that('randomForest classification execution', {
   #   data = lending_club,
   #   control = caught_ctrl
   # )
-  # expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  # expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   expect_error(
     fit_xy(
@@ -69,12 +68,10 @@ test_that('randomForest classification execution', {
       control = caught_ctrl
     )
   )
-
 })
 
 
 test_that('randomForest classification prediction', {
-
   skip_if_not_installed("randomForest")
 
   xy_fit <- fit_xy(
@@ -86,7 +83,10 @@ test_that('randomForest classification prediction', {
 
   xy_pred <- predict(xy_fit$fit, newdata = lending_club[1:6, num_pred])
   xy_pred <- unname(xy_pred)
-  expect_equal(xy_pred, predict(xy_fit, new_data = lending_club[1:6, num_pred])$.pred_class)
+  expect_identical(
+    xy_pred,
+    predict(xy_fit, new_data = lending_club[1:6, num_pred])$.pred_class
+  )
 
   form_fit <- fit(
     lc_basic,
@@ -95,16 +95,21 @@ test_that('randomForest classification prediction', {
     control = ctrl
   )
 
-  form_pred <- predict(form_fit$fit, newdata = lending_club[1:6, c("funded_amnt", "int_rate")])
+  form_pred <- predict(
+    form_fit$fit,
+    newdata = lending_club[1:6, c("funded_amnt", "int_rate")]
+  )
   form_pred <- unname(form_pred)
-  expect_equal(
+  expect_identical(
     form_pred,
-    predict(form_fit, new_data = lending_club[1:6, c("funded_amnt", "int_rate")])$.pred_class
+    predict(
+      form_fit,
+      new_data = lending_club[1:6, c("funded_amnt", "int_rate")]
+    )$.pred_class
   )
 })
 
 test_that('randomForest classification probabilities', {
-
   skip_if_not_installed("randomForest")
 
   xy_fit <- fit_xy(
@@ -114,13 +119,24 @@ test_that('randomForest classification probabilities', {
     control = ctrl
   )
 
-  xy_pred <- predict(xy_fit$fit, newdata = lending_club[1:6, num_pred], type = "prob")
+  xy_pred <- predict(
+    xy_fit$fit,
+    newdata = lending_club[1:6, num_pred],
+    type = "prob"
+  )
   xy_pred <- as_tibble(as.data.frame(xy_pred))
   names(xy_pred) <- paste0(".pred_", names(xy_pred))
-  expect_equal(xy_pred, predict(xy_fit, new_data = lending_club[1:6, num_pred], type = "prob"))
+  expect_identical(
+    xy_pred,
+    predict(xy_fit, new_data = lending_club[1:6, num_pred], type = "prob")
+  )
 
-  one_row <- predict(xy_fit, new_data = lending_club[1, num_pred], type = "prob")
-  expect_equal(xy_pred[1,], one_row)
+  one_row <- predict(
+    xy_fit,
+    new_data = lending_club[1, num_pred],
+    type = "prob"
+  )
+  expect_identical(xy_pred[1, ], one_row)
 
   form_fit <- fit(
     lc_basic,
@@ -129,12 +145,20 @@ test_that('randomForest classification probabilities', {
     control = ctrl
   )
 
-  form_pred <- predict(form_fit$fit, newdata = lending_club[1:6, c("funded_amnt", "int_rate")], type = "prob")
+  form_pred <- predict(
+    form_fit$fit,
+    newdata = lending_club[1:6, c("funded_amnt", "int_rate")],
+    type = "prob"
+  )
   form_pred <- as_tibble(as.data.frame(form_pred))
   names(form_pred) <- paste0(".pred_", names(form_pred))
-  expect_equal(
+  expect_identical(
     form_pred,
-    predict(form_fit, new_data = lending_club[1:6, c("funded_amnt", "int_rate")], type = "prob")
+    predict(
+      form_fit,
+      new_data = lending_club[1:6, c("funded_amnt", "int_rate")],
+      type = "prob"
+    )
   )
 })
 
@@ -154,7 +178,6 @@ bad_rf_reg <- rand_forest(mode = "regression") %>%
 # ------------------------------------------------------------------------------
 
 test_that('randomForest regression execution', {
-
   skip_if_not_installed("randomForest")
 
   expect_error(
@@ -183,7 +206,7 @@ test_that('randomForest regression execution', {
     data = mtcars,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_form_catch$fit, "try-error"))
+  expect_s3_class(randomForest_form_catch$fit, "try-error")
 
   randomForest_xy_catch <- fit_xy(
     bad_rf_reg,
@@ -191,12 +214,10 @@ test_that('randomForest regression execution', {
     y = mtcars$mpg,
     control = caught_ctrl
   )
-  expect_true(inherits(randomForest_xy_catch$fit, "try-error"))
-
+  expect_s3_class(randomForest_xy_catch$fit, "try-error")
 })
 
 test_that('randomForest regression prediction', {
-
   skip_if_not_installed("randomForest")
 
   xy_fit <- fit_xy(
@@ -209,14 +230,12 @@ test_that('randomForest regression prediction', {
   xy_pred <- predict(xy_fit$fit, newdata = tail(mtcars))
   xy_pred <- unname(xy_pred)
 
-  expect_equal(xy_pred, predict(xy_fit, new_data = tail(mtcars))$.pred)
-
+  expect_identical(xy_pred, predict(xy_fit, new_data = tail(mtcars))$.pred)
 })
 
 ## -----------------------------------------------------------------------------
 
 test_that('argument checks for data dimensions', {
-
   skip_if_not_installed("randomForest")
   skip_if_not_installed("parsnip", minimum_version = "1.2.1.9002")
 
@@ -229,18 +248,23 @@ test_that('argument checks for data dimensions', {
     set_mode("regression")
 
   expect_snapshot(
-    f_fit  <- spec %>% fit(body_mass_g ~ ., data = penguins),
+    f_fit <- spec %>% fit(body_mass_g ~ ., data = penguins),
   )
 
   expect_snapshot(
     xy_fit <- spec %>% fit_xy(x = penguins[, -6], y = penguins$body_mass_g),
   )
 
-  expect_equal(f_fit$fit$mtry, 6)
-  expect_equal(f_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
-  expect_equal(xy_fit$fit$mtry, 6)
-  expect_equal(xy_fit$fit$call$nodesize, rlang::expr(min_rows(~1000, x)), ignore_attr = TRUE)
-
+  expect_identical(f_fit$fit$mtry, 6)
+  expect_identical(
+    f_fit$fit$call$nodesize,
+    rlang::expr(min_rows(~1000, x)),
+    ignore_attr = TRUE
+  )
+  expect_identical(xy_fit$fit$mtry, 6)
+  expect_identical(
+    xy_fit$fit$call$nodesize,
+    rlang::expr(min_rows(~1000, x)),
+    ignore_attr = TRUE
+  )
 })
-
-

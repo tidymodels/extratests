@@ -1,5 +1,4 @@
-## Skip entire file is Spark is not installed
-skip_if(spark_not_installed())
+skip_if_no_spark()
 
 library(testthat)
 library(parsnip)
@@ -12,17 +11,20 @@ hpc <- hpc_data[1:150, c(2:5, 8)]
 # ------------------------------------------------------------------------------
 
 test_that('spark execution', {
+  sc <- spark_test_connection()
 
-  skip_if_not_installed("sparklyr")
-
-  suppressPackageStartupMessages(library(sparklyr))
-
-  sc <- try(spark_connect(master = "local"), silent = TRUE)
-
-  skip_if(inherits(sc, "try-error"))
-
-  churn_logit_tr <- copy_to(sc, wa_churn[ 5:100,   ], "churn_logit_tr", overwrite = TRUE)
-  churn_logit_te <- copy_to(sc, wa_churn[   1:4, -1], "churn_logit_te", overwrite = TRUE)
+  churn_logit_tr <- copy_to(
+    sc,
+    wa_churn[5:100, ],
+    "churn_logit_tr",
+    overwrite = TRUE
+  )
+  churn_logit_te <- copy_to(
+    sc,
+    wa_churn[1:4, -1],
+    "churn_logit_te",
+    overwrite = TRUE
+  )
 
   # ----------------------------------------------------------------------------
 
@@ -59,7 +61,7 @@ test_that('spark execution', {
     regexp = NA
   )
 
-  expect_equal(colnames(spark_class_pred), "pred_class")
+  expect_identical(colnames(spark_class_pred), "pred_class")
 
   expect_equal(
     as.data.frame(spark_class_pred)$pred_class,
@@ -72,19 +74,19 @@ test_that('spark execution', {
   )
 
   expect_error(
-    spark_class_prob_classprob <- predict(spark_class_fit, churn_logit_te, type = "prob"),
+    spark_class_prob_classprob <- predict(
+      spark_class_fit,
+      churn_logit_te,
+      type = "prob"
+    ),
     regexp = NA
   )
 
-  expect_equal(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
+  expect_identical(colnames(spark_class_prob), c("pred_No", "pred_Yes"))
 
   expect_equal(
     as.data.frame(spark_class_prob),
     as.data.frame(spark_class_prob_classprob),
     ignore_attr = TRUE
   )
-
-  spark_disconnect_all()
 })
-
-

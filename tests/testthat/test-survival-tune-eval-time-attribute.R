@@ -35,7 +35,7 @@ test_that("fit_resamples save eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   tree_res <-
@@ -49,12 +49,10 @@ test_that("fit_resamples save eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  expect_true("eval_time" %in% names(attributes(tree_res)))
-  expect_equal(attributes(tree_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(tree_res), time_points)
-
+  expect_in("eval_time", names(attributes(tree_res)))
+  expect_identical(attributes(tree_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(tree_res), time_points)
 })
-
 
 
 test_that("tune*_() saves eval_time", {
@@ -85,7 +83,7 @@ test_that("tune*_() saves eval_time", {
 
   grid <- tibble(cost_complexity = 10^c(-10, -2, -1))
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   ## ------------------------------------------------------------------------------
 
@@ -100,9 +98,9 @@ test_that("tune*_() saves eval_time", {
       eval_time = time_points
     )
 
-  expect_true("eval_time" %in% names(attributes(grid_res)))
-  expect_equal(attributes(grid_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(grid_res), time_points)
+  expect_in("eval_time", names(attributes(grid_res)))
+  expect_identical(attributes(grid_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(grid_res), time_points)
 
   # ------------------------------------------------------------------------------
 
@@ -120,9 +118,9 @@ test_that("tune*_() saves eval_time", {
       )
   })
 
-  expect_true("eval_time" %in% names(attributes(bayes_res)))
-  expect_equal(attributes(bayes_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(bayes_res), time_points)
+  expect_in("eval_time", names(attributes(bayes_res)))
+  expect_identical(attributes(bayes_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(bayes_res), time_points)
 
   # ------------------------------------------------------------------------------
 
@@ -141,9 +139,9 @@ test_that("tune*_() saves eval_time", {
       )
   })
 
-  expect_true("eval_time" %in% names(attributes(sa_res)))
-  expect_equal(attributes(sa_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(sa_res), time_points)
+  expect_in("eval_time", names(attributes(sa_res)))
+  expect_identical(attributes(sa_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(sa_res), time_points)
 
   ## ------------------------------------------------------------------------------
 
@@ -161,9 +159,9 @@ test_that("tune*_() saves eval_time", {
         eval_time = time_points
       )
   })
-  expect_true("eval_time" %in% names(attributes(anova_res)))
-  expect_equal(attributes(anova_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(anova_res), time_points)
+  expect_in("eval_time", names(attributes(anova_res)))
+  expect_identical(attributes(anova_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(anova_res), time_points)
 
   ## ------------------------------------------------------------------------------
 
@@ -180,10 +178,9 @@ test_that("tune*_() saves eval_time", {
       )
   })
 
-  expect_true("eval_time" %in% names(attributes(wl_res)))
-  expect_equal(attributes(wl_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(wl_res), time_points)
-
+  expect_in("eval_time", names(attributes(wl_res)))
+  expect_identical(attributes(wl_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(wl_res), time_points)
 })
 
 
@@ -216,7 +213,7 @@ test_that("last_fit saves eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  srv_mtrc  <- metric_set(brier_survival)
+  srv_mtrc <- metric_set(brier_survival)
 
   set.seed(2193)
   tree_res <-
@@ -230,9 +227,7 @@ test_that("last_fit saves eval_time", {
 
   ## ------------------------------------------------------------------------------
 
-  expect_true("eval_time" %in% names(attributes(tree_res)))
-  expect_equal(attributes(tree_res)$eval_time, time_points)
-  expect_equal(.get_tune_eval_times(tree_res), time_points)
-
+  expect_in("eval_time", names(attributes(tree_res)))
+  expect_identical(attributes(tree_res)$eval_time, time_points)
+  expect_identical(.get_tune_eval_times(tree_res), time_points)
 })
-

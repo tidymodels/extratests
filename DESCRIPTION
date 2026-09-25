@@ -29,11 +29,14 @@ Suggests:
     fastICA,
     finetune,
     flexsurv,
+    grf,
     glmnet,
     hardhat,
     kknn,
     LiblineaR,
+    lightgbm,
     lubridate,
+    MASS,
     Matrix,
     mda,
     mixOmics,
@@ -70,7 +73,8 @@ Suggests:
     workflows,
     workflowsets,
     xgboost,
-    yardstick
+    yardstick,
+    ggplot2
 Remotes:
     mixOmicsTeam/mixOmics,
     r-lib/pillar

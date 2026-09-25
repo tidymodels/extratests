@@ -47,7 +47,7 @@ test_that("known selections are stored", {
 
   known_selections <- collect_extracts(res)[[5, ".extracts"]]
 
-  expect_equal(
+  expect_identical(
     known_selections,
     list(list(
       Class = "Class",
