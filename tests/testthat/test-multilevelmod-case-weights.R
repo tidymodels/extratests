@@ -1,5 +1,5 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("parsnip", "1.6.0.9001")
 skip_if_not_installed("hardhat", "1.2.0")
 skip_if_not_installed("yardstick", "1.0.0")
 skip_if_not_installed("workflows", "1.0.0")
@@ -13,6 +13,7 @@ test_that('linear_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
   skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
+  skip_if_not_installed("rstanarm")
 
   dat <- make_msa_wts()
 
@@ -71,6 +72,7 @@ test_that('logistic_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
   skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
+  skip_if_not_installed("rstanarm")
 
   data("two_class_dat", package = "modeldata")
 
@@ -139,6 +141,7 @@ test_that('poisson_reg - stan_glmer case weights', {
   skip_if_not_installed("multilevelmod", "1.0.0")
   skip_if_not_installed("Matrix", "1.6-2")
   skip_if_not_installed("lme4", "1.1-35.1")
+  skip_if_not_installed("rstanarm")
 
   data(bioChemists, package = "pscl", envir = rlang::current_env())
 

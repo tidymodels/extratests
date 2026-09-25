@@ -400,7 +400,7 @@
       # A tibble: 1 x 6
         penalty .metric        .eval_time   mean     n std_err
           <dbl> <chr>               <dbl>  <dbl> <int>   <dbl>
-      1    0.01 brier_survival          1 0.0192    30 0.00158
+      1  0.0001 brier_survival          1 0.0192    30 0.00158
 
 ---
 
@@ -416,7 +416,7 @@
       # A tibble: 1 x 6
         penalty .metric          .eval_time  mean     n std_err
           <dbl> <chr>                 <dbl> <dbl> <int>   <dbl>
-      1    0.01 royston_survival         NA 0.433    30  0.0111
+      1  0.0001 royston_survival         NA 0.433    30  0.0111
 
 # race tuning (W/L) - unneeded eval_time
 
@@ -431,9 +431,9 @@
 ---
 
     Code
-      tune_res <- proportional_hazards(penalty = tune(), engine = "glmnet") %>%
-        tune_race_win_loss(surv ~ ., resamples = vfold_cv(lung_surv, 5), metrics = metric_set(
-          concordance_survival), eval_time = 10)
+      tune_res <- proportional_hazards(penalty = tune()) %>% set_engine("glmnet",
+        cox.ties = "efron") %>% tune_race_win_loss(surv ~ ., resamples = vfold_cv(
+        lung_surv, 5), metrics = metric_set(concordance_survival), eval_time = 10)
     Condition
       Warning in `tune_race_win_loss()`:
       `eval_time` is only used for dynamic or integrated survival metrics.

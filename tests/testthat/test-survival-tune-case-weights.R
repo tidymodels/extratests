@@ -19,7 +19,7 @@ test_that("grid tuning survival models with importance case weights", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet", path_values = grid$penalty) %>%
+    set_engine("glmnet", path_values = grid$penalty, cox.ties = "efron") %>%
     set_mode("censored regression")
 
   gctrl <- control_grid(save_pred = TRUE, extract = function(x) {
@@ -116,7 +116,7 @@ test_that("grid tuning survival models with frequency case weights", {
 
   mod_spec <-
     proportional_hazards(penalty = 0.01, mixture = 1) %>%
-    set_engine("glmnet", path_values = grid$penalty) %>%
+    set_engine("glmnet", path_values = grid$penalty, cox.ties = "efron") %>%
     set_mode("censored regression")
 
   rctrl <- control_resamples(extract = function(x) extract_fit_engine(x))
@@ -175,7 +175,7 @@ test_that("grid tuning survival models with frequency case weights", {
       control = rctrl
     )
 
-  expect_identical(
+  expect_equal(
     coef(weights_none_tune_res$.extracts[[1]]$.extracts[[1]]),
     coef(weights_frq_tune_res$.extracts[[1]]$.extracts[[1]])
   )

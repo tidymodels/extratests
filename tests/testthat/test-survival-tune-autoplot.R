@@ -168,9 +168,9 @@ test_that("autoplot-ting survival models with integrated metric", {
   mod_spec <-
     proportional_hazards(
       penalty = tune(),
-      mixture = tune(),
-      engine = "glmnet"
+      mixture = tune()
     ) %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <-
@@ -995,7 +995,8 @@ test_that("autoplot() warning for unneeded evaluation times", {
     dplyr::mutate(surv = Surv(time, status), .keep = "unused")
   set.seed(2193)
   tune_res <-
-    proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+    proportional_hazards(penalty = tune()) %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     tune_grid(
       surv ~ .,
       resamples = vfold_cv(lung_surv, 2),

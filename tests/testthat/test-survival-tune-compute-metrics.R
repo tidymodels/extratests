@@ -24,7 +24,8 @@ test_that("compute_metrics works with survival models", {
 
   set.seed(2193)
   tune_res <-
-    proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+    proportional_hazards(penalty = tune()) %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     tune_grid(
       surv ~ .,
       resamples = vfold_cv(lung_surv, 2),

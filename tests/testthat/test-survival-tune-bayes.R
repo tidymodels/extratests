@@ -503,7 +503,7 @@ test_that("Bayesian tuning survival models with linear_pred metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -795,7 +795,7 @@ test_that("Bayesian tuning survival models with mixture of metric types includin
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))

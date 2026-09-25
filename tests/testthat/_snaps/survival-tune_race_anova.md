@@ -409,9 +409,9 @@
 ---
 
     Code
-      tune_res <- proportional_hazards(penalty = tune(), engine = "glmnet") %>%
-        tune_race_anova(surv ~ ., resamples = vfold_cv(lung_surv, 5), metrics = metric_set(
-          concordance_survival), eval_time = 10)
+      tune_res <- proportional_hazards(penalty = tune()) %>% set_engine("glmnet",
+        cox.ties = "efron") %>% tune_race_anova(surv ~ ., resamples = vfold_cv(
+        lung_surv, 5), metrics = metric_set(concordance_survival), eval_time = 10)
     Condition
       Warning in `tune_race_anova()`:
       `eval_time` is only used for dynamic or integrated survival metrics.

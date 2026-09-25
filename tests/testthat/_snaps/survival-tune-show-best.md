@@ -57,10 +57,12 @@
       Warning in `show_best()`:
       No value of `metric` was given; "concordance_survival" will be used.
     Output
-      # A tibble: 1 x 7
+      # A tibble: 3 x 7
         cost_complexity .metric              .estimator  mean     n std_err .config   
                   <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     
-      1         0.00001 concordance_survival standard   0.278    10  0.0147 pre0_mod1~
+      1         0.00001 concordance_survival standard   0.569    10  0.0105 pre0_mod1~
+      2         0.001   concordance_survival standard   0.550    10  0.0254 pre0_mod2~
+      3         0.00316 concordance_survival standard   0.540    10  0.0389 pre0_mod3~
 
 ---
 
@@ -70,10 +72,12 @@
       Warning in `show_best()`:
       `eval_time` is only used for dynamic survival metrics.
     Output
-      # A tibble: 1 x 7
+      # A tibble: 3 x 7
         cost_complexity .metric              .estimator  mean     n std_err .config   
                   <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     
-      1         0.00001 concordance_survival standard   0.278    10  0.0147 pre0_mod1~
+      1         0.00001 concordance_survival standard   0.569    10  0.0105 pre0_mod1~
+      2         0.001   concordance_survival standard   0.550    10  0.0254 pre0_mod2~
+      3         0.00316 concordance_survival standard   0.540    10  0.0389 pre0_mod3~
 
 ---
 
@@ -94,11 +98,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 pre0_m~
-      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 pre0_m~
-      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 pre0_m~
-      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 pre0_m~
-      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 pre0_m~
+      1       0.000118  concordance~ standard           NA 0.583    10  0.0135 pre0_m~
+      2       0.0000384 concordance~ standard           NA 0.576    10  0.0141 pre0_m~
+      3       0.0000192 concordance~ standard           NA 0.575    10  0.0139 pre0_m~
+      4       0.0000107 concordance~ standard           NA 0.574    10  0.0139 pre0_m~
+      5       0.000327  concordance~ standard           NA 0.574    10  0.0161 pre0_m~
 
 ---
 
@@ -111,11 +115,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0867    concordance~ standard           NA 0.297    10  0.0118 pre0_m~
-      2       0.0000192 concordance~ standard           NA 0.279    10  0.0147 pre0_m~
-      3       0.0000107 concordance~ standard           NA 0.278    10  0.0147 pre0_m~
-      4       0.0000384 concordance~ standard           NA 0.277    10  0.0156 pre0_m~
-      5       0.000118  concordance~ standard           NA 0.270    10  0.0141 pre0_m~
+      1       0.000118  concordance~ standard           NA 0.583    10  0.0135 pre0_m~
+      2       0.0000384 concordance~ standard           NA 0.576    10  0.0141 pre0_m~
+      3       0.0000192 concordance~ standard           NA 0.575    10  0.0139 pre0_m~
+      4       0.0000107 concordance~ standard           NA 0.574    10  0.0139 pre0_m~
+      5       0.000327  concordance~ standard           NA 0.574    10  0.0161 pre0_m~
 
 ---
 
@@ -154,11 +158,11 @@
       # A tibble: 5 x 8
         cost_complexity .metric      .estimator .eval_time  mean     n std_err .config
                   <dbl> <chr>        <chr>           <dbl> <dbl> <int>   <dbl> <chr>  
-      1       0.0000192 concordance~ standard           NA  0.28    10    0.01 pre0_m~
-      2       0.0000107 concordance~ standard           NA  0.28    10    0.01 pre0_m~
-      3       0.0000384 concordance~ standard           NA  0.28    10    0.02 pre0_m~
-      4       0.000118  concordance~ standard           NA  0.27    10    0.01 pre0_m~
-      5       0.000327  concordance~ standard           NA  0.26    10    0.01 pre0_m~
+      1       0.000118  concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      2       0.0000384 concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      3       0.0000192 concordance~ standard           NA  0.58    10    0.01 pre0_m~
+      4       0.0000107 concordance~ standard           NA  0.57    10    0.01 pre0_m~
+      5       0.000327  concordance~ standard           NA  0.57    10    0.02 pre0_m~
 
 ---
 
@@ -187,9 +191,9 @@
       # A tibble: 3 x 8
            penalty .metric          .estimator  mean     n   std_err .config     .iter
              <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
-      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
-      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
-      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+      1 0.00000168 royston_survival standard   0.999    10 0.0000725 initial_pr~     0
+      2 0.0000470  royston_survival standard   0.999    10 0.0000725 Iter1           1
+      3 0.000153   royston_survival standard   0.999    10 0.0000725 Iter2           2
 
 ---
 
@@ -197,11 +201,11 @@
       show_best(sa_linpred_res, metric = "concordance_survival")
     Output
       # A tibble: 3 x 8
-           penalty .metric              .estimator  mean     n std_err .config   .iter
-             <dbl> <chr>                <chr>      <dbl> <int>   <dbl> <chr>     <int>
-      1 0.00000168 concordance_survival standard   0.938    10 0.00376 initial_~     0
-      2 0.0000470  concordance_survival standard   0.938    10 0.00376 Iter1         1
-      3 0.000153   concordance_survival standard   0.938    10 0.00376 Iter2         2
+           penalty .metric              .estimator  mean     n  std_err .config  .iter
+             <dbl> <chr>                <chr>      <dbl> <int>    <dbl> <chr>    <int>
+      1 0.00000168 concordance_survival standard   0.994    10 0.000398 initial~     0
+      2 0.0000470  concordance_survival standard   0.994    10 0.000398 Iter1        1
+      3 0.000153   concordance_survival standard   0.994    10 0.000398 Iter2        2
 
 ---
 
@@ -214,9 +218,9 @@
       # A tibble: 3 x 8
            penalty .metric          .estimator  mean     n   std_err .config     .iter
              <dbl> <chr>            <chr>      <dbl> <int>     <dbl> <chr>       <int>
-      1 0.00000168 royston_survival standard   1.000    10 0.0000534 initial_pr~     0
-      2 0.0000470  royston_survival standard   1.000    10 0.0000534 Iter1           1
-      3 0.000153   royston_survival standard   1.000    10 0.0000534 Iter2           2
+      1 0.00000168 royston_survival standard   0.999    10 0.0000725 initial_pr~     0
+      2 0.0000470  royston_survival standard   0.999    10 0.0000725 Iter1           1
+      3 0.000153   royston_survival standard   0.999    10 0.0000725 Iter2           2
 
 ---
 

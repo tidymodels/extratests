@@ -53,7 +53,7 @@ test_that("augmenting survival models", {
 
   glmn_fit <-
     proportional_hazards(penalty = 0.1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     fit(event_time ~ ., data = sim_tr)
 
   glmn_aug <- augment(glmn_fit, new_data = sim_tr, eval_time = time_points)
@@ -110,7 +110,7 @@ test_that("augment() works for tune_results", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))

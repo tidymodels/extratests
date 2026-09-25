@@ -685,7 +685,7 @@ test_that("race tuning (win_loss) survival models with linear_pred metric", {
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -1135,7 +1135,7 @@ test_that("race tuning (win_loss) survival models mixture of metric types includ
 
   mod_spec <-
     proportional_hazards(penalty = tune(), mixture = 1) %>%
-    set_engine("glmnet") %>%
+    set_engine("glmnet", cox.ties = "efron") %>%
     set_mode("censored regression")
 
   grid <- tibble(penalty = 10^c(-4, -2, -1))
@@ -1288,7 +1288,8 @@ test_that("race tuning (W/L) - unneeded eval_time", {
   set.seed(2193)
   expect_snapshot(
     tune_res <-
-      proportional_hazards(penalty = tune(), engine = "glmnet") %>%
+      proportional_hazards(penalty = tune()) %>%
+      set_engine("glmnet", cox.ties = "efron") %>%
       tune_race_win_loss(
         surv ~ .,
         resamples = vfold_cv(lung_surv, 5),

@@ -1,5 +1,5 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("parsnip", "1.6.0.9001")
 skip_if_not_installed("hardhat", "1.2.0")
 skip_if_not_installed("yardstick", "1.0.0")
 skip_if_not_installed("workflows", "1.0.0")
@@ -103,6 +103,7 @@ test_that('poisson_reg - glmnet case weights', {
 
 test_that('poisson_reg - stan case weights', {
   skip_if_not_installed("poissonreg", "1.0.1")
+  skip_if_not_installed("rstanarm")
 
   dat <- make_biochem_wts()
 

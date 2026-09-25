@@ -71,7 +71,8 @@ test_that("augment survival workflows with eval_time", {
   expect_snapshot(
     workflow() %>%
       add_model(
-        proportional_hazards(penalty = 0.001) %>% set_engine("glmnet")
+        proportional_hazards(penalty = 0.001) %>%
+          set_engine("glmnet", cox.ties = "efron")
       ) %>%
       add_formula(event_time ~ .) %>%
       fit(data = sim_dat) %>%
