@@ -1,5 +1,5 @@
 # theses are needed for all case-weights tests
-skip_if_not_installed("parsnip", "1.0.1")
+skip_if_not_installed("parsnip", "1.6.0.9001")
 skip_if_not_installed("hardhat", minimum_version = "1.2.0")
 skip_if_not_installed("yardstick", minimum_version = "1.0.0")
 skip_if_not_installed("workflows", minimum_version = "1.0.0")
