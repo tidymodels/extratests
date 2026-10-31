@@ -19,7 +19,7 @@
       # A tibble: 1 x 7
         .metric        .estimator .eval_time  mean     n std_err .config        
         <chr>          <chr>           <dbl> <dbl> <int>   <dbl> <chr>          
-      1 brier_survival standard           10 0.253    10  0.0306 pre0_mod0_post0
+      1 brier_survival standard           10 0.253    10  0.0304 pre0_mod0_post0
 
 ---
 
@@ -60,5 +60,5 @@
       # A tibble: 1 x 7
         .metric                   .estimator .eval_time  mean     n std_err .config   
         <chr>                     <chr>           <dbl> <dbl> <int>   <dbl> <chr>     
-      1 brier_survival_integrated standard           NA 0.196    10  0.0150 pre0_mod0~
+      1 brier_survival_integrated standard           NA 0.195    10  0.0148 pre0_mod0~
 
